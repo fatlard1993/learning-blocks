@@ -89,6 +89,9 @@ public final class PhonicsCommand {
 			.then(Commands.literal("lessons")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.then(Commands.argument("player", EntityArgument.player()).executes(PhonicsCommand::lessons)))
+			.then(Commands.literal("home")
+				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
+				.then(Commands.argument("player", EntityArgument.player()).executes(PhonicsCommand::home)))
 			.then(Commands.literal("release")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.then(Commands.argument("player", EntityArgument.player()).executes(PhonicsCommand::release)))
@@ -412,6 +415,30 @@ public final class PhonicsCommand {
 		context.getSource().sendSuccess(() -> Component.literal(player.getGameProfile().name() + ": "
 			+ (left > 0 ? left + " lessons left" : owed > 0 ? owed + " lessons owed, from when they were taken out" : "no lessons set")), false);
 		return left + owed;
+	}
+
+	/**
+	 * Home now, whatever keeps them in: the safe way out, forced. Their lessons for this visit go;
+	 * their daily reading stays, so the reply says how to turn that off too.
+	 */
+	private static int home(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+		ServerPlayer player = EntityArgument.getPlayer(context, "player");
+		String name = player.getGameProfile().name();
+		int lessons = Travel.lessons(player);
+		if (!Travel.forceHome(player)) {
+			context.getSource().sendFailure(Component.literal(name + " isn't in the classroom"));
+			return 0;
+		}
+		String by = context.getSource().getTextName();
+		justfatlard.phonics.Phonics.LOGGER.info("[{}] {} sent {} home by force ({} lessons left were cleared)", justfatlard.phonics.Phonics.MOD_ID, by, name, lessons);
+		Progress.of(player).lessonNote(player, "sent home by " + by + (lessons > 0 ? ", " + lessons + " lessons cleared" : ""));
+		boolean daily = justfatlard.phonics.classroom.Schedules.of(player.getUUID()) != null;
+		context.getSource().sendSuccess(() -> Component.literal("Sent " + name + " home."
+			+ (lessons > 0 ? " The " + lessons + (lessons == 1 ? " lesson" : " lessons") + " left on this visit are cleared." : "")
+			+ (daily ? " Their daily reading isn't: if today's isn't done, they'll be sent in again at their next login (/phonics daily "
+				+ name + " off turns it off)." : "")
+			+ " /phonics release " + name + " clears any lessons still owed."), true);
+		return 1;
 	}
 
 	private static int release(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {

@@ -858,8 +858,10 @@ public final class Room {
 		long now = level.getGameTime();
 		if (noPuzzleSince < 0) noPuzzleSince = now;
 		if (now - noPuzzleSince < STRANDED_AT_MOST) return;
-		Phonics.LOGGER.warn("[{}] {}'s room has had nothing to ask for {} ticks with {} lessons left; the lessons are released",
-			Phonics.MOD_ID, player.getGameProfile().name(), now - noPuzzleSince, lessons);
+		justfatlard.phonics.classroom.Travel.lastStuck = "STUCK: " + player.getGameProfile().name() + " is kept for " + lessons
+			+ " lessons, but the room has had nothing to ask for " + (now - noPuzzleSince) + " ticks; the lessons are released. Room state: "
+			+ Rooms.stateForLog(player);
+		Phonics.LOGGER.error("[{}] {}", Phonics.MOD_ID, justfatlard.phonics.classroom.Travel.lastStuck);
 		Travel.setLessons(player, 0);
 		justfatlard.phonics.reward.Progress.of(player).lessonNote(player, lessons + " lessons let go: nothing to ask");
 		noPuzzleSince = -1;

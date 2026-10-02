@@ -50,6 +50,22 @@ public final class Rooms {
 		});
 	}
 
+	/** What a child's room is doing, in one line for the log: what to look at when somebody is stuck. */
+	public static String stateForLog(ServerPlayer player) {
+		Room room = of(player);
+		var visit = justfatlard.phonics.classroom.Visit.of(player);
+		String common = "lessons=" + justfatlard.phonics.classroom.Travel.lessons(player)
+			+ " visit=" + (visit != null) + " prizesWaiting=" + (visit != null && visit.hasPrizes())
+			+ " narration=" + (justfatlard.phonics.narration.Narrator.isPlaying(player) ? "playing" : "quiet")
+			+ " at=" + player.blockPosition().toShortString();
+		if (room == null) return "no room; " + common;
+		Puzzle puzzle = room.puzzle();
+		String round = room.bob() != null ? "bob:" + room.bob().mode() : room.scene() != null ? "scene:" + room.scene().word().text()
+			: puzzle == null ? "none" : puzzle.kind() + ":" + puzzle.target().text();
+		return "round=" + round + " busy=" + room.busy() + " leaving=" + room.leaving(player) + " leavingFor=" + room.leavingFor(player)
+			+ " portalOpen=" + room.portalOpenFor(player) + " readers=" + room.present().size() + " " + common;
+	}
+
 	public static @Nullable Room of(ServerPlayer player) {
 		return rooms.get(player.getUUID());
 	}

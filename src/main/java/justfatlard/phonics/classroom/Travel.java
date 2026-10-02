@@ -150,6 +150,7 @@ public final class Travel {
 	public static boolean leave(ServerPlayer player) {
 		Visit visit = Visit.of(player);
 		if (visit == null) return false;
+		triedToLeave(player);
 		Room room = Rooms.of(player);
 		if (room != null && room.leaving(player)) {
 			// Already on the way: going again is harmless, and makes sure of it.
@@ -172,8 +173,13 @@ public final class Travel {
 	 * so no save ever sees the prizes both waiting and handed over, or neither.
 	 */
 	private static void goHome(ServerPlayer player) {
+		goHome(player, false);
+	}
+
+	private static void goHome(ServerPlayer player, boolean forced) {
 		// Dead or dying: nothing handed to a body survives the respawn, which does this itself.
 		if (player.isDeadOrDying() || player.isRemoved()) return;
+		if (wedgedForTests && !forced) return;
 		Visit visit = Visit.of(player);
 		if (visit == null) return;
 		boolean inside = Places.isClassroom(player.level());
@@ -185,6 +191,72 @@ public final class Travel {
 	/** Home now, by whoever notices a leave taking too long, or a room that broke. */
 	public static void goHomeNow(ServerPlayer player) {
 		goHome(player);
+	}
+
+	/** For tests: every ordinary way home does nothing, as if something were wedged; only {@link #forceHome} gets through. */
+	public static volatile boolean wedgedForTests;
+
+	/**
+	 * Home right now, whatever keeps them in: lessons, the portal's lock, a leave that never
+	 * finished. By the same way out as the door (their things back, the trip, the prizes, the visit
+	 * ended), with the prize line skipped. The lessons left on this visit go; the daily schedule
+	 * does not, so a day not yet done sends them in again at their next login. False if they had
+	 * no visit to end.
+	 */
+	public static boolean forceHome(ServerPlayer player) {
+		Visit visit = Visit.of(player);
+		if (visit == null) return false;
+		if (visit.lessons() > 0) Visit.set(player, visit.withLessons(0));
+		Narrator.stop(player);
+		goHome(player, true);
+		attempts.remove(player.getUUID());
+		return Visit.of(player) == null;
+	}
+
+	// --- Never stuck ---
+
+	/** How long tries to leave are remembered, how many in that time mean stuck, and how long after the last. */
+	static final int TRIES_WITHIN = 30 * 20;
+	static final int TRIES_STUCK = 3;
+	static final int STUCK_AFTER = 10 * 20;
+
+	/** When each child last tried to leave (the portal, a click on it, Go home, /phonics leave), by game time. */
+	private static final java.util.Map<java.util.UUID, java.util.ArrayDeque<Long>> attempts = new java.util.HashMap<>();
+
+	/** For tests: the last stuck line logged. */
+	public static volatile @Nullable String lastStuck;
+
+	private static void triedToLeave(ServerPlayer player) {
+		long now = player.level().getGameTime();
+		java.util.ArrayDeque<Long> tries = attempts.computeIfAbsent(player.getUUID(), id -> new java.util.ArrayDeque<>());
+		tries.addLast(now);
+		while (!tries.isEmpty() && now - tries.peekFirst() > TRIES_WITHIN) tries.removeFirst();
+	}
+
+	/**
+	 * Each tick in the classroom: a child free to go who has tried to leave three times in thirty
+	 * seconds and is still here ten seconds after the last is stuck, whatever the cause. They go
+	 * home by force, and the log says so loudly, with what the room was doing.
+	 */
+	public static void checkStuck(ServerPlayer player) {
+		java.util.ArrayDeque<Long> tries = attempts.get(player.getUUID());
+		if (tries == null || tries.isEmpty()) return;
+		long now = player.level().getGameTime();
+		while (!tries.isEmpty() && now - tries.peekFirst() > TRIES_WITHIN) tries.removeFirst();
+		if (tries.size() < TRIES_STUCK || now - tries.peekLast() < STUCK_AFTER) return;
+		if (Visit.of(player) == null || kept(player)) {
+			attempts.remove(player.getUUID());
+			return;
+		}
+		int count = tries.size();
+		Room room = Rooms.of(player);
+		String state = Rooms.stateForLog(player);
+		lastStuck = "STUCK: " + player.getGameProfile().name() + " tried to leave " + count + " times; sent home. Room state: " + state;
+		Phonics.LOGGER.error("[{}] {}", Phonics.MOD_ID, lastStuck);
+		attempts.remove(player.getUUID());
+		if (room != null) Progress.of(player).lessonNote(player, "sent home: stuck after " + count + " tries to leave");
+		// Not in the middle of the classroom's own walk over its players.
+		Later.after(player, 1, Travel::forceHome);
 	}
 
 	/**
@@ -221,6 +293,7 @@ public final class Travel {
 		if (visit.prizeXp() > 0) player.giveExperiencePoints(visit.prizeXp());
 		player.containerMenu.broadcastChanges();
 		Visit.set(player, null);
+		attempts.remove(player.getUUID());
 	}
 
 	/** Every way out that is not the door: stash, prizes, done, wherever they are. */

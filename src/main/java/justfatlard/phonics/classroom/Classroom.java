@@ -1,5 +1,6 @@
 package justfatlard.phonics.classroom;
 
+import java.util.List;
 import java.util.Set;
 import justfatlard.phonics.Safely;
 import justfatlard.phonics.puzzle.Room;
@@ -50,7 +51,7 @@ public final class Classroom {
 		boolean turned = raining != wasRaining;
 		wasRaining = raining;
 
-		for (ServerPlayer player : classroom.players()) {
+		for (ServerPlayer player : List.copyOf(classroom.players())) {
 			Safely.run("The classroom's care of " + player.getGameProfile().name(), () -> care(player, turned));
 		}
 	}
@@ -59,6 +60,8 @@ public final class Classroom {
 	private static void care(ServerPlayer player, boolean turned) {
 		ServerLevel classroom = (ServerLevel) player.level();
 		if (turned) Sky.overworldTurned(player);
+		Travel.checkStuck(player);
+		if (!Places.isClassroom(player.level())) return;
 		if (player.getFoodData().getFoodLevel() < 20) player.getFoodData().setFoodLevel(20);
 		if (player.getFoodData().getSaturationLevel() < 5) player.getFoodData().setSaturation(5);
 

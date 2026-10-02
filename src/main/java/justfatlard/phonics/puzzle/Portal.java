@@ -38,6 +38,11 @@ import org.jspecify.annotations.Nullable;
  */
 final class Portal {
 	private static final int FLAGS = RoomLayout.FLAGS;
+	/** How long a child who walked into the opening any way round stands wholly inside it before it takes them home. */
+	static final int SETTLED_IN = 20;
+	private final java.util.Map<UUID, Long> fullSince = new java.util.HashMap<>();
+	private final java.util.Set<UUID> walkedIn = new java.util.HashSet<>();
+
 	/** How often walking into a locked portal may say the count again. */
 	private static final int BUMP_EVERY = 80;
 	private static final BlockState FRAME_DARK = Blocks.POLISHED_BLACKSTONE_BRICKS.defaultBlockState();
@@ -182,10 +187,23 @@ final class Portal {
 				if (now % 12 == 0) level.sendParticles(ParticleTypes.WITCH, at.x, at.y, at.z - 0.2, 2, 0.6, 1.0, 0.1, 0.0);
 			}
 			// In the doorway itself, not just near it: the player's body overlapping the opening,
-			// facing into it and walking forward. A child pushed back by a word (fan), spun round, or
-			// backing up to see the board is not leaving.
+			// facing into it and walking forward; or, any way round (sideways, backwards), the whole
+			// body inside the opening for a second, having walked there themselves. A child pushed in
+			// by a word (fan), standing still or just backing up to see the board is not leaving.
 			boolean walkingIn = player.getLookAngle().z > 0.2 && player.getLastClientInput().forward();
-			if (walkingIn && player.getBoundingBox().intersects(opening.deflate(0.05, 0.0, 0.2)) && !room.leaving(player)) {
+			AABB body = player.getBoundingBox();
+			boolean wholly = body.minX >= opening.minX - 0.01 && body.maxX <= opening.maxX + 0.01
+				&& body.minZ >= opening.minZ - 0.01 && body.maxZ <= opening.maxZ + 0.01 && body.minY >= opening.minY - 0.5;
+			if (wholly) {
+				fullSince.putIfAbsent(id, now);
+				var input = player.getLastClientInput();
+				if (input.forward() || input.backward() || input.left() || input.right()) walkedIn.add(id);
+			} else {
+				fullSince.remove(id);
+				walkedIn.remove(id);
+			}
+			boolean settledIn = wholly && walkedIn.contains(id) && now - fullSince.get(id) >= SETTLED_IN;
+			if ((walkingIn || settledIn) && body.intersects(opening.deflate(0.05, 0.0, 0.2)) && !room.leaving(player)) {
 				Long entered = enteredAt.get(id);
 				if (entered != null && now - entered < 20) return;
 				enteredAt.put(id, now);
