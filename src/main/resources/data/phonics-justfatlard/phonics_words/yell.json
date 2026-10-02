@@ -1,0 +1,45 @@
+{
+  "tiles": [
+    "y",
+    "e",
+    "ll"
+  ],
+  "stage": 6,
+  "icon": "minecraft:goat_horn",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:note",
+        "count": 8,
+        "spread": 0.5,
+        "at": "above",
+        "sound": "minecraft:entity.villager.celebrate",
+        "pitch": 1.6
+      },
+      {
+        "type": "creatures_do",
+        "what": "hop"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "tune",
+        "instrument": "didgeridoo",
+        "notes": [
+          6,
+          4
+        ],
+        "every": 6
+      },
+      {
+        "type": "creatures_do",
+        "what": "spin"
+      }
+    ]
+  }
+}

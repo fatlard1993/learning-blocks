@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "j",
+    "o",
+    "g"
+  ],
+  "stage": 3,
+  "icon": "minecraft:leather_boots",
+  "outcome": {
+    "type": "effect",
+    "effect": "minecraft:speed",
+    "duration": 200
+  },
+  "wrong": {
+    "type": "spin",
+    "turns": 1.0,
+    "ticks": 24
+  }
+}

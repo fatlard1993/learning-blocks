@@ -1,0 +1,43 @@
+{
+  "tiles": [
+    "p",
+    "l",
+    "ay"
+  ],
+  "stage": 13,
+  "icon": "minecraft:music_disc_13",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "tune",
+        "instrument": "harp",
+        "notes": [
+          12,
+          14,
+          16,
+          17,
+          19,
+          17,
+          16,
+          14,
+          12
+        ],
+        "every": 3
+      },
+      {
+        "type": "creatures_do",
+        "what": "hop"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "tune",
+    "instrument": "bass",
+    "notes": [
+      12,
+      6
+    ],
+    "every": 6
+  }
+}

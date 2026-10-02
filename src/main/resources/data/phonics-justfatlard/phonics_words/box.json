@@ -1,0 +1,44 @@
+{
+  "tiles": [
+    "b",
+    "o",
+    "x"
+  ],
+  "stage": 3,
+  "picture": "clear",
+  "outcome": {
+    "type": "place_block",
+    "block": "phonics-justfatlard:box",
+    "at": "near",
+    "properties": {
+      "facing": "south"
+    }
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "phonics-justfatlard:box",
+        "at": "near",
+        "lasts": 40,
+        "properties": {
+          "facing": "south"
+        }
+      },
+      {
+        "type": "particles",
+        "particle": {
+          "type": "minecraft:item",
+          "item": "minecraft:feather"
+        },
+        "count": 30,
+        "spread": 0.6,
+        "at": "above",
+        "sound": "minecraft:entity.chicken.egg",
+        "pitch": 1.5
+      }
+    ]
+  },
+  "icon": "phonics-justfatlard:box"
+}

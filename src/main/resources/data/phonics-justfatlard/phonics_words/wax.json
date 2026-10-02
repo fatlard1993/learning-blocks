@@ -1,0 +1,18 @@
+{
+  "tiles": [
+    "w",
+    "a",
+    "x"
+  ],
+  "stage": 1,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:honeycomb"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:honeycomb"
+    ]
+  }
+}

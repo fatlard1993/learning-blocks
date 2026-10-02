@@ -1,0 +1,34 @@
+{
+  "tiles": [
+    "h",
+    "o",
+    "g",
+    "s"
+  ],
+  "sounds": [
+    null,
+    null,
+    null,
+    "z"
+  ],
+  "stage": 3,
+  "plural": true,
+  "puzzle": false,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:pig"
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:pig"
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:pig"
+      }
+    ]
+  }
+}

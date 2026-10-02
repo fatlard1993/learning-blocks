@@ -1,0 +1,20 @@
+{
+  "tiles": [
+    "c",
+    "oa",
+    "t"
+  ],
+  "stage": 10,
+  "picture": "clear",
+  "outcome": {
+    "type": "equip_item",
+    "item": "minecraft:leather_chestplate",
+    "slot": "chest"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:leather_chestplate"
+    ]
+  }
+}

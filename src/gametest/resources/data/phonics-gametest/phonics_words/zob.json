@@ -1,0 +1,6 @@
+{
+  "tiles": ["z", "o", "b"],
+  "stage": 99,
+  "requires": ["nomod-gametest"],
+  "outcome": { "type": "give_item", "item": "minecraft:cookie" }
+}

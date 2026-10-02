@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    "f",
+    "i",
+    "x"
+  ],
+  "stage": 2,
+  "icon": "minecraft:anvil",
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:happy_villager",
+    "count": 20,
+    "spread": 0.6,
+    "at": "above",
+    "sound": "minecraft:block.anvil.use",
+    "pitch": 1.4
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:crit",
+        "count": 10,
+        "spread": 0.3,
+        "at": "above",
+        "sound": "minecraft:block.anvil.land",
+        "pitch": 1.6
+      }
+    ]
+  }
+}

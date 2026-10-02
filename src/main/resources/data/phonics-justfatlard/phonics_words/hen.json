@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "h",
+    "e",
+    "n"
+  ],
+  "stage": 5,
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:chicken"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:chicken",
+    "act": "bounce",
+    "lasts": 60
+  }
+}

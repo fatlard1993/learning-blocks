@@ -1,0 +1,44 @@
+{
+	"overview": [
+		"Reading puzzles for young children, in a classroom of their own: hear each letter, put one in the gap, and see what the word does.",
+		"Press the Phonics button to go in, and the door to come home with everything you went in with."
+	],
+	"versions": {
+		"0.1.0": [
+			"A classroom with one puzzle: _ A T, three letters to try, and a button that reads the word out.",
+			"CAT brings a cat, BAT a bat, HAT a hat on your head.",
+			"Every letter, word and cheer is spoken, with big captions that light up each word as it is said.",
+			"Letter tiles say their sound when placed, picked up or hit.",
+			"Prizes to take home for new words, streaks and more, set by the server in config/phonics/prizes.json.",
+			"A book, My Words, that lists every word you have read.",
+			"Operators can change every prize in game with /phonics prizes, items and all.",
+			"Captions can be turned off, made smaller, or moved; they now sit at the top by default.",
+			"A prize held back by the daily cap is paid on a later day instead of lost.",
+			"Forty more words in five stages, one short vowel at a time: pigs, puppies, beds, fireworks and more.",
+			"You move up a stage once you have read every word in yours.",
+			"Tiles are broken and placed like any block: knock one loose, pick it up, place it in the gap.",
+			"Vowel tiles say their short sound; a picture of the word hangs over the board.",
+			"What a word does now comes out of the button: creatures hop out, items fly to you.",
+			"A wrong tile flies back to its place; placing into a full gap swaps; the floor never gets muddled.",
+			"The prize chest shows what is waiting. Moving up a stage starts fresh.",
+			"Grown-ups can send a child for a number of lessons, and click the picture to hear the word again.",
+			"Wrong words do something sillier: a hat bonks you, the fox runs off, TEN throws snowballs at you.",
+			"Letter sounds and My words: hear every letter, the vowels, and the words you have read, from anywhere.",
+			"Long captions wrap onto a second line instead of running off the screen.",
+			"When a word is sounded out, its vowel is the one from that word's own recording.",
+			"Situations: now and then the room acts out a little problem, and one of your words fixes it.",
+			"Fixed: a child with prizes waiting could sometimes never leave the classroom.",
+			"Letters first: new readers start by matching sounds to letters, with a chant for each one.",
+			"Prizes fly into the chest where you can see them, and the haul grows on top.",
+			"The room says its most common lines in several different ways.",
+			"The My Words book is gone; the My words screen does its job.",
+			"New words: zap, yap, nap, ram, ham, jam, wag, rag, van, sit, win, zip, sip, hop, pop, mop, rod, cod, yum, hum, gum, bug, tug, cut, hut, sun, leg, beg, gem, fed, vet, web.",
+			"New kinds of round: change the last sound (map, mat, man) or the vowel in the middle (cat, cot, cut).",
+			"Letter names: each letter on the Letter sounds screen has a Name button.",
+			"Thirteen new situations, from bouncing puppies to a stuck villager.",
+			"Two-letter tiles (sh, ch, th, ck, qu, ll, ss, ff, zz) and a Two-letter sounds screen.",
+			"Build-it rounds: the whole word from its own tiles.",
+			"Stages 6 to 8: double letters, sh ch th qu, and blends, with 49 new words."
+		]
+	}
+}

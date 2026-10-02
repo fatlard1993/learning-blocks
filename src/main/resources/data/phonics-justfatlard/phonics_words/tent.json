@@ -1,0 +1,20 @@
+{
+  "tiles": [
+    "t",
+    "e",
+    "n",
+    "t"
+  ],
+  "stage": 11,
+  "icon": "minecraft:light_gray_wool",
+  "outcome": {
+    "type": "hut",
+    "lasts": 100,
+    "block": "minecraft:white_wool"
+  },
+  "wrong": {
+    "type": "hut",
+    "lasts": 20,
+    "block": "minecraft:white_wool"
+  }
+}

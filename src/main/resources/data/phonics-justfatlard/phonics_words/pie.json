@@ -1,0 +1,40 @@
+{
+  "tiles": [
+    "p",
+    "ie"
+  ],
+  "stage": 10,
+  "picture": "clear",
+  "outcome": {
+    "type": "prefer",
+    "options": [
+      {
+        "type": "give_item",
+        "item": "lets-cook-justfatlard:whole_pumpkin_pie"
+      },
+      {
+        "type": "give_item",
+        "item": "minecraft:pumpkin_pie"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "prefer",
+    "options": [
+      {
+        "type": "bonk",
+        "items": [
+          "lets-cook-justfatlard:whole_pumpkin_pie"
+        ],
+        "sound": "minecraft:entity.slime.squish"
+      },
+      {
+        "type": "bonk",
+        "items": [
+          "minecraft:pumpkin_pie"
+        ],
+        "sound": "minecraft:entity.slime.squish"
+      }
+    ]
+  }
+}

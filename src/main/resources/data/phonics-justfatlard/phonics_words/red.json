@@ -1,0 +1,41 @@
+{
+  "tiles": [
+    "r",
+    "e",
+    "d"
+  ],
+  "stage": 5,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "give_item",
+        "item": "minecraft:red_dye"
+      },
+      {
+        "type": "particles",
+        "particle": {
+          "type": "minecraft:dust",
+          "color": 16711680,
+          "scale": 2.0
+        },
+        "count": 40,
+        "spread": 1.2,
+        "at": "player",
+        "sound": "minecraft:item.dye.use"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": {
+      "type": "minecraft:dust",
+      "color": 16711680,
+      "scale": 2.0
+    },
+    "count": 30,
+    "spread": 0.25,
+    "at": "face",
+    "sound": "minecraft:item.dye.use"
+  }
+}

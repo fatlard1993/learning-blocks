@@ -1,0 +1,37 @@
+{
+  "tiles": [
+    "p",
+    "u",
+    "p",
+    "s"
+  ],
+  "sounds": [
+    null,
+    null,
+    null,
+    null
+  ],
+  "stage": 4,
+  "plural": true,
+  "puzzle": false,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:wolf",
+        "baby": true
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:wolf",
+        "baby": true
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:wolf",
+        "baby": true
+      }
+    ]
+  }
+}

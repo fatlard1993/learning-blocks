@@ -1,0 +1,46 @@
+{
+  "tiles": [
+    "s",
+    "w",
+    "i",
+    "m"
+  ],
+  "stage": 8,
+  "icon": "minecraft:dolphin_spawn_egg",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:splash",
+        "count": 30,
+        "spread": 0.6,
+        "at": "player",
+        "sound": "minecraft:entity.player.swim"
+      },
+      {
+        "type": "effect",
+        "effect": "minecraft:dolphins_grace",
+        "duration": 200
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:splash",
+        "count": 40,
+        "spread": 0.3,
+        "at": "face",
+        "sound": "minecraft:entity.player.splash"
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 16
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+	"duration": 1.765,
+	"words": [
+		{
+			"text": "The",
+			"start": 0.0,
+			"end": 0.163
+		},
+		{
+			"text": "parrot",
+			"start": 0.221,
+			"end": 0.522
+		},
+		{
+			"text": "has",
+			"start": 0.557,
+			"end": 0.662
+		},
+		{
+			"text": "nowhere",
+			"start": 0.731,
+			"end": 0.998
+		},
+		{
+			"text": "to",
+			"start": 1.022,
+			"end": 1.068
+		},
+		{
+			"text": "sit!",
+			"start": 1.126,
+			"end": 1.765
+		}
+	]
+}

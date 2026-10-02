@@ -1,0 +1,27 @@
+{
+  "tiles": [
+    "d",
+    "ow",
+    "n"
+  ],
+  "stage": 13,
+  "icon": "minecraft:feather",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "push",
+        "up": 0.8
+      },
+      {
+        "type": "effect",
+        "effect": "minecraft:slow_falling",
+        "duration": 80
+      }
+    ]
+  },
+  "wrong": {
+    "type": "push",
+    "up": 0.3
+  }
+}

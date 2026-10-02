@@ -1,0 +1,18 @@
+{
+  "tiles": [
+    "p",
+    "i",
+    "ck"
+  ],
+  "stage": 6,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:wooden_pickaxe"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:wooden_pickaxe"
+    ]
+  }
+}

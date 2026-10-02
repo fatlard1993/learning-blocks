@@ -1,0 +1,18 @@
+{
+  "tiles": [
+    "t",
+    "e",
+    "n"
+  ],
+  "stage": 5,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:snowball",
+    "count": 10
+  },
+  "wrong": {
+    "type": "throw_at_player",
+    "count": 10,
+    "every": 3
+  }
+}

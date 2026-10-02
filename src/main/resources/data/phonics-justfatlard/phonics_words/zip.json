@@ -1,0 +1,45 @@
+{
+  "tiles": [
+    "z",
+    "i",
+    "p"
+  ],
+  "stage": 2,
+  "icon": "minecraft:feather",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 12,
+        "spread": 0.3,
+        "at": "player",
+        "sound": "minecraft:entity.breeze.jump",
+        "pitch": 1.6
+      },
+      {
+        "type": "push",
+        "back": -1.4,
+        "up": 0.15
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 12,
+        "spread": 0.3,
+        "at": "player"
+      },
+      {
+        "type": "push",
+        "back": 1.4,
+        "up": 0.15
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "tiles": [
+    "m",
+    "i",
+    "x"
+  ],
+  "stage": 2,
+  "icon": "minecraft:brewing_stand",
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:witch",
+    "count": 30,
+    "spread": 0.5,
+    "at": "above",
+    "sound": "minecraft:block.brewing_stand.brew"
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:bubble_pop",
+    "count": 30,
+    "spread": 0.4,
+    "at": "face",
+    "sound": "minecraft:block.bubble_column.upwards_inside",
+    "pitch": 1.4
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "f",
+    "e",
+    "ll"
+  ],
+  "stage": 6,
+  "icon": "minecraft:oak_log",
+  "outcome": {
+    "type": "roll",
+    "item": "minecraft:oak_log"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:oak_log"
+    ]
+  }
+}

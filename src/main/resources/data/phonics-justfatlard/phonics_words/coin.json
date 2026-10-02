@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    "c",
+    "oi",
+    "n"
+  ],
+  "stage": 13,
+  "picture": "clear",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "give_item",
+        "item": "minecraft:gold_nugget"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:wax_on",
+        "count": 10,
+        "spread": 0.4,
+        "at": "above",
+        "sound": "minecraft:entity.experience_orb.pickup"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:gold_nugget"
+    ]
+  }
+}

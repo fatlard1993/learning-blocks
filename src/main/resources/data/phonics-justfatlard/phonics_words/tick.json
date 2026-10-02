@@ -1,0 +1,43 @@
+{
+  "tiles": [
+    "t",
+    "i",
+    "ck"
+  ],
+  "stage": 6,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "give_item",
+        "item": "minecraft:clock"
+      },
+      {
+        "type": "tune",
+        "instrument": "hat",
+        "notes": [
+          12,
+          14,
+          12,
+          14
+        ],
+        "every": 10
+      }
+    ]
+  },
+  "wrong": {
+    "type": "tune",
+    "instrument": "hat",
+    "notes": [
+      12,
+      14,
+      12,
+      14,
+      12,
+      14,
+      12,
+      14
+    ],
+    "every": 2
+  }
+}

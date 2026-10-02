@@ -1,0 +1,35 @@
+{
+	"duration": 1.811,
+	"words": [
+		{
+			"text": "Oh!",
+			"start": 0.0,
+			"end": 0.279
+		},
+		{
+			"text": "It's",
+			"start": 0.313,
+			"end": 0.476
+		},
+		{
+			"text": "so",
+			"start": 0.522,
+			"end": 0.697
+		},
+		{
+			"text": "dark",
+			"start": 0.778,
+			"end": 1.022
+		},
+		{
+			"text": "in",
+			"start": 1.08,
+			"end": 1.138
+		},
+		{
+			"text": "here!",
+			"start": 1.207,
+			"end": 1.811
+		}
+	]
+}

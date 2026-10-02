@@ -1,0 +1,33 @@
+{
+  "tiles": [
+    "h",
+    "i",
+    "t"
+  ],
+  "stage": 2,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:target",
+        "lasts": 100
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:crit",
+        "count": 12,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:block.note_block.bell",
+        "pitch": 1.5
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:target"
+    ]
+  }
+}

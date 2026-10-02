@@ -1,0 +1,20 @@
+{
+  "tiles": [
+    "f",
+    "l",
+    "a",
+    "p"
+  ],
+  "stage": 8,
+  "icon": "minecraft:phantom_membrane",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:parrot"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:parrot",
+    "act": "circle",
+    "lasts": 60
+  }
+}

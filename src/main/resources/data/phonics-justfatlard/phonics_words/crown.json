@@ -1,0 +1,21 @@
+{
+  "tiles": [
+    "c",
+    "r",
+    "ow",
+    "n"
+  ],
+  "stage": 13,
+  "picture": "clear",
+  "outcome": {
+    "type": "equip_item",
+    "item": "minecraft:golden_helmet",
+    "slot": "head"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:golden_helmet"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "tiles": [
+    "t",
+    "ow",
+    "n"
+  ],
+  "stage": 13,
+  "picture_card": "town",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:villager",
+        "profession": "minecraft:mason"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:happy_villager",
+        "count": 10,
+        "spread": 0.6,
+        "at": "above",
+        "sound": "minecraft:block.bell.use",
+        "pitch": 1.2
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:villager",
+        "act": "bounce",
+        "lasts": 50
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 16
+      }
+    ]
+  }
+}

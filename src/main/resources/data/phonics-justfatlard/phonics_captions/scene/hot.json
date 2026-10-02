@@ -1,0 +1,25 @@
+{
+	"duration": 1.765,
+	"words": [
+		{
+			"text": "Brr!",
+			"start": 0.0,
+			"end": 0.522
+		},
+		{
+			"text": "He's",
+			"start": 0.65,
+			"end": 0.848
+		},
+		{
+			"text": "so",
+			"start": 0.882,
+			"end": 1.01
+		},
+		{
+			"text": "cold!",
+			"start": 1.103,
+			"end": 1.765
+		}
+	]
+}

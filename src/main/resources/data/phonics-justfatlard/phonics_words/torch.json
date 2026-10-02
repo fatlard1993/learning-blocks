@@ -1,0 +1,20 @@
+{
+  "tiles": [
+    "t",
+    "or",
+    "ch"
+  ],
+  "stage": 12,
+  "picture": "clear",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:torch",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:torch"
+    ]
+  }
+}

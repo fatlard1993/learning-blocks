@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "sh",
+    "e",
+    "ll"
+  ],
+  "stage": 7,
+  "picture": "clear",
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:nautilus_shell"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:nautilus_shell"
+    ]
+  }
+}

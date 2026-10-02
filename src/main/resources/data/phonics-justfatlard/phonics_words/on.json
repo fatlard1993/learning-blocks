@@ -1,0 +1,30 @@
+{
+  "tiles": [
+    "o",
+    "n"
+  ],
+  "icon": "minecraft:redstone_lamp",
+  "keyword": true,
+  "puzzle": false,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:redstone_lamp",
+        "properties": {
+          "lit": "true"
+        },
+        "lasts": 80
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:end_rod",
+        "count": 10,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:block.copper_bulb.turn_on"
+      }
+    ]
+  }
+}

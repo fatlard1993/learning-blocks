@@ -1,0 +1,33 @@
+{
+  "tiles": [
+    "h",
+    "ow",
+    "l"
+  ],
+  "stage": 13,
+  "icon": "minecraft:bone_block",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:wolf"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:note",
+        "count": 4,
+        "spread": 0.3,
+        "at": "above",
+        "sound": "minecraft:entity.wolf.whine",
+            "pitch": 0.6
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:wolf",
+    "act": "spin",
+    "lasts": 60
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "tiles": [
+    "p",
+    "a",
+    "t"
+  ],
+  "stage": 1,
+  "icon": "minecraft:white_wool",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:sheep"
+      },
+      {
+        "type": "creatures_do",
+        "what": "hearts"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:sheep",
+    "act": "bounce",
+    "lasts": 60
+  }
+}

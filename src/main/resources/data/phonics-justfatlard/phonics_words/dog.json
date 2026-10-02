@@ -1,0 +1,20 @@
+{
+  "tiles": [
+    "d",
+    "o",
+    "g"
+  ],
+  "stage": 3,
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:wolf",
+    "tamed_to_player": true
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:wolf",
+    "act": "spin",
+    "lasts": 60
+  }
+}

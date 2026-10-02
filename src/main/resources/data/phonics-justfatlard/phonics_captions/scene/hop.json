@@ -1,0 +1,30 @@
+{
+	"duration": 1.347,
+	"words": [
+		{
+			"text": "How",
+			"start": 0.0,
+			"end": 0.197
+		},
+		{
+			"text": "can",
+			"start": 0.255,
+			"end": 0.372
+		},
+		{
+			"text": "you",
+			"start": 0.43,
+			"end": 0.499
+		},
+		{
+			"text": "get",
+			"start": 0.546,
+			"end": 0.662
+		},
+		{
+			"text": "over?",
+			"start": 0.708,
+			"end": 1.347
+		}
+	]
+}

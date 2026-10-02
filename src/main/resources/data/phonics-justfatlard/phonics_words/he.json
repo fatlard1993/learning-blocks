@@ -1,0 +1,18 @@
+{
+  "tiles": [
+    "h",
+    "e"
+  ],
+  "stage": 3,
+  "tricky": true,
+  "puzzle": false,
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:end_rod",
+    "count": 12,
+    "spread": 0.4,
+    "at": "above",
+    "sound": "minecraft:block.amethyst_block.chime",
+    "pitch": 1.4
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "tiles": [
+    "u",
+    "p"
+  ],
+  "icon": "minecraft:ladder",
+  "keyword": true,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 12,
+        "spread": 0.3,
+        "at": "player",
+        "sound": "minecraft:entity.breeze.jump"
+      },
+      {
+        "type": "push",
+        "up": 0.9
+      }
+    ]
+  },
+  "puzzle": false
+}

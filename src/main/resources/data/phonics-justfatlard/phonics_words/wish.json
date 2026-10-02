@@ -1,0 +1,30 @@
+{
+  "tiles": [
+    "w",
+    "i",
+    "sh"
+  ],
+  "stage": 7,
+  "icon": "minecraft:nether_star",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:end_rod",
+        "count": 30,
+        "spread": 0.8,
+        "at": "above",
+        "sound": "minecraft:block.amethyst_block.chime"
+      },
+      {
+        "type": "firework_burst",
+        "shape": "star"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "firework_burst",
+    "dud": true
+  }
+}

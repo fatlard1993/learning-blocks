@@ -1,0 +1,25 @@
+{
+	"duration": 1.347,
+	"words": [
+		{
+			"text": "He",
+			"start": 0.0,
+			"end": 0.163
+		},
+		{
+			"text": "needs",
+			"start": 0.209,
+			"end": 0.43
+		},
+		{
+			"text": "some",
+			"start": 0.453,
+			"end": 0.615
+		},
+		{
+			"text": "wool!",
+			"start": 0.65,
+			"end": 1.347
+		}
+	]
+}

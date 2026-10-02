@@ -1,0 +1,35 @@
+{
+  "tiles": [
+    "l",
+    "igh",
+    "t"
+  ],
+  "stage": 13,
+  "icon": "minecraft:glowstone",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:glowstone",
+        "lasts": 200
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:end_rod",
+        "count": 20,
+        "spread": 0.5,
+        "at": "player"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:end_rod",
+    "count": 20,
+    "spread": 0.3,
+    "at": "face",
+    "sound": "minecraft:block.amethyst_block.chime",
+    "pitch": 0.7
+  }
+}

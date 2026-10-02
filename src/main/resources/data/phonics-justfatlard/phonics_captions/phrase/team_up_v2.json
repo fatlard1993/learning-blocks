@@ -1,0 +1,40 @@
+{
+	"duration": 2.08,
+	"words": [
+		{
+			"text": "Team",
+			"start": 0.134,
+			"end": 0.16
+		},
+		{
+			"text": "time!",
+			"start": 0.272,
+			"end": 0.8
+		},
+		{
+			"text": "You",
+			"start": 0.88,
+			"end": 1.12
+		},
+		{
+			"text": "each",
+			"start": 1.152,
+			"end": 1.28
+		},
+		{
+			"text": "have",
+			"start": 1.312,
+			"end": 1.44
+		},
+		{
+			"text": "a",
+			"start": 1.48,
+			"end": 1.52
+		},
+		{
+			"text": "spot!",
+			"start": 1.616,
+			"end": 2.08
+		}
+	]
+}

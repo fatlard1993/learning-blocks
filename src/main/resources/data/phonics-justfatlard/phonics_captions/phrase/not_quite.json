@@ -1,0 +1,30 @@
+{
+	"duration": 1.579,
+	"words": [
+		{
+			"text": "Hmm,",
+			"start": 0.0,
+			"end": 0.383
+		},
+		{
+			"text": "that's",
+			"start": 0.406,
+			"end": 0.604
+		},
+		{
+			"text": "not",
+			"start": 0.65,
+			"end": 0.778
+		},
+		{
+			"text": "quite",
+			"start": 0.836,
+			"end": 1.068
+		},
+		{
+			"text": "it!",
+			"start": 1.115,
+			"end": 1.579
+		}
+	]
+}

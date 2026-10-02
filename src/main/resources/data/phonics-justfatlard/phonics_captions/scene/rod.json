@@ -1,0 +1,30 @@
+{
+	"duration": 1.486,
+	"words": [
+		{
+			"text": "He",
+			"start": 0.0,
+			"end": 0.163
+		},
+		{
+			"text": "wants",
+			"start": 0.209,
+			"end": 0.441
+		},
+		{
+			"text": "to",
+			"start": 0.488,
+			"end": 0.546
+		},
+		{
+			"text": "go",
+			"start": 0.592,
+			"end": 0.685
+		},
+		{
+			"text": "fishing!",
+			"start": 0.755,
+			"end": 1.486
+		}
+	]
+}

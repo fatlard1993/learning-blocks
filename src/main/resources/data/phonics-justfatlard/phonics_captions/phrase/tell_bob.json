@@ -1,0 +1,30 @@
+{
+	"duration": 1.4,
+	"words": [
+		{
+			"text": "Tell",
+			"start": 0.139,
+			"end": 0.16
+		},
+		{
+			"text": "Bob",
+			"start": 0.24,
+			"end": 0.48
+		},
+		{
+			"text": "what",
+			"start": 0.512,
+			"end": 0.64
+		},
+		{
+			"text": "to",
+			"start": 0.667,
+			"end": 0.72
+		},
+		{
+			"text": "do!",
+			"start": 0.853,
+			"end": 1.28
+		}
+	]
+}

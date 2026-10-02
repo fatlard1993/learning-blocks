@@ -1,0 +1,15 @@
+{
+  "tiles": [
+    "t",
+    "ur",
+    "t",
+    "le"
+  ],
+  "keyword": true,
+  "puzzle": false,
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:turtle",
+    "baby": true
+  }
+}

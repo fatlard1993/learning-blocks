@@ -1,0 +1,21 @@
+{
+  "tiles": [
+    "ch",
+    "e",
+    "s",
+    "t"
+  ],
+  "stage": 8,
+  "picture": "clear",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:chest",
+    "at": "near"
+  },
+  "wrong": {
+    "type": "place_block",
+    "block": "minecraft:chest",
+    "at": "near",
+    "lasts": 30
+  }
+}

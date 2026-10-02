@@ -1,0 +1,33 @@
+{
+  "tiles": [
+    "s",
+    "a",
+    "t"
+  ],
+  "stage": 1,
+  "icon": "minecraft:saddle",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:cat",
+        "tamed_to_player": true,
+        "sitting": true
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 4,
+        "spread": 0.3,
+        "at": "above"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:cat",
+    "act": "bounce",
+    "lasts": 60
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "tiles": [
+    "r",
+    "ai",
+    "l"
+  ],
+  "stage": 10,
+  "picture": "clear",
+  "outcome": {
+    "type": "prefer",
+    "options": [
+      {
+        "type": "place_block",
+        "block": "minecart-mania-justfatlard:wooden_rail",
+        "lasts": 200
+      },
+      {
+        "type": "place_block",
+        "block": "minecraft:rail",
+        "lasts": 200
+      }
+    ]
+  },
+  "wrong": {
+    "type": "prefer",
+    "options": [
+      {
+        "type": "bonk",
+        "items": [
+          "minecart-mania-justfatlard:wooden_rail"
+        ]
+      },
+      {
+        "type": "bonk",
+        "items": [
+          "minecraft:rail"
+        ]
+      }
+    ]
+  }
+}

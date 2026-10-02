@@ -1,0 +1,37 @@
+{
+  "tiles": [
+    "j",
+    "i",
+    "g"
+  ],
+  "stage": 2,
+  "icon": "minecraft:jukebox",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "tune",
+        "instrument": "harp",
+        "notes": [
+          12,
+          16,
+          19,
+          16,
+          12,
+          19
+        ],
+        "every": 3
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 20
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spin",
+    "turns": 0.5,
+    "ticks": 10
+  }
+}

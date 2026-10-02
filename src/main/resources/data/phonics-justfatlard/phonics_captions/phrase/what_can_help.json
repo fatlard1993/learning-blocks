@@ -1,0 +1,20 @@
+{
+	"duration": 1.115,
+	"words": [
+		{
+			"text": "What",
+			"start": 0.0,
+			"end": 0.232
+		},
+		{
+			"text": "can",
+			"start": 0.279,
+			"end": 0.406
+		},
+		{
+			"text": "help?",
+			"start": 0.476,
+			"end": 1.115
+		}
+	]
+}

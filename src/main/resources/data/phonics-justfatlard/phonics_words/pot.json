@@ -1,0 +1,22 @@
+{
+  "tiles": [
+    "p",
+    "o",
+    "t"
+  ],
+  "stage": 3,
+  "icon": "minecraft:decorated_pot",
+  "picture": "clear",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:potted_poppy",
+    "at": "near"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:flower_pot"
+    ],
+    "sound": "minecraft:block.decorated_pot.shatter"
+  }
+}

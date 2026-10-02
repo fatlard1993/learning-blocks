@@ -1,0 +1,28 @@
+{
+  "tiles": [
+    "z",
+    "a",
+    "p"
+  ],
+  "stage": 1,
+  "icon": "minecraft:lightning_rod",
+  "keyword": true,
+  "outcome": {
+    "type": "strike",
+    "lasts": 60
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:electric_spark",
+        "count": 14,
+        "spread": 0.3,
+        "at": "face",
+        "sound": "minecraft:entity.player.hurt",
+        "pitch": 1.4
+      }
+    ]
+  }
+}

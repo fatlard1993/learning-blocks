@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    "s",
+    "a",
+    "n",
+    "d"
+  ],
+  "stage": 11,
+  "picture": "clear",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:sand",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": {
+          "type": "minecraft:item",
+          "item": "minecraft:sand"
+        },
+        "count": 20,
+        "spread": 0.3,
+        "at": "face",
+        "sound": "minecraft:block.sand.fall",
+        "pitch": 1.4
+      }
+    ]
+  }
+}

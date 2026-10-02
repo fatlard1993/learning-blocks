@@ -1,0 +1,21 @@
+{
+  "tiles": [
+    "g",
+    "oa",
+    "t"
+  ],
+  "stage": 10,
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:goat",
+    "baby": true
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:goat",
+    "baby": true,
+    "act": "bounce",
+    "lasts": 60
+  }
+}

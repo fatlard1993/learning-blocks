@@ -1,0 +1,30 @@
+{
+	"duration": 1.68,
+	"words": [
+		{
+			"text": "You",
+			"start": 0.2,
+			"end": 0.24
+		},
+		{
+			"text": "know",
+			"start": 0.272,
+			"end": 0.4
+		},
+		{
+			"text": "that",
+			"start": 0.432,
+			"end": 0.56
+		},
+		{
+			"text": "one",
+			"start": 0.6,
+			"end": 0.72
+		},
+		{
+			"text": "now!",
+			"start": 0.82,
+			"end": 1.68
+		}
+	]
+}

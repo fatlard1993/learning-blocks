@@ -1,0 +1,31 @@
+{
+  "tiles": [
+    "f",
+    "ar",
+    "m"
+  ],
+  "stage": 12,
+  "icon": "minecraft:iron_hoe",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:hay_block",
+        "lasts": 200
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:chicken",
+        "baby": true
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:wheat",
+      "minecraft:wheat_seeds"
+    ]
+  }
+}

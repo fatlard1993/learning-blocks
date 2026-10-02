@@ -1,0 +1,16 @@
+{
+  "tiles": [
+    "f",
+    "u",
+    "n"
+  ],
+  "stage": 4,
+  "icon": "minecraft:cake",
+  "outcome": {
+    "type": "firework_burst"
+  },
+  "wrong": {
+    "type": "firework_burst",
+    "dud": true
+  }
+}

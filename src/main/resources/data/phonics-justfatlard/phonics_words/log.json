@@ -1,0 +1,18 @@
+{
+  "tiles": [
+    "l",
+    "o",
+    "g"
+  ],
+  "stage": 3,
+  "picture": "clear",
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:oak_log"
+  },
+  "wrong": {
+    "type": "roll",
+    "item": "minecraft:oak_log",
+    "ticks": 36
+  }
+}

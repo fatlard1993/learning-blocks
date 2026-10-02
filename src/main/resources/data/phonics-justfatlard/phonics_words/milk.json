@@ -1,0 +1,45 @@
+{
+  "tiles": [
+    "m",
+    "i",
+    "l",
+    "k"
+  ],
+  "stage": 11,
+  "picture": "clear",
+  "scene": {
+    "line": "The baby is thirsty!",
+    "setup": [
+      {
+        "type": "character",
+        "baby": true,
+        "act": "still"
+      },
+      {
+        "type": "bubble",
+        "text": "?",
+        "color": 16769126
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:milk_bucket",
+        "then": "drink"
+      }
+    ]
+  },
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:milk_bucket"
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:white_ash",
+    "count": 30,
+    "spread": 0.3,
+    "at": "face",
+    "sound": "minecraft:entity.cow.milk",
+    "pitch": 1.3
+  }
+}

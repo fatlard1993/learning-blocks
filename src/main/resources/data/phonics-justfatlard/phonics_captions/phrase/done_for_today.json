@@ -1,0 +1,50 @@
+{
+	"duration": 2.64,
+	"words": [
+		{
+			"text": "All",
+			"start": 0.136,
+			"end": 0.16
+		},
+		{
+			"text": "done",
+			"start": 0.208,
+			"end": 0.4
+		},
+		{
+			"text": "for",
+			"start": 0.42,
+			"end": 0.48
+		},
+		{
+			"text": "today!",
+			"start": 0.573,
+			"end": 1.36
+		},
+		{
+			"text": "Off",
+			"start": 1.44,
+			"end": 1.68
+		},
+		{
+			"text": "you",
+			"start": 1.7,
+			"end": 1.76
+		},
+		{
+			"text": "go",
+			"start": 1.813,
+			"end": 1.92
+		},
+		{
+			"text": "and",
+			"start": 1.94,
+			"end": 2.0
+		},
+		{
+			"text": "play!",
+			"start": 2.096,
+			"end": 2.64
+		}
+	]
+}

@@ -1,0 +1,27 @@
+{
+  "tiles": [
+    "r",
+    "i",
+    "p"
+  ],
+  "stage": 2,
+  "icon": "minecraft:paper",
+  "outcome": {
+    "type": "particles",
+    "particle": {
+      "type": "minecraft:item",
+      "item": "minecraft:paper"
+    },
+    "count": 20,
+    "spread": 0.4,
+    "at": "face",
+    "sound": "minecraft:entity.sheep.shear",
+    "pitch": 1.3
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:paper"
+    ]
+  }
+}

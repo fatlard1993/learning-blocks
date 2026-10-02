@@ -1,0 +1,25 @@
+{
+	"duration": 2.24,
+	"words": [
+		{
+			"text": "Welcome",
+			"start": 0.188,
+			"end": 0.24
+		},
+		{
+			"text": "back!",
+			"start": 0.32,
+			"end": 0.72
+		},
+		{
+			"text": "Reading",
+			"start": 0.78,
+			"end": 1.2
+		},
+		{
+			"text": "time!",
+			"start": 1.296,
+			"end": 2.24
+		}
+	]
+}

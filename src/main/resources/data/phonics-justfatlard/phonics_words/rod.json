@@ -1,0 +1,75 @@
+{
+  "tiles": [
+    "r",
+    "o",
+    "d"
+  ],
+  "stage": 3,
+  "picture": "clear",
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:fishing_rod"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:fishing_rod"
+    ]
+  },
+  "scene": {
+    "line": "He wants to go fishing!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:villager",
+        "act": "still"
+      },
+      {
+        "type": "block",
+        "block": "minecraft:light_blue_carpet",
+        "at": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      },
+      {
+        "type": "ambient",
+        "id": "fish",
+        "particle": "minecraft:splash",
+        "at": "beside",
+        "count": 6,
+        "spread": 0.4,
+        "every": 10,
+        "sound": "minecraft:entity.fish.swim",
+        "pitch": 1.0,
+        "sound_every": 30
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:fishing_rod",
+        "then": "hold"
+      },
+      {
+        "type": "visit",
+        "entity": "minecraft:cod",
+        "to": "front"
+      }
+    ]
+  }
+}

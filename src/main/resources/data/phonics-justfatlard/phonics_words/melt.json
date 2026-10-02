@@ -1,0 +1,40 @@
+{
+  "tiles": [
+    "m",
+    "e",
+    "l",
+    "t"
+  ],
+  "stage": 11,
+  "icon": "minecraft:packed_ice",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:ice",
+        "lasts": 30
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:falling_water",
+        "count": 20,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:block.fire.extinguish",
+        "pitch": 1.6,
+        "repeat": 6,
+        "every": 6
+      }
+    ]
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:falling_water",
+    "count": 30,
+    "spread": 0.3,
+    "at": "above",
+    "sound": "minecraft:entity.player.splash",
+    "pitch": 1.4
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "tiles": [
+    "m",
+    "a",
+    "p"
+  ],
+  "stage": 1,
+  "picture": "clear",
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:map"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:map"
+    ],
+    "sound": "minecraft:item.book.page_turn"
+  },
+  "scene": {
+    "line": "He's lost!",
+    "setup": [
+      {
+        "type": "character",
+        "act": "wander"
+      },
+      {
+        "type": "bubble",
+        "text": "?",
+        "color": 16769126
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:map",
+        "then": "hold"
+      }
+    ]
+  }
+}

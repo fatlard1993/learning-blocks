@@ -1,0 +1,40 @@
+{
+	"duration": 2.508,
+	"words": [
+		{
+			"text": "The",
+			"start": 0.0,
+			"end": 0.163
+		},
+		{
+			"text": "animals",
+			"start": 0.244,
+			"end": 0.592
+		},
+		{
+			"text": "are",
+			"start": 0.627,
+			"end": 0.755
+		},
+		{
+			"text": "hungry!",
+			"start": 0.789,
+			"end": 1.335
+		},
+		{
+			"text": "Let's",
+			"start": 1.463,
+			"end": 1.695
+		},
+		{
+			"text": "get",
+			"start": 1.741,
+			"end": 1.916
+		},
+		{
+			"text": "them...",
+			"start": 1.962,
+			"end": 2.508
+		}
+	]
+}

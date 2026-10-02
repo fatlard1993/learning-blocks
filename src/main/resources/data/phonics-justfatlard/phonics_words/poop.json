@@ -1,0 +1,37 @@
+{
+  "tiles": [
+    "p",
+    "oo",
+    "p"
+  ],
+  "stage": 10,
+  "picture": "clear",
+  "requires": [
+    "poopsmith"
+  ],
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "give_item",
+        "item": "poopsmith:poop"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:poof",
+        "count": 8,
+        "spread": 0.3,
+        "at": "player",
+        "sound": "minecraft:entity.slime.squish_small",
+        "pitch": 1.6
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "poopsmith:poop"
+    ],
+    "sound": "minecraft:entity.slime.squish"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "b",
+    "ir",
+    "d"
+  ],
+  "stage": 12,
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:parrot"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:parrot",
+    "act": "circle",
+    "lasts": 60
+  }
+}

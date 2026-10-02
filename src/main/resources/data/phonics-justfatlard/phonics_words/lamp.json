@@ -1,0 +1,21 @@
+{
+  "tiles": [
+    "l",
+    "a",
+    "m",
+    "p"
+  ],
+  "stage": 11,
+  "picture": "clear",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:lantern",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:lantern"
+    ]
+  }
+}

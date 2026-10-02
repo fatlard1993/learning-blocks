@@ -1,0 +1,30 @@
+{
+	"duration": 1.48,
+	"words": [
+		{
+			"text": "Pick",
+			"start": 0.208,
+			"end": 0.24
+		},
+		{
+			"text": "what",
+			"start": 0.272,
+			"end": 0.4
+		},
+		{
+			"text": "Bob",
+			"start": 0.46,
+			"end": 0.64
+		},
+		{
+			"text": "should",
+			"start": 0.663,
+			"end": 0.8
+		},
+		{
+			"text": "make!",
+			"start": 0.88,
+			"end": 1.36
+		}
+	]
+}

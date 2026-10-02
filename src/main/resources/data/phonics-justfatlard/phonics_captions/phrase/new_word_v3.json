@@ -1,0 +1,30 @@
+{
+	"duration": 2.08,
+	"words": [
+		{
+			"text": "You",
+			"start": 0.145,
+			"end": 0.16
+		},
+		{
+			"text": "learned",
+			"start": 0.2,
+			"end": 0.48
+		},
+		{
+			"text": "a",
+			"start": 0.54,
+			"end": 0.6
+		},
+		{
+			"text": "new",
+			"start": 0.63,
+			"end": 0.72
+		},
+		{
+			"text": "word!",
+			"start": 0.832,
+			"end": 2.08
+		}
+	]
+}

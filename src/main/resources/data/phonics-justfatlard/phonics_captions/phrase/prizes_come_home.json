@@ -1,0 +1,35 @@
+{
+	"duration": 1.68,
+	"words": [
+		{
+			"text": "Your",
+			"start": 0.067,
+			"end": 0.08
+		},
+		{
+			"text": "prizes",
+			"start": 0.16,
+			"end": 0.64
+		},
+		{
+			"text": "come",
+			"start": 0.672,
+			"end": 0.8
+		},
+		{
+			"text": "home",
+			"start": 0.848,
+			"end": 1.04
+		},
+		{
+			"text": "with",
+			"start": 1.072,
+			"end": 1.2
+		},
+		{
+			"text": "you!",
+			"start": 1.28,
+			"end": 1.68
+		}
+	]
+}

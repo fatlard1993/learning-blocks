@@ -1,0 +1,21 @@
+{
+  "tiles": [
+    "f",
+    "l",
+    "a",
+    "g"
+  ],
+  "stage": 8,
+  "picture": "clear",
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:white_banner"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:white_banner"
+    ],
+    "sound": "minecraft:block.wool.fall"
+  }
+}

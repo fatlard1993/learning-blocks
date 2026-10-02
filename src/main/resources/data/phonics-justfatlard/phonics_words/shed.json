@@ -1,0 +1,17 @@
+{
+  "tiles": [
+    "sh",
+    "e",
+    "d"
+  ],
+  "stage": 7,
+  "icon": "minecraft:spruce_door",
+  "outcome": {
+    "type": "hut",
+    "lasts": 100
+  },
+  "wrong": {
+    "type": "hut",
+    "lasts": 20
+  }
+}

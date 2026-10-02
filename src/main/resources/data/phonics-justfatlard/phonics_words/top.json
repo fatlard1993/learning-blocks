@@ -1,0 +1,53 @@
+{
+  "tiles": [
+    "t",
+    "o",
+    "p"
+  ],
+  "stage": 3,
+  "picture": "clear",
+  "icon": "phonics-justfatlard:toy_top",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "phonics-justfatlard:toy",
+        "properties": {
+          "kind": "top",
+          "facing": "south"
+        },
+        "at": "near"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 6,
+        "spread": 0.4,
+        "at": "above",
+        "sound": "minecraft:block.note_block.chime",
+        "pitch": 1.6
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "phonics-justfatlard:toy",
+        "properties": {
+          "kind": "top",
+          "facing": "south"
+        },
+        "at": "near",
+        "lasts": 40
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 16
+      }
+    ]
+  }
+}

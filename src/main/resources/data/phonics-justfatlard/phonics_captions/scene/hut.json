@@ -1,0 +1,50 @@
+{
+	"duration": 3.065,
+	"words": [
+		{
+			"text": "Whoosh!",
+			"start": 0.0,
+			"end": 0.499
+		},
+		{
+			"text": "It's",
+			"start": 0.546,
+			"end": 0.743
+		},
+		{
+			"text": "so",
+			"start": 0.778,
+			"end": 0.94
+		},
+		{
+			"text": "windy!",
+			"start": 1.01,
+			"end": 1.486
+		},
+		{
+			"text": "He",
+			"start": 1.637,
+			"end": 1.741
+		},
+		{
+			"text": "needs",
+			"start": 1.8,
+			"end": 1.997
+		},
+		{
+			"text": "a",
+			"start": 2.02,
+			"end": 2.055
+		},
+		{
+			"text": "little",
+			"start": 2.09,
+			"end": 2.31
+		},
+		{
+			"text": "house!",
+			"start": 2.357,
+			"end": 3.065
+		}
+	]
+}

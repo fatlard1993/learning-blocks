@@ -1,0 +1,16 @@
+{
+  "tiles": [
+    "v",
+    "i",
+    "ll",
+    "a",
+    "g",
+    "er"
+  ],
+  "keyword": true,
+  "puzzle": false,
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:villager"
+  }
+}

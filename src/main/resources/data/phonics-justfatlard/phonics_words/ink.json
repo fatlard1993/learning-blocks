@@ -1,0 +1,26 @@
+{
+  "tiles": [
+    "i",
+    "n",
+    "k"
+  ],
+  "keyword": true,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:squid_ink",
+        "count": 20,
+        "spread": 0.3,
+        "at": "face",
+        "sound": "minecraft:entity.squid.squirt"
+      },
+      {
+        "type": "give_item",
+        "item": "minecraft:ink_sac"
+      }
+    ]
+  },
+  "puzzle": false
+}

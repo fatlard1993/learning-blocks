@@ -1,0 +1,45 @@
+{
+  "tiles": [
+    "h",
+    "i",
+    "d"
+  ],
+  "stage": 2,
+  "icon": "minecraft:azalea_leaves",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:poof",
+        "count": 16,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:block.azalea_leaves.place"
+      },
+      {
+        "type": "effect",
+        "effect": "minecraft:invisibility",
+        "duration": 60
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:poof",
+        "count": 8,
+        "spread": 0.3,
+        "at": "player"
+      },
+      {
+        "type": "bonk",
+        "items": [
+          "minecraft:oak_leaves"
+        ]
+      }
+    ]
+  }
+}

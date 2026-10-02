@@ -1,0 +1,31 @@
+{
+  "tiles": [
+    "d",
+    "ir",
+    "t"
+  ],
+  "stage": 12,
+  "picture": "clear",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:dirt",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": {
+          "type": "minecraft:item",
+          "item": "minecraft:dirt"
+        },
+        "count": 20,
+        "spread": 0.3,
+        "at": "face",
+        "sound": "minecraft:block.gravel.break",
+        "pitch": 1.4
+      }
+    ]
+  }
+}

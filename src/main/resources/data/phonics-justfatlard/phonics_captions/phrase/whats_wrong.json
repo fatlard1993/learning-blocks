@@ -1,0 +1,50 @@
+{
+	"duration": 2.833,
+	"words": [
+		{
+			"text": "Uh",
+			"start": 0.0,
+			"end": 0.244
+		},
+		{
+			"text": "oh!",
+			"start": 0.267,
+			"end": 0.569
+		},
+		{
+			"text": "Something's",
+			"start": 0.72,
+			"end": 1.138
+		},
+		{
+			"text": "not",
+			"start": 1.173,
+			"end": 1.3
+		},
+		{
+			"text": "right.",
+			"start": 1.358,
+			"end": 1.695
+		},
+		{
+			"text": "Can",
+			"start": 1.811,
+			"end": 1.95
+		},
+		{
+			"text": "you",
+			"start": 1.997,
+			"end": 2.067
+		},
+		{
+			"text": "fix",
+			"start": 2.113,
+			"end": 2.31
+		},
+		{
+			"text": "it?",
+			"start": 2.38,
+			"end": 2.833
+		}
+	]
+}

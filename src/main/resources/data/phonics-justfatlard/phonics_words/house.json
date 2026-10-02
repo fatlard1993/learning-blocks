@@ -1,0 +1,26 @@
+{
+  "tiles": [
+    "h",
+    "ou",
+    "s",
+    "e"
+  ],
+  "sounds": [
+    null,
+    null,
+    null,
+    "silent"
+  ],
+  "stage": 13,
+  "icon": "minecraft:bricks",
+  "outcome": {
+    "type": "hut",
+    "lasts": 100,
+    "block": "minecraft:bricks"
+  },
+  "wrong": {
+    "type": "hut",
+    "lasts": 20,
+    "block": "minecraft:bricks"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "tiles": [
+    "d",
+    "i",
+    "g"
+  ],
+  "stage": 2,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "give_item",
+        "item": "minecraft:wooden_shovel"
+      },
+      {
+        "type": "effect",
+        "effect": "minecraft:haste",
+        "duration": 200
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:wooden_shovel"
+    ],
+    "sound": "minecraft:item.shovel.flatten"
+  }
+}

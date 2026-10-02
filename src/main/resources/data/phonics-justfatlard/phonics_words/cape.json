@@ -1,0 +1,26 @@
+{
+  "tiles": [
+    "c",
+    "a",
+    "p",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "a_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "outcome": {
+    "type": "equip_item",
+    "item": "minecraft:elytra",
+    "slot": "chest"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:elytra"
+    ]
+  }
+}

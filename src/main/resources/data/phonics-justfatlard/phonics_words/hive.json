@@ -1,0 +1,49 @@
+{
+  "tiles": [
+    "h",
+    "i",
+    "v",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "i_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "icon": "minecraft:beehive",
+  "picture": "clear",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:beehive",
+        "lasts": 200
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:falling_honey",
+        "count": 10,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:block.beehive.work"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:falling_honey",
+        "count": 20,
+        "spread": 0.3,
+        "at": "above",
+        "sound": "minecraft:block.honey_block.slide",
+        "pitch": 1.4
+      }
+    ]
+  }
+}

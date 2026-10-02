@@ -1,0 +1,29 @@
+{
+  "tiles": [
+    "j",
+    "oy"
+  ],
+  "stage": 13,
+  "icon": "minecraft:emerald",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 16,
+        "spread": 0.6,
+        "at": "above",
+        "sound": "minecraft:entity.villager.celebrate",
+        "pitch": 1.4
+      },
+      {
+        "type": "firework_burst"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "firework_burst",
+    "dud": true
+  }
+}

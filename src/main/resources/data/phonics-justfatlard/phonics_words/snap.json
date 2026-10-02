@@ -1,0 +1,36 @@
+{
+  "tiles": [
+    "s",
+    "n",
+    "a",
+    "p"
+  ],
+  "stage": 8,
+  "icon": "minecraft:bone",
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:crit",
+    "count": 20,
+    "spread": 0.4,
+    "at": "player",
+    "sound": "minecraft:entity.item.break"
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:crit",
+        "count": 20,
+        "spread": 0.2,
+        "at": "face",
+        "sound": "minecraft:entity.item.break",
+        "pitch": 0.7
+      },
+      {
+        "type": "push",
+        "up": 0.3
+      }
+    ]
+  }
+}

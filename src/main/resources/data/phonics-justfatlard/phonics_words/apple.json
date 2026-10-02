@@ -1,0 +1,22 @@
+{
+  "tiles": [
+    "a",
+    "p",
+    "p",
+    "l",
+    "e"
+  ],
+  "sounds": [
+    null,
+    null,
+    null,
+    null,
+    "silent"
+  ],
+  "keyword": true,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:apple"
+  },
+  "puzzle": false
+}

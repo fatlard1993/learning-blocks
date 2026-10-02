@@ -1,0 +1,30 @@
+{
+	"duration": 2.08,
+	"words": [
+		{
+			"text": "Done!",
+			"start": 0.269,
+			"end": 0.6
+		},
+		{
+			"text": "Just",
+			"start": 0.656,
+			"end": 0.88
+		},
+		{
+			"text": "like",
+			"start": 0.912,
+			"end": 1.04
+		},
+		{
+			"text": "you",
+			"start": 1.1,
+			"end": 1.28
+		},
+		{
+			"text": "said!",
+			"start": 1.328,
+			"end": 2.08
+		}
+	]
+}

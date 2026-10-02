@@ -1,0 +1,20 @@
+{
+  "tiles": [
+    "t",
+    "w",
+    "i",
+    "g"
+  ],
+  "stage": 8,
+  "picture": "clear",
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:stick"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:stick"
+    ]
+  }
+}

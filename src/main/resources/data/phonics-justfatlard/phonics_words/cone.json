@@ -1,0 +1,30 @@
+{
+  "tiles": [
+    "c",
+    "o",
+    "n",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "o_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "picture": "clear",
+  "requires": [
+    "lets-cook-justfatlard"
+  ],
+  "outcome": {
+    "type": "give_item",
+    "item": "lets-cook-justfatlard:ice_cream"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "lets-cook-justfatlard:ice_cream"
+    ],
+    "sound": "minecraft:entity.slime.squish"
+  }
+}

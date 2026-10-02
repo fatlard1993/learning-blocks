@@ -1,0 +1,18 @@
+{
+  "tiles": [
+    "h",
+    "o",
+    "g"
+  ],
+  "stage": 3,
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:pig"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:pig",
+    "act": "spin",
+    "lasts": 60
+  }
+}

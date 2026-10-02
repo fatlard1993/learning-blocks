@@ -1,0 +1,21 @@
+{
+  "tiles": [
+    "ch",
+    "i",
+    "ck"
+  ],
+  "stage": 7,
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:chicken",
+    "baby": true
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:chicken",
+    "act": "bounce",
+    "lasts": 60,
+    "baby": true
+  }
+}

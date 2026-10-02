@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "h",
+    "i",
+    "ll"
+  ],
+  "stage": 6,
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:grass_block",
+    "at": "near"
+  },
+  "wrong": {
+    "type": "place_block",
+    "block": "minecraft:dirt",
+    "at": "near",
+    "lasts": 30
+  }
+}

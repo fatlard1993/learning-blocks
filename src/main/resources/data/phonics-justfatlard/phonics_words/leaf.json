@@ -1,0 +1,33 @@
+{
+  "tiles": [
+    "l",
+    "ea",
+    "f"
+  ],
+  "stage": 10,
+  "picture": "clear",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "give_item",
+        "item": "minecraft:oak_leaves"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:cherry_leaves",
+        "count": 12,
+        "spread": 0.5,
+        "at": "above"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:cherry_leaves",
+    "count": 30,
+    "spread": 0.4,
+    "at": "face",
+    "sound": "minecraft:block.azalea_leaves.fall"
+  }
+}

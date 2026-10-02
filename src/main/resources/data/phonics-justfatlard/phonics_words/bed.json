@@ -1,0 +1,38 @@
+{
+  "tiles": [
+    "b",
+    "e",
+    "d"
+  ],
+  "stage": 5,
+  "picture": "clear",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:red_bed",
+    "at": "near"
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:red_bed",
+        "at": "near",
+        "lasts": 50
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 10,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:entity.slime.jump",
+        "pitch": 1.4
+      },
+      {
+        "type": "push",
+        "up": 0.7
+      }
+    ]
+  }
+}

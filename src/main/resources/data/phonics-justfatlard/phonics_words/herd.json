@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    "h",
+    "er",
+    "d"
+  ],
+  "stage": 12,
+  "icon": "minecraft:lead",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:sheep"
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:sheep"
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:sheep"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:sheep",
+    "act": "bounce",
+    "lasts": 60
+  }
+}

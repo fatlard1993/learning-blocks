@@ -1,0 +1,18 @@
+{
+  "tiles": [
+    "b",
+    "u",
+    "zz"
+  ],
+  "stage": 6,
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:bee"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:bee",
+    "act": "circle",
+    "lasts": 60
+  }
+}

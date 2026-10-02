@@ -1,0 +1,25 @@
+{
+	"duration": 1.44,
+	"words": [
+		{
+			"text": "The",
+			"start": 0.0,
+			"end": 0.163
+		},
+		{
+			"text": "kitty",
+			"start": 0.221,
+			"end": 0.476
+		},
+		{
+			"text": "is",
+			"start": 0.522,
+			"end": 0.604
+		},
+		{
+			"text": "hungry!",
+			"start": 0.662,
+			"end": 1.44
+		}
+	]
+}

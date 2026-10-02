@@ -1,0 +1,33 @@
+{
+  "tiles": [
+    "g",
+    "i",
+    "f",
+    "t"
+  ],
+  "stage": 11,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "give_item",
+        "item": "minecraft:red_shulker_box"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:happy_villager",
+        "count": 16,
+        "spread": 0.5,
+        "at": "above",
+        "sound": "minecraft:entity.player.levelup",
+        "pitch": 1.6
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:red_shulker_box"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "b",
+    "oa",
+    "t"
+  ],
+  "stage": 10,
+  "icon": "minecraft:birch_boat",
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:birch_boat"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:birch_boat",
+    "lasts": 40
+  }
+}

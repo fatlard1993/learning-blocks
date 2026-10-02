@@ -1,0 +1,74 @@
+{
+  "tiles": [
+    "v",
+    "e",
+    "t"
+  ],
+  "stage": 5,
+  "icon": "minecraft:golden_apple",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:villager",
+        "profession": "minecraft:cleric"
+      },
+      {
+        "type": "creatures_do",
+        "what": "hearts"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:villager",
+    "act": "bonk",
+    "lasts": 80,
+    "profession": "minecraft:cleric"
+  },
+  "scene": {
+    "line": "The puppy needs an animal doctor!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:wolf",
+        "act": "still",
+        "baby": true
+      },
+      {
+        "type": "bubble",
+        "text": "...",
+        "color": 14540253
+      },
+      {
+        "type": "ambient",
+        "id": "sad",
+        "particle": "minecraft:falling_water",
+        "at": "face",
+        "count": 1,
+        "spread": 0.05,
+        "every": 8,
+        "sound": "minecraft:entity.wolf.whine",
+        "pitch": 1.4,
+        "sound_every": 45
+      }
+    ],
+    "solve": [
+      {
+        "type": "visit",
+        "entity": "minecraft:villager",
+        "profession": "minecraft:cleric",
+        "to": "beside"
+      },
+      {
+        "type": "burst",
+        "particle": "minecraft:heart",
+        "count": 12,
+        "spread": 0.4,
+        "sound": "minecraft:entity.wolf.ambient",
+        "pitch": 1.4
+      }
+    ]
+  }
+}

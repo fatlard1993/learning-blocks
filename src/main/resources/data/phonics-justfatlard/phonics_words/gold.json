@@ -1,0 +1,20 @@
+{
+  "tiles": [
+    "g",
+    "o",
+    "l",
+    "d"
+  ],
+  "sounds": [
+    null,
+    "o_long",
+    null,
+    null
+  ],
+  "keyword": true,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:gold_ingot"
+  },
+  "puzzle": false
+}

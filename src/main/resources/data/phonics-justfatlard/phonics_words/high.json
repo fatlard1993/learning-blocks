@@ -1,0 +1,29 @@
+{
+  "tiles": [
+    "h",
+    "igh"
+  ],
+  "stage": 13,
+  "icon": "minecraft:scaffolding",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "push",
+        "up": 1.2
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 12,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:entity.goat.long_jump"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "push",
+    "up": 0.3
+  }
+}

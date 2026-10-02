@@ -1,0 +1,36 @@
+{
+  "tiles": [
+    "p",
+    "u",
+    "ff"
+  ],
+  "stage": 6,
+  "icon": "minecraft:pufferfish",
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:cloud",
+    "count": 30,
+    "spread": 0.8,
+    "at": "player",
+    "sound": "minecraft:entity.breeze.wind_burst"
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 20,
+        "spread": 0.2,
+        "at": "face",
+        "sound": "minecraft:entity.breeze.wind_burst",
+        "pitch": 1.4
+      },
+      {
+        "type": "push",
+        "back": 0.8,
+        "up": 0.2
+      }
+    ]
+  }
+}

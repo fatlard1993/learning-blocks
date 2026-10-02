@@ -1,0 +1,69 @@
+{
+  "tiles": [
+    "b",
+    "o",
+    "n",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "o_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "picture": "clear",
+  "scene": {
+    "line": "The puppy wants something to chew!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:wolf",
+        "baby": true,
+        "act": "bounce"
+      },
+      {
+        "type": "bubble",
+        "text": "?",
+        "color": 16769126
+      },
+      {
+        "type": "ambient",
+        "id": "whine",
+        "particle": "minecraft:poof",
+        "at": "body",
+        "count": 1,
+        "spread": 0.1,
+        "every": 40,
+        "sound": "minecraft:entity.wolf.whine",
+        "pitch": 1.5,
+        "sound_every": 40
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:bone",
+        "then": "eat"
+      },
+      {
+        "type": "burst",
+        "particle": "minecraft:heart",
+        "count": 10,
+        "spread": 0.4
+      }
+    ]
+  },
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:bone"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:bone",
+      "minecraft:bone"
+    ],
+    "sound": "minecraft:entity.skeleton.step"
+  }
+}

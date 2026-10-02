@@ -1,0 +1,69 @@
+{
+  "tiles": [
+    "t",
+    "u",
+    "g"
+  ],
+  "stage": 4,
+  "icon": "minecraft:lead",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "give_item",
+        "item": "minecraft:lead"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:crit",
+        "count": 8,
+        "spread": 0.3,
+        "at": "player",
+        "sound": "minecraft:item.lead.tied"
+      },
+      {
+        "type": "pull",
+        "strength": 1.2
+      }
+    ]
+  },
+  "wrong": {
+    "type": "push",
+    "back": 1.2,
+    "up": 0.2
+  },
+  "scene": {
+    "line": "He's stuck!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:villager",
+        "act": "stuck"
+      },
+      {
+        "type": "bubble",
+        "text": "!",
+        "color": 16746598
+      },
+      {
+        "type": "ambient",
+        "id": "wriggle",
+        "particle": "minecraft:poof",
+        "at": "body",
+        "count": 2,
+        "spread": 0.2,
+        "every": 20,
+        "sound": "minecraft:entity.villager.no",
+        "pitch": 1.2,
+        "sound_every": 40
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:lead",
+        "then": "pull"
+      }
+    ]
+  }
+}

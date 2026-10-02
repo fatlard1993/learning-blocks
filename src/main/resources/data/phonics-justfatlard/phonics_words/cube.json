@@ -1,0 +1,35 @@
+{
+  "tiles": [
+    "c",
+    "u",
+    "b",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "u_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "icon": "minecraft:ice",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:ice",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:snowflake",
+        "count": 20,
+        "spread": 0.3,
+        "at": "above",
+        "sound": "minecraft:block.glass.break",
+        "pitch": 1.6
+      }
+    ]
+  }
+}

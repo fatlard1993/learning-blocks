@@ -1,0 +1,64 @@
+{
+  "tiles": [
+    "f",
+    "i",
+    "sh"
+  ],
+  "stage": 7,
+  "picture": "clear",
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:cod"
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:cod",
+        "lasts": 40
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:splash",
+        "count": 30,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:entity.cod.flop"
+      }
+    ]
+  },
+  "scene": {
+    "line": "The kitty is hungry!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:cat",
+        "act": "still"
+      },
+      {
+        "type": "bubble",
+        "text": "?",
+        "color": 16769126
+      },
+      {
+        "type": "ambient",
+        "id": "meow",
+        "particle": "minecraft:poof",
+        "at": "body",
+        "count": 1,
+        "spread": 0.1,
+        "every": 40,
+        "sound": "minecraft:entity.cat.beg_for_food",
+        "sound_every": 40
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:cod",
+        "then": "eat"
+      }
+    ]
+  }
+}

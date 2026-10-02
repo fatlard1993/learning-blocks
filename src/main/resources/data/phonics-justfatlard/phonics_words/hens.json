@@ -1,0 +1,34 @@
+{
+  "tiles": [
+    "h",
+    "e",
+    "n",
+    "s"
+  ],
+  "sounds": [
+    null,
+    null,
+    null,
+    "z"
+  ],
+  "stage": 5,
+  "plural": true,
+  "puzzle": false,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:chicken"
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:chicken"
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:chicken"
+      }
+    ]
+  }
+}

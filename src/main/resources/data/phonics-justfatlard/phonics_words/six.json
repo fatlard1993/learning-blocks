@@ -1,0 +1,21 @@
+{
+  "tiles": [
+    "s",
+    "i",
+    "x"
+  ],
+  "stage": 2,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:carrot",
+    "count": 6
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:carrot",
+      "minecraft:carrot",
+      "minecraft:carrot"
+    ]
+  }
+}

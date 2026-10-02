@@ -1,0 +1,30 @@
+{
+  "tiles": [
+    "w",
+    "a",
+    "g"
+  ],
+  "stage": 1,
+  "icon": "minecraft:lead",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:wolf",
+        "tamed_to_player": true
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 6,
+        "spread": 0.4,
+        "at": "above"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "creatures_do",
+    "what": "spin"
+  }
+}

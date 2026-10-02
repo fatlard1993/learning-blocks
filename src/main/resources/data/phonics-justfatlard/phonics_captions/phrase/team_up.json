@@ -1,0 +1,30 @@
+{
+	"duration": 1.84,
+	"words": [
+		{
+			"text": "Let's",
+			"start": 0.068,
+			"end": 0.24
+		},
+		{
+			"text": "do",
+			"start": 0.267,
+			"end": 0.32
+		},
+		{
+			"text": "this",
+			"start": 0.352,
+			"end": 0.48
+		},
+		{
+			"text": "one",
+			"start": 0.52,
+			"end": 0.64
+		},
+		{
+			"text": "together!",
+			"start": 0.711,
+			"end": 1.84
+		}
+	]
+}

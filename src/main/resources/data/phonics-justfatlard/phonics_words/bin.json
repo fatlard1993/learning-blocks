@@ -1,0 +1,61 @@
+{
+  "tiles": [
+    "b",
+    "i",
+    "n"
+  ],
+  "stage": 2,
+  "outcome": {
+    "type": "place_block",
+    "block": "phonics-justfatlard:bin",
+    "at": "near",
+    "properties": {
+      "facing": "south"
+    }
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "phonics-justfatlard:bin",
+        "at": "near",
+        "lasts": 50,
+        "properties": {
+          "facing": "south"
+        }
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:composter",
+        "count": 30,
+        "spread": 0.3,
+        "at": "face",
+        "sound": "minecraft:block.composter.fill_success"
+      }
+    ]
+  },
+  "scene": {
+    "line": "What a mess!",
+    "setup": [
+      {
+        "type": "litter",
+        "items": [
+          "minecraft:paper",
+          "minecraft:stick",
+          "minecraft:bowl",
+          "minecraft:string"
+        ]
+      }
+    ],
+    "solve": [
+      {
+        "type": "place",
+        "block": "phonics-justfatlard:bin",
+        "then": "absorb"
+      }
+    ]
+  },
+  "icon": "phonics-justfatlard:bin",
+  "picture": "clear"
+}

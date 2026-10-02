@@ -1,0 +1,25 @@
+{
+	"duration": 1.254,
+	"words": [
+		{
+			"text": "Eight",
+			"start": 0.0,
+			"end": 0.267
+		},
+		{
+			"text": "more",
+			"start": 0.325,
+			"end": 0.522
+		},
+		{
+			"text": "to",
+			"start": 0.557,
+			"end": 0.615
+		},
+		{
+			"text": "go!",
+			"start": 0.662,
+			"end": 1.254
+		}
+	]
+}

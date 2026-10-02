@@ -1,0 +1,26 @@
+{
+  "tiles": [
+    "t",
+    "i",
+    "p"
+  ],
+  "stage": 2,
+  "icon": "minecraft:bucket",
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:falling_water",
+    "count": 30,
+    "spread": 0.4,
+    "at": "above",
+    "sound": "minecraft:item.bucket.empty"
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:splash",
+    "count": 40,
+    "spread": 0.3,
+    "at": "face",
+    "sound": "minecraft:entity.player.splash",
+    "pitch": 1.4
+  }
+}

@@ -1,0 +1,10 @@
+.gradle/
+build/
+run/
+.vscode/
+out/
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+.sound-cache/
+.rounds/

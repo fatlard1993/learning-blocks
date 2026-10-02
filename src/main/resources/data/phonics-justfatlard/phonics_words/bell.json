@@ -1,0 +1,34 @@
+{
+  "tiles": [
+    "b",
+    "e",
+    "ll"
+  ],
+  "stage": 6,
+  "picture": "clear",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:bell",
+        "at": "near"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:note",
+        "count": 6,
+        "spread": 0.5,
+        "at": "above",
+        "sound": "minecraft:block.bell.use"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:bell"
+    ],
+    "sound": "minecraft:block.bell.use"
+  }
+}

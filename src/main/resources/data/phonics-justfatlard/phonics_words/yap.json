@@ -1,0 +1,35 @@
+{
+  "tiles": [
+    "y",
+    "a",
+    "p"
+  ],
+  "stage": 1,
+  "icon": "minecraft:sweet_berries",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:fox",
+        "baby": true
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:note",
+        "count": 4,
+        "spread": 0.3,
+        "at": "above",
+        "sound": "minecraft:entity.fox.ambient",
+        "pitch": 1.4
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:fox",
+    "baby": true,
+    "act": "bounce",
+    "lasts": 60
+  }
+}

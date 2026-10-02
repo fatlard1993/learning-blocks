@@ -1,0 +1,35 @@
+{
+	"duration": 1.84,
+	"words": [
+		{
+			"text": "All",
+			"start": 0.068,
+			"end": 0.08
+		},
+		{
+			"text": "done!",
+			"start": 0.16,
+			"end": 0.72
+		},
+		{
+			"text": "The",
+			"start": 0.78,
+			"end": 0.96
+		},
+		{
+			"text": "door",
+			"start": 1.008,
+			"end": 1.2
+		},
+		{
+			"text": "is",
+			"start": 1.227,
+			"end": 1.28
+		},
+		{
+			"text": "open!",
+			"start": 1.376,
+			"end": 1.84
+		}
+	]
+}

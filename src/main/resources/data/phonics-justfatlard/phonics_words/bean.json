@@ -1,0 +1,39 @@
+{
+  "tiles": [
+    "b",
+    "ea",
+    "n"
+  ],
+  "stage": 10,
+  "outcome": {
+    "type": "prefer",
+    "options": [
+      {
+        "type": "give_item",
+        "item": "cloud-kingdoms-justfatlard:magic_bean"
+      },
+      {
+        "type": "give_item",
+        "item": "minecraft:cocoa_beans",
+        "count": 3
+      }
+    ]
+  },
+  "wrong": {
+    "type": "prefer",
+    "options": [
+      {
+        "type": "bonk",
+        "items": [
+          "cloud-kingdoms-justfatlard:magic_bean"
+        ]
+      },
+      {
+        "type": "bonk",
+        "items": [
+          "minecraft:cocoa_beans"
+        ]
+      }
+    ]
+  }
+}

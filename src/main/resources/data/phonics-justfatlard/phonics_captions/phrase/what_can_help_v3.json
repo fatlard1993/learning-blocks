@@ -1,0 +1,30 @@
+{
+	"duration": 1.625,
+	"words": [
+		{
+			"text": "Hmm,",
+			"start": 0.0,
+			"end": 0.441
+		},
+		{
+			"text": "what",
+			"start": 0.534,
+			"end": 0.697
+		},
+		{
+			"text": "could",
+			"start": 0.731,
+			"end": 0.848
+		},
+		{
+			"text": "fix",
+			"start": 0.894,
+			"end": 1.103
+		},
+		{
+			"text": "it?",
+			"start": 1.196,
+			"end": 1.625
+		}
+	]
+}

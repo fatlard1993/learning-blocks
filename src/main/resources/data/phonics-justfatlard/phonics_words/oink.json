@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    "oi",
+    "nk"
+  ],
+  "stage": 13,
+  "icon": "minecraft:carrot_on_a_stick",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:pig",
+        "baby": true
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:note",
+        "count": 4,
+        "spread": 0.3,
+        "at": "above"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:pig",
+    "baby": true,
+    "act": "bounce",
+    "lasts": 60
+  }
+}

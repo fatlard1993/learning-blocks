@@ -1,0 +1,16 @@
+{
+  "tiles": [
+    "ch",
+    "o",
+    "p"
+  ],
+  "stage": 7,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:wooden_axe"
+  },
+  "wrong": {
+    "type": "roll",
+    "item": "minecraft:oak_log"
+  }
+}

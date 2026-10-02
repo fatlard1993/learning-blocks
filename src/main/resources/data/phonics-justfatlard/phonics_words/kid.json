@@ -1,0 +1,21 @@
+{
+  "tiles": [
+    "k",
+    "i",
+    "d"
+  ],
+  "stage": 2,
+  "keyword": true,
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:villager",
+    "baby": true
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:villager",
+    "baby": true,
+    "act": "bounce",
+    "lasts": 60
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "tiles": [
+    "f",
+    "or",
+    "k"
+  ],
+  "stage": 12,
+  "picture": "clear",
+  "icon": "phonics-justfatlard:fork",
+  "outcome": {
+    "type": "place_block",
+    "block": "phonics-justfatlard:fork",
+    "at": "near",
+    "properties": {
+      "facing": "south"
+    }
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "phonics-justfatlard:fork"
+    ]
+  }
+}

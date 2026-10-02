@@ -1,0 +1,45 @@
+{
+  "tiles": [
+    "c",
+    "u",
+    "t"
+  ],
+  "stage": 4,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:shears"
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": {
+      "type": "minecraft:item",
+      "item": "minecraft:white_wool"
+    },
+    "count": 20,
+    "spread": 0.3,
+    "at": "face",
+    "sound": "minecraft:entity.sheep.shear"
+  },
+  "scene": {
+    "line": "He's all tangled up!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:villager",
+        "act": "shiver"
+      },
+      {
+        "type": "wrap",
+        "item": "minecraft:vine",
+        "count": 5
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:shears",
+        "then": "snip"
+      }
+    ]
+  }
+}

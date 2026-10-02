@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "d",
+    "r",
+    "o",
+    "p"
+  ],
+  "stage": 8,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:apple"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:apple"
+    ]
+  }
+}

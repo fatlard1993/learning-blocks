@@ -1,0 +1,30 @@
+{
+	"duration": 1.92,
+	"words": [
+		{
+			"text": "Ooh,",
+			"start": 0.072,
+			"end": 0.8
+		},
+		{
+			"text": "a",
+			"start": 0.84,
+			"end": 0.88
+		},
+		{
+			"text": "prize",
+			"start": 0.96,
+			"end": 1.36
+		},
+		{
+			"text": "for",
+			"start": 1.4,
+			"end": 1.52
+		},
+		{
+			"text": "you!",
+			"start": 1.6,
+			"end": 1.92
+		}
+	]
+}

@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "l",
+    "i",
+    "d"
+  ],
+  "stage": 2,
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:oak_trapdoor",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:oak_trapdoor"
+    ]
+  }
+}

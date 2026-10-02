@@ -1,0 +1,30 @@
+{
+	"duration": 1.6,
+	"words": [
+		{
+			"text": "I",
+			"start": 0.15,
+			"end": 0.16
+		},
+		{
+			"text": "did",
+			"start": 0.24,
+			"end": 0.48
+		},
+		{
+			"text": "what",
+			"start": 0.512,
+			"end": 0.64
+		},
+		{
+			"text": "you",
+			"start": 0.68,
+			"end": 0.8
+		},
+		{
+			"text": "said!",
+			"start": 0.88,
+			"end": 1.6
+		}
+	]
+}

@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "f",
+    "o",
+    "x"
+  ],
+  "stage": 3,
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:fox"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:fox",
+    "act": "spin",
+    "lasts": 60
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "f",
+    "oo",
+    "d"
+  ],
+  "stage": 10,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:cooked_chicken"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:cooked_chicken"
+    ],
+    "sound": "minecraft:entity.slime.squish"
+  }
+}

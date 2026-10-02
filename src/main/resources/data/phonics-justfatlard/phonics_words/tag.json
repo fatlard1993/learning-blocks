@@ -1,0 +1,18 @@
+{
+  "tiles": [
+    "t",
+    "a",
+    "g"
+  ],
+  "stage": 1,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:name_tag"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:name_tag"
+    ]
+  }
+}

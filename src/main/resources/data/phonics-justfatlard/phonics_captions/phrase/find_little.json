@@ -1,0 +1,30 @@
+{
+	"duration": 1.347,
+	"words": [
+		{
+			"text": "Which",
+			"start": 0.0,
+			"end": 0.255
+		},
+		{
+			"text": "one",
+			"start": 0.325,
+			"end": 0.464
+		},
+		{
+			"text": "is",
+			"start": 0.499,
+			"end": 0.569
+		},
+		{
+			"text": "the",
+			"start": 0.615,
+			"end": 0.685
+		},
+		{
+			"text": "little...",
+			"start": 0.731,
+			"end": 1.347
+		}
+	]
+}

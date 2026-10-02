@@ -1,0 +1,25 @@
+{
+  "tiles": [
+    "w",
+    "e",
+    "ll"
+  ],
+  "stage": 6,
+  "icon": "minecraft:cobblestone_wall",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:water_cauldron",
+    "at": "near",
+    "properties": {
+      "level": "3"
+    }
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:splash",
+    "count": 60,
+    "spread": 0.3,
+    "at": "face",
+    "sound": "minecraft:entity.player.splash"
+  }
+}

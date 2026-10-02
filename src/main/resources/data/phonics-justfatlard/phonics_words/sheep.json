@@ -1,0 +1,53 @@
+{
+  "tiles": [
+    "sh",
+    "ee",
+    "p"
+  ],
+  "stage": 10,
+  "picture": "clear",
+  "scene": {
+    "line": "He needs some wool!",
+    "setup": [
+      {
+        "type": "character",
+        "act": "still"
+      },
+      {
+        "type": "bubble",
+        "text": "?",
+        "color": 16769126
+      },
+      {
+        "type": "prop",
+        "item": "minecraft:white_wool"
+      }
+    ],
+    "solve": [
+      {
+        "type": "visit",
+        "entity": "minecraft:sheep",
+        "to": "beside"
+      },
+      {
+        "type": "burst",
+        "particle": "minecraft:happy_villager",
+        "count": 16,
+        "spread": 0.5,
+        "sound": "minecraft:entity.sheep.ambient"
+      }
+    ]
+  },
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:sheep",
+    "baby": true
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:sheep",
+    "baby": true,
+    "act": "bounce",
+    "lasts": 60
+  }
+}

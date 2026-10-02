@@ -1,0 +1,20 @@
+{
+  "tiles": [
+    "p",
+    "i",
+    "g"
+  ],
+  "stage": 2,
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:pig"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:pig",
+    "act": "sneeze",
+    "lasts": 60,
+    "baby": true
+  }
+}

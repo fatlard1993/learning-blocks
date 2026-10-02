@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    "qu",
+    "i",
+    "ck"
+  ],
+  "stage": 7,
+  "icon": "minecraft:sugar",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 10,
+        "spread": 0.3,
+        "at": "player"
+      },
+      {
+        "type": "effect",
+        "effect": "minecraft:speed",
+        "duration": 200,
+        "amplifier": 1
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spin",
+    "turns": 2.0,
+    "ticks": 12
+  }
+}

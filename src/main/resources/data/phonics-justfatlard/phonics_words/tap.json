@@ -1,0 +1,38 @@
+{
+  "tiles": [
+    "t",
+    "a",
+    "p"
+  ],
+  "stage": 1,
+  "icon": "minecraft:stone_button",
+  "outcome": {
+    "type": "tune",
+    "instrument": "hat",
+    "notes": [
+      12,
+      12,
+      12
+    ],
+    "every": 4
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "tune",
+        "instrument": "hat",
+        "notes": [
+          12
+        ],
+        "every": 4
+      },
+      {
+        "type": "bonk",
+        "items": [
+          "minecraft:stone_button"
+        ]
+      }
+    ]
+  }
+}

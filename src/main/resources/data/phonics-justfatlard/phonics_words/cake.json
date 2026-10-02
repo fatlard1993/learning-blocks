@@ -1,0 +1,38 @@
+{
+  "tiles": [
+    "c",
+    "a",
+    "k",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "a_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "picture": "clear",
+  "outcome": {
+    "type": "prefer",
+    "options": [
+      {
+        "type": "place_block",
+        "block": "lets-cook-justfatlard:chocolate_cake",
+        "lasts": 200
+      },
+      {
+        "type": "place_block",
+        "block": "minecraft:cake",
+        "lasts": 200
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:cake"
+    ],
+    "sound": "minecraft:entity.slime.squish"
+  }
+}

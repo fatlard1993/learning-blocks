@@ -1,0 +1,18 @@
+{
+  "tiles": [
+    "qu",
+    "i",
+    "ll"
+  ],
+  "stage": 7,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:feather"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:feather"
+    ]
+  }
+}

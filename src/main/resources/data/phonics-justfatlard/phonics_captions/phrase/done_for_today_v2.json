@@ -1,0 +1,30 @@
+{
+	"duration": 2.4,
+	"words": [
+		{
+			"text": "Great",
+			"start": 0.311,
+			"end": 0.4
+		},
+		{
+			"text": "reading",
+			"start": 0.45,
+			"end": 0.8
+		},
+		{
+			"text": "today!",
+			"start": 0.867,
+			"end": 1.52
+		},
+		{
+			"text": "Have",
+			"start": 1.584,
+			"end": 1.84
+		},
+		{
+			"text": "fun!",
+			"start": 1.94,
+			"end": 2.4
+		}
+	]
+}

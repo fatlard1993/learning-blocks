@@ -1,0 +1,22 @@
+{
+  "tiles": [
+    "n",
+    "e",
+    "s",
+    "t"
+  ],
+  "stage": 11,
+  "picture": "clear",
+  "keyword": true,
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:bee_nest",
+    "lasts": 120
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:bee_nest"
+    ]
+  }
+}

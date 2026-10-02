@@ -1,0 +1,36 @@
+{
+  "tiles": [
+    "s",
+    "u",
+    "n"
+  ],
+  "stage": 4,
+  "icon": "minecraft:sunflower",
+  "keyword": true,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:end_rod",
+        "count": 30,
+        "spread": 0.8,
+        "at": "above",
+        "sound": "minecraft:block.amethyst_block.chime"
+      },
+      {
+        "type": "give_item",
+        "item": "minecraft:sunflower"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:end_rod",
+    "count": 40,
+    "spread": 0.2,
+    "at": "face",
+    "sound": "minecraft:block.beacon.activate",
+    "pitch": 1.6
+  }
+}

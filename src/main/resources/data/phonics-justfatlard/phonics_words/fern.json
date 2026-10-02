@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "f",
+    "er",
+    "n"
+  ],
+  "stage": 12,
+  "picture": "clear",
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:fern"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:fern"
+    ]
+  }
+}

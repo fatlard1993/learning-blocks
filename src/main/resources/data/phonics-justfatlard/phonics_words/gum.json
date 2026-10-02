@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "g",
+    "u",
+    "m"
+  ],
+  "stage": 4,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:slime_ball"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:slime_ball"
+    ],
+    "sound": "minecraft:entity.slime.squish"
+  }
+}

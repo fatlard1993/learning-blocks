@@ -1,0 +1,35 @@
+{
+	"duration": 1.76,
+	"words": [
+		{
+			"text": "[playful,",
+			"start": 0.0,
+			"end": 0.08
+		},
+		{
+			"text": "giggly]",
+			"start": 0.084,
+			"end": 0.14
+		},
+		{
+			"text": "Tell",
+			"start": 0.144,
+			"end": 0.16
+		},
+		{
+			"text": "Bob",
+			"start": 0.24,
+			"end": 0.48
+		},
+		{
+			"text": "something",
+			"start": 0.512,
+			"end": 0.8
+		},
+		{
+			"text": "silly!",
+			"start": 0.907,
+			"end": 1.76
+		}
+	]
+}

@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "b",
+    "a",
+    "g"
+  ],
+  "stage": 1,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:bundle"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:bundle"
+    ],
+    "sound": "minecraft:item.bundle.drop_contents"
+  }
+}

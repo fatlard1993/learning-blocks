@@ -1,0 +1,35 @@
+{
+	"duration": 1.95,
+	"words": [
+		{
+			"text": "The",
+			"start": 0.0,
+			"end": 0.151
+		},
+		{
+			"text": "puppy",
+			"start": 0.209,
+			"end": 0.488
+		},
+		{
+			"text": "wants",
+			"start": 0.546,
+			"end": 0.755
+		},
+		{
+			"text": "something",
+			"start": 0.789,
+			"end": 1.057
+		},
+		{
+			"text": "to",
+			"start": 1.091,
+			"end": 1.138
+		},
+		{
+			"text": "chew!",
+			"start": 1.207,
+			"end": 1.95
+		}
+	]
+}

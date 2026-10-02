@@ -1,0 +1,29 @@
+{
+  "tiles": [
+    "r",
+    "u",
+    "g"
+  ],
+  "stage": 4,
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:red_carpet",
+    "at": "feet"
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:red_carpet",
+        "at": "feet",
+        "lasts": 40
+      },
+      {
+        "type": "push",
+        "back": 0.8,
+        "up": 0.25
+      }
+    ]
+  }
+}

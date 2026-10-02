@@ -1,0 +1,25 @@
+{
+  "tiles": [
+    "j",
+    "a",
+    "m"
+  ],
+  "stage": 1,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:sweet_berries"
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": {
+      "type": "minecraft:dust",
+      "color": 8068002,
+      "scale": 1.6
+    },
+    "count": 30,
+    "spread": 0.25,
+    "at": "face",
+    "sound": "minecraft:entity.slime.squish_small"
+  },
+  "icon": "minecraft:honey_bottle"
+}

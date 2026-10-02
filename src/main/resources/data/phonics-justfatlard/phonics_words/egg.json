@@ -1,0 +1,36 @@
+{
+  "tiles": [
+    "e",
+    "gg"
+  ],
+  "stage": 6,
+  "picture": "clear",
+  "keyword": true,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:egg"
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "bonk",
+        "items": [
+          "minecraft:egg"
+        ]
+      },
+      {
+        "type": "particles",
+        "particle": {
+          "type": "minecraft:item",
+          "item": "minecraft:egg"
+        },
+        "count": 12,
+        "spread": 0.3,
+        "at": "above",
+        "sound": "minecraft:entity.turtle.egg_crack",
+        "pitch": 1.4
+      }
+    ]
+  }
+}

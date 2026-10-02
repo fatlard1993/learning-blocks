@@ -1,0 +1,22 @@
+{
+  "tiles": [
+    "p",
+    "u",
+    "p"
+  ],
+  "stage": 4,
+  "icon": "minecraft:bone",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:wolf",
+    "baby": true,
+    "tamed_to_player": true
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:wolf",
+    "act": "spin",
+    "lasts": 60,
+    "baby": true
+  }
+}

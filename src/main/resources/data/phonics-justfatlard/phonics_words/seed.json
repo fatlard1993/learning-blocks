@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "s",
+    "ee",
+    "d"
+  ],
+  "stage": 10,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:wheat_seeds",
+    "count": 4
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:wheat_seeds"
+    ]
+  }
+}

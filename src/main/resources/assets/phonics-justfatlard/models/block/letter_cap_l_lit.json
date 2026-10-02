@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "phonics-justfatlard:block/letter_cap_l_lit",
+    "top": "phonics-justfatlard:block/letter_top_lit",
+    "bottom": "phonics-justfatlard:block/letter_top_lit"
+  }
+}

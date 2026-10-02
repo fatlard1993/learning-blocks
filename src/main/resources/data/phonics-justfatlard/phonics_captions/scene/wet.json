@@ -1,0 +1,30 @@
+{
+	"duration": 1.625,
+	"words": [
+		{
+			"text": "The",
+			"start": 0.0,
+			"end": 0.163
+		},
+		{
+			"text": "flowers",
+			"start": 0.209,
+			"end": 0.58
+		},
+		{
+			"text": "are",
+			"start": 0.615,
+			"end": 0.708
+		},
+		{
+			"text": "all",
+			"start": 0.743,
+			"end": 0.848
+		},
+		{
+			"text": "droopy!",
+			"start": 0.906,
+			"end": 1.625
+		}
+	]
+}

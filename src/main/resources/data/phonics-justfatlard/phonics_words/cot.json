@@ -1,0 +1,74 @@
+{
+  "tiles": [
+    "c",
+    "o",
+    "t"
+  ],
+  "stage": 3,
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:white_bed",
+    "at": "near"
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:white_bed",
+        "at": "near",
+        "lasts": 50
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 10,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:entity.slime.jump",
+        "pitch": 1.4
+      },
+      {
+        "type": "push",
+        "up": 0.7
+      }
+    ]
+  },
+  "scene": {
+    "line": "He's so sleepy!",
+    "setup": [
+      {
+        "type": "character"
+      },
+      {
+        "type": "bubble",
+        "text": "Zzz",
+        "color": 11195647
+      },
+      {
+        "type": "ambient",
+        "id": "yawn",
+        "particle": "minecraft:white_smoke",
+        "at": "face",
+        "count": 1,
+        "spread": 0.05,
+        "every": 40,
+        "sound": "minecraft:entity.villager.ambient",
+        "pitch": 0.6,
+        "sound_every": 50
+      }
+    ],
+    "solve": [
+      {
+        "type": "place",
+        "block": "minecraft:white_bed",
+        "then": "sleep"
+      },
+      {
+        "type": "bubble",
+        "text": "Zzz",
+        "color": 11195647
+      }
+    ]
+  }
+}

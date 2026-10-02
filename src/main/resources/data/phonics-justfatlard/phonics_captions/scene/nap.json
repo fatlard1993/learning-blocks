@@ -1,0 +1,25 @@
+{
+	"duration": 1.579,
+	"words": [
+		{
+			"text": "Someone",
+			"start": 0.0,
+			"end": 0.383
+		},
+		{
+			"text": "is",
+			"start": 0.418,
+			"end": 0.499
+		},
+		{
+			"text": "sooo",
+			"start": 0.557,
+			"end": 0.743
+		},
+		{
+			"text": "tired!",
+			"start": 0.801,
+			"end": 1.579
+		}
+	]
+}

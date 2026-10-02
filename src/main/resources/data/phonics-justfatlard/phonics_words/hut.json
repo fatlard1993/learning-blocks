@@ -1,0 +1,55 @@
+{
+  "tiles": [
+    "h",
+    "u",
+    "t"
+  ],
+  "stage": 4,
+  "icon": "minecraft:oak_door",
+  "outcome": {
+    "type": "hut",
+    "lasts": 100
+  },
+  "wrong": {
+    "type": "hut",
+    "lasts": 20
+  },
+  "scene": {
+    "line": "Whoosh! It's so windy! He needs a little house!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:villager",
+        "act": "wander"
+      },
+      {
+        "type": "ambient",
+        "id": "wind",
+        "particle": "minecraft:cherry_leaves",
+        "at": "body",
+        "count": 8,
+        "spread": 0.9,
+        "every": 3,
+        "sound": "minecraft:block.cherry_leaves.fall",
+        "pitch": 0.8,
+        "sound_every": 30,
+        "drift": true
+      },
+      {
+        "type": "ambient",
+        "id": "gust",
+        "particle": "minecraft:gust",
+        "at": "beside",
+        "count": 1,
+        "spread": 0.6,
+        "every": 25
+      }
+    ],
+    "solve": [
+      {
+        "type": "hut",
+        "lasts": 300
+      }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "tiles": [
+    "r",
+    "o",
+    "s",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "o_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "picture": "clear",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "give_item",
+        "item": "minecraft:rose_bush"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 6,
+        "spread": 0.4,
+        "at": "above"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:rose_bush"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "p",
+    "e",
+    "n"
+  ],
+  "stage": 5,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:writable_book"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:writable_book"
+    ],
+    "sound": "minecraft:item.book.page_turn"
+  }
+}

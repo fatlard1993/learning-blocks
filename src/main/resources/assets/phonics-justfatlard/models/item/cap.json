@@ -1,0 +1,215 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "crown": "minecraft:block/red_wool",
+    "button": "minecraft:block/white_wool",
+    "particle": "minecraft:block/red_wool"
+  },
+  "elements": [
+    {
+      "from": [
+        1.2,
+        13.4,
+        1.2
+      ],
+      "to": [
+        14.8,
+        16.6,
+        14.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#crown"
+        },
+        "south": {
+          "texture": "#crown"
+        },
+        "east": {
+          "texture": "#crown"
+        },
+        "west": {
+          "texture": "#crown"
+        },
+        "up": {
+          "texture": "#crown"
+        },
+        "down": {
+          "texture": "#crown"
+        }
+      }
+    },
+    {
+      "from": [
+        2.4,
+        16.6,
+        2.4
+      ],
+      "to": [
+        13.6,
+        17.6,
+        13.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#crown"
+        },
+        "south": {
+          "texture": "#crown"
+        },
+        "east": {
+          "texture": "#crown"
+        },
+        "west": {
+          "texture": "#crown"
+        },
+        "up": {
+          "texture": "#crown"
+        },
+        "down": {
+          "texture": "#crown"
+        }
+      }
+    },
+    {
+      "from": [
+        7.4,
+        17.6,
+        7.4
+      ],
+      "to": [
+        8.6,
+        18.2,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#button"
+        },
+        "south": {
+          "texture": "#button"
+        },
+        "east": {
+          "texture": "#button"
+        },
+        "west": {
+          "texture": "#button"
+        },
+        "up": {
+          "texture": "#button"
+        },
+        "down": {
+          "texture": "#button"
+        }
+      }
+    },
+    {
+      "from": [
+        2.4,
+        13.4,
+        -4.2
+      ],
+      "to": [
+        13.6,
+        14.0,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#crown"
+        },
+        "south": {
+          "texture": "#crown"
+        },
+        "east": {
+          "texture": "#crown"
+        },
+        "west": {
+          "texture": "#crown"
+        },
+        "up": {
+          "texture": "#crown"
+        },
+        "down": {
+          "texture": "#crown"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        25,
+        135,
+        0
+      ],
+      "translation": [
+        0,
+        -7,
+        0
+      ],
+      "scale": [
+        0.9,
+        0.9,
+        0.9
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    }
+  }
+}

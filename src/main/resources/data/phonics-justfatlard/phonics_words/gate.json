@@ -1,0 +1,27 @@
+{
+  "tiles": [
+    "g",
+    "a",
+    "t",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "a_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "picture": "clear",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:oak_fence_gate",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:oak_fence_gate"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "tiles": [
+    "y",
+    "u",
+    "m"
+  ],
+  "stage": 4,
+  "icon": "minecraft:cookie",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "give_item",
+        "item": "minecraft:cookie"
+      },
+      {
+        "type": "particles",
+        "particle": {
+          "type": "minecraft:item",
+          "item": "minecraft:cookie"
+        },
+        "count": 8,
+        "spread": 0.15,
+        "at": "face",
+        "sound": "minecraft:entity.player.burp"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:poof",
+    "count": 8,
+    "spread": 0.2,
+    "at": "face",
+    "sound": "minecraft:entity.player.burp",
+    "pitch": 0.6
+  }
+}

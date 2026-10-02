@@ -1,0 +1,15 @@
+{
+  "tiles": [
+    "r",
+    "a",
+    "bb",
+    "i",
+    "t"
+  ],
+  "keyword": true,
+  "puzzle": false,
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:rabbit"
+  }
+}

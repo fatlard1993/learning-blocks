@@ -1,0 +1,30 @@
+{
+	"duration": 1.393,
+	"words": [
+		{
+			"text": "Ready",
+			"start": 0.0,
+			"end": 0.302
+		},
+		{
+			"text": "for",
+			"start": 0.36,
+			"end": 0.464
+		},
+		{
+			"text": "the",
+			"start": 0.499,
+			"end": 0.569
+		},
+		{
+			"text": "next",
+			"start": 0.604,
+			"end": 0.824
+		},
+		{
+			"text": "one?",
+			"start": 0.894,
+			"end": 1.393
+		}
+	]
+}

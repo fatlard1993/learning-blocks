@@ -1,0 +1,25 @@
+{
+	"duration": 1.486,
+	"words": [
+		{
+			"text": "Here",
+			"start": 0.0,
+			"end": 0.255
+		},
+		{
+			"text": "comes",
+			"start": 0.302,
+			"end": 0.534
+		},
+		{
+			"text": "another",
+			"start": 0.58,
+			"end": 0.882
+		},
+		{
+			"text": "one!",
+			"start": 0.952,
+			"end": 1.486
+		}
+	]
+}

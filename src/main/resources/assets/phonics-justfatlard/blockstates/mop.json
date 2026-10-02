@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "phonics-justfatlard:block/mop",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "phonics-justfatlard:block/mop",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "phonics-justfatlard:block/mop",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "phonics-justfatlard:block/mop",
+      "y": 270
+    }
+  }
+}

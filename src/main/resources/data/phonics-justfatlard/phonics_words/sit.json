@@ -1,0 +1,77 @@
+{
+  "tiles": [
+    "s",
+    "i",
+    "t"
+  ],
+  "stage": 2,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:wolf",
+        "tamed_to_player": true,
+        "sitting": true
+      },
+      {
+        "type": "creatures_do",
+        "what": "sit"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "scale",
+        "amount": -0.3,
+        "duration": 30
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:poof",
+        "count": 10,
+        "spread": 0.3,
+        "at": "player",
+        "sound": "minecraft:entity.slime.squish",
+        "pitch": 0.8
+      }
+    ]
+  },
+  "scene": {
+    "line": "They're too wiggly!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:wolf",
+        "act": "bounce",
+        "baby": true
+      },
+      {
+        "type": "character",
+        "entity": "minecraft:wolf",
+        "act": "bounce",
+        "baby": true
+      },
+      {
+        "type": "ambient",
+        "id": "barks",
+        "particle": "minecraft:poof",
+        "at": "body",
+        "count": 1,
+        "spread": 0.1,
+        "every": 25,
+        "sound": "minecraft:entity.wolf.ambient",
+        "pitch": 1.5,
+        "sound_every": 25
+      }
+    ],
+    "solve": [
+      {
+        "type": "pose",
+        "pose": "sit"
+      }
+    ]
+  }
+}

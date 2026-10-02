@@ -1,0 +1,43 @@
+{
+  "tiles": [
+    "w",
+    "i",
+    "n"
+  ],
+  "stage": 2,
+  "icon": "minecraft:totem_of_undying",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "firework_burst"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:happy_villager",
+        "count": 20,
+        "spread": 0.6,
+        "at": "above",
+        "sound": "minecraft:entity.villager.celebrate",
+        "pitch": 1.2
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "firework_burst",
+        "dud": true
+      },
+      {
+        "type": "tune",
+        "instrument": "didgeridoo",
+        "notes": [
+          5
+        ],
+        "every": 4
+      }
+    ]
+  }
+}

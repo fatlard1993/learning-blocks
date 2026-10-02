@@ -1,0 +1,8 @@
+{
+  "tiles": ["z", "u", "b"],
+  "stage": 99,
+  "outcome": { "type": "prefer", "options": [
+    { "type": "give_item", "item": "nomod-gametest:thing" },
+    { "type": "give_item", "item": "minecraft:apple" }
+  ] }
+}

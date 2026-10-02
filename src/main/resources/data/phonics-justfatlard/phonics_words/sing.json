@@ -1,0 +1,42 @@
+{
+  "tiles": [
+    "s",
+    "i",
+    "ng"
+  ],
+  "stage": 11,
+  "icon": "minecraft:music_disc_cat",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:villager",
+        "profession": "minecraft:librarian"
+      },
+      {
+        "type": "tune",
+        "instrument": "bell",
+        "notes": [
+          12,
+          16,
+          19,
+          24,
+          19,
+          16
+        ],
+        "every": 4
+      }
+    ]
+  },
+  "wrong": {
+    "type": "tune",
+    "instrument": "didgeridoo",
+    "notes": [
+      6,
+      4,
+      2
+    ],
+    "every": 6
+  }
+}

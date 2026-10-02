@@ -1,0 +1,36 @@
+{
+  "tiles": [
+    "h",
+    "i",
+    "ss"
+  ],
+  "stage": 6,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:cat"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:poof",
+        "count": 6,
+        "spread": 0.3,
+        "at": "player",
+        "sound": "minecraft:entity.cat.hiss"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:cat",
+        "act": "sneeze",
+        "lasts": 60
+      }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "tiles": [
+    "b",
+    "a",
+    "th"
+  ],
+  "stage": 7,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "phonics-justfatlard:tub",
+        "at": "near",
+        "properties": {
+          "facing": "south"
+        }
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:splash",
+        "count": 40,
+        "spread": 0.6,
+        "at": "above",
+        "sound": "minecraft:entity.player.splash"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:splash",
+    "count": 70,
+    "spread": 0.3,
+    "at": "face",
+    "sound": "minecraft:entity.player.splash.high_speed"
+  },
+  "icon": "phonics-justfatlard:tub"
+}

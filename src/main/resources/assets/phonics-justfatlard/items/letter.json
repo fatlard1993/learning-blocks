@@ -1,0 +1,636 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:block_state",
+    "block_state_property": "letter",
+    "cases": [
+      {
+        "when": "a",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_a"
+        }
+      },
+      {
+        "when": "b",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_b"
+        }
+      },
+      {
+        "when": "c",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_c"
+        }
+      },
+      {
+        "when": "d",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_d"
+        }
+      },
+      {
+        "when": "e",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_e"
+        }
+      },
+      {
+        "when": "f",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_f"
+        }
+      },
+      {
+        "when": "g",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_g"
+        }
+      },
+      {
+        "when": "h",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_h"
+        }
+      },
+      {
+        "when": "i",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_i"
+        }
+      },
+      {
+        "when": "j",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_j"
+        }
+      },
+      {
+        "when": "k",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_k"
+        }
+      },
+      {
+        "when": "l",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_l"
+        }
+      },
+      {
+        "when": "m",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_m"
+        }
+      },
+      {
+        "when": "n",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_n"
+        }
+      },
+      {
+        "when": "o",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_o"
+        }
+      },
+      {
+        "when": "p",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_p"
+        }
+      },
+      {
+        "when": "q",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_q"
+        }
+      },
+      {
+        "when": "r",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_r"
+        }
+      },
+      {
+        "when": "s",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_s"
+        }
+      },
+      {
+        "when": "t",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_t"
+        }
+      },
+      {
+        "when": "u",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_u"
+        }
+      },
+      {
+        "when": "v",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_v"
+        }
+      },
+      {
+        "when": "w",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_w"
+        }
+      },
+      {
+        "when": "x",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_x"
+        }
+      },
+      {
+        "when": "y",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_y"
+        }
+      },
+      {
+        "when": "z",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_z"
+        }
+      },
+      {
+        "when": "blank",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_blank"
+        }
+      },
+      {
+        "when": "sh",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_sh"
+        }
+      },
+      {
+        "when": "ch",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ch"
+        }
+      },
+      {
+        "when": "th",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_th"
+        }
+      },
+      {
+        "when": "ck",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ck"
+        }
+      },
+      {
+        "when": "qu",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_qu"
+        }
+      },
+      {
+        "when": "ll",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ll"
+        }
+      },
+      {
+        "when": "ss",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ss"
+        }
+      },
+      {
+        "when": "ff",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ff"
+        }
+      },
+      {
+        "when": "zz",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_zz"
+        }
+      },
+      {
+        "when": "ee",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ee"
+        }
+      },
+      {
+        "when": "ea",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ea"
+        }
+      },
+      {
+        "when": "oa",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_oa"
+        }
+      },
+      {
+        "when": "ai",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ai"
+        }
+      },
+      {
+        "when": "oo",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_oo"
+        }
+      },
+      {
+        "when": "ie",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ie"
+        }
+      },
+      {
+        "when": "gg",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_gg"
+        }
+      },
+      {
+        "when": "ar",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ar"
+        }
+      },
+      {
+        "when": "or",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_or"
+        }
+      },
+      {
+        "when": "ur",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ur"
+        }
+      },
+      {
+        "when": "ir",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ir"
+        }
+      },
+      {
+        "when": "er",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_er"
+        }
+      },
+      {
+        "when": "ow",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ow"
+        }
+      },
+      {
+        "when": "ou",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ou"
+        }
+      },
+      {
+        "when": "ay",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ay"
+        }
+      },
+      {
+        "when": "igh",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_igh"
+        }
+      },
+      {
+        "when": "oi",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_oi"
+        }
+      },
+      {
+        "when": "oy",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_oy"
+        }
+      },
+      {
+        "when": "ng",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_ng"
+        }
+      },
+      {
+        "when": "nk",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_nk"
+        }
+      },
+      {
+        "when": "aw",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_aw"
+        }
+      },
+      {
+        "when": "wh",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_wh"
+        }
+      },
+      {
+        "when": "le",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_le"
+        }
+      },
+      {
+        "when": "dge",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_dge"
+        }
+      },
+      {
+        "when": "cap_a",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_a"
+        }
+      },
+      {
+        "when": "cap_b",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_b"
+        }
+      },
+      {
+        "when": "cap_c",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_c"
+        }
+      },
+      {
+        "when": "cap_d",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_d"
+        }
+      },
+      {
+        "when": "cap_e",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_e"
+        }
+      },
+      {
+        "when": "cap_f",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_f"
+        }
+      },
+      {
+        "when": "cap_g",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_g"
+        }
+      },
+      {
+        "when": "cap_h",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_h"
+        }
+      },
+      {
+        "when": "cap_i",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_i"
+        }
+      },
+      {
+        "when": "cap_j",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_j"
+        }
+      },
+      {
+        "when": "cap_k",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_k"
+        }
+      },
+      {
+        "when": "cap_l",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_l"
+        }
+      },
+      {
+        "when": "cap_m",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_m"
+        }
+      },
+      {
+        "when": "cap_n",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_n"
+        }
+      },
+      {
+        "when": "cap_o",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_o"
+        }
+      },
+      {
+        "when": "cap_p",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_p"
+        }
+      },
+      {
+        "when": "cap_q",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_q"
+        }
+      },
+      {
+        "when": "cap_r",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_r"
+        }
+      },
+      {
+        "when": "cap_s",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_s"
+        }
+      },
+      {
+        "when": "cap_t",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_t"
+        }
+      },
+      {
+        "when": "cap_u",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_u"
+        }
+      },
+      {
+        "when": "cap_v",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_v"
+        }
+      },
+      {
+        "when": "cap_w",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_w"
+        }
+      },
+      {
+        "when": "cap_x",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_x"
+        }
+      },
+      {
+        "when": "cap_y",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_y"
+        }
+      },
+      {
+        "when": "cap_z",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_cap_z"
+        }
+      },
+      {
+        "when": "blank_blue",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_blank_blue"
+        }
+      },
+      {
+        "when": "blank_orange",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_blank_orange"
+        }
+      },
+      {
+        "when": "blank_green",
+        "model": {
+          "type": "minecraft:model",
+          "model": "phonics-justfatlard:block/letter_blank_green"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "phonics-justfatlard:block/letter_blank"
+    }
+  }
+}

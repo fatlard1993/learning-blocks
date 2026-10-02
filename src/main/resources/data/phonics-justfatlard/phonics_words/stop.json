@@ -1,0 +1,44 @@
+{
+  "tiles": [
+    "s",
+    "t",
+    "o",
+    "p"
+  ],
+  "stage": 8,
+  "icon": "minecraft:red_banner",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:snowflake",
+        "count": 20,
+        "spread": 0.6,
+        "at": "above",
+        "sound": "minecraft:block.glass.hit"
+      },
+      {
+        "type": "creatures_do",
+        "what": "freeze"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 10,
+        "spread": 0.3,
+        "at": "player"
+      },
+      {
+        "type": "push",
+        "back": -1.0,
+        "up": 0.1
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+	"duration": 1.44,
+	"words": [
+		{
+			"text": "They're",
+			"start": 0.0,
+			"end": 0.29
+		},
+		{
+			"text": "too",
+			"start": 0.337,
+			"end": 0.534
+		},
+		{
+			"text": "wiggly!",
+			"start": 0.615,
+			"end": 1.44
+		}
+	]
+}

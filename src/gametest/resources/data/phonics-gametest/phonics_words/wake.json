@@ -1,0 +1,6 @@
+{
+  "tiles": ["w", "a", "k", "e"],
+  "sounds": [null, "a_long", null, "silent"],
+  "stage": 99,
+  "outcome": { "type": "give_item", "item": "minecraft:cookie" }
+}

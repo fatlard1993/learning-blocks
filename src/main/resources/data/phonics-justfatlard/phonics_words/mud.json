@@ -1,0 +1,35 @@
+{
+  "tiles": [
+    "m",
+    "u",
+    "d"
+  ],
+  "stage": 4,
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:mud",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:mud",
+        "at": "feet",
+        "lasts": 40
+      },
+      {
+        "type": "particles",
+        "particle": {
+          "type": "minecraft:item",
+          "item": "minecraft:mud"
+        },
+        "count": 20,
+        "spread": 0.3,
+        "at": "player",
+        "sound": "minecraft:block.mud.step"
+      }
+    ]
+  }
+}

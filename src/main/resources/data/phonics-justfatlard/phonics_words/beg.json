@@ -1,0 +1,33 @@
+{
+  "tiles": [
+    "b",
+    "e",
+    "g"
+  ],
+  "stage": 5,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:cat",
+        "tamed_to_player": true,
+        "sitting": true
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 5,
+        "spread": 0.3,
+        "at": "above"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:cat",
+    "act": "spin",
+    "lasts": 60
+  },
+  "icon": "minecraft:salmon"
+}

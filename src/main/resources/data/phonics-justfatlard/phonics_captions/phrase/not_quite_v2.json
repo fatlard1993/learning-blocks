@@ -1,0 +1,40 @@
+{
+	"duration": 3.12,
+	"words": [
+		{
+			"text": "Oh,",
+			"start": 0.667,
+			"end": 1.04
+		},
+		{
+			"text": "Bob!",
+			"start": 1.16,
+			"end": 1.6
+		},
+		{
+			"text": "That's",
+			"start": 1.68,
+			"end": 2.08
+		},
+		{
+			"text": "not",
+			"start": 2.12,
+			"end": 2.24
+		},
+		{
+			"text": "what",
+			"start": 2.272,
+			"end": 2.4
+		},
+		{
+			"text": "we",
+			"start": 2.453,
+			"end": 2.56
+		},
+		{
+			"text": "wanted!",
+			"start": 2.629,
+			"end": 3.12
+		}
+	]
+}

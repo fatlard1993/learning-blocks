@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "h",
+    "a",
+    "m"
+  ],
+  "stage": 1,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:cooked_porkchop"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:cooked_porkchop"
+    ],
+    "sound": "minecraft:entity.slime.squish"
+  }
+}

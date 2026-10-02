@@ -1,0 +1,35 @@
+{
+	"duration": 2.24,
+	"words": [
+		{
+			"text": "Wow!",
+			"start": 0.26,
+			"end": 0.64
+		},
+		{
+			"text": "You're",
+			"start": 0.74,
+			"end": 1.12
+		},
+		{
+			"text": "ready",
+			"start": 1.147,
+			"end": 1.28
+		},
+		{
+			"text": "for",
+			"start": 1.32,
+			"end": 1.44
+		},
+		{
+			"text": "new",
+			"start": 1.48,
+			"end": 1.6
+		},
+		{
+			"text": "words!",
+			"start": 1.693,
+			"end": 2.24
+		}
+	]
+}

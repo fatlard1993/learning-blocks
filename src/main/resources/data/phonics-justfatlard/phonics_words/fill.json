@@ -1,0 +1,40 @@
+{
+  "tiles": [
+    "f",
+    "i",
+    "ll"
+  ],
+  "stage": 6,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:splash",
+        "count": 20,
+        "spread": 0.3,
+        "at": "player",
+        "sound": "minecraft:item.bottle.fill"
+      },
+      {
+        "type": "give_item",
+        "item": "minecraft:potion",
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:water"
+          }
+        }
+      }
+    ]
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:splash",
+    "count": 50,
+    "spread": 0.3,
+    "at": "face",
+    "sound": "minecraft:entity.player.splash",
+    "pitch": 1.4
+  },
+  "icon": "minecraft:glass_bottle"
+}

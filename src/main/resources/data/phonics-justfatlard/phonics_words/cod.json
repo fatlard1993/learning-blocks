@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    "c",
+    "o",
+    "d"
+  ],
+  "stage": 3,
+  "icon": "minecraft:cod",
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:cod"
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:cod",
+        "lasts": 40
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:splash",
+        "count": 30,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:entity.cod.flop"
+      }
+    ]
+  }
+}

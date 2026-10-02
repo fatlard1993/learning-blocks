@@ -1,0 +1,45 @@
+{
+	"duration": 2.0,
+	"words": [
+		{
+			"text": "The",
+			"start": 0.068,
+			"end": 0.08
+		},
+		{
+			"text": "E",
+			"start": 0.28,
+			"end": 0.48
+		},
+		{
+			"text": "makes",
+			"start": 0.52,
+			"end": 0.72
+		},
+		{
+			"text": "the",
+			"start": 0.76,
+			"end": 0.88
+		},
+		{
+			"text": "U",
+			"start": 1.0,
+			"end": 1.12
+		},
+		{
+			"text": "say",
+			"start": 1.16,
+			"end": 1.28
+		},
+		{
+			"text": "its",
+			"start": 1.32,
+			"end": 1.44
+		},
+		{
+			"text": "name!",
+			"start": 1.52,
+			"end": 2.0
+		}
+	]
+}

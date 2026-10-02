@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "l",
+    "oo",
+    "p"
+  ],
+  "stage": 10,
+  "icon": "minecraft:iron_chain",
+  "outcome": {
+    "type": "spin",
+    "turns": 1.0,
+    "ticks": 20
+  },
+  "wrong": {
+    "type": "spin",
+    "turns": 2.0,
+    "ticks": 30
+  }
+}

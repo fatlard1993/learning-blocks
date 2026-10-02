@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "justfatlard.phonics.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "CachedNamesAccessor",
+    "InventoryChangeTriggerMixin",
+    "LevelMixin",
+    "PlayerLoadedMixin",
+    "PunchMixin",
+    "TeleportCommandMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

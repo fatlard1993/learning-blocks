@@ -1,0 +1,538 @@
+{
+  "variants": {
+    "letter=a,lit=false": {
+      "model": "phonics-justfatlard:block/letter_a"
+    },
+    "letter=a,lit=true": {
+      "model": "phonics-justfatlard:block/letter_a_lit"
+    },
+    "letter=b,lit=false": {
+      "model": "phonics-justfatlard:block/letter_b"
+    },
+    "letter=b,lit=true": {
+      "model": "phonics-justfatlard:block/letter_b_lit"
+    },
+    "letter=c,lit=false": {
+      "model": "phonics-justfatlard:block/letter_c"
+    },
+    "letter=c,lit=true": {
+      "model": "phonics-justfatlard:block/letter_c_lit"
+    },
+    "letter=d,lit=false": {
+      "model": "phonics-justfatlard:block/letter_d"
+    },
+    "letter=d,lit=true": {
+      "model": "phonics-justfatlard:block/letter_d_lit"
+    },
+    "letter=e,lit=false": {
+      "model": "phonics-justfatlard:block/letter_e"
+    },
+    "letter=e,lit=true": {
+      "model": "phonics-justfatlard:block/letter_e_lit"
+    },
+    "letter=f,lit=false": {
+      "model": "phonics-justfatlard:block/letter_f"
+    },
+    "letter=f,lit=true": {
+      "model": "phonics-justfatlard:block/letter_f_lit"
+    },
+    "letter=g,lit=false": {
+      "model": "phonics-justfatlard:block/letter_g"
+    },
+    "letter=g,lit=true": {
+      "model": "phonics-justfatlard:block/letter_g_lit"
+    },
+    "letter=h,lit=false": {
+      "model": "phonics-justfatlard:block/letter_h"
+    },
+    "letter=h,lit=true": {
+      "model": "phonics-justfatlard:block/letter_h_lit"
+    },
+    "letter=i,lit=false": {
+      "model": "phonics-justfatlard:block/letter_i"
+    },
+    "letter=i,lit=true": {
+      "model": "phonics-justfatlard:block/letter_i_lit"
+    },
+    "letter=j,lit=false": {
+      "model": "phonics-justfatlard:block/letter_j"
+    },
+    "letter=j,lit=true": {
+      "model": "phonics-justfatlard:block/letter_j_lit"
+    },
+    "letter=k,lit=false": {
+      "model": "phonics-justfatlard:block/letter_k"
+    },
+    "letter=k,lit=true": {
+      "model": "phonics-justfatlard:block/letter_k_lit"
+    },
+    "letter=l,lit=false": {
+      "model": "phonics-justfatlard:block/letter_l"
+    },
+    "letter=l,lit=true": {
+      "model": "phonics-justfatlard:block/letter_l_lit"
+    },
+    "letter=m,lit=false": {
+      "model": "phonics-justfatlard:block/letter_m"
+    },
+    "letter=m,lit=true": {
+      "model": "phonics-justfatlard:block/letter_m_lit"
+    },
+    "letter=n,lit=false": {
+      "model": "phonics-justfatlard:block/letter_n"
+    },
+    "letter=n,lit=true": {
+      "model": "phonics-justfatlard:block/letter_n_lit"
+    },
+    "letter=o,lit=false": {
+      "model": "phonics-justfatlard:block/letter_o"
+    },
+    "letter=o,lit=true": {
+      "model": "phonics-justfatlard:block/letter_o_lit"
+    },
+    "letter=p,lit=false": {
+      "model": "phonics-justfatlard:block/letter_p"
+    },
+    "letter=p,lit=true": {
+      "model": "phonics-justfatlard:block/letter_p_lit"
+    },
+    "letter=q,lit=false": {
+      "model": "phonics-justfatlard:block/letter_q"
+    },
+    "letter=q,lit=true": {
+      "model": "phonics-justfatlard:block/letter_q_lit"
+    },
+    "letter=r,lit=false": {
+      "model": "phonics-justfatlard:block/letter_r"
+    },
+    "letter=r,lit=true": {
+      "model": "phonics-justfatlard:block/letter_r_lit"
+    },
+    "letter=s,lit=false": {
+      "model": "phonics-justfatlard:block/letter_s"
+    },
+    "letter=s,lit=true": {
+      "model": "phonics-justfatlard:block/letter_s_lit"
+    },
+    "letter=t,lit=false": {
+      "model": "phonics-justfatlard:block/letter_t"
+    },
+    "letter=t,lit=true": {
+      "model": "phonics-justfatlard:block/letter_t_lit"
+    },
+    "letter=u,lit=false": {
+      "model": "phonics-justfatlard:block/letter_u"
+    },
+    "letter=u,lit=true": {
+      "model": "phonics-justfatlard:block/letter_u_lit"
+    },
+    "letter=v,lit=false": {
+      "model": "phonics-justfatlard:block/letter_v"
+    },
+    "letter=v,lit=true": {
+      "model": "phonics-justfatlard:block/letter_v_lit"
+    },
+    "letter=w,lit=false": {
+      "model": "phonics-justfatlard:block/letter_w"
+    },
+    "letter=w,lit=true": {
+      "model": "phonics-justfatlard:block/letter_w_lit"
+    },
+    "letter=x,lit=false": {
+      "model": "phonics-justfatlard:block/letter_x"
+    },
+    "letter=x,lit=true": {
+      "model": "phonics-justfatlard:block/letter_x_lit"
+    },
+    "letter=y,lit=false": {
+      "model": "phonics-justfatlard:block/letter_y"
+    },
+    "letter=y,lit=true": {
+      "model": "phonics-justfatlard:block/letter_y_lit"
+    },
+    "letter=z,lit=false": {
+      "model": "phonics-justfatlard:block/letter_z"
+    },
+    "letter=z,lit=true": {
+      "model": "phonics-justfatlard:block/letter_z_lit"
+    },
+    "letter=blank,lit=false": {
+      "model": "phonics-justfatlard:block/letter_blank"
+    },
+    "letter=blank,lit=true": {
+      "model": "phonics-justfatlard:block/letter_blank_lit"
+    },
+    "letter=sh,lit=false": {
+      "model": "phonics-justfatlard:block/letter_sh"
+    },
+    "letter=sh,lit=true": {
+      "model": "phonics-justfatlard:block/letter_sh_lit"
+    },
+    "letter=ch,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ch"
+    },
+    "letter=ch,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ch_lit"
+    },
+    "letter=th,lit=false": {
+      "model": "phonics-justfatlard:block/letter_th"
+    },
+    "letter=th,lit=true": {
+      "model": "phonics-justfatlard:block/letter_th_lit"
+    },
+    "letter=ck,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ck"
+    },
+    "letter=ck,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ck_lit"
+    },
+    "letter=qu,lit=false": {
+      "model": "phonics-justfatlard:block/letter_qu"
+    },
+    "letter=qu,lit=true": {
+      "model": "phonics-justfatlard:block/letter_qu_lit"
+    },
+    "letter=ll,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ll"
+    },
+    "letter=ll,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ll_lit"
+    },
+    "letter=ss,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ss"
+    },
+    "letter=ss,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ss_lit"
+    },
+    "letter=ff,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ff"
+    },
+    "letter=ff,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ff_lit"
+    },
+    "letter=zz,lit=false": {
+      "model": "phonics-justfatlard:block/letter_zz"
+    },
+    "letter=zz,lit=true": {
+      "model": "phonics-justfatlard:block/letter_zz_lit"
+    },
+    "letter=ee,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ee"
+    },
+    "letter=ee,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ee_lit"
+    },
+    "letter=ea,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ea"
+    },
+    "letter=ea,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ea_lit"
+    },
+    "letter=oa,lit=false": {
+      "model": "phonics-justfatlard:block/letter_oa"
+    },
+    "letter=oa,lit=true": {
+      "model": "phonics-justfatlard:block/letter_oa_lit"
+    },
+    "letter=ai,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ai"
+    },
+    "letter=ai,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ai_lit"
+    },
+    "letter=oo,lit=false": {
+      "model": "phonics-justfatlard:block/letter_oo"
+    },
+    "letter=oo,lit=true": {
+      "model": "phonics-justfatlard:block/letter_oo_lit"
+    },
+    "letter=ie,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ie"
+    },
+    "letter=ie,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ie_lit"
+    },
+    "letter=gg,lit=false": {
+      "model": "phonics-justfatlard:block/letter_gg"
+    },
+    "letter=gg,lit=true": {
+      "model": "phonics-justfatlard:block/letter_gg_lit"
+    },
+    "letter=ar,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ar"
+    },
+    "letter=ar,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ar_lit"
+    },
+    "letter=or,lit=false": {
+      "model": "phonics-justfatlard:block/letter_or"
+    },
+    "letter=or,lit=true": {
+      "model": "phonics-justfatlard:block/letter_or_lit"
+    },
+    "letter=ur,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ur"
+    },
+    "letter=ur,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ur_lit"
+    },
+    "letter=ir,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ir"
+    },
+    "letter=ir,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ir_lit"
+    },
+    "letter=er,lit=false": {
+      "model": "phonics-justfatlard:block/letter_er"
+    },
+    "letter=er,lit=true": {
+      "model": "phonics-justfatlard:block/letter_er_lit"
+    },
+    "letter=ow,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ow"
+    },
+    "letter=ow,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ow_lit"
+    },
+    "letter=ou,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ou"
+    },
+    "letter=ou,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ou_lit"
+    },
+    "letter=ay,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ay"
+    },
+    "letter=ay,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ay_lit"
+    },
+    "letter=igh,lit=false": {
+      "model": "phonics-justfatlard:block/letter_igh"
+    },
+    "letter=igh,lit=true": {
+      "model": "phonics-justfatlard:block/letter_igh_lit"
+    },
+    "letter=oi,lit=false": {
+      "model": "phonics-justfatlard:block/letter_oi"
+    },
+    "letter=oi,lit=true": {
+      "model": "phonics-justfatlard:block/letter_oi_lit"
+    },
+    "letter=oy,lit=false": {
+      "model": "phonics-justfatlard:block/letter_oy"
+    },
+    "letter=oy,lit=true": {
+      "model": "phonics-justfatlard:block/letter_oy_lit"
+    },
+    "letter=ng,lit=false": {
+      "model": "phonics-justfatlard:block/letter_ng"
+    },
+    "letter=ng,lit=true": {
+      "model": "phonics-justfatlard:block/letter_ng_lit"
+    },
+    "letter=nk,lit=false": {
+      "model": "phonics-justfatlard:block/letter_nk"
+    },
+    "letter=nk,lit=true": {
+      "model": "phonics-justfatlard:block/letter_nk_lit"
+    },
+    "letter=aw,lit=false": {
+      "model": "phonics-justfatlard:block/letter_aw"
+    },
+    "letter=aw,lit=true": {
+      "model": "phonics-justfatlard:block/letter_aw_lit"
+    },
+    "letter=wh,lit=false": {
+      "model": "phonics-justfatlard:block/letter_wh"
+    },
+    "letter=wh,lit=true": {
+      "model": "phonics-justfatlard:block/letter_wh_lit"
+    },
+    "letter=le,lit=false": {
+      "model": "phonics-justfatlard:block/letter_le"
+    },
+    "letter=le,lit=true": {
+      "model": "phonics-justfatlard:block/letter_le_lit"
+    },
+    "letter=dge,lit=false": {
+      "model": "phonics-justfatlard:block/letter_dge"
+    },
+    "letter=dge,lit=true": {
+      "model": "phonics-justfatlard:block/letter_dge_lit"
+    },
+    "letter=cap_a,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_a"
+    },
+    "letter=cap_a,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_a_lit"
+    },
+    "letter=cap_b,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_b"
+    },
+    "letter=cap_b,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_b_lit"
+    },
+    "letter=cap_c,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_c"
+    },
+    "letter=cap_c,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_c_lit"
+    },
+    "letter=cap_d,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_d"
+    },
+    "letter=cap_d,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_d_lit"
+    },
+    "letter=cap_e,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_e"
+    },
+    "letter=cap_e,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_e_lit"
+    },
+    "letter=cap_f,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_f"
+    },
+    "letter=cap_f,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_f_lit"
+    },
+    "letter=cap_g,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_g"
+    },
+    "letter=cap_g,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_g_lit"
+    },
+    "letter=cap_h,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_h"
+    },
+    "letter=cap_h,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_h_lit"
+    },
+    "letter=cap_i,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_i"
+    },
+    "letter=cap_i,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_i_lit"
+    },
+    "letter=cap_j,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_j"
+    },
+    "letter=cap_j,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_j_lit"
+    },
+    "letter=cap_k,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_k"
+    },
+    "letter=cap_k,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_k_lit"
+    },
+    "letter=cap_l,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_l"
+    },
+    "letter=cap_l,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_l_lit"
+    },
+    "letter=cap_m,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_m"
+    },
+    "letter=cap_m,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_m_lit"
+    },
+    "letter=cap_n,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_n"
+    },
+    "letter=cap_n,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_n_lit"
+    },
+    "letter=cap_o,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_o"
+    },
+    "letter=cap_o,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_o_lit"
+    },
+    "letter=cap_p,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_p"
+    },
+    "letter=cap_p,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_p_lit"
+    },
+    "letter=cap_q,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_q"
+    },
+    "letter=cap_q,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_q_lit"
+    },
+    "letter=cap_r,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_r"
+    },
+    "letter=cap_r,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_r_lit"
+    },
+    "letter=cap_s,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_s"
+    },
+    "letter=cap_s,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_s_lit"
+    },
+    "letter=cap_t,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_t"
+    },
+    "letter=cap_t,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_t_lit"
+    },
+    "letter=cap_u,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_u"
+    },
+    "letter=cap_u,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_u_lit"
+    },
+    "letter=cap_v,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_v"
+    },
+    "letter=cap_v,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_v_lit"
+    },
+    "letter=cap_w,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_w"
+    },
+    "letter=cap_w,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_w_lit"
+    },
+    "letter=cap_x,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_x"
+    },
+    "letter=cap_x,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_x_lit"
+    },
+    "letter=cap_y,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_y"
+    },
+    "letter=cap_y,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_y_lit"
+    },
+    "letter=cap_z,lit=false": {
+      "model": "phonics-justfatlard:block/letter_cap_z"
+    },
+    "letter=cap_z,lit=true": {
+      "model": "phonics-justfatlard:block/letter_cap_z_lit"
+    },
+    "letter=blank_blue,lit=false": {
+      "model": "phonics-justfatlard:block/letter_blank_blue"
+    },
+    "letter=blank_blue,lit=true": {
+      "model": "phonics-justfatlard:block/letter_blank_blue_lit"
+    },
+    "letter=blank_orange,lit=false": {
+      "model": "phonics-justfatlard:block/letter_blank_orange"
+    },
+    "letter=blank_orange,lit=true": {
+      "model": "phonics-justfatlard:block/letter_blank_orange_lit"
+    },
+    "letter=blank_green,lit=false": {
+      "model": "phonics-justfatlard:block/letter_blank_green"
+    },
+    "letter=blank_green,lit=true": {
+      "model": "phonics-justfatlard:block/letter_blank_green_lit"
+    }
+  }
+}

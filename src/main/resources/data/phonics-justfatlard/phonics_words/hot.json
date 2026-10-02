@@ -1,0 +1,87 @@
+{
+  "tiles": [
+    "h",
+    "o",
+    "t"
+  ],
+  "stage": 3,
+  "icon": "minecraft:fire_charge",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:campfire",
+        "lasts": 120
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:flame",
+        "count": 24,
+        "spread": 0.6,
+        "at": "player",
+        "sound": "minecraft:block.campfire.crackle"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:small_flame",
+        "count": 8,
+        "spread": 0.2,
+        "at": "face",
+        "sound": "minecraft:entity.player.hurt",
+        "pitch": 1.2
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:smoke",
+        "count": 10,
+        "spread": 0.2,
+        "at": "face"
+      }
+    ]
+  },
+  "scene": {
+    "line": "Brr! He's so cold!",
+    "setup": [
+      {
+        "type": "character",
+        "act": "shiver"
+      },
+      {
+        "type": "bubble",
+        "text": "Brr!",
+        "color": 10478591
+      },
+      {
+        "type": "ambient",
+        "id": "snow",
+        "particle": "minecraft:snowflake",
+        "at": "over",
+        "count": 6,
+        "spread": 0.5,
+        "every": 3,
+        "sound": "minecraft:entity.player.hurt_freeze",
+        "pitch": 1.3,
+        "sound_every": 45
+      }
+    ],
+    "solve": [
+      {
+        "type": "place",
+        "block": "minecraft:campfire"
+      },
+      {
+        "type": "burst",
+        "particle": "minecraft:flame",
+        "count": 30,
+        "spread": 0.6,
+        "sound": "minecraft:block.campfire.crackle"
+      }
+    ]
+  }
+}

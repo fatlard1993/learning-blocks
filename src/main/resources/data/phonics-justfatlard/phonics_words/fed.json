@@ -1,0 +1,75 @@
+{
+  "tiles": [
+    "f",
+    "e",
+    "d"
+  ],
+  "stage": 5,
+  "icon": "minecraft:wheat",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 8,
+        "spread": 0.5,
+        "at": "above",
+        "sound": "minecraft:entity.generic.eat"
+      },
+      {
+        "type": "creatures_do",
+        "what": "hearts"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "creatures_do",
+    "what": "sneeze"
+  },
+  "scene": {
+    "line": "The animals are hungry! Let's get them...",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:pig",
+        "act": "still"
+      },
+      {
+        "type": "character",
+        "entity": "minecraft:cow",
+        "act": "still"
+      },
+      {
+        "type": "character",
+        "entity": "minecraft:sheep",
+        "act": "still"
+      },
+      {
+        "type": "bubble",
+        "text": "?",
+        "color": 16769126
+      },
+      {
+        "type": "ambient",
+        "id": "grumble",
+        "particle": "minecraft:smoke",
+        "at": "body",
+        "count": 1,
+        "spread": 0.1,
+        "every": 40,
+        "sound": "minecraft:entity.pig.ambient",
+        "pitch": 0.7,
+        "sound_every": 40
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:wheat",
+        "then": "eat",
+        "all": true
+      }
+    ]
+  }
+}

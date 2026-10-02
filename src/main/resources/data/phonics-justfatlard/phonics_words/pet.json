@@ -1,0 +1,21 @@
+{
+  "tiles": [
+    "p",
+    "e",
+    "t"
+  ],
+  "stage": 5,
+  "icon": "minecraft:string",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:cat",
+    "tamed_to_player": true,
+    "sitting": true
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:cat",
+    "act": "bounce",
+    "lasts": 60
+  }
+}

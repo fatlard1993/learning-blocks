@@ -1,0 +1,20 @@
+{
+  "tiles": [
+    "w",
+    "e",
+    "b"
+  ],
+  "stage": 5,
+  "picture": "clear",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:cobweb",
+    "at": "near"
+  },
+  "wrong": {
+    "type": "place_block",
+    "block": "minecraft:cobweb",
+    "at": "feet",
+    "lasts": 40
+  }
+}

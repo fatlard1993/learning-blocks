@@ -1,0 +1,57 @@
+{
+  "tiles": [
+    "h",
+    "a",
+    "t"
+  ],
+  "stage": 1,
+  "picture": "clear",
+  "outcome": {
+    "type": "equip_item",
+    "item": "minecraft:leather_helmet",
+    "slot": "head"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:leather_helmet"
+    ]
+  },
+  "scene": {
+    "line": "Oh no! He's getting wet!",
+    "setup": [
+      {
+        "type": "character"
+      },
+      {
+        "type": "ambient",
+        "id": "cloud",
+        "particle": "minecraft:cloud",
+        "at": "over",
+        "count": 6,
+        "spread": 0.35,
+        "every": 3,
+        "drift": true
+      },
+      {
+        "type": "ambient",
+        "id": "rain",
+        "particle": "minecraft:falling_water",
+        "at": "over",
+        "count": 5,
+        "spread": 0.3,
+        "every": 2,
+        "sound": "minecraft:weather.rain",
+        "pitch": 1.2,
+        "sound_every": 40
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:leather_helmet",
+        "then": "wear"
+      }
+    ]
+  }
+}

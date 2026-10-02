@@ -1,0 +1,452 @@
+# Phonics
+
+A server-side Fabric mod of reading puzzles for young children, in a quiet classroom dimension of their own, on an ordinary survival server.
+
+## The classroom
+
+Press the **Phonics** button on the action menu (or type `/phonics`) and you are taken to your own classroom: a small room with a green chalkboard, open to a sky that is always daytime and never rains. Every child gets a room of their own, far from everyone else's, so nobody's reading is interrupted and nobody sees anybody else's.
+
+Nothing in the classroom can get hurt and nobody gets hungry. It's survival, so that letter tiles can be knocked loose and set down the ordinary way, but that is all: the only blocks that break are letter tiles, a tile can only go in the word's gap or on the floor, nothing else can be placed, and nothing a word puts in the room can be opened, slept in or taken. You can't fall out of it either: step off the edge and you're back on the floor.
+
+What you were carrying stays at the door. Your things, your experience, your game mode and any potion effects still running are put aside on the way in and handed back on the way out, exactly as they were. Nothing from the classroom comes home with you.
+
+To go home, walk through the portal behind you: no clicking, just walk in. While lessons keep a child in, the portal is dark with a soft wall across it and the number left over it, and walking into it says how many are left; when the last one is done it lights up with a whoosh and swirls. **Go home** on the action menu (or `/phonics leave`) is the other way out, and says the same count while lessons are left. Clicking a creature or a villager in the classroom never opens another mod's dialogue or a trade.
+
+## The puzzle
+
+On the chalkboard is a word with its first letter missing, like `_ a t`, and beside it a picture of the word it wants (click the picture to hear the word again). On the floor are a few letter tiles.
+
+- **Break a tile** (hold left-click, it takes a moment) and it drops; walk over it to pick it up.
+- **Place it in the gap**: right-click the underscore at the back of the gap with the tile in your hand. Placing into a filled gap swaps the tiles; the old one flies back to its place on the floor. A tile set down anywhere else flies straight back to its place too, so the floor never gets muddled.
+- **Press the button** and the room sounds out each letter in turn, lighting its tile as it says it, then says the whole word, and then the word happens: it comes out of the button, a creature hopping out, an item thrown to your feet, a hat flying onto your head, a bed flying to its spot, a trail of sparks for anything that happens to you.
+
+Every letter says its sound when you touch it: hit it, break it, place it, or right-click it with an empty hand. A tile says its own sound (the short one, for a vowel: a as in cat); a letter in the word row says it the way the word does. When the room sounds a word out, each vowel is the very vowel from that word's own recording, so the a in cat is cat's a; consonants are the ordinary letter sounds. After a wrong word, the tile in the gap flies back to its place so you can try again. Tiles dropped or still in your pocket are tidied up for the next round, and any tile that goes missing comes back to its place.
+
+Moving up a stage is a clean slate: the pack is emptied, creatures and anything the words put down are cleared, and the room says "Wow! You're ready for new words!" before the first new word. The room asks for one word, out loud, and asks again if you go quiet for a while. Make it and the room cheers, and a new word comes along. The other tiles make real words too, and they happen as well, only sillier: build hat when the room asked for cat and a hat flies over and bonks you on the head; build ten and the button throws ten snowballs at you; build pig and a piglet sneezes. Creatures in a wrong answer are silly, never unfriendly: they chase their tails, bounce, sneeze or wander off the wrong way and bonk into the wall, and nothing runs away from the child. A wrong answer is still something to read, and it never hurts and never lasts.
+
+Everything the room says is spoken, in one voice (and the lines said most often have several versions, so "Well done!" isn't the same every time), with big captions that light up each word as it is said, so a child can follow along before they can read the whole line. A line too long for the window wraps onto a second line (or a third), still lighting word by word, so nothing runs off the edges at any caption size or GUI scale. Nothing goes to chat. Each player can turn captions off, make them smaller, or move them from the top of the screen (clear of the board and the tiles) to raised or the bottom, on Phonics' page of Pandorical's settings.
+
+## Situations
+
+Once a child has read a word, it can come back as a little problem instead of "Can you make...?". There's no picture and no word said: the room acts something out ("Oh no! He's getting wet!", a villager under a rain cloud), asks "What can help?", and offers the usual letters. The right word fixes it (the hat flies onto his head and the cloud drifts away) and the room says "That helped!". A wrong word does its usual silly thing while the rain keeps falling, and they can try again. Clicking the character asks again.
+
+The situations: hat (rain), lit (the room goes dark), bun (a rumbling tummy, crumbs, and hungry looks at the button), cot (a sleepy villager), hot (a shivering villager in the snow; a campfire comes to warm him), map (a lost villager pacing about), bin (litter on the floor), hug (a sad kitten), fan (a hot villager), cup (a thirsty villager by a cauldron), sit (two pups bouncing about; sit calms them), fed (a hungry pig, cow and sheep), hop (a cake behind a little fence; hop gives the jump to get over it), cut (a villager tangled in vines), wet (droopy flowers that bloom once watered), hum (a baby villager who can't sleep), nap (a tired dog), hut (a villager blown about by the wind, leaves flying), mop (a puddle), rod (a villager by a pond who wants to go fishing), vet (a puppy that needs an animal doctor, and a cleric comes), tug (a villager stuck in the floor), pop (a pinata to burst, only with the pinata mod installed), ship (a villager who can't get across the water; a boat comes), fish (a hungry kitty), bone (a puppy that wants something to chew), milk (a thirsty baby villager), hay (a hungry foal), tree (a parrot with nowhere to sit; a little tree comes) and sheep (a villager who needs some wool; a sheep comes). One round in four is a situation, once there's a read word with one; operators can turn them off or change how often on the prize editor's General tab (`puzzles` in prizes.json). They count as lessons and pay like any other round, and everything in them is harmless and gone at the next round and on the way out, the dark included.
+
+## Reading together
+
+Two (or three) children can share one classroom. `/phonics join <player>` asks to read with someone who is in their classroom; they get a **[Yes]** and a **[No]** to click in chat, and a yes brings the asker in by the ordinary way (their own things put aside, their own lessons and prizes) or straight across from their own classroom. Operators can `/phonics pair <a> <b>` and `/phonics unpair <player>`, and `/phonics daily <reader> with <other>` (or `with nobody`) pairs two for daily reading time: whoever arrives second goes into the first one's room.
+
+Rounds take turns. Each is picked for the reader whose turn it is, from their own stage band, mastery, review and today's lessons, and starts with "Your turn!" and their name in the caption; their gap's underscore is in their colour (blue, orange, green) and a little arrow in the same colour floats over them. Only they can put a tile in the gap, press the button or pick a picture: the other can knock tiles loose, carry and drop them, and hear them, but a tile aimed at the gap stays in their hand and they hear "Wait for your turn!" with "It's Max's turn!" written. Everything counts only for the reader whose turn it is (mastery, lessons, the daily count, prizes, which fly into their own chest: each reader has one beside the portal), and everybody hears and sees everything.
+
+One round in three (`team_up_every`, and `team_up` to switch it off, on the prize editor's General tab) is a team-up: "Let's do this one together!", a word from the lower reader's band, its first sound that reader's gap and its last the other's, each in their colour. Each puts in only their own; either presses the button. Right: "Great teamwork!", the word counts for both, and each for their own tile; built wrong, the miss is quietly the one who put the wrong tile in.
+
+The portal is each reader's own: one whose lessons are done walks out, and the others carry on (the room passes to them if it was the leaver's); one still kept is turned back from it, sees their own frame dark, and the count over it names them. A disconnect is one reader's, as ever.
+
+## Tricky words
+
+Some words can't be sounded out: the, I, to, no, go, he, she, we, me, be, was, you, they, my, said, are, of. From stage 2 they open a few at a time (the, I and to first; are and of at stage 7), and one round in six is one of them, the fewest-practised first. The word is on the board and the room says it, with a star in the caption instead of sounds, since there is nothing to blend. On the floor stand two or three word cards, and the child right-clicks or punches the one that matches. The right one: the word again, a sparkle, and on to the next. Another: that card says its own word and wiggles. They are mastered like any word (three clean picks), and have their own **Tricky** tab.
+
+## Big and little letters
+
+Once a letter's sound is mastered in the letters level, its capital comes in too, both ways round: the board shows a and asks "Which one is the big... A?", with three capitals on the floor, or shows A and asks for the little one. The other tiles are letters the child knows, and never b with d, p with q, m with w or n with u until both are solid. Right: the letter's name, twice, with a sparkle running between the two tiles ("A... a!"). Wrong: the tile says its name and flies home. Each letter's pair is mastered after three clean matches, either way round, and a group (and the letters level) isn't done until its sounds and its pairs both are. Readers who finished the letters level before capitals keep their place; for them, and for everyone after the letters level, a big-and-little round comes up now and then as review. The Letters tab has an **A B C** button to show the capitals, with each pair's matches as pips, and the progress screen shows each pair's mastery.
+
+## Plurals and phrases
+
+After stage 5 (and past every stage), one round in eight is a plural of a word the child has read: cat with a gap before it and a gap after, and on the floor the first letters of the family (c, b) and an s. Cats: three cats. Bats: three bats. The s says /s/ in cats, bats and pups, and /z/ in dogs, pigs, hogs, hens and cubs. Only creatures have plurals.
+
+One round in seven is a two-word phrase: an adjective the child has read (big, red, wet, fun, six) above a creature word to build. The button reads the adjective, sounds out the noun, then says the two together, and the phrase happens: big pig is one big pig, six cod is six cod, red makes a sheep red (anything else gets a red puff), wet drips, fun makes it hop with sparkles. Building another creature word of the family is friendly: its own phrase happens instead (big hog in a big pig round); any other word does what it always does (big makes you grow). Building bats in a cats round brings three bats. Only pairs the room can show are offered, and only once both words have been read.
+
+## Plushies and toys
+
+Twenty-six soft toys, each a word Minecraft has no creature or thing for: owl, duck, ant, rat, ox, shark, crab, worm, moth, yak, teddy (bear), snail, seal, mouse, snake, skunk, hawk, ladybug, mole, crow, pug, deer, whale, fly, beetle and mice (three little mice in a row). They are chunky, felt-coloured, big-eyed, and about half a block tall. Put one down anywhere on the server and it faces you; right-click it and it squeaks, puffs a heart and says its word, with a caption; break it and it comes back as itself.
+
+In lessons they stand in for the animals: reading owl brings an owl plushie popping out of the button, a lesson prop that is cleared at the next word (not a prize); built wrong, it pops out and you spin round. Bug is the ladybug now, and hug brings the teddy as well as the hearts.
+
+Nineteen toys, the second family to collect, in the same chunky style: a drum, a kite, a spinning top, stacking rings, a toy cap and a dress-up wig (both worn on the head), a butterfly net, a bowling pin, a sock puppet, a doll's crib, a toy car, van, jet, bus, ship, train and truck, a doll and an ABC block made of the same wood as the letter tiles. Put one down and right-click it, and it makes its own little noise (a toot, a ding, a squeak, a whirr) and says its word. Reading a toy word pops the toy out with its noise and hearts, a lesson prop like the plushies; built wrong, it pops out and you spin round. Cap and wig put the toy on your head; ship still gives a boat to ride, and jet still sends you up.
+
+Both are the collect-them-all prize. `{ "plush": "random_new" }` gives a plushie the child hasn't got yet (any one, once they have them all), `{ "plush": "owl" }` that one; `{ "toy": "random_new" }` and `{ "toy": "drum" }` the same for toys; and `{ "toybox": "random_new" }` one they haven't got from either, every missing one equally likely. New servers' prizes give a new one from the toybox for every stage band finished and at every milestone; an existing prizes file keeps what it had until one is added on the editor (each prize list has **Add a plushie** and **Add a toy**, and a row's arrows go through "A new one" and every kind). A new one is announced with "Ooh! You got a new plushie!" or "Ooh! A new toy!", flies into the chest like any prize and comes home the usual way. The **Toybox** tab (`/phonics toybox`) has two shelves, Plushies and Toys: the ones a child has in colour (with how many, if more than one; a click says the word), the rest as "?", and "Plushies 7 of 26 · Toys 3 of 19".
+
+## Props and picture cards
+
+Props are things words need that Minecraft hasn't got and that aren't toys, plain objects to put down, not collected: a bin, a bathtub, a cardboard box (open, its flaps folded out), a glass jar, a desk fan, a mop, an ear of corn, a mug, a school desk and a fork. A key is Minecraft's trial key, so there is no new one.
+
+A word with no item at all can have a picture card, `"picture_card": "<name>"`: a small pixel picture (`textures/card/<name>.png` in the mod) on a panel beside the word, drawn by Pandorical. The moon, a sad face, a glad face, a mouth and a town have one. Only players with Pandorical see a card, and it is gone with the round.
+
+## Read it
+
+From stage 2, now and then (one round in five, `read_it_every`; `read_it` switches it off) a word the child has already read comes back to be read on its own. It is shown whole on the board, with no gap, no picture and nothing said but "What does it say?" (or "Can you read it?"...). Only words whose picture a five-year-old names at once as the word are used (`"picture": "clear"` in the word file: cat, bell, ship, crown...), never a verb or a loosely pictured word (sat, run, jam). On the floor stand two or three such pictures of words that sound alike (cat, bat, hat), or, where a family has too few, other clear words of the stage starting or ending the same, and the child right-clicks or punches the one they think it is. The right one: now the word is sounded out, as a check, and it happens as any right word does. Another: that picture says its own word ("Oops! That's... bat!"), gives a little wiggle, and they try again; nothing cheeky, since this is a check of reading. It counts as a lesson and pays like any round. A situation is never a read-it round.
+
+## Sentences with Bob
+
+From stage 5, one round in five (`tell_bob_every`; `tell_bob` switches it off) is Bob's. Bob is a villager who helps, very literally: he does exactly what a sentence says, which is the whole game (like a grown-up making a sandwich from a child's too-literal instructions). His lines are his own voice, and his captions start with "Bob:".
+
+- **Tell Bob**: framed on the floor to the left is what Bob should make (a cat in a box), and on the floor are word cards: the sentence's words and one or two that make something else (dog, on). Click a card and it flies into the sentence row on the board; click it there and it flies home; each card says its word as it goes. The button reads the sentence back a word at a time, each card lit and the sentence in the caption, then Bob says "Okay!" and does it on his stage. Put cat in box: the cat sits in the box, "Easy peasy!", and it counts like a word. Put box in cat: a box can't go in a cat, so it goes on the cat's head. Put cat on box: the cat perches on top. Put cat on pig: the cat rides the pig. Then "Hmm, that's not quite it!", the cards fly home, and the stage is set back to try again. Sentences come in order: plain ones (put hat on dog), then with big (put big cat in box), then with the and a (put the cat in the box), then two in a row where the order matters (put cat in box, put lid on box: the lid on first, and the cat ends up on the lid). A kind opens once two of the one before are mastered. Only words the child has read are used, and the little words once their stage is reached (put from 5, a from 4, under from 12).
+- **What's wrong?**: every third of Bob's rounds (`whats_wrong` switches them off), the sentence is already in the row and Bob has already done it, wrong: a wrong thing (put cat in tub), a wrong little word (put cat on box), or the wrong way round (put box in cat). "Uh oh! Something's not right." The child takes the wrong card out, puts the right one in, and presses the button: Bob does it again from the start.
+- **Fix the word**: from stage 2, one word round in six (`whats_wrong_every`) has the gap already filled with a wrong letter that makes another real word: the picture is a cat, and the board says cot. "Uh oh! Something's not right. Can you fix it?" The child swaps the o for an a, and it goes on as any word round.
+- **Silly sentences**: the **Silly sentences** button on the action menu (or `/phonics silly`), from stage 5, gives a sentence row and a floor of cards (put, in, on, the little words the child has, and things they have read), and Bob does any sentence at all, one after another, the stage keeping what is done. Pressing the button again goes back to reading. It is for fun: no mastery, and a lesson only if `silly_counts` says so.
+- **Reading together**: Tell Bob is both readers': the one whose turn it isn't picks which of two goals Bob should make ("Ava, pick what Bob should make!"), then the other tells Bob, and a right sentence counts for both.
+
+Sentences are mastered the way words are, clean on three different days, and the progress screen has a Sentences section: each sentence tried, its clean days and misses.
+
+## Remembering, and looking again
+
+The room remembers what each child gets right and wrong: every word and every sound, how often tried, got first time and missed, and the last few things built instead (bad for bed; b picked for d). Every word and sound has a box: a miss puts it in box 1, a first-time answer moves it up, and it comes back after a few rounds in box 1 and rarely once it is solid. About three rounds in ten (`review_share`, 0 to 90) are a word, or in the letters level a letter, that is due for another look, rather than the usual pick; the rest are as before. The sounds a child mixes up are counted in pairs (b and d), for the progress screen. On My words, the Letters tab and the Two-letter tab, what is due for another look and still shaky (missed lately, or not yet got first time much) gets a small gold star, with "Let's practise this one!"; nothing a child sees counts what they got wrong.
+
+## Hearing it again
+
+Three screens open from anywhere, the overworld included, from the **Letters** and **My words** buttons on the action menu (or `/phonics sounds`, `/phonics vowels`, `/phonics words`), with tabs across the top to move between them. Click anything to hear it, just to you, with what was said written along the bottom.
+
+- **Letters**: all 26 letters, drawn like the tiles (vowels red, consonants blue), with a green tick on each one a child has learned in the letters level. Click a letter for its sound, or the **Name** button under it for its name ("bee" for b; a vowel's name is its long sound). **A B C** shows the capitals instead, each with its big-and-little matches as pips; clicking one says its name.
+- **Two-letter**: every two-letter tile, to hear, with a word that uses it, and a tick once a child has learned it (by reading words with it, first try, a couple of times).
+- **Vowels**: a, e, i, o and u, each with a short button (the sound, then the vowel's keyword from the letters level, apple, egg, ink, on or up, with its picture) and a long button.
+- **Tricky**: the tricky words open at your stage, to hear, with their clean picks as pips, and how many more are to come.
+- **My words**: every word you've read, by stage band (1a, 1b...), with its picture. The words still to find in the stage you're on show as question marks, so you can see how many are left without being told what they are. The prize chest's screen has a **My words** button too.
+
+Operators also get **Phrases**, every recorded line the room says, with its caption and length, and can see every word the server has (`/phonics words all`, or the button on the screen) or another player's (`/phonics words <player>`).
+
+## Letters first
+
+A new reader starts on the letters level, stage 0, before any words. The room plays a sound ("Which letter says... /m/?", or "Can you find the letter that says..."), and there's one gap on the board, no picture, and three letter tiles on the floor (four later on). Right-clicking the gap's underscore asks again. The right letter gets the alphabet chant, its sound twice and then its keyword ("m, m, map!"), and the keyword happens; another letter just says its own sound, goes back to its place, and the sound is asked for again, with nothing silly and nothing that feels like a mistake.
+
+Letters come in the usual groups: s a t p i n, then m d g o c k, then e u r h b, then f l j v w, then x y z (q waits for "qu"). The other tiles are always letters already met. A letter is mastered after three clean matches (`mastery_clean`, the same count as for words); when a group is all mastered the next one opens, with earlier letters mixed back in now and then. When every group is known, the reader moves on to stage 1 with the usual fresh start and "You're ready for new words!". Keywords are the words that start with each letter (bat, cat, dog, hat, kid, web, yum...), plus keyword-only words for the rest: apple, egg, gold, ink, jump, nest, on (a lamp lights up), rabbit, sun, turtle, up, villager; zap's lightning is a little one, and quiet; x ends its keyword, fox. Two tiles that say the same sound (c and k) are never on the floor together, since either would be right.
+
+Blending starts early. Once s a t p i n are known, one round in three (`letter_word_every`; 0 turns it off) is a word made only of letters the child knows, asked by its first sound with three tiles, all known: sat, sit, sip, tap, tip, pat and nap to begin with, and more as more letters are learned (map, cat, dig, kid, dog...). Reading one counts like any word, but the level is still finished by knowing every letter.
+
+Readers from before the letters level stay where they are. `letters_first` (on by default, in `puzzles` in prizes.json and on the prize editor's General tab) turns it off for new readers, and `/phonics stage <player> 1` skips it; `/phonics stage <player> 0` starts the letters again.
+
+## Stages
+
+Words come a short vowel at a time, the order phonics is usually taught in, and a child moves up a stage once they have mastered every word in theirs. A word is mastered after three clean completions (`mastery_clean`, 1 to 10, on the prize editor's General tab): right first time that round, with nothing wrong built or picked before, in any kind of round (a situation or a read-it round too). A miss neither adds nor takes away. Within a stage the room asks for the words with fewest clean completions first, and never the same word twice running; a mastered word leaves the usual rounds and comes back only now and then for review (and in read-it and middle-vowel rounds, which mix in earlier stages), and a slip on a mastered word brings it back sooner without unmastering it. Mastering a word gets a sparkle over its picture and "You've got it!"; the new stage's "You're ready for new words!" and fresh start come when the last word of a stage is mastered, and `stage_complete` pays then. Words a missing mod leaves out don't hold a stage up, and `/phonics stage` still moves a reader. Readers from before mastery keep the stage they had reached, with the ones before it counted as done. Past the last stage, every word is open. My words shows each word's clean completions as little pips, with a gold border once mastered.
+
+A child's day has no repeats: a word asked once is not asked again that day while their band has another. Once every word of the band has had its turn, the room fills in, first with the same words in a kind of round they haven't had today (the last sound swapped instead of the first, the whole word, read it, a situation), then with something from before due for another look (a word, then a big-and-little pair), then a situation or phrase of words already read, and only after all that the same word again, never twice running. Leaving and coming back the same day doesn't start it over; the day is the schedule's (`timezone`).
+
+Only one clean completion a day counts towards mastering anything (a word, a letter, a two-letter tile, a big-and-little pair, a tricky word): mastered means clean on three different days. More rounds the same day are practice: they still count as lessons, for review and for the daily schedule. So a band takes at least three days; at ten lessons a day, a band of up to ten words takes three, and a bigger one about its words times three over ten (1c's 15 words, five days; 8a's 12, four). The whole course is then at least about 89 days at ten a day, after the letters level.
+
+Long stages come in bands, so the gate (and "You're ready for new words!", and `stage_complete`) comes every 4 to 15 words rather than every 24. Within a stage, words are ordered by the latest letter group they need (s a t p i n; m d g o c k; e u r h b; f l j v w; x y z; then two-letter tiles). Stages 1 and 2 split by group: 1a is words of s a t p i n alone (ant, sat, tap, pat, nap), 1b adds the second group (cat, map, man, tag), and 1c is the rest; a band of fewer than four words joins its neighbour, so stage 2 is 2a (pin, sip, sit, tip, pig, dig, kid) and 2b. Any other stage that would take more than 45 rounds at mastery is split in two halves in the same order. A band only limits which words are asked for: the tiles on the floor still come from the whole stage's families, so a 1a round (_at: sat) still offers c, b and h. The bands are shown as 1a, 1b, 1c on My words and the progress screen, and `/phonics stage <player> 1b` puts a reader at one. A reader from before bands keeps their stage, starting at its first band.
+
+| Band | Words | Rounds at mastery 3 |
+|------|-------|---------------------|
+| 1a | ant nap pat sat tap | 15 |
+| 1b | cap cat man map mat pad sad tag | 24 |
+| 1c | bat hat rat bag ham rag ram fan van jam wag yap zap yak wax | 45 |
+| 2a | pin sip sit tip pig dig kid | 21 |
+| 2b | bin hit rip big hid fin lit win jig lid wig six zip mix fix | 45 |
+| 3a | pop pot top cot mop cod dog hop | 24 |
+| 3b | hot hog rod jog log ox box fox | 24 |
+| 4a | pup sun cup cut pug tug gum mud mug bun bus | 33 |
+| 4b | hut run tub bug cub hug hum rug fun yum | 30 |
+| 5a | net pen pet ten keg hen bed beg | 24 |
+| 5b | red jet vet wet fed leg web yes | 24 |
+| 6a | pack pick tick kick kiss sock doll egg hill hiss | 30 |
+| 6b | puff duck rock bell buzz fill fizz fell well yell | 30 |
+| 7 | chip path ship chop dish moth bath shed fish wish chick quick quill shell | 42 |
+| 8a | snap spin stop step trip drip grin drop crab crib drum clap | 36 |
+| 8b | swim twig glad sled frog flap flag chest truck clock block | 33 |
+| 9a | pine cape gate kite snake cake mice bone rope | 27 |
+| 9b | rose cube vine dive mole hive mule fly whale | 27 |
+| 10a | pie moo coat goat meat moon seed bee bean boat boot rain | 36 |
+| 10b | tree train loop seal snail food mail rail leaf sheep beetle | 33 |
+| 11a | sand mask nest tent desk gift lamp milk raft | 27 |
+| 11b | jump melt pink sing king ring honk skunk | 24 |
+| 12a | star turn car corn dirt storm burp horn bird deer | 30 |
+| 12b | herd horse jar fern farm fork worm torch shark | 27 |
+| 13a | town cow coin down hay high crow hawk crown mouse | 30 |
+| 13b | house joy owl light play clay cloud howl oink mouth | 30 |
+
+The table is the shipped words with no optional mods installed (cone, poop and the like join their band where their mod is); a different `mastery_clean` changes which stages are long enough to split. The letters level takes about 75 clean matches, and as many again for big and little letters.
+
+Some tiles are two letters that make one sound: sh, ch, th, ck, qu, ll, ss, ff, zz, gg, ng, nk, wh (whale) and le (beetle); the vowel teams ee, ea, oa, ai, oo, ie, ow (as in cow), ou, ay, oi, oy and aw (hawk); the r-controlled ar, or, ur, ir and er; and igh, three letters on one tile. A word can have a tile say something else with `sounds`: crow's ow says /oh/, fly's y says its name, mice's c says /s/, worm's or says /ur/. Each is a tile of its own with both letters on it, blue for consonants and red for vowel teams. A word like ship is three tiles, sh-i-p, and sounded out as three sounds.
+
+Stage 9 is magic e: the e on the end says nothing and makes the vowel before it say its name (c-a-k-e, cake). Sounding one out, the vowel says its long sound, shown in the caption as its capital (c · A · k · e); at the silent e, the e lights up together with its vowel and a sparkle runs from one to the other. Stage 10 is the vowel teams (b-oa-t, sh-ee-p).
+
+Rounds come in four kinds. At first the first sound is swapped (_at: cat, bat, hat). Once most of a stage is read, the last sound is too (ma_: map, mat, man). From stage 2 the vowel in the middle is swapped as well (c_t: cat, cot, cut), with words from every stage read so far, since it needs more than one vowel. A kind that has nothing new to offer waits, and a word only one kind can reach (web, in we_; chop, in ch_p) is always reached. From stage 6 there are whole-word rounds too: every slot is a gap, and the floor holds the word's tiles and a decoy or two the child knows; a row not yet full only gets "hmm", and anything built is sounded out as built. Words with no family (mud, yes, most of stage 8's blends) are asked this way. Each kind can be switched off on the prize editor's General tab (`first_sound`, `last_sound`, `middle_vowel`, `whole_word` in `puzzles`).
+
+| Stage | Families | Words, and what they do |
+|-------|----------|-------------------------|
+| 1, short a | -at -ag -ap -an -am | **cat** a cat, **bat** a bat, **hat** a hat on your head, **mat** a mat at your feet, **sat** a cat sits by you, **pat** a sheep, and hearts, **bag** a bundle, **tag** a name tag, **map** a map, **cap** a toy cap on your head, **tap** tap, tap, tap, **man** a villager, **fan** a desk fan and a gust that pushes you back, **zap** a lightning rod struck by a little harmless bolt, **yap** a fox cub yapping, **nap** a lullaby, **ram** a sheep, **ham** a porkchop, **jam** sweet berries, **wag** a dog of your own, wagging, **rag** a white rag, **van** a toy van, **pad** a lily pad, **wax** honeycomb |
+| 2, short i | -ig -in -it -ip -id -ix | **pig** a pig, **big** you grow for a few seconds, **dig** a shovel and a burst of speed digging, **jig** a dance, **bin** a bin, **fin** a tropical fish in a bucket, **win** a firework and a cheer, **lit** a torch, **sit** a dog sits, and every pet in the room sits too, **hit** a target, **zip** a dash forward, **sip** a drink, **tip** a bucket tipped out, **rip** paper ripped, **kid** a villager child, **lid** a trapdoor lid, **hid** you hide in a puff of leaves, **six** six carrots, **fix** a fix and a cheer, **mix** potions mixed |
+| 3, short o | -og -ot -ox -op -od | **dog** a dog of your own, **log** a log, **jog** speed, **hog** a pig, **pot** a flower in a pot, **cot** a white bed, **hot** a campfire beside you, **fox** a fox, **box** a cardboard box, **hop** jump boost, **pop** bubbles pop, **mop** a mop, **top** a spinning top, **rod** a fishing rod, **cod** a cod flopping about |
+| 4, short u | -un -ug -ub -up -um -ut | **bun** bread, **run** more speed, **fun** a firework, **rug** a rug at your feet, **hug** hearts, and every creature in the room hops over to you, **cub** a polar bear cub, **tub** a bathtub, **bus** a toy bus, **pup** a puppy of your own, **cup** a bottle, **sun** sparkles and a sunflower, **yum** a cookie and a burp, **hum** a little tune, **gum** a slime ball, **bug** a bee, **tug** a lead, and you're pulled towards the button, **cut** shears, **hut** a tiny wooden hut round you for a while, **mud** a block of mud |
+| 5, short e | -en -ed -et -eg (and web, yes) | **hen** a chicken, **pen** a book and quill, **ten** ten snowballs, **bed** a red bed, **red** red dye and a puff of red, **pet** a cat of your own that sits by you, **wet** a splash, **jet** a toy jet, then a jump into the air and a slow float down, **leg** leggings on, **beg** a cat sits up and begs, **keg** a barrel, **fed** hearts over every creature, **vet** a cleric who makes every creature feel better, **web** a cobweb, **yes** a villager's "hm!" and a cheer |
+| 6, double letters and ck | -ell -ick -ock -iss -ill (and buzz, fizz, puff, pack) | **bell** a bell rings, **well** a well of water, **yell** a cheer that makes every creature jump, **fell** a log rolls by, **kick** a slime ball rolls off, **egg** an egg (and e's keyword), **pick** a pickaxe, **tick** a clock and a tick-tock, **rock** cobblestone, **sock** a sock puppet, **doll** a doll, **kiss** hearts, **hiss** a cat hisses, **buzz** a bee, **fizz** fizzing bubbles, **puff** a puff of cloud, **hill** a grass mound, **fill** a bottle filled with water, **pack** a bundle |
+| 7, sh ch th and qu | -ip -ish -ick -ath (and shed, shell, chop, quill) | **ship** a boat to sit in (pictured as the toy ship), **chip** a baked potato, **fish** a fish, **dish** a bowl, **wish** a star firework, **chick** a chick, **quick** speed, **quill** a feather, **bath** a bath of water and a splash, **path** a path block, **shed** a tiny shed round you, **shell** a nautilus shell, **chop** an axe |
+| 8, blends | -lock (and whole-word rounds) | **frog** a frog, **swim** dolphin's grace, **spin** you spin round, **grin** a happy face, **drum** a toy drum and a drumbeat, **twig** a stick, **clap** clapping, **flap** a parrot, **snap** a snap, **stop** every creature freezes a moment, **drop** an apple drops, **drip** drips, **trip** a stumble forward, **flag** a banner, **step** a stair, **sled** a sled to sit in, **clock** a clock, **block** an ABC block, **truck** a toy truck, **chest** a chest |
+| 9, magic e | -ake -ine -ive -one -ose ... | **cake** a cake (the Let's Cook chocolate cake, with that mod), **cape** a cape on your back, **gate** a fence gate, **bone** a bone, **cone** an ice cream (only with Let's Cook), **rope** a rope ladder (with Better Ladders; a lead without), **rose** a rose bush and hearts, **pine** a spruce sapling, **vine** vines, **hive** a beehive and dripping honey, **dive** a big splash, **cube** an ice cube, **mule** a baby mule |
+| 10, vowel teams | -oat -ail (and more) | **bee** a bee, **tree** a little tree, **sheep** a lamb, **seed** seeds, **leaf** leaves, **bean** a magic bean (with Cloud Kingdoms; cocoa beans without), **meat** a steak, **boat** a boat to sit in, **goat** a baby goat, **coat** a coat on, **rail** a rail (Minecart Mania's wooden rail, with that mod), **mail** a mailbox (with Village Mail; a letter without), **rain** rain, **train** a toy train, **pie** a pie (Let's Cook's, with that mod), **food** a roast chicken, **boot** an iron boot, **moo** a calf mooing, **loop** a loop-the-loop spin, **poop** a poop pops out (only with Poopsmith) |
+| 11, ng, nk and final blends | (whole-word rounds, mostly) | **sing** a villager sings, **pink** pink dye and a pink puff, **honk** a honk, **nest** a bee nest, **jump** a jump, **lamp** a lantern, **tent** a little wool tent round you, **milk** a bucket of milk, **sand** sand, **mask** a pumpkin mask on, **gift** a present, **raft** a raft to sit on, **melt** ice melts |
+| 12, r-controlled | -orn -ird ... | **star** a star, **car** a toy car, **farm** a hay bale and a chick, **horse** a foal, **storm** clouds and rain, **bird** a parrot, **fern** a fern, **herd** three sheep, **horn** a horn toots, **torch** a torch, **dirt** dirt |
+| 13, ow ou ay igh oi oy | -ay (and more) | **cow** a cow, **down** you float down, **crown** a gold crown on, **cloud** a cloud (Cloud Kingdoms' with that mod), **house** a little brick house round you, **howl** a wolf howls, **hay** a hay bale, **play** a tune, **clay** clay, **light** a glowing block, **high** up you go, **coin** a gold coin, **joy** hearts and a firework, **oink** a piglet |
+
+Added with the plushies, toys and props (each brings its plushie, toy or prop, and a friendly spin when built wrong): stage 1 ant, rat, yak, sad (a picture card); 2 pin, wig; 3 ox; 4 pug, mug; 5 net; 6 duck; 7 moth; 8 crab, crib, glad (card); 9 kite, snake, mole, whale, fly, mice; 10 snail, seal, beetle, moon (card); 11 ring, king (a gold crown), skunk, desk; 12 shark, worm, deer, fork, corn, jar; 13 owl, mouse, hawk, crow, mouth and town (cards).
+
+Gem (an emerald) and kit (leather armour) are kept as word files but are not puzzles: gem's soft g is never taught, and kit is a word many children don't know. They are there to turn back on with `"puzzle": true`.
+
+Everything a word brings is harmless, can't be hurt, and stays in the classroom: creatures are invulnerable and only a few are kept, anything put down goes on open floor away from the board and the tiles and is cleared at the next word, and a grown child shrinks back on the way out if not before.
+
+## Prizes
+
+Reading can earn things to take home to the main server. Nothing is given inside the classroom: whatever a child earns waits with the things they left at the door, a chest by the portal home shows that something is waiting, and on the way out the room says "You earned a prize!". At home they get their own things back first, then the prizes; whatever doesn't fit is dropped at their feet. That holds however the visit ends: the door, `/phonics leave`, logging out and back in somewhere else, or a respawn.
+
+What pays, and what with, is set in `config/phonics/prizes.json`, written with every setting and a comment beside it the first time the server starts.
+
+Prizes are seen arriving. When something is earned, the room says "You earned a prize!" (after the lesson's own lines) as the prize pops out of the button and arcs across the room into the chest by the portal, which pops into place first if it isn't there yet; its lid opens to catch each one, with sparkles and a soft chime, one after another, and a stack shows "×2" for a moment. Experience flies in as a stream of green sparks. Over the chest, a slowly turning display shows the haul so far (up to three things, then "+N"). Opening the chest shows what's waiting (to look at, not to take), with a My words button. On the way out the haul lifts off the chest and goes to the child, and everything comes home with them.
+
+Operators can change all of it in game with `/phonics prizes`: a General tab (prizes on or off, the daily cap, points, and the Puzzles settings: situations and how often, letters first and when a letter counts as known, read it, the kinds of word round, team-ups, Tell Bob and how often, what's wrong and how often, and whether silly sentences count), an Events tab with every event's settings and prizes, and Milestones and Thresholds tabs where totals can be added and removed. Every prize list shows its items as icons, with an **Edit** button that puts your own things aside and lays the list out in your inventory: hold whatever should be given, from the creative menu or chests (named and enchanted items keep their names and enchantments), and say done to get your own things back. Loot tables are picked from every table the server has loaded; experience has a row of its own. Every change is written to the file as it's made, so the menu and the file always agree, and a hand edit followed by `/phonics reload` shows up in the menu at once. The simple on/off and number settings also appear on Phonics' page of Pandorical's settings screen, under its server heading.
+
+A setting or prize that's wrong, or names an item or loot table this server doesn't have, is skipped and named in the log and in the reply to `/phonics reload`; the rest keeps working, and the entry stays in the file for when the mod comes back.
+
+Events, each of which can give points, prizes, or both, and each of which can be switched off:
+
+| Event | When |
+|-------|------|
+| `new_word` | The first time a child ever reads a word. Once per word, ever, so guessing every letter in turn earns nothing more. Also says "That's a new word!" |
+| `solved` | Any word read; `first_try_only` limits it to a word read before any other was built that round |
+| `streak` | Every `length` words read in a row; building a different word starts the count over |
+| `stage_complete` | Every word of a stage band (1a, 1b...) mastered; pays once per band |
+| `milestone` | Totals of different words ever read |
+| `daily_visit` | The first visit of each real day |
+
+Points are optional and off by default: each threshold pays once, the first time a child's total reaches it. `daily_cap` limits how many payouts a child gets in a real day. Nothing past it is lost: it's owed, and paid on a later day, oldest first, within that day's cap.
+
+A prize is items (`item`, `count`, optional `components`), experience (`xp`), one roll of a loot table (`loot_table`), or something for the toybox (`plush`, `toy`, `toybox`; see Plushies and toys). There are no command prizes.
+
+There used to be a word book, "My Words", handed out as a written book; the My words screen replaced it. A file that still mentions `word_book` loads without complaint (one line in the log says it's ignored), and the next save from the prize editor leaves it out. Books already handed out stay ordinary written books.
+
+The file as first written:
+
+```jsonc
+// Phonics prizes: what reading earns, handed over at home when a child leaves the classroom.
+//
+// Nothing here goes into the classroom's own inventory. Everything earned waits with the
+// things put aside at the door and is handed back after them; whatever does not fit is
+// dropped at the child's feet at home.
+//
+// A prize is one of:
+//   { "item": "minecraft:cookie", "count": 3 }                 items; "components" optional
+//   { "item": "minecraft:paper", "components": { "minecraft:custom_name": "A gold star" } }
+//   { "xp": 10 }                                               experience points
+//   { "loot_table": "minecraft:gameplay/cat_morning_gift" }    one roll of a loot table
+//   { "plush": "random_new" }                                  a plushie the child hasn't got yet
+//   { "plush": "owl" }                                         that plushie
+//   { "toy": "random_new" }                                    a toy the child hasn't got yet
+//   { "toy": "drum" }                                          that toy
+//   { "toybox": "random_new" }                                 a plushie or a toy they haven't got
+// Anything naming an item or loot table this server has not got is skipped, with a line in
+// the log, and kept in this file. There are no command prizes.
+//
+// Every setting here can also be changed in game: /phonics prizes (operators only). The menu
+// writes this file as it goes, comments and all; /phonics reload reads a hand edit.
+
+{
+  // Everything below, on or off at once.
+  "enabled": true,
+
+  // At most this many payouts per child per real day, counting every event and threshold
+  // that pays. 0 for no cap. A payout over the cap is not lost: it is owed, and paid on a
+  // later day, oldest first, within that day's cap.
+  "daily_cap": 0,
+  "events": {
+    // The first time a child ever reads a word. Pays once per word, ever, so guessing every
+    // letter in turn earns nothing more.
+    "new_word": {
+      "enabled": true,
+      "points": 0,
+      "prizes": [ { "item": "minecraft:cookie", "count": 1 } ]
+    },
+
+    // Any word read. first_try_only: only when no other word was built this round first.
+    "solved": {
+      "enabled": false,
+      "first_try_only": true,
+      "points": 1,
+      "prizes": []
+    },
+
+    // Every "length" words read in a row. Building a different word resets the count.
+    "streak": {
+      "enabled": true,
+      "length": 3,
+      "points": 0,
+      "prizes": [ { "xp": 10 } ]
+    },
+
+    // Every word in a stage read at least once. Pays once per stage.
+    "stage_complete": {
+      "enabled": true,
+      "points": 0,
+      "prizes": [ { "item": "minecraft:emerald", "count": 1 }, { "toybox": "random_new" } ]
+    },
+
+    // Totals of different words ever read. Each pays once.
+    "milestone": {
+      "enabled": true,
+      "every": [
+        { "words": 10, "prizes": [ { "item": "minecraft:emerald", "count": 3 }, { "toybox": "random_new" } ] },
+        { "words": 25, "prizes": [ { "item": "minecraft:diamond", "count": 1 }, { "toybox": "random_new" } ] },
+        { "words": 100, "prizes": [ { "item": "minecraft:diamond", "count": 5 }, { "toybox": "random_new" } ] }
+      ]
+    },
+
+    // The first visit of each real day.
+    "daily_visit": {
+      "enabled": false,
+      "points": 0,
+      "prizes": [ { "item": "minecraft:apple", "count": 1 } ]
+    }
+  },
+
+  // Points add up from the events above that give them. Each threshold pays once, the
+  // first time the total reaches it. Off by default.
+  "points": {
+    "enabled": false,
+    "thresholds": [
+      { "points": 10, "prizes": [ { "item": "minecraft:gold_ingot", "count": 1 } ] },
+      { "points": 50, "prizes": [ { "item": "minecraft:diamond", "count": 1 } ] }
+    ]
+  },
+
+  // How rounds are asked. scenes: now and then, instead of "Can you make...", the room acts
+  // out a little problem (a villager in the rain) and the child works out which word helps.
+  // Only words already read are asked this way. scene_every: one round in this many.
+  // letters_first: a new reader starts on the letters level (stage 0): hear a sound, find its
+  // letter, before any words. Readers from before are left where they are. mastery_clean
+  // (1 to 10): clean completions - right first time, nothing wrong built or picked before - that
+  // master a word, a letter or a two-letter tile; a stage (or a group of letters) opens the next
+  // only when everything in it is mastered. Misses neither add nor take away.
+  // letter_word_every: once s a t p i n are known, one letters round in this many is a word
+  // built only from letters the child knows (sat, tap, sip); 0 for none.
+  // read_it: from stage 2, now and then a word already read is shown whole, not said, and the
+  // child picks its picture from two or three that sound alike; read_it_every: one in this many.
+  // review_share: out of 100, how often a round is a word or letter due for another look (one
+  // missed lately, or never got first try) rather than the usual pick.
+  // first_sound, last_sound, middle_vowel: the kinds of word round, each on or off. First sound
+  // swaps the first tile (_at: cat, bat, hat); last sound, once most of a stage is read, the
+  // last (ma_: map, mat, man); middle vowel, from stage 2, the vowel (c_t: cat, cot, cut).
+  // whole_word: from stage 6, every slot a gap: the word built from its own tiles and a
+  // decoy or two the child knows. Words with no family are asked this way too.
+  // team_up: when two read together, now and then both work on one word, each with a gap of
+  // their own; team_up_every: one round in this many (0 for none).
+  // tell_bob: from stage 5, now and then the child tells Bob, a very literal helper, what to
+  // do, with word cards (put the cat in the box), and he does exactly what it says;
+  // tell_bob_every: one round in this many (0 for none). whats_wrong: what's-wrong rounds,
+  // Bob's sentence already made and acted out wrong, one card to fix (from stage 5), and a
+  // word on the board with one wrong letter (from stage 2); whats_wrong_every: one round in
+  // this many is a word to fix. silly_counts: whether a silly sentence told to Bob (Silly
+  // sentences, from the action menu) counts as a lesson; never towards mastery.
+  "puzzles": {
+    "scenes": true,
+    "scene_every": 4,
+    "letters_first": true,
+    "mastery_clean": 3,
+    "letter_word_every": 3,
+    "read_it": true,
+    "read_it_every": 5,
+    "review_share": 30,
+    "first_sound": true,
+    "last_sound": true,
+    "middle_vowel": true,
+    "whole_word": true,
+    "team_up": true,
+    "team_up_every": 3,
+    "tell_bob": true,
+    "tell_bob_every": 5,
+    "whats_wrong": true,
+    "whats_wrong_every": 6,
+    "silly_counts": false
+  }
+}
+```
+
+A child's progress (every word read, streak, points, what has already paid) is kept on the player in the world save, and outlives every visit and death.
+
+## Words
+
+Words are data, not code. Each is one file, `data/<namespace>/phonics_words/<word>.json`:
+
+```json
+{
+  "tiles": ["c", "a", "t"],
+  "stage": 1,
+  "outcome": { "type": "spawn_entity", "entity": "minecraft:cat" }
+}
+```
+
+`icon` (an item id) is the picture shown over the board while the word is asked for; without it the picture is what the outcome brings (a creature's spawn egg, the item, the block). `sounds`, one per tile, says a tile differently in this word: `"a_long"` for the letter's name, `"silent"` for a letter that says nothing (shown greyed in the caption), `null` for the tile's own sound:
+
+```json
+{ "tiles": ["c", "a", "k", "e"], "sounds": [null, "a_long", null, "silent"], "stage": 6, "outcome": { ... } }
+```
+
+`picture: "clear"` marks a word whose picture is unmistakably that word, for read-it rounds. `requires` (a list of mod ids) leaves a word out entirely when any of those mods isn't installed (poop needs Poopsmith). A word that only prefers a mod's thing uses a `prefer` outcome, which falls back to vanilla.
+
+`picture_card` names a picture card for the board (see Everyday things and picture cards); `icon` can name a plushie (`phonics-justfatlard:plush_owl`) or a thing.
+
+`tricky: true` makes it a tricky word (with `puzzle: false`): its `stage` is when it opens, and `shown` (a list of tiles, `cap_i` for I) is how the board and its card write it when that isn't its tiles. `plural: true` (with `puzzle: false`) makes it a plural: its tiles are a word's plus `s`, `"z"` in `sounds` for an s that says /z/, and its outcome the creature three times.
+
+`keyword: true` makes a word a letter's keyword too (zap for z): said and done at the end of that letter's chant in the letters level. `puzzle: false` makes it nothing else (apple): never a puzzle, in no family, and never in My words.
+
+`scene` (optional) makes the word a situation, asked once it has been read: `line` (said instead of "Can you make...", and recorded by the sound generator as `scene/<word>`), `setup` (what's in the room) and `solve` (what the right word does). Setup steps: `character` (`entity`, a villager by default, harmless only; `baby`; `act` `still`, `wander`, `shiver`, `bounce`, `stuck` or `hungry` (glancing over at the button); up to three, the first the one the scene is about), `ambient` (particles kept up over the character: `particle`, `at` `over`/`head`/`face`/`body`/`beside`, `count`, `spread`, `every`, an optional `sound` every `sound_every` ticks, and `drift` to float away when solved), `bubble` (a thought over its head: `text`, `color`), `dim` (the room goes dark for the child), `litter` (`items` lying on the floor), `block` (`block` at squares `at` from the scene's spot, `[east, south]` or `[east, south, up]`, beside the character by default, and what it `becomes` when solved), `wrap` (`item`s wound round the character), `ring` (a ring of `block` round the spot), `prop` (an `item` turning on the spot). Solve steps: `give` (an `item` flies to the character, or to every one with `all`, `then` `wear`, `hold`, `eat`, `drink`, `snip` the wrapping, `pull` a stuck one free, or `soak` a puddle), `place` (a `block` flies beside it, `then` `sleep`, `absorb` the litter, or `none`), `burst` (particles and a sound), `bubble`, `light`, `pose` (every character `sit`s or `lie`s down), `visit` (a helper `entity` comes from the button `to` `beside`, `over` or `front`, with a villager's `profession`), `tune`, `effect` (a beneficial effect on the child), `hut`. After the solve the trouble stops by itself, the blocks become what they become, and the character cheers up.
+
+`wrong` (optional, same shape as `outcome`) is what the word does when it's built but wasn't the word asked for: a funnier, harmless version, over in a couple of seconds, with nothing left behind. Without one, or if it names something missing, the word does its ordinary outcome instead.
+
+A puzzle is made from a family of words sharing everything but one tile (cat, bat, hat, mat; map, mat, man; cat, cot, cut), so a family's other words are the wrong answers, and each is a real word that does something too. An outcome is one of:
+
+| Type | Does |
+|------|------|
+| `spawn_entity` | A creature: `entity`, plus `baby`, `tamed_to_player`, `sitting`, `profession` (for a villager). It must be in the `phonics-justfatlard:harmless` entity tag, or in `harmless_as_baby` and spawned as a baby, and never a monster. `act` makes it `spin` (chase its tail), `bounce` on the spot, `sneeze`, `bonk` (trot off the wrong way into the wall), `circle` the child's head, or `flee` to the far corner (not used by the shipped words: running away reads as rejection); `lasts` (ticks) makes it vanish in a puff after that long |
+| `equip_item`, `give_item` | An item on (`slot`) or in the pack; `count` and `components` optional |
+| `effect` | A beneficial or neutral effect: `effect`, `duration`, `amplifier` |
+| `place_block` | A block (`properties` optional) `at` the child's `feet` or on the free floor `near` them; never on the board or the tiles, cleared at the next round and on leaving. A bed takes two squares. `lasts` (ticks) makes it go in a puff of smoke that long after it lands |
+| `scale` | The child grows (`amount`, 0.8 is nearly double) for `duration` ticks |
+| `particles` | `particle` (an id, or a full particle object such as dust with a colour), `count`, `spread`, `at` `player`, `above` or `face` (just in front of the eyes), an optional `sound` and `pitch`, and `repeat` bursts `every` ticks apart |
+| `push` | A shove `back` from where the child is looking, and `up` |
+| `firework_burst` | A firework over the child, `shape` and `colors` optional; a `dud` goes up and fizzles out |
+| `creatures_come` | Every creature in the room hops over to the child |
+| `creatures_go` | Every creature in the room runs off from the child (not used by the shipped words) |
+| `throw_at_player` | `count` snowballs thrown at the child, `every` ticks apart. Snowballs only; none end up in the pack |
+| `bonk` | `items` fly at the child's head, bonk (an optional `sound`), and fall off to lie on the floor a moment |
+| `spin` | The child turns round on the spot: `turns` over `ticks` |
+| `roll` | An `item` rolls out of the button and across the floor, gone at the far wall after `ticks` |
+| `tune` | A little tune over the child: `notes` (semitones, 0 to 24, as a note block counts them) on an `instrument` (harp, bass, flute...), `every` ticks apart |
+| `pull` | The child pulled towards the button, `strength` |
+| `hut` | A tiny wooden hut round the child for `lasts` ticks: its doorway always open, a roof only over a child of ordinary size, only in empty squares |
+| `creatures_do` | Every creature in the room: `what` is `hearts`, `sit`, `spin`, `hop`, `bounce`, `sneeze` or `freeze` |
+| `strike` | A lightning rod out of the button, struck by a little bolt of sparks (particles, not real lightning: no thunder, no fire), gone after `lasts` ticks |
+| `sequence` | Several of these in order: `steps` |
+| `prefer` | The first of its `options` this server can run: a mod's thing where the mod is installed, a vanilla one where it isn't |
+
+A word naming a mob, item, block, particle, sound or effect that isn't installed is skipped, so a data pack can reach for another mod's creatures without breaking anything when that mod is missing.
+
+A data pack can add words, or replace the shipped ones, by writing files at the same paths.
+
+## Commands
+
+- `/phonics`: go to your classroom
+- `/phonics leave`: come home
+- `/phonics sounds`, `/phonics vowels`, `/phonics words`: the letter sounds, the vowels, and the words you've read
+- `/phonics toybox` (or `/phonics plushies`): the Toybox tab, your plushies and toys
+- `/phonics silly`: silly sentences with Bob, from stage 5 (again, back to reading); the Silly sentences button on the action menu runs it
+- `/phonics words all`, `/phonics words <player>`, `/phonics phrases`: every word, someone else's words, and every recorded phrase (operators only)
+- `/phonics reload`: read `config/phonics/prizes.json` again (operators only)
+- `/phonics send <player> [lessons]`: send a player to the classroom (operators only). With a number of lessons (solved words), the portal is locked, with the count over it, until they're done; `/phonics leave` waits too. If something else takes them out, the lessons are kept and their next login takes them back. Operators are never kept in
+- `/phonics join <player>`, `/phonics accept <player>`, `/phonics decline <player>`: ask to read with someone, and answer (anyone). `/phonics pair <a> <b>`, `/phonics unpair <player>`, `/phonics daily <reader> with <other|nobody>` (operators): see Reading together
+- `/phonics lessons <player>`, `/phonics release <player>`: how many are left, and clearing them (operators only). These, `send` and `progress` say so when the player named is offline, by the name the server knows them by
+- `/phonics stage <player> [n]`: show where a player is, or put them at stage `n`, or a band of one, `1b` (operators only). Everything from there up is read again; what it paid stays paid. `1` starts them over
+- `/phonics progress <player>`: a reader's progress (operators only): their stage; every letter and two-letter sound, and every word, coloured not tried / learning / shaky / solid; the sounds they mix up most ("mixes up b and d: 5 times"); the sentences told to Bob, with their clean days and misses; time and rounds this week; and their lessons history. Also from a reader's name on the prize editor's General tab. `/phonics progress <player> export` writes the same to `config/phonics/reports/<player>.json`
+- `/phonics daily <player> [n|off]`, `/phonics daily <player> <weekday> <n>` (operators only): a daily reading schedule, a number of lessons to finish each day before playing, with any day of the week different (weekends 0, say). With no number it shows the schedule and today's progress. A scheduled child joining with fewer rounds solved today than the day asks for is sent into the classroom ("Reading time first!") for what is left, rounds they solved earlier that day counting, with the portal locked until they're done ("All done for today! Off you go and play!"). A new day starting while they play waits for their next login (`enforce_on_rollover` gives a minute's notice and sends them in instead). Operators are never kept in unless they schedule themselves. An offline player is found by name through the server's own name cache (`usercache.json`: anyone who has joined; a name it has never seen is refused, "have them join once"), or by UUID, which stores their real name if the server knows it; the stored name is brought up to date whenever they join. Kept in `config/phonics/schedules.json` by UUID, with the name alongside and a `timezone` for when a day starts (the server's own by default; the prize cap and daily visit use it too). The prize editor's Readers list sets lessons a day and weekends off too
+- `/phonics try [kind] [word]` (operators): the sampler. Runs a round of any kind right now in your classroom (taking you in if need be), as practice: it plays and says and does everything, but nothing counts (no mastery, memory, prizes, lessons or daily count, no stage change), and the round after is your ordinary next one. Kinds: letters, case, early, first, last, middle, whole, readit, scene, phrase, tricky, plural, teamup (or together, when two read together), fixit (a word with one wrong letter), bob (Tell Bob, by goal: cat-in-box), whatswrong (Bob's sentence made wrong), sentence (silly sentences); the word or letter is optional and tab-completes. With no kind, a screen of buttons, one per kind, and Next for another of the last kind
+- `/phonics prizes`: the prize editor (operators only); `/phonics prizes done` and `cancel` finish editing a list's items
+
+`/phonics`, `/phonics leave` and the three review screens are open to everyone. `/tp` won't take anybody into or out of the classroom: the door does work a teleport would skip, so the command is refused and names the right one.
+
+## Pandorical
+
+Phonics runs server-side, and Pandorical is required: the server will not load this mod without it. Pandorical carries the letter tiles' textures and models to each client, puts the Phonics button on the action menu, and is the route real recorded sounds will reach players by.
+
+## Development
+
+Building, testing and the layout of the code are in [DEVELOPMENT.md](DEVELOPMENT.md).
+
+## License
+
+MIT, see [LICENSE](LICENSE).

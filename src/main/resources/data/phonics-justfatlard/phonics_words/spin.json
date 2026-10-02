@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    "s",
+    "p",
+    "i",
+    "n"
+  ],
+  "stage": 8,
+  "icon": "minecraft:compass",
+  "outcome": {
+    "type": "spin",
+    "turns": 2.0,
+    "ticks": 24
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spin",
+        "turns": 2.0,
+        "ticks": 12
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:crit",
+        "count": 12,
+        "spread": 0.4,
+        "at": "above"
+      }
+    ]
+  }
+}

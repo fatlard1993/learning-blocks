@@ -1,0 +1,25 @@
+{
+	"duration": 1.44,
+	"words": [
+		{
+			"text": "Wait",
+			"start": 0.277,
+			"end": 0.32
+		},
+		{
+			"text": "for",
+			"start": 0.36,
+			"end": 0.48
+		},
+		{
+			"text": "your",
+			"start": 0.512,
+			"end": 0.64
+		},
+		{
+			"text": "turn!",
+			"start": 0.752,
+			"end": 1.44
+		}
+	]
+}

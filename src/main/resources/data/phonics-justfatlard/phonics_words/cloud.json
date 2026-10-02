@@ -1,0 +1,34 @@
+{
+  "tiles": [
+    "c",
+    "l",
+    "ou",
+    "d"
+  ],
+  "stage": 13,
+  "icon": "minecraft:snow_block",
+  "outcome": {
+    "type": "prefer",
+    "options": [
+      {
+        "type": "place_block",
+        "block": "cloud-kingdoms-justfatlard:cloud",
+        "lasts": 100
+      },
+      {
+        "type": "place_block",
+        "block": "minecraft:snow_block",
+        "lasts": 100
+      }
+    ]
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:cloud",
+    "count": 30,
+    "spread": 0.4,
+    "at": "face",
+    "sound": "minecraft:entity.player.breath",
+    "pitch": 1.2
+  }
+}

@@ -1,0 +1,33 @@
+{
+	"schemaVersion": 1,
+	"id": "phonics-justfatlard",
+	"version": "${version}",
+	"name": "Phonics",
+	"description": "Early-reading puzzles for young children, in a quiet classroom dimension of their own: hear the letters, make the word, see what it does.",
+	"authors": [
+		"justfatlard"
+	],
+	"license": "MIT",
+	"icon": "assets/phonics-justfatlard/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"justfatlard.phonics.Phonics"
+		]
+	},
+	"mixins": [
+		"phonics-justfatlard.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=${loaderVersion}",
+		"fabric-api": "${fabricApiVersion}",
+		"minecraft": "${minecraftDependency}",
+		"java": ">=25",
+		"pandorical": ">=15.0.0"
+	},
+	"contact": {
+		"homepage": "https://github.com/fatlard1993/phonics",
+		"sources": "https://github.com/fatlard1993/phonics",
+		"issues": "https://github.com/fatlard1993/phonics/issues"
+	}
+}

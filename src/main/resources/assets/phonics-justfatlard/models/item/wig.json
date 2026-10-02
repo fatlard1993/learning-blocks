@@ -1,0 +1,246 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hair": "minecraft:block/orange_wool",
+    "particle": "minecraft:block/orange_wool"
+  },
+  "elements": [
+    {
+      "from": [
+        0.8,
+        14.2,
+        0.8
+      ],
+      "to": [
+        15.2,
+        17.4,
+        15.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hair"
+        },
+        "south": {
+          "texture": "#hair"
+        },
+        "east": {
+          "texture": "#hair"
+        },
+        "west": {
+          "texture": "#hair"
+        },
+        "up": {
+          "texture": "#hair"
+        },
+        "down": {
+          "texture": "#hair"
+        }
+      }
+    },
+    {
+      "from": [
+        0.8,
+        2.5,
+        13.6
+      ],
+      "to": [
+        15.2,
+        14.2,
+        15.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hair"
+        },
+        "south": {
+          "texture": "#hair"
+        },
+        "east": {
+          "texture": "#hair"
+        },
+        "west": {
+          "texture": "#hair"
+        },
+        "up": {
+          "texture": "#hair"
+        },
+        "down": {
+          "texture": "#hair"
+        }
+      }
+    },
+    {
+      "from": [
+        0.8,
+        4.5,
+        0.8
+      ],
+      "to": [
+        2.2,
+        14.2,
+        13.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hair"
+        },
+        "south": {
+          "texture": "#hair"
+        },
+        "east": {
+          "texture": "#hair"
+        },
+        "west": {
+          "texture": "#hair"
+        },
+        "up": {
+          "texture": "#hair"
+        },
+        "down": {
+          "texture": "#hair"
+        }
+      }
+    },
+    {
+      "from": [
+        13.8,
+        4.5,
+        0.8
+      ],
+      "to": [
+        15.2,
+        14.2,
+        13.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hair"
+        },
+        "south": {
+          "texture": "#hair"
+        },
+        "east": {
+          "texture": "#hair"
+        },
+        "west": {
+          "texture": "#hair"
+        },
+        "up": {
+          "texture": "#hair"
+        },
+        "down": {
+          "texture": "#hair"
+        }
+      }
+    },
+    {
+      "from": [
+        2.2,
+        12.2,
+        0.8
+      ],
+      "to": [
+        13.8,
+        14.2,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hair"
+        },
+        "south": {
+          "texture": "#hair"
+        },
+        "east": {
+          "texture": "#hair"
+        },
+        "west": {
+          "texture": "#hair"
+        },
+        "up": {
+          "texture": "#hair"
+        },
+        "down": {
+          "texture": "#hair"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        25,
+        135,
+        0
+      ],
+      "translation": [
+        0,
+        -7,
+        0
+      ],
+      "scale": [
+        0.9,
+        0.9,
+        0.9
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    }
+  }
+}

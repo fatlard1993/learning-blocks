@@ -1,0 +1,26 @@
+{
+  "tiles": [
+    "s",
+    "i",
+    "p"
+  ],
+  "stage": 2,
+  "icon": "minecraft:potion",
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:splash",
+    "count": 10,
+    "spread": 0.1,
+    "at": "face",
+    "sound": "minecraft:entity.generic.drink"
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:splash",
+    "count": 60,
+    "spread": 0.3,
+    "at": "face",
+    "sound": "minecraft:entity.player.splash",
+    "pitch": 1.4
+  }
+}

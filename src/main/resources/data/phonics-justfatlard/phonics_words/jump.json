@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    "j",
+    "u",
+    "m",
+    "p"
+  ],
+  "stage": 11,
+  "icon": "minecraft:slime_block",
+  "keyword": true,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "push",
+        "up": 0.6
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 8,
+        "spread": 0.3,
+        "at": "player",
+        "sound": "minecraft:entity.goat.long_jump"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "push",
+    "up": 0.2
+  }
+}

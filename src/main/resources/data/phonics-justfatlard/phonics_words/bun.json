@@ -1,0 +1,55 @@
+{
+  "tiles": [
+    "b",
+    "u",
+    "n"
+  ],
+  "stage": 4,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:bread"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:bread"
+    ],
+    "sound": "minecraft:entity.slime.squish_small"
+  },
+  "scene": {
+    "line": "Somebody's tummy is rumbling!",
+    "setup": [
+      {
+        "type": "character",
+        "act": "hungry"
+      },
+      {
+        "type": "bubble",
+        "text": "?",
+        "color": 16769126
+      },
+      {
+        "type": "ambient",
+        "id": "rumble",
+        "particle": {
+          "type": "minecraft:item",
+          "item": "minecraft:bread"
+        },
+        "at": "body",
+        "count": 3,
+        "spread": 0.2,
+        "every": 15,
+        "sound": "minecraft:entity.cat.purr",
+        "pitch": 0.5,
+        "sound_every": 30
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:bread",
+        "then": "eat"
+      }
+    ]
+  }
+}

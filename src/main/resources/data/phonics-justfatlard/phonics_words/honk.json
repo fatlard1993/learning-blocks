@@ -1,0 +1,35 @@
+{
+  "tiles": [
+    "h",
+    "o",
+    "nk"
+  ],
+  "stage": 11,
+  "icon": "minecraft:goat_horn",
+  "outcome": {
+    "type": "tune",
+    "instrument": "didgeridoo",
+    "notes": [
+      6,
+      6
+    ],
+    "every": 6
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "tune",
+        "instrument": "didgeridoo",
+        "notes": [
+          2
+        ],
+        "every": 4
+      },
+      {
+        "type": "push",
+        "up": 0.3
+      }
+    ]
+  }
+}

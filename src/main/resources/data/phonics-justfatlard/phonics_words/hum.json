@@ -1,0 +1,79 @@
+{
+  "tiles": [
+    "h",
+    "u",
+    "m"
+  ],
+  "stage": 4,
+  "icon": "minecraft:note_block",
+  "outcome": {
+    "type": "tune",
+    "instrument": "flute",
+    "notes": [
+      12,
+      14,
+      16,
+      12,
+      12,
+      14,
+      16,
+      12
+    ],
+    "every": 5
+  },
+  "wrong": {
+    "type": "tune",
+    "instrument": "didgeridoo",
+    "notes": [
+      2,
+      1,
+      0,
+      1,
+      2
+    ],
+    "every": 6
+  },
+  "scene": {
+    "line": "The baby can't sleep!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:villager",
+        "act": "still",
+        "baby": true
+      },
+      {
+        "type": "ambient",
+        "id": "tears",
+        "particle": "minecraft:falling_water",
+        "at": "face",
+        "count": 1,
+        "spread": 0.05,
+        "every": 6,
+        "sound": "minecraft:entity.villager.no",
+        "pitch": 1.8,
+        "sound_every": 40
+      }
+    ],
+    "solve": [
+      {
+        "type": "tune",
+        "instrument": "harp",
+        "notes": [
+          16,
+          12,
+          9,
+          12,
+          7,
+          4
+        ],
+        "every": 7
+      },
+      {
+        "type": "bubble",
+        "text": "Zzz",
+        "color": 11195647
+      }
+    ]
+  }
+}

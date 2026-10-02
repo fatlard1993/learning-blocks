@@ -1,0 +1,28 @@
+{
+  "tiles": [
+    "h",
+    "or",
+    "s",
+    "e"
+  ],
+  "sounds": [
+    null,
+    null,
+    null,
+    "silent"
+  ],
+  "stage": 12,
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:horse",
+    "baby": true
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:horse",
+    "baby": true,
+    "act": "bounce",
+    "lasts": 60
+  }
+}

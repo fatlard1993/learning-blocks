@@ -1,0 +1,31 @@
+{
+  "tiles": [
+    "s",
+    "l",
+    "e",
+    "d"
+  ],
+  "stage": 8,
+  "icon": "minecraft:spruce_boat",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:spruce_boat"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:snowflake",
+        "count": 30,
+        "spread": 0.8,
+        "at": "player"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:spruce_boat",
+    "lasts": 40
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "tiles": [
+    "h",
+    "ay"
+  ],
+  "stage": 13,
+  "picture": "clear",
+  "scene": {
+    "line": "The horse is hungry!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:horse",
+        "baby": true,
+        "act": "hungry"
+      },
+      {
+        "type": "bubble",
+        "text": "?",
+        "color": 16769126
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:hay_block",
+        "then": "eat"
+      },
+      {
+        "type": "burst",
+        "particle": "minecraft:heart",
+        "count": 10,
+        "spread": 0.4
+      }
+    ]
+  },
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:hay_block",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:wheat"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "tiles": [
+    "p",
+    "a",
+    "d"
+  ],
+  "stage": 1,
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:lily_pad",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "minecraft:lily_pad",
+        "lasts": 40
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:splash",
+        "count": 30,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:entity.player.splash"
+      }
+    ]
+  }
+}

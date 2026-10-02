@@ -1,0 +1,25 @@
+{
+	"duration": 1.3,
+	"words": [
+		{
+			"text": "Seven",
+			"start": 0.0,
+			"end": 0.337
+		},
+		{
+			"text": "more",
+			"start": 0.395,
+			"end": 0.58
+		},
+		{
+			"text": "to",
+			"start": 0.615,
+			"end": 0.662
+		},
+		{
+			"text": "go!",
+			"start": 0.72,
+			"end": 1.3
+		}
+	]
+}

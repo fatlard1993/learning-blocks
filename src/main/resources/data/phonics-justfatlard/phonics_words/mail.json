@@ -1,0 +1,38 @@
+{
+  "tiles": [
+    "m",
+    "ai",
+    "l"
+  ],
+  "stage": 10,
+  "outcome": {
+    "type": "prefer",
+    "options": [
+      {
+        "type": "place_block",
+        "block": "village-mail:mailbox",
+        "lasts": 200
+      },
+      {
+        "type": "give_item",
+        "item": "minecraft:paper"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": {
+          "type": "minecraft:item",
+          "item": "minecraft:paper"
+        },
+        "count": 20,
+        "spread": 0.5,
+        "at": "above",
+        "sound": "minecraft:item.book.page_turn"
+      }
+    ]
+  }
+}

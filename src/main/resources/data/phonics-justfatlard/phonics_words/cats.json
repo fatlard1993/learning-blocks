@@ -1,0 +1,34 @@
+{
+  "tiles": [
+    "c",
+    "a",
+    "t",
+    "s"
+  ],
+  "sounds": [
+    null,
+    null,
+    null,
+    null
+  ],
+  "stage": 1,
+  "plural": true,
+  "puzzle": false,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:cat"
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:cat"
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:cat"
+      }
+    ]
+  }
+}

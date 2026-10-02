@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "k",
+    "e",
+    "g"
+  ],
+  "stage": 5,
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:barrel",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:barrel"
+    ]
+  }
+}

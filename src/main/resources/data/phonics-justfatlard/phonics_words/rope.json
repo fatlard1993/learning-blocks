@@ -1,0 +1,45 @@
+{
+  "tiles": [
+    "r",
+    "o",
+    "p",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "o_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "outcome": {
+    "type": "prefer",
+    "options": [
+      {
+        "type": "give_item",
+        "item": "better-ladders-justfatlard:rope_ladder"
+      },
+      {
+        "type": "give_item",
+        "item": "minecraft:lead"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "prefer",
+    "options": [
+      {
+        "type": "bonk",
+        "items": [
+          "better-ladders-justfatlard:rope_ladder"
+        ]
+      },
+      {
+        "type": "bonk",
+        "items": [
+          "minecraft:lead"
+        ]
+      }
+    ]
+  }
+}

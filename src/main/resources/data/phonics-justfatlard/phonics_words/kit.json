@@ -1,0 +1,34 @@
+{
+  "tiles": [
+    "k",
+    "i",
+    "t"
+  ],
+  "stage": 2,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "give_item",
+        "item": "minecraft:leather_chestplate"
+      },
+      {
+        "type": "give_item",
+        "item": "minecraft:leather_leggings"
+      },
+      {
+        "type": "give_item",
+        "item": "minecraft:leather_boots"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:leather_chestplate",
+      "minecraft:leather_leggings",
+      "minecraft:leather_boots"
+    ]
+  },
+  "puzzle": false
+}

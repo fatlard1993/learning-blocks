@@ -1,0 +1,26 @@
+{
+  "tiles": [
+    "p",
+    "i",
+    "n",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "i_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:spruce_sapling",
+    "lasts": 200
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:spruce_sapling"
+    ]
+  }
+}

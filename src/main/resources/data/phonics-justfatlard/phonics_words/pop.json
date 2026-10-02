@@ -1,0 +1,63 @@
+{
+  "tiles": [
+    "p",
+    "o",
+    "p"
+  ],
+  "stage": 3,
+  "icon": "minecraft:popped_chorus_fruit",
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:bubble_pop",
+    "count": 40,
+    "spread": 0.8,
+    "at": "above",
+    "sound": "minecraft:block.bubble_column.bubble_pop",
+    "pitch": 1.2
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:bubble_pop",
+    "count": 30,
+    "spread": 0.2,
+    "at": "face",
+    "sound": "minecraft:block.bubble_column.bubble_pop",
+    "pitch": 0.6
+  },
+  "scene": {
+    "line": "What's inside?",
+    "setup": [
+      {
+        "type": "block",
+        "block": "pinata:pinata",
+        "at": [
+          [
+            0,
+            0,
+            2
+          ]
+        ],
+        "becomes": "minecraft:air"
+      }
+    ],
+    "solve": [
+      {
+        "type": "burst",
+        "particle": {
+          "type": "minecraft:item",
+          "item": "minecraft:cookie"
+        },
+        "count": 40,
+        "spread": 0.8,
+        "sound": "minecraft:entity.firework_rocket.blast",
+        "pitch": 1.2
+      },
+      {
+        "type": "burst",
+        "particle": "minecraft:happy_villager",
+        "count": 20,
+        "spread": 0.8
+      }
+    ]
+  }
+}

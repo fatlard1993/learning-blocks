@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "c",
+    "a",
+    "t"
+  ],
+  "stage": 1,
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:cat"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:cat",
+    "act": "spin",
+    "lasts": 60
+  }
+}

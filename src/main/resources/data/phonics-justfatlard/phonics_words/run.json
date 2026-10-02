@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    "r",
+    "u",
+    "n"
+  ],
+  "stage": 4,
+  "icon": "minecraft:rabbit_foot",
+  "outcome": {
+    "type": "effect",
+    "effect": "minecraft:speed",
+    "duration": 200,
+    "amplifier": 1
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 10,
+        "spread": 0.3,
+        "at": "player"
+      },
+      {
+        "type": "push",
+        "back": 1.2,
+        "up": 0.2
+      }
+    ]
+  }
+}

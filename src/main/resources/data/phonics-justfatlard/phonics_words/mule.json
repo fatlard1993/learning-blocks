@@ -1,0 +1,27 @@
+{
+  "tiles": [
+    "m",
+    "u",
+    "l",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "u_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:mule",
+    "baby": true
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:mule",
+    "baby": true,
+    "act": "bounce",
+    "lasts": 60
+  }
+}

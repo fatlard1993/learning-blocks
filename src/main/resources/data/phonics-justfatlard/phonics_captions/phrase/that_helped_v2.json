@@ -1,0 +1,20 @@
+{
+	"duration": 1.76,
+	"words": [
+		{
+			"text": "Phew,",
+			"start": 0.147,
+			"end": 0.56
+		},
+		{
+			"text": "much",
+			"start": 0.656,
+			"end": 1.04
+		},
+		{
+			"text": "better!",
+			"start": 1.109,
+			"end": 1.76
+		}
+	]
+}

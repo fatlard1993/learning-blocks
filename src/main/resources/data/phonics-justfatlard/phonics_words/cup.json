@@ -1,0 +1,42 @@
+{
+  "tiles": [
+    "c",
+    "u",
+    "p"
+  ],
+  "stage": 4,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:glass_bottle"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:glass_bottle"
+    ],
+    "sound": "minecraft:block.glass.hit"
+  },
+  "scene": {
+    "line": "He's thirsty!",
+    "setup": [
+      {
+        "type": "character"
+      },
+      {
+        "type": "block",
+        "block": "minecraft:water_cauldron",
+        "properties": {
+          "level": "3"
+        }
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "minecraft:glass_bottle",
+        "then": "drink"
+      }
+    ]
+  },
+  "icon": "minecraft:flower_pot"
+}

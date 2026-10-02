@@ -1,0 +1,25 @@
+{
+	"duration": 1.718,
+	"words": [
+		{
+			"text": "Somebody's",
+			"start": 0.0,
+			"end": 0.488
+		},
+		{
+			"text": "tummy",
+			"start": 0.522,
+			"end": 0.778
+		},
+		{
+			"text": "is",
+			"start": 0.836,
+			"end": 0.906
+		},
+		{
+			"text": "rumbling!",
+			"start": 0.964,
+			"end": 1.718
+		}
+	]
+}

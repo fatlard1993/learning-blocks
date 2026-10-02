@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "b",
+    "i",
+    "g"
+  ],
+  "stage": 2,
+  "icon": "minecraft:bone_meal",
+  "outcome": {
+    "type": "scale",
+    "amount": 0.8,
+    "duration": 160
+  },
+  "wrong": {
+    "type": "scale",
+    "amount": -0.6,
+    "duration": 60
+  }
+}

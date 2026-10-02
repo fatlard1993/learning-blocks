@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "r",
+    "o",
+    "ck"
+  ],
+  "stage": 6,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:cobblestone"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:cobblestone"
+    ],
+    "sound": "minecraft:block.stone.hit"
+  }
+}

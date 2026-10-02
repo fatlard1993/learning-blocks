@@ -1,0 +1,54 @@
+{
+  "tiles": [
+    "c",
+    "l",
+    "a",
+    "p"
+  ],
+  "stage": 8,
+  "icon": "minecraft:firework_star",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "tune",
+        "instrument": "hat",
+        "notes": [
+          12,
+          12,
+          12
+        ],
+        "every": 6
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:crit",
+        "count": 10,
+        "spread": 0.5,
+        "at": "above"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "tune",
+        "instrument": "hat",
+        "notes": [
+          12,
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "every": 2
+      },
+      {
+        "type": "creatures_do",
+        "what": "hop"
+      }
+    ]
+  }
+}

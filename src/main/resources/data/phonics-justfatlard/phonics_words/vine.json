@@ -1,0 +1,27 @@
+{
+  "tiles": [
+    "v",
+    "i",
+    "n",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "i_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "picture": "clear",
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:vine"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:vine",
+      "minecraft:vine"
+    ]
+  }
+}

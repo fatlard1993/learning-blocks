@@ -1,0 +1,35 @@
+{
+	"duration": 2.136,
+	"words": [
+		{
+			"text": "The",
+			"start": 0.0,
+			"end": 0.151
+		},
+		{
+			"text": "puppy",
+			"start": 0.209,
+			"end": 0.499
+		},
+		{
+			"text": "needs",
+			"start": 0.557,
+			"end": 0.755
+		},
+		{
+			"text": "an",
+			"start": 0.789,
+			"end": 0.848
+		},
+		{
+			"text": "animal",
+			"start": 0.917,
+			"end": 1.231
+		},
+		{
+			"text": "doctor!",
+			"start": 1.289,
+			"end": 2.136
+		}
+	]
+}

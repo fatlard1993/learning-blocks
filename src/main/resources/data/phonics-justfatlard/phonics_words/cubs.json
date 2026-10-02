@@ -1,0 +1,37 @@
+{
+  "tiles": [
+    "c",
+    "u",
+    "b",
+    "s"
+  ],
+  "sounds": [
+    null,
+    null,
+    null,
+    "z"
+  ],
+  "stage": 4,
+  "plural": true,
+  "puzzle": false,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:polar_bear",
+        "baby": true
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:polar_bear",
+        "baby": true
+      },
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:polar_bear",
+        "baby": true
+      }
+    ]
+  }
+}

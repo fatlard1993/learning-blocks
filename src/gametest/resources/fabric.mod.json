@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "phonics-gametest",
+  "version": "1.0.0",
+  "name": "Phonics tests",
+  "description": "Loads the mod, joins a world, and checks a trip to the classroom gives back everything it put aside.",
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "justfatlard.phonics.gametest.TestDefaults"
+    ],
+    "client": [
+      "justfatlard.phonics.gametest.TestClientDefaults"
+    ],
+    "fabric-client-gametest": [
+      "justfatlard.phonics.gametest.PlushArt"
+    ]
+  },
+  "depends": {
+    "phonics-justfatlard": "*",
+    "fabric-client-gametest-api-v1": "*"
+  }
+}

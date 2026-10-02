@@ -1,0 +1,35 @@
+{
+  "tiles": [
+    "k",
+    "i",
+    "ng"
+  ],
+  "stage": 11,
+  "picture": "clear",
+  "icon": "minecraft:golden_helmet",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "equip_item",
+        "item": "minecraft:golden_helmet",
+        "slot": "head"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:wax_on",
+        "count": 12,
+        "spread": 0.4,
+        "at": "above",
+        "sound": "minecraft:block.amethyst_block.chime",
+        "pitch": 1.5
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:golden_helmet"
+    ]
+  }
+}

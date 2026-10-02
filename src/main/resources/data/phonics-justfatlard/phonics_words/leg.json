@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "l",
+    "e",
+    "g"
+  ],
+  "stage": 5,
+  "outcome": {
+    "type": "equip_item",
+    "item": "minecraft:leather_leggings",
+    "slot": "legs"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:leather_leggings"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "tiles": [
+    "c",
+    "u",
+    "b"
+  ],
+  "stage": 4,
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:polar_bear",
+    "baby": true
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:polar_bear",
+    "act": "bounce",
+    "lasts": 60,
+    "baby": true
+  }
+}

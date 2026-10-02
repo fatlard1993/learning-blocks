@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "c",
+    "ow"
+  ],
+  "stage": 13,
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:cow"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:cow",
+    "baby": true,
+    "act": "sneeze",
+    "lasts": 60
+  }
+}

@@ -1,0 +1,25 @@
+{
+	"duration": 1.76,
+	"words": [
+		{
+			"text": "Ready?",
+			"start": 0.344,
+			"end": 0.72
+		},
+		{
+			"text": "It's",
+			"start": 0.827,
+			"end": 1.12
+		},
+		{
+			"text": "your",
+			"start": 1.152,
+			"end": 1.28
+		},
+		{
+			"text": "go!",
+			"start": 1.387,
+			"end": 1.76
+		}
+	]
+}

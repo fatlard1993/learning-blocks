@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "p",
+    "a",
+    "th"
+  ],
+  "stage": 7,
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:dirt_path",
+    "at": "near"
+  },
+  "wrong": {
+    "type": "place_block",
+    "block": "minecraft:dirt_path",
+    "at": "near",
+    "lasts": 30
+  }
+}

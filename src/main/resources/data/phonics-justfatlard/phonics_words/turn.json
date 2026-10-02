@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "t",
+    "ur",
+    "n"
+  ],
+  "stage": 12,
+  "icon": "minecraft:recovery_compass",
+  "outcome": {
+    "type": "spin",
+    "turns": 1.0,
+    "ticks": 20
+  },
+  "wrong": {
+    "type": "spin",
+    "turns": 0.5,
+    "ticks": 10
+  }
+}

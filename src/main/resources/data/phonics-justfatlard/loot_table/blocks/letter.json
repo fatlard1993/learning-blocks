@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "phonics-justfatlard:letter",
+          "modifier": [
+            {
+              "type": "minecraft:copy_state",
+              "block": "phonics-justfatlard:letter",
+              "properties": [ "letter" ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "random_sequence": "phonics-justfatlard:blocks/letter"
+}

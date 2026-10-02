@@ -1,0 +1,104 @@
+{
+  "tiles": [
+    "n",
+    "a",
+    "p"
+  ],
+  "stage": 1,
+  "icon": "minecraft:red_bed",
+  "keyword": true,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "tune",
+        "instrument": "harp",
+        "notes": [
+          16,
+          12,
+          9,
+          12,
+          7,
+          4
+        ],
+        "every": 7
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 6,
+        "spread": 0.3,
+        "at": "above"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:white_smoke",
+        "count": 6,
+        "spread": 0.2,
+        "at": "face",
+        "sound": "minecraft:entity.fox.sleep",
+        "pitch": 0.6
+      },
+      {
+        "type": "push",
+        "up": 0.45
+      }
+    ]
+  },
+  "scene": {
+    "line": "Someone is sooo tired!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:wolf",
+        "act": "still"
+      },
+      {
+        "type": "bubble",
+        "text": "...",
+        "color": 14540253
+      },
+      {
+        "type": "ambient",
+        "id": "yawn",
+        "particle": "minecraft:white_smoke",
+        "at": "face",
+        "count": 1,
+        "spread": 0.05,
+        "every": 40,
+        "sound": "minecraft:entity.wolf.whine",
+        "pitch": 0.8,
+        "sound_every": 50
+      }
+    ],
+    "solve": [
+      {
+        "type": "tune",
+        "instrument": "harp",
+        "notes": [
+          16,
+          12,
+          9,
+          12,
+          7,
+          4
+        ],
+        "every": 7
+      },
+      {
+        "type": "pose",
+        "pose": "lie"
+      },
+      {
+        "type": "bubble",
+        "text": "Zzz",
+        "color": 11195647
+      }
+    ]
+  }
+}

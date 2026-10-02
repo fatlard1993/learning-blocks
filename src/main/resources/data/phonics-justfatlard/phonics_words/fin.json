@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "f",
+    "i",
+    "n"
+  ],
+  "stage": 2,
+  "outcome": {
+    "type": "give_item",
+    "item": "minecraft:tropical_fish_bucket"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:tropical_fish",
+    "act": "none",
+    "lasts": 40
+  },
+  "icon": "minecraft:tropical_fish"
+}

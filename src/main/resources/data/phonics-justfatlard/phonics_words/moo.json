@@ -1,0 +1,32 @@
+{
+  "tiles": [
+    "m",
+    "oo"
+  ],
+  "stage": 10,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "spawn_entity",
+        "entity": "minecraft:cow",
+        "baby": true
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:note",
+        "count": 4,
+        "spread": 0.3,
+        "at": "above",
+        "sound": "minecraft:entity.cow.ambient"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:cow",
+    "baby": true,
+    "act": "sneeze",
+    "lasts": 60
+  }
+}

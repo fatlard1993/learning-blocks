@@ -1,0 +1,548 @@
+{
+  "variants": {
+    "facing=north,kind=owl": {
+      "model": "phonics-justfatlard:block/plush_owl",
+      "y": 0
+    },
+    "facing=east,kind=owl": {
+      "model": "phonics-justfatlard:block/plush_owl",
+      "y": 90
+    },
+    "facing=south,kind=owl": {
+      "model": "phonics-justfatlard:block/plush_owl",
+      "y": 180
+    },
+    "facing=west,kind=owl": {
+      "model": "phonics-justfatlard:block/plush_owl",
+      "y": 270
+    },
+    "facing=north,kind=duck": {
+      "model": "phonics-justfatlard:block/plush_duck",
+      "y": 0
+    },
+    "facing=east,kind=duck": {
+      "model": "phonics-justfatlard:block/plush_duck",
+      "y": 90
+    },
+    "facing=south,kind=duck": {
+      "model": "phonics-justfatlard:block/plush_duck",
+      "y": 180
+    },
+    "facing=west,kind=duck": {
+      "model": "phonics-justfatlard:block/plush_duck",
+      "y": 270
+    },
+    "facing=north,kind=ant": {
+      "model": "phonics-justfatlard:block/plush_ant",
+      "y": 0
+    },
+    "facing=east,kind=ant": {
+      "model": "phonics-justfatlard:block/plush_ant",
+      "y": 90
+    },
+    "facing=south,kind=ant": {
+      "model": "phonics-justfatlard:block/plush_ant",
+      "y": 180
+    },
+    "facing=west,kind=ant": {
+      "model": "phonics-justfatlard:block/plush_ant",
+      "y": 270
+    },
+    "facing=north,kind=rat": {
+      "model": "phonics-justfatlard:block/plush_rat",
+      "y": 0
+    },
+    "facing=east,kind=rat": {
+      "model": "phonics-justfatlard:block/plush_rat",
+      "y": 90
+    },
+    "facing=south,kind=rat": {
+      "model": "phonics-justfatlard:block/plush_rat",
+      "y": 180
+    },
+    "facing=west,kind=rat": {
+      "model": "phonics-justfatlard:block/plush_rat",
+      "y": 270
+    },
+    "facing=north,kind=ox": {
+      "model": "phonics-justfatlard:block/plush_ox",
+      "y": 0
+    },
+    "facing=east,kind=ox": {
+      "model": "phonics-justfatlard:block/plush_ox",
+      "y": 90
+    },
+    "facing=south,kind=ox": {
+      "model": "phonics-justfatlard:block/plush_ox",
+      "y": 180
+    },
+    "facing=west,kind=ox": {
+      "model": "phonics-justfatlard:block/plush_ox",
+      "y": 270
+    },
+    "facing=north,kind=shark": {
+      "model": "phonics-justfatlard:block/plush_shark",
+      "y": 0
+    },
+    "facing=east,kind=shark": {
+      "model": "phonics-justfatlard:block/plush_shark",
+      "y": 90
+    },
+    "facing=south,kind=shark": {
+      "model": "phonics-justfatlard:block/plush_shark",
+      "y": 180
+    },
+    "facing=west,kind=shark": {
+      "model": "phonics-justfatlard:block/plush_shark",
+      "y": 270
+    },
+    "facing=north,kind=crab": {
+      "model": "phonics-justfatlard:block/plush_crab",
+      "y": 0
+    },
+    "facing=east,kind=crab": {
+      "model": "phonics-justfatlard:block/plush_crab",
+      "y": 90
+    },
+    "facing=south,kind=crab": {
+      "model": "phonics-justfatlard:block/plush_crab",
+      "y": 180
+    },
+    "facing=west,kind=crab": {
+      "model": "phonics-justfatlard:block/plush_crab",
+      "y": 270
+    },
+    "facing=north,kind=worm": {
+      "model": "phonics-justfatlard:block/plush_worm",
+      "y": 0
+    },
+    "facing=east,kind=worm": {
+      "model": "phonics-justfatlard:block/plush_worm",
+      "y": 90
+    },
+    "facing=south,kind=worm": {
+      "model": "phonics-justfatlard:block/plush_worm",
+      "y": 180
+    },
+    "facing=west,kind=worm": {
+      "model": "phonics-justfatlard:block/plush_worm",
+      "y": 270
+    },
+    "facing=north,kind=moth": {
+      "model": "phonics-justfatlard:block/plush_moth",
+      "y": 0
+    },
+    "facing=east,kind=moth": {
+      "model": "phonics-justfatlard:block/plush_moth",
+      "y": 90
+    },
+    "facing=south,kind=moth": {
+      "model": "phonics-justfatlard:block/plush_moth",
+      "y": 180
+    },
+    "facing=west,kind=moth": {
+      "model": "phonics-justfatlard:block/plush_moth",
+      "y": 270
+    },
+    "facing=north,kind=yak": {
+      "model": "phonics-justfatlard:block/plush_yak",
+      "y": 0
+    },
+    "facing=east,kind=yak": {
+      "model": "phonics-justfatlard:block/plush_yak",
+      "y": 90
+    },
+    "facing=south,kind=yak": {
+      "model": "phonics-justfatlard:block/plush_yak",
+      "y": 180
+    },
+    "facing=west,kind=yak": {
+      "model": "phonics-justfatlard:block/plush_yak",
+      "y": 270
+    },
+    "facing=north,kind=teddy": {
+      "model": "phonics-justfatlard:block/plush_teddy",
+      "y": 0
+    },
+    "facing=east,kind=teddy": {
+      "model": "phonics-justfatlard:block/plush_teddy",
+      "y": 90
+    },
+    "facing=south,kind=teddy": {
+      "model": "phonics-justfatlard:block/plush_teddy",
+      "y": 180
+    },
+    "facing=west,kind=teddy": {
+      "model": "phonics-justfatlard:block/plush_teddy",
+      "y": 270
+    },
+    "facing=north,kind=snail": {
+      "model": "phonics-justfatlard:block/plush_snail",
+      "y": 0
+    },
+    "facing=east,kind=snail": {
+      "model": "phonics-justfatlard:block/plush_snail",
+      "y": 90
+    },
+    "facing=south,kind=snail": {
+      "model": "phonics-justfatlard:block/plush_snail",
+      "y": 180
+    },
+    "facing=west,kind=snail": {
+      "model": "phonics-justfatlard:block/plush_snail",
+      "y": 270
+    },
+    "facing=north,kind=seal": {
+      "model": "phonics-justfatlard:block/plush_seal",
+      "y": 0
+    },
+    "facing=east,kind=seal": {
+      "model": "phonics-justfatlard:block/plush_seal",
+      "y": 90
+    },
+    "facing=south,kind=seal": {
+      "model": "phonics-justfatlard:block/plush_seal",
+      "y": 180
+    },
+    "facing=west,kind=seal": {
+      "model": "phonics-justfatlard:block/plush_seal",
+      "y": 270
+    },
+    "facing=north,kind=mouse": {
+      "model": "phonics-justfatlard:block/plush_mouse",
+      "y": 0
+    },
+    "facing=east,kind=mouse": {
+      "model": "phonics-justfatlard:block/plush_mouse",
+      "y": 90
+    },
+    "facing=south,kind=mouse": {
+      "model": "phonics-justfatlard:block/plush_mouse",
+      "y": 180
+    },
+    "facing=west,kind=mouse": {
+      "model": "phonics-justfatlard:block/plush_mouse",
+      "y": 270
+    },
+    "facing=north,kind=snake": {
+      "model": "phonics-justfatlard:block/plush_snake",
+      "y": 0
+    },
+    "facing=east,kind=snake": {
+      "model": "phonics-justfatlard:block/plush_snake",
+      "y": 90
+    },
+    "facing=south,kind=snake": {
+      "model": "phonics-justfatlard:block/plush_snake",
+      "y": 180
+    },
+    "facing=west,kind=snake": {
+      "model": "phonics-justfatlard:block/plush_snake",
+      "y": 270
+    },
+    "facing=north,kind=skunk": {
+      "model": "phonics-justfatlard:block/plush_skunk",
+      "y": 0
+    },
+    "facing=east,kind=skunk": {
+      "model": "phonics-justfatlard:block/plush_skunk",
+      "y": 90
+    },
+    "facing=south,kind=skunk": {
+      "model": "phonics-justfatlard:block/plush_skunk",
+      "y": 180
+    },
+    "facing=west,kind=skunk": {
+      "model": "phonics-justfatlard:block/plush_skunk",
+      "y": 270
+    },
+    "facing=north,kind=hawk": {
+      "model": "phonics-justfatlard:block/plush_hawk",
+      "y": 0
+    },
+    "facing=east,kind=hawk": {
+      "model": "phonics-justfatlard:block/plush_hawk",
+      "y": 90
+    },
+    "facing=south,kind=hawk": {
+      "model": "phonics-justfatlard:block/plush_hawk",
+      "y": 180
+    },
+    "facing=west,kind=hawk": {
+      "model": "phonics-justfatlard:block/plush_hawk",
+      "y": 270
+    },
+    "facing=north,kind=ladybug": {
+      "model": "phonics-justfatlard:block/plush_ladybug",
+      "y": 0
+    },
+    "facing=east,kind=ladybug": {
+      "model": "phonics-justfatlard:block/plush_ladybug",
+      "y": 90
+    },
+    "facing=south,kind=ladybug": {
+      "model": "phonics-justfatlard:block/plush_ladybug",
+      "y": 180
+    },
+    "facing=west,kind=ladybug": {
+      "model": "phonics-justfatlard:block/plush_ladybug",
+      "y": 270
+    },
+    "facing=north,kind=mole": {
+      "model": "phonics-justfatlard:block/plush_mole",
+      "y": 0
+    },
+    "facing=east,kind=mole": {
+      "model": "phonics-justfatlard:block/plush_mole",
+      "y": 90
+    },
+    "facing=south,kind=mole": {
+      "model": "phonics-justfatlard:block/plush_mole",
+      "y": 180
+    },
+    "facing=west,kind=mole": {
+      "model": "phonics-justfatlard:block/plush_mole",
+      "y": 270
+    },
+    "facing=north,kind=crow": {
+      "model": "phonics-justfatlard:block/plush_crow",
+      "y": 0
+    },
+    "facing=east,kind=crow": {
+      "model": "phonics-justfatlard:block/plush_crow",
+      "y": 90
+    },
+    "facing=south,kind=crow": {
+      "model": "phonics-justfatlard:block/plush_crow",
+      "y": 180
+    },
+    "facing=west,kind=crow": {
+      "model": "phonics-justfatlard:block/plush_crow",
+      "y": 270
+    },
+    "facing=north,kind=pug": {
+      "model": "phonics-justfatlard:block/plush_pug",
+      "y": 0
+    },
+    "facing=east,kind=pug": {
+      "model": "phonics-justfatlard:block/plush_pug",
+      "y": 90
+    },
+    "facing=south,kind=pug": {
+      "model": "phonics-justfatlard:block/plush_pug",
+      "y": 180
+    },
+    "facing=west,kind=pug": {
+      "model": "phonics-justfatlard:block/plush_pug",
+      "y": 270
+    },
+    "facing=north,kind=deer": {
+      "model": "phonics-justfatlard:block/plush_deer",
+      "y": 0
+    },
+    "facing=east,kind=deer": {
+      "model": "phonics-justfatlard:block/plush_deer",
+      "y": 90
+    },
+    "facing=south,kind=deer": {
+      "model": "phonics-justfatlard:block/plush_deer",
+      "y": 180
+    },
+    "facing=west,kind=deer": {
+      "model": "phonics-justfatlard:block/plush_deer",
+      "y": 270
+    },
+    "facing=north,kind=whale": {
+      "model": "phonics-justfatlard:block/plush_whale",
+      "y": 0
+    },
+    "facing=east,kind=whale": {
+      "model": "phonics-justfatlard:block/plush_whale",
+      "y": 90
+    },
+    "facing=south,kind=whale": {
+      "model": "phonics-justfatlard:block/plush_whale",
+      "y": 180
+    },
+    "facing=west,kind=whale": {
+      "model": "phonics-justfatlard:block/plush_whale",
+      "y": 270
+    },
+    "facing=north,kind=fly": {
+      "model": "phonics-justfatlard:block/plush_fly",
+      "y": 0
+    },
+    "facing=east,kind=fly": {
+      "model": "phonics-justfatlard:block/plush_fly",
+      "y": 90
+    },
+    "facing=south,kind=fly": {
+      "model": "phonics-justfatlard:block/plush_fly",
+      "y": 180
+    },
+    "facing=west,kind=fly": {
+      "model": "phonics-justfatlard:block/plush_fly",
+      "y": 270
+    },
+    "facing=north,kind=beetle": {
+      "model": "phonics-justfatlard:block/plush_beetle",
+      "y": 0
+    },
+    "facing=east,kind=beetle": {
+      "model": "phonics-justfatlard:block/plush_beetle",
+      "y": 90
+    },
+    "facing=south,kind=beetle": {
+      "model": "phonics-justfatlard:block/plush_beetle",
+      "y": 180
+    },
+    "facing=west,kind=beetle": {
+      "model": "phonics-justfatlard:block/plush_beetle",
+      "y": 270
+    },
+    "facing=north,kind=mice": {
+      "model": "phonics-justfatlard:block/plush_mice",
+      "y": 0
+    },
+    "facing=east,kind=mice": {
+      "model": "phonics-justfatlard:block/plush_mice",
+      "y": 90
+    },
+    "facing=south,kind=mice": {
+      "model": "phonics-justfatlard:block/plush_mice",
+      "y": 180
+    },
+    "facing=west,kind=mice": {
+      "model": "phonics-justfatlard:block/plush_mice",
+      "y": 270
+    },
+    "facing=north,kind=bobcat": {
+      "model": "phonics-justfatlard:block/plush_bobcat",
+      "y": 0
+    },
+    "facing=east,kind=bobcat": {
+      "model": "phonics-justfatlard:block/plush_bobcat",
+      "y": 90
+    },
+    "facing=south,kind=bobcat": {
+      "model": "phonics-justfatlard:block/plush_bobcat",
+      "y": 180
+    },
+    "facing=west,kind=bobcat": {
+      "model": "phonics-justfatlard:block/plush_bobcat",
+      "y": 270
+    },
+    "facing=north,kind=catfish": {
+      "model": "phonics-justfatlard:block/plush_catfish",
+      "y": 0
+    },
+    "facing=east,kind=catfish": {
+      "model": "phonics-justfatlard:block/plush_catfish",
+      "y": 90
+    },
+    "facing=south,kind=catfish": {
+      "model": "phonics-justfatlard:block/plush_catfish",
+      "y": 180
+    },
+    "facing=west,kind=catfish": {
+      "model": "phonics-justfatlard:block/plush_catfish",
+      "y": 270
+    },
+    "facing=north,kind=starfish": {
+      "model": "phonics-justfatlard:block/plush_starfish",
+      "y": 0
+    },
+    "facing=east,kind=starfish": {
+      "model": "phonics-justfatlard:block/plush_starfish",
+      "y": 90
+    },
+    "facing=south,kind=starfish": {
+      "model": "phonics-justfatlard:block/plush_starfish",
+      "y": 180
+    },
+    "facing=west,kind=starfish": {
+      "model": "phonics-justfatlard:block/plush_starfish",
+      "y": 270
+    },
+    "facing=north,kind=chipmunk": {
+      "model": "phonics-justfatlard:block/plush_chipmunk",
+      "y": 0
+    },
+    "facing=east,kind=chipmunk": {
+      "model": "phonics-justfatlard:block/plush_chipmunk",
+      "y": 90
+    },
+    "facing=south,kind=chipmunk": {
+      "model": "phonics-justfatlard:block/plush_chipmunk",
+      "y": 180
+    },
+    "facing=west,kind=chipmunk": {
+      "model": "phonics-justfatlard:block/plush_chipmunk",
+      "y": 270
+    },
+    "facing=north,kind=puffin": {
+      "model": "phonics-justfatlard:block/plush_puffin",
+      "y": 0
+    },
+    "facing=east,kind=puffin": {
+      "model": "phonics-justfatlard:block/plush_puffin",
+      "y": 90
+    },
+    "facing=south,kind=puffin": {
+      "model": "phonics-justfatlard:block/plush_puffin",
+      "y": 180
+    },
+    "facing=west,kind=puffin": {
+      "model": "phonics-justfatlard:block/plush_puffin",
+      "y": 270
+    },
+    "facing=north,kind=robin": {
+      "model": "phonics-justfatlard:block/plush_robin",
+      "y": 0
+    },
+    "facing=east,kind=robin": {
+      "model": "phonics-justfatlard:block/plush_robin",
+      "y": 90
+    },
+    "facing=south,kind=robin": {
+      "model": "phonics-justfatlard:block/plush_robin",
+      "y": 180
+    },
+    "facing=west,kind=robin": {
+      "model": "phonics-justfatlard:block/plush_robin",
+      "y": 270
+    },
+    "facing=north,kind=lobster": {
+      "model": "phonics-justfatlard:block/plush_lobster",
+      "y": 0
+    },
+    "facing=east,kind=lobster": {
+      "model": "phonics-justfatlard:block/plush_lobster",
+      "y": 90
+    },
+    "facing=south,kind=lobster": {
+      "model": "phonics-justfatlard:block/plush_lobster",
+      "y": 180
+    },
+    "facing=west,kind=lobster": {
+      "model": "phonics-justfatlard:block/plush_lobster",
+      "y": 270
+    },
+    "facing=north,kind=hedgehog": {
+      "model": "phonics-justfatlard:block/plush_hedgehog",
+      "y": 0
+    },
+    "facing=east,kind=hedgehog": {
+      "model": "phonics-justfatlard:block/plush_hedgehog",
+      "y": 90
+    },
+    "facing=south,kind=hedgehog": {
+      "model": "phonics-justfatlard:block/plush_hedgehog",
+      "y": 180
+    },
+    "facing=west,kind=hedgehog": {
+      "model": "phonics-justfatlard:block/plush_hedgehog",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "tiles": [
+    "m",
+    "u",
+    "g"
+  ],
+  "stage": 4,
+  "picture": "clear",
+  "icon": "phonics-justfatlard:mug",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "phonics-justfatlard:mug",
+        "at": "near",
+        "properties": {
+          "facing": "south"
+        }
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 4,
+        "spread": 0.2,
+        "at": "face"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "phonics-justfatlard:mug"
+    ]
+  }
+}

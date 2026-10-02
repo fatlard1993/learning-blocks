@@ -1,0 +1,21 @@
+{
+  "tiles": [
+    "m",
+    "a",
+    "s",
+    "k"
+  ],
+  "stage": 11,
+  "picture": "clear",
+  "outcome": {
+    "type": "equip_item",
+    "item": "minecraft:carved_pumpkin",
+    "slot": "head"
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "minecraft:carved_pumpkin"
+    ]
+  }
+}

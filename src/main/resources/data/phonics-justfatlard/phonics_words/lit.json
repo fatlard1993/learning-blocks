@@ -1,0 +1,37 @@
+{
+  "tiles": [
+    "l",
+    "i",
+    "t"
+  ],
+  "stage": 2,
+  "icon": "minecraft:redstone_torch",
+  "outcome": {
+    "type": "place_block",
+    "block": "minecraft:torch",
+    "at": "near"
+  },
+  "wrong": {
+    "type": "place_block",
+    "block": "minecraft:torch",
+    "at": "near",
+    "lasts": 30
+  },
+  "scene": {
+    "line": "Oh! It's so dark in here!",
+    "setup": [
+      {
+        "type": "dim"
+      }
+    ],
+    "solve": [
+      {
+        "type": "place",
+        "block": "minecraft:torch"
+      },
+      {
+        "type": "light"
+      }
+    ]
+  }
+}
