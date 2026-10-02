@@ -442,13 +442,19 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 			session.onServer(server -> {
 				ServerPlayer player = session.player();
 				ServerLevel level = (ServerLevel) player.level();
-				check(Play.play(level, at, level.getBlockState(at), Anims.of(toy)), toy + " would not play again");
-				// The bus faces east here: its doors are on its right, the south.
-				Vec3 from = toy == Toy.BUS ? Vec3.atBottomCenterOf(at).add(0.3, 0.6, 1.0) : Vec3.atBottomCenterOf(at).add(1.3, 0, -1.3);
-				Vec3 aim = Vec3.atBottomCenterOf(at).add(0, 0.4, 0).subtract(from.add(0, player.getEyeHeight(), 0));
+				// The bus faces east here: its door is on its right, the south. The kite, from its side, to see it lean and fly.
+				Vec3 from = toy == Toy.BUS ? Vec3.atBottomCenterOf(at).add(0.6, 0, 1.8)
+					: toy == Toy.KITE ? Vec3.atBottomCenterOf(at).add(1.4, 0, -2.4) : Vec3.atBottomCenterOf(at).add(1.3, 0, -1.3);
+				Vec3 aim = Vec3.atBottomCenterOf(at).add(0, toy == Toy.KITE ? 0.9 : 0.4, 0).subtract(from.add(0, player.getEyeHeight(), 0));
 				float yaw = (float) Math.toDegrees(Math.atan2(-aim.x, aim.z));
 				float pitch = (float) -Math.toDegrees(Math.atan2(aim.y, Math.sqrt(aim.x * aim.x + aim.z * aim.z)));
 				player.teleportTo(level, from.x, from.y, from.z, Set.of(), yaw, pitch, true);
+			});
+			session.waitTicks(3);
+			shoot(session, "phonics-part-" + toy.name().toLowerCase(java.util.Locale.ROOT) + "-rest");
+			session.onServer(server -> {
+				ServerLevel level = (ServerLevel) session.player().level();
+				check(Play.play(level, at, level.getBlockState(at), Anims.of(toy)), toy + " would not play again");
 			});
 			int third = Math.max(4, Anims.of(toy).length() / 3);
 			session.waitTicks(third);

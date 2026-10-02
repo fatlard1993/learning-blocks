@@ -102,34 +102,44 @@ def drum():
 
 
 def kite():
-    """A diamond kite, taller than wide, standing on its bow-tied tail: cross spars on the sail."""
-    c = {"red": RED, "yellow": YELLOW, "blue": BLUE, "green": GREEN, "spar": shade(WOOD, 0.8), "string": CREAM,
-         "bow": PINK}
-    lean = {}
-    rows = [(14.2, 15, 7.6), (13.4, 14.2, 6.8), (12.6, 13.4, 6), (11.8, 12.6, 5.2), (11, 11.8, 5.6),
-            (10.2, 11, 6.1), (9.4, 10.2, 6.6), (8.6, 9.4, 7.1), (7.8, 8.6, 7.5)]
+    """A classic diamond kite: a big flat sail in four colours with its cross spars, leaning back on
+    the reel its string winds onto, and a bow-tied tail trailing behind on the floor. The sail, the
+    tail and the string are parts: the kite lifts off its reel and flies."""
+    c = {"red": RED, "yellow": YELLOW, "blue": BLUE, "green": GREEN, "spar": shade(WOOD, 0.75), "string": CREAM,
+         "bow": PINK, "reel": WOOD, "flange": RED, "wound": shade(CREAM, 0.92)}
+    lean = ("x", 22.5, (8, 2.4, 8.6))
+    sail = {"part": "sail", "rot": lean}
+    tip, wide, top, half = 2.4, 10.6, 15.8, 6.6
     boxes = []
-    for y0, y1, x0 in rows:
-        high = y0 >= 11.8
-        boxes.append(((x0, y0, 7.7), (8, y1, 8.3), "red" if high else "blue", lean))
-        boxes.append(((8, y0, 7.7), (16 - x0, y1, 8.3), "yellow" if high else "green", lean))
+    y = tip
+    while y < top - 0.01:
+        y1 = min(top, y + 0.8)
+        mid = (y + y1) / 2
+        hw = half * (mid - tip) / (wide - tip) if mid < wide else half * (top - mid) / (top - wide)
+        hw = max(0.6, hw)
+        upper = mid >= wide
+        boxes.append(((8 - hw, y, 8.3), (8, y1, 8.9), "red" if upper else "blue", sail))
+        boxes.append(((8, y, 8.3), (8 + hw, y1, 8.9), "yellow" if upper else "green", sail))
+        y = y1
     boxes += [
-        ((7.75, 7.8, 7.5), (8.25, 15, 7.7), "spar", lean),
-        ((5.2, 12, 7.5), (10.8, 12.4, 7.7), "spar", lean),
-        ((7.9, 5.6, 7.9), (8.1, 7.8, 8.1), "string"),
-        ((7, 6, 7.8), (9, 6.8, 8.2), "bow"),
-        ((8.6, 3.6, 7.9), (8.8, 5.6, 8.1), "string"),
-        ((7.9, 5.4, 7.9), (8.8, 5.6, 8.1), "string"),
-        ((7.7, 3.6, 7.8), (9.7, 4.4, 8.2), "bow"),
-        ((7.5, 1.4, 7.9), (7.7, 3.6, 8.1), "string"),
-        ((7.5, 3.4, 7.9), (8.6, 3.6, 8.1), "string"),
-        ((6.6, 1.6, 7.8), (8.6, 2.4, 8.2), "bow"),
-        ((7.5, 0, 7.6), (8.9, 0.4, 9.6), "string"),
-        ((7.5, 0.4, 7.9), (7.7, 1.4, 8.1), "string"),
+        ((7.7, tip, 8.0), (8.3, top, 8.3), "spar", sail),
+        ((8 - half + 0.4, wide - 0.3, 8.0), (8 + half - 0.4, wide + 0.3, 8.3), "spar", sail),
+        # The reel, in front: a spool with the string wound on, and the string up to the sail's tip.
+        ((6.6, 0.5, 3.2), (9.4, 2.5, 5.2), "wound"),
+        ((6.0, 0, 2.8), (6.6, 3.0, 5.6), "flange"),
+        ((9.4, 0, 2.8), (10.0, 3.0, 5.6), "flange"),
+        ((7.9, 2.3, 5.2), (8.1, 2.5, 8.6), "string", {"part": "string"}),
     ]
-    # The tail, everything under the sail, is a part of its own: it waves.
-    boxes = [box + ({"part": "tail"},) if len(box) == 3 and box[1][1] <= 7.8 else box for box in boxes]
+    tail = {"part": "tail"}
+    boxes += [
+        ((7.9, 0.3, 8.7), (8.1, 2.4, 8.9), "string", tail),
+        ((7.9, 0, 8.9), (8.1, 0.2, 15.6), "string", tail),
+        ((6.9, 0, 10.4), (9.1, 0.5, 11.2), "bow", tail),
+        ((6.9, 0, 12.6), (9.1, 0.5, 13.4), "bow", tail),
+        ((6.9, 0, 14.8), (9.1, 0.5, 15.6), "bow", tail),
+    ]
     return c, {}, boxes
+
 
 def top():
     """A wooden spinning top: small, a point, a wide shoulder and a thin spindle to twist."""
@@ -148,19 +158,28 @@ def top():
     return c, {}, boxes
 
 def ring():
-    c = {"base": WOOD, "red": RED, "orange": ORANGE, "yellow": YELLOW, "green": GREEN, "blue": BLUE, "knob": RED}
+    """Stacking rings: square rings, each four bars round a hole, on a wooden post with a round knob."""
+    c = {"base": WOOD, "red": RED, "orange": ORANGE, "yellow": YELLOW, "green": GREEN, "blue": BLUE, "knob": RED,
+         "post": shade(WOOD, 0.9)}
+    hole0, hole1 = 6.7, 9.3
     boxes = [
         ((4, 0, 4), (12, 1, 12), "base"),
-        # The post the rings go on, hidden inside them until they come off.
-        ((7.3, 1, 7.3), (8.7, 9, 8.7), "base"),
-        ((4, 1, 4), (12, 2.6, 12), "red", {"part": "ring0"}),
-        ((4.5, 2.6, 4.5), (11.5, 4.2, 11.5), "orange", {"part": "ring1"}),
-        ((5, 4.2, 5), (11, 5.8, 11), "yellow", {"part": "ring2"}),
-        ((5.5, 5.8, 5.5), (10.5, 7.4, 10.5), "green", {"part": "ring3"}),
-        ((6, 7.4, 6), (10, 9, 10), "blue", {"part": "ring4"}),
-        ((7.2, 9, 7.2), (8.8, 10, 8.8), "base"),
-        ((6.8, 10, 6.8), (9.2, 11.6, 9.2), "knob"),
+        ((7.3, 1, 7.3), (8.7, 10, 8.7), "post"),
+        # The knob, rounded: a wide middle between narrower top and bottom.
+        ((7.1, 10, 7.1), (8.9, 10.4, 8.9), "knob"),
+        ((6.7, 10.4, 6.7), (9.3, 11.4, 9.3), "knob"),
+        ((7.1, 11.4, 7.1), (8.9, 11.8, 8.9), "knob"),
     ]
+    rings = [(4, 1, 2.6, "red"), (4.5, 2.6, 4.2, "orange"), (5, 4.2, 5.8, "yellow"), (5.5, 5.8, 7.4, "green"), (6, 7.4, 9, "blue")]
+    for k, (lo, y0, y1, colour) in enumerate(rings):
+        hi = 16 - lo
+        part = {"part": f"ring{k}"}
+        boxes += [
+            ((lo, y0, lo), (hi, y1, hole0), colour, part),
+            ((lo, y0, hole1), (hi, y1, hi), colour, part),
+            ((lo, y0, hole0), (hole0, y1, hole1), colour, part),
+            ((hole1, y0, hole0), (hi, y1, hole1), colour, part),
+        ]
     return c, {}, boxes
 
 
@@ -341,7 +360,7 @@ def bus():
     c = {"body": YELLOW, "tyre": BLACK, "stripe": BLACK, "light": RED, "bumper": BLACK, "door": shade(YELLOW, 0.88)}
     side = windows(8, 3, YELLOW, SKY, 4)
     front = windows(8, 3, YELLOW, SKY, 1)
-    # A folding door on the right, near the front: two leaves, each a tall window in a frame.
+    # A door on the right, near the front: two leaves, each a tall window in a frame.
     door = Face(2, 7, shade(YELLOW, 0.88))
     door.rect(1, 2, 7, 13, SKY)
     door.rect(1, 2, 7, 4, shade(SKY, 1.12))
@@ -353,10 +372,11 @@ def bus():
         ((4.2, 2.2, 0.6), (5.6, 3.2, 1), "light"),
         ((10.4, 2.2, 0.6), (11.8, 3.2, 1), "light"),
         ((3.6, 1.2, 0.5), (12.4, 1.8, 1), "bumper"),
-        ((12.5, 1.4, 2.0), (12.8, 8.6, 3.8), "door", {"east": "@door", "part": "door0"}),
-        ((12.5, 1.4, 3.8), (12.8, 8.6, 5.6), "door", {"east": "@door", "part": "door1"}),
+        # The door, flush on the right near the front: painted, two leaves.
+        ((12.5, 1.4, 2.0), (12.6, 8.6, 3.8), "door", {"east": "@door"}),
+        ((12.5, 1.4, 3.8), (12.6, 8.6, 5.6), "door", {"east": "@door"}),
     ]
-    boxes += wheels(2.4, 13.6, (2.2, 11.8))
+    boxes += wheels(2.4, 13.6, (2.2, 11.8), part="wheel", hub="light")
     return c, {"side": side, "front": front, "door": door}, boxes
 
 

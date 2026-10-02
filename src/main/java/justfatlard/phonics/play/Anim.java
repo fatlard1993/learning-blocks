@@ -41,7 +41,11 @@ public final class Anim {
 	public record Event(int tick, @Nullable SoundEvent sound, float pitch, @Nullable ParticleOptions particle, int count, float height) {}
 
 	/** A part's pose at a tick: moved, in model units, and turned about its pivot round the model's axes. */
-	public record Turn(int tick, float x, float y, float z, float rx, float ry, float rz) {}
+	public record Turn(int tick, float x, float y, float z, float rx, float ry, float rz, float sx, float sy, float sz) {
+		public Turn(int tick, float x, float y, float z, float rx, float ry, float rz) {
+			this(tick, x, y, z, rx, ry, rz, 1, 1, 1);
+		}
+	}
 
 	/** A part of a toy drawn in pieces, its pivot in model units, and its poses. */
 	public record Part(String name, float px, float py, float pz, List<Turn> turns) {}
@@ -91,6 +95,13 @@ public final class Anim {
 		return this;
 	}
 
+	/** The same, stretched along its own axes too (a kite's string paying out). */
+	public Anim turn(int tick, float x, float y, float z, float rx, float ry, float rz, float sx, float sy, float sz) {
+		if (current == null) throw new IllegalStateException("a part's pose with no part named");
+		current.turns().add(new Turn(tick, x, y, z, rx, ry, rz, sx, sy, sz));
+		return this;
+	}
+
 	/** The current part spinning round one axis ({@code 'x'}, {@code 'y'} or {@code 'z'}) from one tick to another, a step every tick. */
 	public Anim spin(char axis, int from, int to, float degreesPerTick) {
 		for (int tick = from; tick <= to; tick++) {
@@ -131,7 +142,8 @@ public final class Anim {
 		if (after == null || after.tick() == before.tick()) return before;
 		float t = (tick - before.tick()) / (float) (after.tick() - before.tick());
 		return new Turn(tick, lerp(before.x(), after.x(), t), lerp(before.y(), after.y(), t), lerp(before.z(), after.z(), t),
-			lerp(before.rx(), after.rx(), t), lerp(before.ry(), after.ry(), t), lerp(before.rz(), after.rz(), t));
+			lerp(before.rx(), after.rx(), t), lerp(before.ry(), after.ry(), t), lerp(before.rz(), after.rz(), t),
+			lerp(before.sx(), after.sx(), t), lerp(before.sy(), after.sy(), t), lerp(before.sz(), after.sz(), t));
 	}
 
 	/** A part's pose as a transformation of the model, centred as an item draws it (a block's middle at nought). */
@@ -140,6 +152,7 @@ public final class Anim {
 		return new Matrix4f()
 			.translate(pivot.x + turn.x() / 16, pivot.y + turn.y() / 16, pivot.z + turn.z() / 16)
 			.rotateX((float) Math.toRadians(turn.rx())).rotateY((float) Math.toRadians(turn.ry())).rotateZ((float) Math.toRadians(turn.rz()))
+			.scale(turn.sx(), turn.sy(), turn.sz())
 			.translate(-pivot.x, -pivot.y, -pivot.z);
 	}
 

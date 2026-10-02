@@ -11,9 +11,9 @@ import net.minecraft.sounds.SoundEvents;
  * What each toy does when played with, and the plushie squish. Most move as one, the whole body:
  * the van's bounce, the top's spin, the pin tipping over and springing back. A toy whose play needs
  * a moving part is drawn in pieces (see {@code generate_toys.py}), and its part moves too: the
- * truck's bed tips, the bus's doors fold open, the rings come off one by one and go back, the sock
- * puppet's mouth flaps, the kite's tail waves, the jet's propeller and the car's and train's wheels
- * spin. Part pivots are in the model's units, matching where generate_toys.py draws them. Every
+ * truck's bed tips, the rings come off one by one and go back, the sock puppet's mouth flaps, the
+ * kite lifts off its reel and flies on its string, the jet's propeller and the car's, bus's and
+ * train's wheels spin. Part pivots are in the model's units, matching where generate_toys.py draws them. Every
  * one ends exactly where it began.
  */
 public final class Anims {
@@ -48,14 +48,11 @@ public final class Anims {
 		Anim van = Anim.of().sound(0, note(SoundEvents.NOTE_BLOCK_DIDGERIDOO), 1.2F).sound(5, note(SoundEvents.NOTE_BLOCK_DIDGERIDOO), 1.2F);
 		for (int i = 0; i < 4; i++) van.key(2 + i * 6, 0, 0.18F, 0, 0, 0, 0, 0.95F, 1.08F, 0.95F).key(5 + i * 6, 0, 0, 0, 0, 0, 0, 1.06F, 0.92F, 1.06F);
 		TOYS.put(Toy.VAN, van.rest(28));
-		// bus: beep beep, its doors fold open (pssht) and shut, and it rocks off on its wheels.
-		Anim bus = Anim.of().pieces("bus").sound(0, note(SoundEvents.NOTE_BLOCK_BELL), 1.0F).sound(4, note(SoundEvents.NOTE_BLOCK_BELL), 1.0F)
-			.sound(6, SoundEvents.PISTON_EXTEND, 1.6F).sound(20, SoundEvents.PISTON_CONTRACT, 1.6F);
-		bus.part("door0", 12.5F, 1.4F, 2.0F).turn(6, 0, 0, 0, 0, 0, 0).turn(10, 0, 0, 0, 0, 78, 0).turn(20, 0, 0, 0, 0, 78, 0).turn(24, 0, 0, 0, 0, 0, 0);
-		bus.part("door1", 12.5F, 1.4F, 5.6F).turn(6, 0, 0, 0, 0, 0, 0).turn(10, 0, 0, 0, 0, -78, 0).turn(20, 0, 0, 0, 0, -78, 0).turn(24, 0, 0, 0, 0, 0, 0);
-		bus.key(24, 0, 0, 0);
-		for (int i = 0; i < 2; i++) bus.key(27 + i * 6, 0, 0, 0, 0, 0, 8).key(30 + i * 6, 0, 0, 0, 0, 0, -8);
-		TOYS.put(Toy.BUS, bus.rest(40));
+		// bus: beep beep, and it rocks side to side as its wheels roll.
+		Anim bus = Anim.of().sound(0, note(SoundEvents.NOTE_BLOCK_BELL), 1.0F).sound(4, note(SoundEvents.NOTE_BLOCK_BELL), 1.0F);
+		for (int i = 0; i < 4; i++) bus.key(3 + i * 6, 0, 0, 0, 0, 0, 7).key(6 + i * 6, 0, 0, 0, 0, 0, -7);
+		wheels(bus.pieces("bus"), new float[] {3.0F, 13.0F}, 1.1F, new float[] {3.3F, 12.9F}, 2, 26, -40);
+		TOYS.put(Toy.BUS, bus.rest(30));
 		// truck: a rumble, and its dump bed tips up on its hinge at the back, the load sliding out, and
 		// settles back down.
 		Anim truck = Anim.of().pieces("truck").sound(0, SoundEvents.GRAVEL_BREAK, 0.8F);
@@ -104,15 +101,23 @@ public final class Anims {
 			drum.sound(i * 5, note(SoundEvents.NOTE_BLOCK_BASEDRUM), 1.0F).squash(i * 5 + 1, 1.08F, 0.88F).key(i * 5 + 3, 0, 0.12F, 0);
 		}
 		TOYS.put(Toy.DRUM, drum.rest(22));
-		// kite: rises and flutters on the breeze, and floats back down.
-		Anim kite = Anim.of().sound(0, SoundEvents.PHANTOM_FLAP, 1.6F);
-		for (int i = 0; i < 6; i++) kite.key(4 + i * 4, 0, 0.3F + Math.min(i, 3) * 0.3F, -0.2F * Math.min(i, 3), 0, 10, i % 2 == 0 ? 16 : -16);
-		kite.sound(14, SoundEvents.PHANTOM_FLAP, 1.8F).key(36, 0, 0.3F, -0.1F, 0, 0, 6).rest(42);
-		// Its tail waves on the wind, under it.
-		kite.pieces("kite").part("tail", 8, 7.8F, 8);
-		for (int i = 0; i < 12; i++) kite.turn(3 + i * 3, 0, 0, 0, 0, 0, i % 2 == 0 ? 24 : -24);
-		kite.turn(40, 0, 0, 0, 0, 0, 0);
-		TOYS.put(Toy.KITE, kite);
+		// kite: it lifts off its reel and flies up and back on its string, the sail fluttering and
+		// the tail waving under it, and settles back onto the reel.
+		Anim kite = Anim.of().pieces("kite").sound(0, SoundEvents.PHANTOM_FLAP, 1.6F).sound(16, SoundEvents.PHANTOM_FLAP, 1.8F)
+			.sound(30, SoundEvents.PHANTOM_FLAP, 1.7F);
+		float upY = 18, backZ = 6;
+		kite.part("sail", 8, 9, 8.6F).turn(10, 0, upY, backZ, 0, 0, 0);
+		for (int i = 0; i < 7; i++) kite.turn(14 + i * 4, 0, upY, backZ, 0, 0, i % 2 == 0 ? 8 : -8);
+		kite.turn(40, 0, upY, backZ, 0, 0, 0).turn(48, 0, 0, 0, 0, 0, 0);
+		kite.part("tail", 8, 2.4F, 8.8F).turn(10, 0, upY, backZ, 90, 0, 0);
+		for (int i = 0; i < 9; i++) kite.turn(13 + i * 3, 0, upY, backZ, 90, 0, i % 2 == 0 ? 22 : -22);
+		kite.turn(40, 0, upY, backZ, 90, 0, 0).turn(48, 0, 0, 0, 0, 0, 0);
+		// The string, from the reel to the sail's tip, paying out as it goes up.
+		float length = (float) Math.sqrt(upY * upY + (backZ + 3.4F) * (backZ + 3.4F));
+		float angle = (float) -Math.toDegrees(Math.atan2(upY, backZ + 3.4F));
+		kite.part("string", 8, 2.4F, 5.2F).turn(10, 0, 0, 0, angle, 0, 0, 1, 1, length / 3.4F)
+			.turn(40, 0, 0, 0, angle, 0, 0, 1, 1, length / 3.4F).turn(48, 0, 0, 0, 0, 0, 0);
+		TOYS.put(Toy.KITE, kite.rest(50));
 		// stacking rings: off the post they come, the top one first, up and over into a pile beside
 		// it; then back on, the big one first, till the stack is as it was.
 		Anim ring = Anim.of().pieces("ring");

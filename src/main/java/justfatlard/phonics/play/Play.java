@@ -237,7 +237,7 @@ public final class Play {
 	 */
 	public static com.mojang.math.Transformation transformation(Matrix4f matrix) {
 		org.joml.Vector3f scale = matrix.getScale(new org.joml.Vector3f());
-		Quaternionf turn = matrix.getNormalizedRotation(new Quaternionf());
+		Quaternionf turn = matrix.getUnnormalizedRotation(new Quaternionf());
 		return new com.mojang.math.Transformation(matrix.getTranslation(new org.joml.Vector3f()), turn, scale, null);
 	}
 
