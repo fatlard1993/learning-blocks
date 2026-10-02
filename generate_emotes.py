@@ -216,19 +216,39 @@ def hot():
 
 
 def hand():
-    """An open hand, waving hello: a mitten of a palm with four fingers and a thumb."""
-    c = Canvas()
-    skin, line = rgb(0xF6D2B4), rgb(0x8A5A44)
-    fingers = [(9, 5), (13, 3), (17, 3), (21, 5)]
-    for x, top in fingers:
-        c.rect(x - 1, top - 1, x + 3, 17, line)
-    c.rect(7, 13, 25, 28, line)
-    c.rect(3, 15, 9, 21, line)
-    for x, top in fingers:
-        c.rect(x, top, x + 2, 17, skin)
-    c.rect(8, 14, 24, 27, skin)
-    c.rect(4, 16, 9, 20, skin)
-    c.rect(9, 27, 23, 29, line)
+    """A waving hand, hello: an open palm, four fingers a little spread (the middle one tallest),
+    the thumb angled out from the side of the palm, outlined, with motion arcs either side; in the
+    same bubble as the feelings."""
+    c = bubble(PAPER)
+    c.disc(16, 14, 12.4, PAPER)
+    skin, line, arc = rgb(0xF6D2B4), rgb(0x8A5A44), rgb(0x5EB8F2)
+    ox, oy = 7, 3
+    mask = set()
+    # Fingers: (left outline column, top row, lean): two skin columns each, an outline between.
+    for x0, top, lean in ((3, 3, -1), (6, 1, 0), (9, 2, 0), (12, 4, 1)):
+        for row in range(top, 10):
+            shift = round(lean * (9 - row) / 6)
+            for col in (x0 + 1, x0 + 2):
+                mask.add((col + shift, row))
+    for row in range(9, 17):
+        for col in range(4, 15):
+            mask.add((col, row))
+    mask -= {(4, 16), (14, 16)}
+    # The thumb, out and up from the side of the palm.
+    for col, row in ((3, 12), (3, 13), (2, 11), (2, 12), (1, 10), (1, 11), (0, 9), (0, 10), (3, 11), (2, 10), (1, 12), (0, 11), (2, 13)):
+        mask.add((col, row))
+    for col, row in mask:
+        for n in ((col + 1, row), (col - 1, row), (col, row + 1), (col, row - 1)):
+            if n not in mask:
+                c.dot(ox + n[0], oy + n[1], line)
+    for col, row in mask:
+        c.dot(ox + col, oy + row, skin)
+    # The crease of the palm.
+    for col in range(7, 12):
+        c.dot(ox + col, oy + 13, rgb(0xE8B896))
+    # Motion arcs, either side.
+    for x, y in ((7, 6), (6, 7), (6, 8), (7, 9), (24, 6), (25, 7), (25, 8), (24, 9)):
+        c.dot(x, y, arc)
     return c
 
 

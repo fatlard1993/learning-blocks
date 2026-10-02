@@ -135,7 +135,7 @@ public final class Anim {
 	}
 
 	/** A part's pose as a transformation of the model, centred as an item draws it (a block's middle at nought). */
-	static Matrix4f partMatrix(Part part, Turn turn) {
+	public static Matrix4f partMatrix(Part part, Turn turn) {
 		org.joml.Vector3f pivot = new org.joml.Vector3f(part.px() / 16 - 0.5F, part.py() / 16 - 0.5F, part.pz() / 16 - 0.5F);
 		return new Matrix4f()
 			.translate(pivot.x + turn.x() / 16, pivot.y + turn.y() / 16, pivot.z + turn.z() / 16)

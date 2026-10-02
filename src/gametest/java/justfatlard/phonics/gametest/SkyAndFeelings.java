@@ -365,16 +365,43 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 				Direction facing = i % 2 == 0 ? Direction.NORTH : Direction.EAST;
 				BlockState state = Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, toy).setValue(ToyBlock.FACING, facing);
 				level.setBlock(at, state, 3);
-				check(Play.play(level, at, state, anim), toy + " would not play");
-				int shown = level.getEntities((Entity) null, new AABB(at).inflate(0.5), entity -> entity.entityTags().contains("phonics-justfatlard.playing")).size();
-				check(shown == 1 + anim.parts().size(), toy + " plays in " + shown + " pieces, not " + (1 + anim.parts().size()));
 			}
-			// The truck, from the side, to see its bed tip.
+			// The truck, from the side, at rest.
 			Vec3 from = Vec3.atBottomCenterOf(base).add(-4.2, 0.2, -1.6);
 			Vec3 aim = Vec3.atCenterOf(base.offset(-7, 0, 0)).subtract(from.add(0, player.getEyeHeight(), 0));
 			float yaw = (float) Math.toDegrees(Math.atan2(-aim.x, aim.z));
 			float pitch = (float) -Math.toDegrees(Math.atan2(aim.y, Math.sqrt(aim.x * aim.x + aim.z * aim.z)));
 			player.teleportTo(level, from.x, from.y, from.z, Set.of(), yaw, pitch, true);
+		});
+		session.waitTicks(20);
+		shoot(session, "phonics-truck-rest");
+		Vec3[] truckView = new Vec3[1];
+		float[] truckTurn = new float[2];
+		session.onServer(server -> {
+			ServerPlayer player = session.player();
+			truckView[0] = player.position();
+			truckTurn[0] = player.getYRot();
+			truckTurn[1] = player.getXRot();
+			Vec3 from = Vec3.atBottomCenterOf(origin[0]).add(0, 0, -1.5);
+			player.teleportTo((ServerLevel) player.level(), from.x, from.y, from.z, Set.of(), 0, 24, true);
+		});
+		session.waitTicks(10);
+		shoot(session, "phonics-toys-rest");
+		session.onServer(server -> session.player().teleportTo((ServerLevel) session.player().level(), truckView[0].x, truckView[0].y, truckView[0].z,
+			Set.of(), truckTurn[0], truckTurn[1], true));
+		session.waitTicks(5);
+		session.onServer(server -> {
+			ServerLevel level = (ServerLevel) session.player().level();
+			BlockPos base = origin[0];
+			for (int i = 0; i < IN_PARTS.size(); i++) {
+				Toy toy = IN_PARTS.get(i);
+				Anim anim = Anims.of(toy);
+				BlockPos at = base.offset(i * 2 - 7, 0, i == 0 ? 0 : 3);
+				BlockState state = level.getBlockState(at);
+				check(Play.play(level, at, state, anim), toy + " would not play");
+				int shown = level.getEntities((Entity) null, new AABB(at).inflate(0.5), entity -> entity.entityTags().contains("phonics-justfatlard.playing")).size();
+				check(shown == 1 + anim.parts().size(), toy + " plays in " + shown + " pieces, not " + (1 + anim.parts().size()));
+			}
 		});
 		session.waitTicks(13);
 		shoot(session, "phonics-truck-tip");
@@ -385,6 +412,15 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 		});
 		session.waitTicks(6);
 		shoot(session, "phonics-toys-parts");
+		closeUp(session, origin[0], -3.5);
+		session.waitTicks(4);
+		shoot(session, "phonics-toys-close-left");
+		closeUp(session, origin[0], 4.5);
+		session.waitTicks(4);
+		shoot(session, "phonics-toys-close-right");
+		closeUp(session, origin[0], -3.5);
+		session.waitTicks(16);
+		shoot(session, "phonics-toys-close-left-2");
 		session.waitTicks(80);
 		session.onServer(server -> {
 			ServerLevel level = (ServerLevel) session.player().level();
@@ -398,6 +434,37 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 				check(!Play.displayAt(level, at), toy + "'s pieces were left behind");
 				check(level.getEntitiesOfClass(Display.class, new AABB(at).inflate(1.5), display -> true).isEmpty(), toy + " left a display about");
 			}
+		});
+		// Each, close, from its side, half way through its play: no part adrift.
+		for (int i = 0; i < IN_PARTS.size(); i++) {
+			Toy toy = IN_PARTS.get(i);
+			BlockPos at = origin[0].offset(i * 2 - 7, 0, i == 0 ? 0 : 3);
+			session.onServer(server -> {
+				ServerPlayer player = session.player();
+				ServerLevel level = (ServerLevel) player.level();
+				check(Play.play(level, at, level.getBlockState(at), Anims.of(toy)), toy + " would not play again");
+				// The bus faces east here: its doors are on its right, the south.
+				Vec3 from = toy == Toy.BUS ? Vec3.atBottomCenterOf(at).add(0.3, 0.6, 1.0) : Vec3.atBottomCenterOf(at).add(1.3, 0, -1.3);
+				Vec3 aim = Vec3.atBottomCenterOf(at).add(0, 0.4, 0).subtract(from.add(0, player.getEyeHeight(), 0));
+				float yaw = (float) Math.toDegrees(Math.atan2(-aim.x, aim.z));
+				float pitch = (float) -Math.toDegrees(Math.atan2(aim.y, Math.sqrt(aim.x * aim.x + aim.z * aim.z)));
+				player.teleportTo(level, from.x, from.y, from.z, Set.of(), yaw, pitch, true);
+			});
+			int third = Math.max(4, Anims.of(toy).length() / 3);
+			session.waitTicks(third);
+			shoot(session, "phonics-part-" + toy.name().toLowerCase(java.util.Locale.ROOT));
+			session.waitTicks(3);
+			shoot(session, "phonics-part-" + toy.name().toLowerCase(java.util.Locale.ROOT) + "-b");
+			session.waitTicks(Anims.of(toy).length());
+		}
+	}
+
+	/** Close, a little above, looking along the second row of toys from in front of {@code x}. */
+	private static void closeUp(Smoke.Session session, BlockPos base, double x) {
+		session.onServer(server -> {
+			ServerPlayer player = session.player();
+			Vec3 from = Vec3.atBottomCenterOf(base).add(x, 0.3, 0.2);
+			player.teleportTo((ServerLevel) player.level(), from.x, from.y, from.z, Set.of(), 0, 38, true);
 		});
 	}
 

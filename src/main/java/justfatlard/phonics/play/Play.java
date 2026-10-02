@@ -147,7 +147,7 @@ public final class Play {
 		for (Piece piece : pieces) {
 			piece.display().snapTo(foot.x, foot.y, foot.z, 0, 0);
 			if (piece.display() instanceof Display.ItemDisplay) {
-				piece.display().setTransformation(new com.mojang.math.Transformation(pieceMatrix(new Matrix4f(), facingYaw, piece.part(), 0)));
+				piece.display().setTransformation(transformation(pieceMatrix(new Matrix4f(), facingYaw, piece.part(), 0)));
 			}
 			piece.display().addTag(PLAYING);
 			level.addFreshEntity(piece.display());
@@ -167,13 +167,15 @@ public final class Play {
 
 	/**
 	 * Where a piece is drawn, from the whole toy's pose: the block's model as an item draws it
-	 * (about its middle, turned half round), stood on the foot, turned the way the toy faces, and
-	 * the part in its own pose.
+	 * (about its middle), stood on the foot, turned the way the toy faces, and the part in its own
+	 * pose.
 	 */
 	private static Matrix4f pieceMatrix(Matrix4f whole, float facingYaw, Anim.@Nullable Part part, int tick) {
-		Matrix4f matrix = new Matrix4f(whole).translate(0, 0.5F, 0).rotateY(facingYaw + (float) Math.PI);
-		if (part != null) matrix.mul(Anim.partMatrix(part, Anim.partAt(part, tick)));
-		return matrix.rotateY((float) Math.PI);
+		Matrix4f matrix = new Matrix4f(whole).translate(0, 0.5F, 0).rotateY(facingYaw);
+		// The item display turns the model half round as it draws it, after this; a part's pose,
+		// in the model's own frame, goes in turned to match.
+		if (part != null) matrix.rotateY((float) Math.PI).mul(Anim.partMatrix(part, Anim.partAt(part, tick))).rotateY((float) Math.PI);
+		return matrix;
 	}
 
 	private static void tick(MinecraftServer server) {
@@ -224,7 +226,19 @@ public final class Play {
 	private static void pose(Display display, Matrix4f matrix, int glide) {
 		display.setTransformationInterpolationDelay(0);
 		display.setTransformationInterpolationDuration(glide);
-		display.setTransformation(new com.mojang.math.Transformation(matrix));
+		display.setTransformation(transformation(matrix));
+	}
+
+	/**
+	 * A pose as a move, one turn and a scale. Not {@code new Transformation(matrix)}: that splits
+	 * the turn in two by a decomposition that, for an even scale, can split it differently from one
+	 * pose to the next, and the game glides each half on its own, so a wheel turning on a car
+	 * turning flew off between poses.
+	 */
+	public static com.mojang.math.Transformation transformation(Matrix4f matrix) {
+		org.joml.Vector3f scale = matrix.getScale(new org.joml.Vector3f());
+		Quaternionf turn = matrix.getNormalizedRotation(new Quaternionf());
+		return new com.mojang.math.Transformation(matrix.getTranslation(new org.joml.Vector3f()), turn, scale, null);
 	}
 
 	/** The end: the display goes, the block shows again, whatever was in it back where it sits. */

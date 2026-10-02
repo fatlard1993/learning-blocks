@@ -371,26 +371,23 @@ def emote_card(name, marks=()):
 
 
 def wave_card():
-    """The waving hand, halved, with a swish either side."""
+    """The waving hand, out of its bubble (generate_emotes.py), at full size: a card of 18."""
     import generate_emotes
     pixels = generate_emotes.hand().pixels()
+    keep = {generate_emotes.rgb(h) for h in (0xF6D2B4, 0x8A5A44, 0xE8B896)}
     letters, palette, rows = "abcdefghijklmnopqrstuvwxyz", {}, []
-    for y in range(0, 32, 2):
+    for y in range(3, 21):
         row = ""
-        for x in range(0, 32, 2):
-            px = tuple(pixels[y + 1][x + 1])
-            if px[3] == 0:
+        for x in range(6, 24):
+            px = tuple(pixels[y][x])
+            if px not in keep:
                 row += "."
                 continue
             if px not in palette:
                 palette[px] = letters[len(palette)]
             row += palette[px]
-        rows.append(list(row))
-    swish = rgb(0x5EB8F2)
-    palette[swish] = "z"
-    for x, y in ((1, 3), (0, 5), (1, 7), (14, 3), (15, 5), (14, 7)):
-        rows[y][x] = "z"
-    return {ch: px for px, ch in palette.items()}, ["".join(row) for row in rows]
+        rows.append(row)
+    return {ch: px for px, ch in palette.items()}, rows
 
 
 def nod_card():
@@ -415,7 +412,7 @@ CARDS.update({"night": night_card(), "day": day_card(), "dark": dark_card(), "du
 
 def card(name):
     palette, rows = CARDS[name]
-    assert len(rows) == 16 and all(len(r) == 16 for r in rows), name
+    assert all(len(r) == len(rows) for r in rows), name
     return [[CLEAR if ch == "." else OUT if ch == "#" else palette[ch] for ch in row] for row in rows]
 
 
