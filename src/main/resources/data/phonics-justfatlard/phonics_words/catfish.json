@@ -1,0 +1,61 @@
+{
+  "tiles": [
+    "c",
+    "a",
+    "t",
+    "f",
+    "i",
+    "sh"
+  ],
+  "stage": 14,
+  "chunks": [
+    3,
+    3
+  ],
+  "picture": "clear",
+  "compound": true,
+  "icon": "phonics-justfatlard:plush_catfish",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "phonics-justfatlard:plush",
+        "properties": {
+          "kind": "catfish",
+          "facing": "south"
+        },
+        "at": "near"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 6,
+        "spread": 0.4,
+        "at": "above",
+        "sound": "minecraft:entity.chicken.egg",
+        "pitch": 1.8
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "phonics-justfatlard:plush",
+        "properties": {
+          "kind": "catfish",
+          "facing": "south"
+        },
+        "at": "near",
+        "lasts": 40
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 16
+      }
+    ]
+  }
+}

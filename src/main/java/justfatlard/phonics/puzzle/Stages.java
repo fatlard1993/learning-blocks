@@ -69,9 +69,13 @@ public final class Stages {
 		return hardest;
 	}
 
-	/** Its tiles' groups, latest first: words needing the same latest group, easier ones first. */
+	/**
+	 * Its tiles' groups, latest first: words needing the same latest group, easier ones first. Big
+	 * words of two syllables (rob|in) after the compounds (cat|fish), which are two words the child
+	 * already reads.
+	 */
 	private static String order(Word word) {
-		StringBuilder key = new StringBuilder();
+		StringBuilder key = new StringBuilder(Words.chunks(word) != null && !Words.compound(word) ? "1/" : "0/");
 		word.tiles().stream().map(Stages::group).sorted(java.util.Comparator.reverseOrder()).forEach(key::append);
 		return key + "/" + word.text();
 	}

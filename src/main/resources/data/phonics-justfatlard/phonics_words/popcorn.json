@@ -1,0 +1,50 @@
+{
+  "tiles": [
+    "p",
+    "o",
+    "p",
+    "c",
+    "or",
+    "n"
+  ],
+  "stage": 14,
+  "chunks": [
+    3,
+    3
+  ],
+  "picture": "clear",
+  "compound": true,
+  "picture_card": "popcorn",
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:poof",
+    "count": 16,
+    "spread": 0.8,
+    "at": "above",
+    "sound": "minecraft:block.bubble_column.bubble_pop",
+    "pitch": 1.6,
+    "repeat": 4,
+    "every": 10
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:poof",
+        "count": 6,
+        "spread": 0.8,
+        "at": "above",
+        "sound": "minecraft:block.bubble_column.bubble_pop",
+        "pitch": 1.6,
+        "repeat": 4,
+        "every": 10
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 16
+      }
+    ]
+  }
+}

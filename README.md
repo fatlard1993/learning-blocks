@@ -58,7 +58,7 @@ One round in seven is a two-word phrase: an adjective the child has read (big, r
 
 ## Plushies and toys
 
-Twenty-six soft toys, each a word Minecraft has no creature or thing for: owl, duck, ant, rat, ox, shark, crab, worm, moth, yak, teddy (bear), snail, seal, mouse, snake, skunk, hawk, ladybug, mole, crow, pug, deer, whale, fly, beetle and mice (three little mice in a row). They are chunky, felt-coloured, big-eyed, and about half a block tall. Put one down anywhere on the server and it faces you; right-click it and it squeaks, puffs a heart and says its word, with a caption; break it and it comes back as itself.
+Thirty-four soft toys, each a word Minecraft has no creature or thing for: owl, duck, ant, rat, ox, shark, crab, worm, moth, yak, teddy (bear), snail, seal, mouse, snake, skunk, hawk, ladybug, mole, crow, pug, deer, whale, fly, beetle and mice (three little mice in a row), and with the big words bobcat, catfish, starfish, chipmunk, puffin, robin, lobster and hedgehog. They are chunky, felt-coloured, big-eyed, and about half a block tall. Put one down anywhere on the server and it faces you; right-click it and it squeaks, puffs a heart and says its word, with a caption; break it and it comes back as itself.
 
 In lessons they stand in for the animals: reading owl brings an owl plushie popping out of the button, a lesson prop that is cleared at the next word (not a prize); built wrong, it pops out and you spin round. Bug is the ladybug now, and hug brings the teddy as well as the hearts.
 
@@ -71,6 +71,18 @@ Both are the collect-them-all prize. `{ "plush": "random_new" }` gives a plushie
 Props are things words need that Minecraft hasn't got and that aren't toys, plain objects to put down, not collected: a bin, a bathtub, a cardboard box (open, its flaps folded out), a glass jar, a desk fan, a mop, an ear of corn, a mug, a school desk and a fork. A key is Minecraft's trial key, so there is no new one.
 
 A word with no item at all can have a picture card, `"picture_card": "<name>"`: a small pixel picture (`textures/card/<name>.png` in the mod) on a panel beside the word, drawn by Pandorical. The moon, a sad face, a glad face, a mouth and a town have one. Only players with Pandorical see a card, and it is gone with the round.
+
+## Big words
+
+Stage 14 is the jump from one-syllable words to book words: compounds first, two words the child already reads (cat|fish, star|fish, bob|cat, hedge|hog, sun|set, cup|cake, pop|corn, rain|bow, snow|man, pan|cake, sand|box, bath|tub), then words of two syllables split between their consonants (rob|in, puf|fin, lob|ster, chip|munk). A big word is written in chunks: the word row has a column between them, so cat and fish stand apart on the board.
+
+- **A chunk to build**: one chunk is on the board and the other is gaps, with its tiles and a decoy or two on the floor. A chunk with a tile twice (pop, in popcorn) is never the one to build.
+- **Both chunks**: every tile a gap, the column still there as a hint (only for words of six tiles or fewer, with no tile twice).
+- **Read it**: big words with a clear picture come up as read-it rounds like any other.
+
+The button sounds out each chunk and says it as its own little word ("c... a... t... cat. f... i... sh... fish."); built right, the chunks then slide together, the column closing, and the room says the whole word: "catfish!". A wrong build is sounded out the same way, chunk by chunk, and goes home as usual. The eight animals bring their plushie (and join the collection); sunset, cupcake, popcorn, rainbow, snowman, pancake and sandbox have picture cards; bathtub brings the bathtub. A word too long to leave room for its picture on the left (cupcake, sandbox) has the picture above it, and every row stays clear of the button.
+
+The chunks that are not words on their own (munk, puf, lob, ster, hedge, bob, rob, set, pan, bow, snow) are word files with `"puzzle": false`, so each has its own recording to be said by. A big word's file says `"chunks": [3, 3]` (tiles per chunk) and, for a compound, `"compound": true`; the compounds come first in the stage's bands.
 
 ## Read it
 
@@ -120,7 +132,7 @@ Words come a short vowel at a time, the order phonics is usually taught in, and 
 
 A child's day has no repeats: a word asked once is not asked again that day while their band has another. Once every word of the band has had its turn, the room fills in, first with the same words in a kind of round they haven't had today (the last sound swapped instead of the first, the whole word, read it, a situation), then with something from before due for another look (a word, then a big-and-little pair), then a situation or phrase of words already read, and only after all that the same word again, never twice running. Leaving and coming back the same day doesn't start it over; the day is the schedule's (`timezone`).
 
-Only one clean completion a day counts towards mastering anything (a word, a letter, a two-letter tile, a big-and-little pair, a tricky word): mastered means clean on three different days. More rounds the same day are practice: they still count as lessons, for review and for the daily schedule. So a band takes at least three days; at ten lessons a day, a band of up to ten words takes three, and a bigger one about its words times three over ten (1c's 15 words, five days; 8a's 12, four). The whole course is then at least about 89 days at ten a day, after the letters level.
+Only one clean completion a day counts towards mastering anything (a word, a letter, a two-letter tile, a big-and-little pair, a tricky word): mastered means clean on three different days. More rounds the same day are practice: they still count as lessons, for review and for the daily schedule. So a band takes at least three days; at ten lessons a day, a band of up to ten words takes three, and a bigger one about its words times three over ten (1c's 15 words, five days; 8a's 12, four). The whole course is then at least about 95 days at ten a day, after the letters level.
 
 Long stages come in bands, so the gate (and "You're ready for new words!", and `stage_complete`) comes every 4 to 15 words rather than every 24. Within a stage, words are ordered by the latest letter group they need (s a t p i n; m d g o c k; e u r h b; f l j v w; x y z; then two-letter tiles). Stages 1 and 2 split by group: 1a is words of s a t p i n alone (ant, sat, tap, pat, nap), 1b adds the second group (cat, map, man, tag), and 1c is the rest; a band of fewer than four words joins its neighbour, so stage 2 is 2a (pin, sip, sit, tip, pig, dig, kid) and 2b. Any other stage that would take more than 45 rounds at mastery is split in two halves in the same order. A band only limits which words are asked for: the tiles on the floor still come from the whole stage's families, so a 1a round (_at: sat) still offers c, b and h. The bands are shown as 1a, 1b, 1c on My words and the progress screen, and `/phonics stage <player> 1b` puts a reader at one. A reader from before bands keeps their stage, starting at its first band.
 
@@ -152,10 +164,12 @@ Long stages come in bands, so the gate (and "You're ready for new words!", and `
 | 12b | herd horse jar fern farm fork worm torch shark | 27 |
 | 13a | town cow coin down hay high crow hawk crown mouse | 30 |
 | 13b | house joy owl light play clay cloud howl oink mouth | 30 |
+| 14a | pancake sunset bobcat cupcake sandbox snowman popcorn bathtub | 24 |
+| 14b | hedgehog catfish rainbow starfish robin puffin lobster chipmunk | 24 |
 
 The table is the shipped words with no optional mods installed (cone, poop and the like join their band where their mod is); a different `mastery_clean` changes which stages are long enough to split. The letters level takes about 75 clean matches, and as many again for big and little letters.
 
-Some tiles are two letters that make one sound: sh, ch, th, ck, qu, ll, ss, ff, zz, gg, ng, nk, wh (whale) and le (beetle); the vowel teams ee, ea, oa, ai, oo, ie, ow (as in cow), ou, ay, oi, oy and aw (hawk); the r-controlled ar, or, ur, ir and er; and igh, three letters on one tile. A word can have a tile say something else with `sounds`: crow's ow says /oh/, fly's y says its name, mice's c says /s/, worm's or says /ur/. Each is a tile of its own with both letters on it, blue for consonants and red for vowel teams. A word like ship is three tiles, sh-i-p, and sounded out as three sounds.
+Some tiles are two letters that make one sound: sh, ch, th, ck, qu, ll, ss, ff, zz, gg, ng, nk, wh (whale) and le (beetle); the vowel teams ee, ea, oa, ai, oo, ie, ow (as in cow), ou, ay, oi, oy and aw (hawk); the r-controlled ar, or, ur, ir and er; and igh and dge (hedge), three letters on one tile. A word can have a tile say something else with `sounds`: crow's ow says /oh/, fly's y says its name, mice's c says /s/, worm's or says /ur/. Each is a tile of its own with both letters on it, blue for consonants and red for vowel teams. A word like ship is three tiles, sh-i-p, and sounded out as three sounds.
 
 Stage 9 is magic e: the e on the end says nothing and makes the vowel before it say its name (c-a-k-e, cake). Sounding one out, the vowel says its long sound, shown in the caption as its capital (c · A · k · e); at the silent e, the e lights up together with its vowel and a sparkle runs from one to the other. Stage 10 is the vowel teams (b-oa-t, sh-ee-p).
 
@@ -176,6 +190,7 @@ Rounds come in four kinds. At first the first sound is swapped (_at: cat, bat, h
 | 11, ng, nk and final blends | (whole-word rounds, mostly) | **sing** a villager sings, **pink** pink dye and a pink puff, **honk** a honk, **nest** a bee nest, **jump** a jump, **lamp** a lantern, **tent** a little wool tent round you, **milk** a bucket of milk, **sand** sand, **mask** a pumpkin mask on, **gift** a present, **raft** a raft to sit on, **melt** ice melts |
 | 12, r-controlled | -orn -ird ... | **star** a star, **car** a toy car, **farm** a hay bale and a chick, **horse** a foal, **storm** clouds and rain, **bird** a parrot, **fern** a fern, **herd** three sheep, **horn** a horn toots, **torch** a torch, **dirt** dirt |
 | 13, ow ou ay igh oi oy | -ay (and more) | **cow** a cow, **down** you float down, **crown** a gold crown on, **cloud** a cloud (Cloud Kingdoms' with that mod), **house** a little brick house round you, **howl** a wolf howls, **hay** a hay bale, **play** a tune, **clay** clay, **light** a glowing block, **high** up you go, **coin** a gold coin, **joy** hearts and a firework, **oink** a piglet |
+| 14, big words | chunks: cat\|fish, rob\|in | **bobcat**, **catfish**, **starfish**, **chipmunk**, **puffin**, **robin**, **lobster**, **hedgehog** their plushie, **sunset** a sunset glow, **cupcake** a cupcake and a happy burp, **popcorn** popping, **rainbow** a rainbow shimmer, **snowman** snowflakes, **pancake** a pancake stack, **sandbox** a puff of sand, **bathtub** a bathtub and a splash |
 
 Added with the plushies, toys and props (each brings its plushie, toy or prop, and a friendly spin when built wrong): stage 1 ant, rat, yak, sad (a picture card); 2 pin, wig; 3 ox; 4 pug, mug; 5 net; 6 duck; 7 moth; 8 crab, crib, glad (card); 9 kite, snake, mole, whale, fly, mice; 10 snail, seal, beetle, moon (card); 11 ring, king (a gold crown), skunk, desk; 12 shark, worm, deer, fork, corn, jar; 13 owl, mouse, hawk, crow, mouth and town (cards).
 

@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    "b",
+    "ow"
+  ],
+  "sounds": [
+    null,
+    "ow_long"
+  ],
+  "stage": 14,
+  "puzzle": false,
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:end_rod",
+    "count": 8,
+    "spread": 0.4,
+    "at": "above"
+  }
+}

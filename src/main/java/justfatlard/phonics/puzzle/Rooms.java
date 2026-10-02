@@ -298,6 +298,16 @@ public final class Rooms {
 		return false;
 	}
 
+	/** A big word with this chunk to build, the one starting at tile {@code start}: for tests. False if it can't be. */
+	public static boolean startChunk(ServerPlayer player, Word target, int start) {
+		Room room = of(player);
+		if (room == null || Puzzle.buildableChunks(target).stream().noneMatch(range -> range[0] == start)) return false;
+		Narrator.stop(player);
+		room.forcedPuzzle = Puzzle.chunk(target, start, player.getRandom(), Puzzle.singles(), Words.all());
+		room.newRound(player);
+		return room.puzzle() != null && room.puzzle().kind() == Puzzle.Kind.CHUNK && room.puzzle().target().id().equals(target.id());
+	}
+
 	/** A read-it round for this word: for tests. False if it has no look-alike to pick instead. */
 	public static boolean startReadIt(ServerPlayer player, Word target) {
 		Room room = of(player);

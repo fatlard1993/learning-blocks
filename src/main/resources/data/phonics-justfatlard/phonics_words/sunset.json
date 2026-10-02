@@ -1,0 +1,50 @@
+{
+  "tiles": [
+    "s",
+    "u",
+    "n",
+    "s",
+    "e",
+    "t"
+  ],
+  "stage": 14,
+  "chunks": [
+    3,
+    3
+  ],
+  "picture": "clear",
+  "compound": true,
+  "picture_card": "sunset",
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:flame",
+    "count": 12,
+    "spread": 1.0,
+    "at": "above",
+    "sound": "minecraft:block.amethyst_block.chime",
+    "pitch": 0.8,
+    "repeat": 3,
+    "every": 10
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:flame",
+        "count": 6,
+        "spread": 1.0,
+        "at": "above",
+        "sound": "minecraft:block.amethyst_block.chime",
+        "pitch": 0.8,
+        "repeat": 3,
+        "every": 10
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 16
+      }
+    ]
+  }
+}

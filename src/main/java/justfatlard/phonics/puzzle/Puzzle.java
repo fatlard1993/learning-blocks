@@ -100,7 +100,8 @@ public record Puzzle(Word target, List<Word> family, List<Letter> shelf, int gap
 	static @Nullable String frameOf(Kind kind, Word word) {
 		// Plural rounds are made on purpose, never picked from frames.
 		if (kind == Kind.PLURAL || kind == Kind.TEAM) return null;
-		if (kind == Kind.WHOLE) return buildable(word) ? "_".repeat(word.tiles().size()) + "/" + word.text() : null;
+		// No more tiles than the floor has places for.
+		if (kind == Kind.WHOLE) return buildable(word) && word.tiles().size() <= MAX_WHOLE_TILES ? "_".repeat(word.tiles().size()) + "/" + word.text() : null;
 		if (kind == Kind.CHUNK) return buildableChunks(word).isEmpty() ? null : "chunk/" + word.text();
 		int at = gapOf(kind, word);
 		if (at < 0) return null;

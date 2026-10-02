@@ -1,0 +1,56 @@
+{
+  "tiles": [
+    "c",
+    "u",
+    "p",
+    "c",
+    "a",
+    "k",
+    "e"
+  ],
+  "sounds": [
+    null,
+    null,
+    null,
+    null,
+    "a_long",
+    null,
+    "silent"
+  ],
+  "stage": 14,
+  "chunks": [
+    3,
+    4
+  ],
+  "picture": "clear",
+  "compound": true,
+  "picture_card": "cupcake",
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:happy_villager",
+    "count": 12,
+    "spread": 0.8,
+    "at": "above",
+    "sound": "minecraft:entity.player.burp",
+    "pitch": 1.2
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:happy_villager",
+        "count": 6,
+        "spread": 0.8,
+        "at": "above",
+        "sound": "minecraft:entity.player.burp",
+        "pitch": 1.2
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 16
+      }
+    ]
+  }
+}

@@ -199,6 +199,11 @@ public final class Room {
 		return layout.spawn();
 	}
 
+	/** The word row's positions, a tile at a time, left to right: for tests. */
+	public List<BlockPos> row() {
+		return List.copyOf(row);
+	}
+
 	/** The button that reads the word out. */
 	public BlockPos button() {
 		return layout.button();

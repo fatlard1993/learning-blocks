@@ -1,0 +1,47 @@
+{
+  "tiles": [
+    "s",
+    "a",
+    "n",
+    "d",
+    "b",
+    "o",
+    "x"
+  ],
+  "stage": 14,
+  "chunks": [
+    4,
+    3
+  ],
+  "picture": "clear",
+  "compound": true,
+  "picture_card": "sandbox",
+  "outcome": {
+    "type": "particles",
+    "particle": "minecraft:white_ash",
+    "count": 20,
+    "spread": 1.0,
+    "at": "above",
+    "sound": "minecraft:block.sand.place",
+    "pitch": 1.0
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:white_ash",
+        "count": 6,
+        "spread": 1.0,
+        "at": "above",
+        "sound": "minecraft:block.sand.place",
+        "pitch": 1.0
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 16
+      }
+    ]
+  }
+}

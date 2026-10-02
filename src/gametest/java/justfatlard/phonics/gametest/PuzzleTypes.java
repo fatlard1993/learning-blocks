@@ -55,8 +55,10 @@ public final class PuzzleTypes implements FabricClientGameTest {
 							case LAST -> puzzle.target().tiles().size() - 1;
 							case MIDDLE -> 1;
 							case WHOLE, PLURAL, TEAM -> 0;
+							// A big word's chunk: its first tile.
+							case CHUNK -> puzzle.gaps().getFirst();
 						}, "the gap of a " + puzzle.kind() + " round is at " + puzzle.gap());
-						if (puzzle.kind() != Puzzle.Kind.WHOLE) for (Letter tile : puzzle.shelf()) check(makesWord(puzzle, tile), puzzle.kind() + " round " + puzzle.target().text()
+						if (puzzle.kind() != Puzzle.Kind.WHOLE && puzzle.kind() != Puzzle.Kind.CHUNK) for (Letter tile : puzzle.shelf()) check(makesWord(puzzle, tile), puzzle.kind() + " round " + puzzle.target().text()
 							+ ": " + tile + " makes no word");
 					}
 				}
