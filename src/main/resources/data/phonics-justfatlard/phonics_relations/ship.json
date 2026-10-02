@@ -1,0 +1,25 @@
+{
+  "is": "toy",
+  "block": "phonics-justfatlard:toy",
+  "properties": {
+    "kind": "ship"
+  },
+  "item": "phonics-justfatlard:toy_ship",
+  "height": 0.738,
+  "tags": [
+    "small",
+    "toy"
+  ],
+  "holds": {
+    "ride": {
+      "accepts": [
+        "plush",
+        "doll"
+      ],
+      "y": 0.4,
+      "z": 0.0,
+      "scale": 0.55,
+      "sound": "minecraft:block.note_block.didgeridoo"
+    }
+  }
+}

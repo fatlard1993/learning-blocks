@@ -148,6 +148,7 @@ public final class Review {
 		starring.clear();
 		trickyShowing.clear();
 		toyboxShowing.clear();
+		toyboxHints.clear();
 		masteredShowing.clear();
 		List<ComponentBuilder> parts = new ArrayList<>();
 		List<String> read = new ArrayList<>();
@@ -198,6 +199,7 @@ public final class Review {
 		starred.put(viewer.getUUID(), List.copyOf(starring));
 		trickyShown.put(viewer.getUUID(), List.copyOf(trickyShowing));
 		toyboxShown.put(viewer.getUUID(), List.copyOf(toyboxShowing));
+		toyboxHinted.put(viewer.getUUID(), List.copyOf(toyboxHints));
 		masteredShown.put(viewer.getUUID(), List.copyOf(masteredShowing));
 		PandoricalApi.screens().open(viewer, screen.build());
 	}
@@ -323,22 +325,25 @@ public final class Review {
 		Progress progress = Progress.of(viewer);
 		var plushies = progress.plushies();
 		var toys = progress.toys();
-		int y = shelf(parts, "plush", "Plushies", TOP, java.util.Arrays.stream(justfatlard.phonics.plush.Plush.values())
+		int y = shelf(parts, progress, "plush", "Plushies", TOP, java.util.Arrays.stream(justfatlard.phonics.plush.Plush.values())
 			.map(p -> new Shelved(p.word(), "plush_" + p.word(), plushies.getOrDefault(p, 0))).toList());
-		y = shelf(parts, "toy", "Toys", y + 4, java.util.Arrays.stream(justfatlard.phonics.toy.Toy.values())
+		y = shelf(parts, progress, "toy", "Toys", y + 4, java.util.Arrays.stream(justfatlard.phonics.toy.Toy.values())
 			.map(t -> new Shelved(t.word(), "toy_" + t.word(), toys.getOrDefault(t, 0))).toList());
 		String count = "Plushies " + plushies.size() + " of " + justfatlard.phonics.plush.Plush.values().length
 			+ " · Toys " + toys.size() + " of " + justfatlard.phonics.toy.Toy.values().length;
 		parts.add(Ui.faint("hint", PAD, y + 2, count));
-		parts.add(Ui.faint("hint2", PAD, y + 12, "Finish a stage band to find a new one!"));
+		parts.add(Ui.faint("hint2", PAD, y + 12, "Master a word to earn its toy!"));
 		toyboxCounted.put(viewer.getUUID(), count);
 		return y + 22;
 	}
 
 	private record Shelved(String word, String item, int count) {}
 
-	/** One shelf: its name, then the set in rows. Returns the y below it. */
-	private static int shelf(List<ComponentBuilder> parts, String family, String name, int top, List<Shelved> all) {
+	/**
+	 * One shelf: its name, then the set in rows. One not had yet shows what earns it: the word to
+	 * master under its "?", and pips for how near it is. Returns the y below it.
+	 */
+	private static int shelf(List<ComponentBuilder> parts, Progress progress, String family, String name, int top, List<Shelved> all) {
 		parts.add(Ui.faint("shelf:" + family, PAD, top, name));
 		top += 11;
 		int columns = 10;
@@ -355,14 +360,37 @@ public final class Review {
 					.prop(ComponentType.PROP_TEXT, "x" + one.count()).prop(ComponentType.PROP_COLOR, "#FFFFFFFF").prop(ComponentType.PROP_SHADOW, "true"));
 				toyboxShowing.add(id);
 			} else {
+				List<justfatlard.phonics.puzzle.Word> earnBy = justfatlard.phonics.reward.Earned.wordsFor(family + ":" + one.word());
+				String words = String.join(", ", earnBy.stream().map(justfatlard.phonics.puzzle.Word::text).toList());
 				parts.add(Ui.button(family + "secret:" + one.word(), x, y, cell, cell, "?").prop(ComponentType.PROP_ENABLED, "false")
-					.prop(ComponentType.PROP_TOOLTIP, "Still to find"));
+					.prop(ComponentType.PROP_TOOLTIP, earnBy.isEmpty() ? "Still to find" : "Master: " + words));
+				if (!earnBy.isEmpty()) {
+					String first = earnBy.getFirst().text() + (earnBy.size() > 1 ? "+" : "");
+					parts.add(new ComponentBuilder(family + "earn:" + one.word(), ComponentType.TEXT).bounds(x, y + cell - 9, cell, 8)
+						.prop(ComponentType.PROP_TEXT, first).prop(ComponentType.PROP_ALIGN, "center").prop(ComponentType.PROP_COLOR, "#FFE8E0C0")
+						.prop(ComponentType.PROP_SCALE, "0.75"));
+					// Pips: the clean days of the word furthest from mastered.
+					int at = Progress.masteredAt();
+					int clean = earnBy.stream().mapToInt(progress::clean).min().orElse(0);
+					for (int pip = 0; pip < Math.min(at, 5); pip++) {
+						parts.add(new ComponentBuilder(family + "pip:" + one.word() + ":" + pip, ComponentType.PANEL).bounds(x + 2 + pip * 4, y + 2, 3, 3)
+							.prop(ComponentType.PROP_BACKGROUND, pip < clean ? "#FFFFC832" : "#FF5A5A5A").prop(ComponentType.PROP_BORDER, "flat"));
+					}
+					toyboxHints.add(family + ":" + one.word() + "=" + words);
+				}
 			}
 		}
 		return top + ((all.size() + columns - 1) / columns) * (cell + 3);
 	}
 
 	private static final List<String> toyboxShowing = new ArrayList<>();
+	private static final List<String> toyboxHints = new ArrayList<>();
+	private static final Map<UUID, List<String>> toyboxHinted = new HashMap<>();
+
+	/** The hints the Toybox tab showed this viewer, {@code plush:teddy=hug}: for tests. */
+	public static List<String> toyboxHints(ServerPlayer viewer) {
+		return toyboxHinted.getOrDefault(viewer.getUUID(), List.of());
+	}
 	private static final Map<UUID, List<String>> toyboxShown = new HashMap<>();
 	private static final Map<UUID, String> toyboxCounted = new HashMap<>();
 

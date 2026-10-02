@@ -199,6 +199,16 @@ public final class PrizeConfig {
 		return current;
 	}
 
+	private static volatile Event toyMastered = new Event(true, 0, List.of());
+
+	/**
+	 * A plushie or toy earned by mastering every word that earns it: the toy, and these prizes too.
+	 * On unless the file says otherwise, a file from before it included.
+	 */
+	public static Event toyMastered() {
+		return toyMastered;
+	}
+
 	private static volatile int tellBobEvery = 5;
 	private static volatile int whatsWrongEvery = 6;
 	private static volatile boolean whatsWrong = true;
@@ -312,6 +322,7 @@ public final class PrizeConfig {
 		// Reading together: how often a round is a team-up when two share a room (0, or team_up off, for never).
 		teamUpEvery = bool(puzzlesJson, "team_up", true, problems) ? Math.max(0, integer(puzzlesJson, "team_up_every", 3, problems)) : 0;
 		// Sentences: Bob's rounds, what's-wrong rounds, and whether the silly sandbox counts.
+		toyMastered = object(events, "toy_mastered").isEmpty() ? new Event(true, 0, List.of()) : event(events, "toy_mastered", server, problems);
 		tellBobEvery = bool(puzzlesJson, "tell_bob", true, problems) ? Math.max(0, integer(puzzlesJson, "tell_bob_every", 5, problems)) : 0;
 		whatsWrong = bool(puzzlesJson, "whats_wrong", true, problems);
 		whatsWrongEvery = Math.max(0, integer(puzzlesJson, "whats_wrong_every", 6, problems));

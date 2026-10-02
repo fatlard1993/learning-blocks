@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "phonics-justfatlard:plush",
+  "properties": {
+    "kind": "lobster"
+  },
+  "item": "phonics-justfatlard:plush_lobster",
+  "height": 0.531,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

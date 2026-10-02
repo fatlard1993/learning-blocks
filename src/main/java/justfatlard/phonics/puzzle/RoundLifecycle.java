@@ -78,12 +78,19 @@ final class RoundLifecycle {
 		if (bobMode == null && target == null && !freshStage && !othersAsked && (stage < 0 || stage >= BOB_FROM) && PrizeConfig.get().extrasOn()) {
 			int every = PrizeConfig.tellBobEvery();
 			if (every > 0 && room.sinceBob >= every - 1) {
-				bobMode = PrizeConfig.whatsWrong() && room.bobRounds % 3 == 2 ? BobRound.Mode.FIX : BobRound.Mode.GOAL;
+				// In turn: tell Bob, read the little word, tell Bob, what's wrong.
+				bobMode = switch (room.bobRounds % 4) {
+					case 1 -> BobRound.Mode.PREP;
+					case 3 -> PrizeConfig.whatsWrong() ? BobRound.Mode.FIX : BobRound.Mode.GOAL;
+					default -> BobRound.Mode.GOAL;
+				};
 			}
 		}
 		if (bobMode != null) {
 			BobRound bob = BobRound.make(room, level, layout, bobMode, player, room.forcedGoal, room.forcedMistake);
-			if (bob == null && bobMode == BobRound.Mode.FIX && room.forcedGoal == null) bob = BobRound.make(room, level, layout, BobRound.Mode.GOAL, player, null, null);
+			if (bob == null && bobMode != BobRound.Mode.GOAL && bobMode != BobRound.Mode.SILLY && room.forcedGoal == null) {
+				bob = BobRound.make(room, level, layout, BobRound.Mode.GOAL, player, null, null);
+			}
 			room.forcedGoal = null;
 			room.forcedMistake = null;
 			if (bob != null) {
@@ -369,7 +376,7 @@ final class RoundLifecycle {
 			progress.useSentenceToday(player, bob.goal.key(), bob.mode.name().toLowerCase(java.util.Locale.ROOT));
 		}
 		Narrator.note(player, "bob:" + bob.mode.name().toLowerCase(java.util.Locale.ROOT)
-			+ (bob.goal != null ? ":" + bob.goal.id() : bob.offered.isEmpty() ? "" : ":pick"));
+			+ (bob.goal != null ? ":" + bob.goal.id() : !bob.prepWords.isEmpty() ? ":" + String.join("-", bob.prepWords) : bob.offered.isEmpty() ? "" : ":pick"));
 		bob.start(player);
 		if (room.promptHeld) room.heldSince = level.getGameTime();
 		else Narrator.play(player, prompt());

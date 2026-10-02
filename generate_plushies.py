@@ -943,10 +943,13 @@ def main():
     turn = {"north": 0, "east": 90, "south": 180, "west": 270}
     write(ASSETS / "blockstates/plush.json", {
         "variants": {
-            f"facing={facing},kind={name}": {"model": f"{NS}:block/plush_{name}", "y": y}
-            for name in PLUSHIES for facing, y in turn.items()
+            f"facing={facing},hidden={hidden},kind={name}": {"model": f"{NS}:block/hidden"} if hidden == "true"
+            else {"model": f"{NS}:block/plush_{name}", "y": y}
+            for name in PLUSHIES for facing, y in turn.items() for hidden in ("false", "true")
         }
     })
+    # Hidden while a display of it plays in its place (Play.java): nothing drawn, so nothing doubles.
+    write(ASSETS / "models/block/hidden.json", {"textures": {"particle": "minecraft:block/white_wool"}, "elements": []})
     # One item for each, drawn as its block.
     for name in PLUSHIES:
         write(ASSETS / f"items/plush_{name}.json", {"model": {"type": "minecraft:model", "model": f"{NS}:block/plush_{name}"}})

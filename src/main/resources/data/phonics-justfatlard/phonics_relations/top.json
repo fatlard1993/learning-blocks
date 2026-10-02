@@ -1,0 +1,13 @@
+{
+  "is": "toy",
+  "block": "phonics-justfatlard:toy",
+  "properties": {
+    "kind": "top"
+  },
+  "item": "phonics-justfatlard:toy_top",
+  "height": 0.562,
+  "tags": [
+    "small",
+    "toy"
+  ]
+}

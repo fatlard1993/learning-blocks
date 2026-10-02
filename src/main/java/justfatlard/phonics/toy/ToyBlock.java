@@ -35,12 +35,12 @@ public class ToyBlock extends Block {
 
 	public ToyBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(stateDefinition.any().setValue(KIND, Toy.DRUM).setValue(FACING, Direction.NORTH));
+		registerDefaultState(stateDefinition.any().setValue(KIND, Toy.DRUM).setValue(FACING, Direction.NORTH).setValue(justfatlard.phonics.play.Play.HIDDEN, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(KIND, FACING);
+		builder.add(KIND, FACING, justfatlard.phonics.play.Play.HIDDEN);
 	}
 
 	@Override
@@ -59,10 +59,42 @@ public class ToyBlock extends Block {
 		return Toys.stack(state.getValue(KIND));
 	}
 
+	/**
+	 * A right-click: played with - its own little show - saying its word; sneaking, what is in or on it comes back
+	 * out. Anything carried in or on it goes along.
+	 */
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-		if (level instanceof ServerLevel server && player instanceof ServerPlayer reader) squeak(server, pos, state.getValue(KIND), reader);
+		if (level instanceof ServerLevel server && player instanceof ServerPlayer reader) {
+			if (player.isShiftKeyDown() && justfatlard.phonics.play.Play.takeOut(server, pos, player, net.minecraft.world.InteractionHand.MAIN_HAND)) {
+				return InteractionResult.SUCCESS;
+			}
+			if (justfatlard.phonics.play.Play.playing(server, pos) || state.getValue(justfatlard.phonics.play.Play.HIDDEN)) return InteractionResult.SUCCESS;
+			squeak(server, pos, state.getValue(KIND), reader);
+			justfatlard.phonics.play.Play.play(server, pos, state, justfatlard.phonics.play.Anims.of(state.getValue(KIND)));
+		}
 		return InteractionResult.SUCCESS;
+	}
+
+	/** A toy or plushie held and used on this one: in, on or onto it, if it fits. */
+	@Override
+	protected InteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+			net.minecraft.world.InteractionHand hand, BlockHitResult hit) {
+		if (level instanceof ServerLevel server && justfatlard.phonics.play.Play.put(server, pos, state, player, hand)) return InteractionResult.SUCCESS;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
+	}
+
+	/** The tick after a play: shown again, whatever happened (see {@link justfatlard.phonics.play.Play#recover}). */
+	@Override
+	protected void tick(BlockState state, ServerLevel level, BlockPos pos, net.minecraft.util.RandomSource random) {
+		justfatlard.phonics.play.Play.recover(state, level, pos);
+	}
+
+	/** Gone: whatever was in or on it drops, and anything playing it stops. */
+	@Override
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean moved) {
+		if (!level.getBlockState(pos).is(this)) justfatlard.phonics.play.Play.removed(level, pos);
+		super.affectNeighborsAfterRemoval(state, level, pos, moved);
 	}
 
 	/** The last toy squeezed, by anyone: for tests. */

@@ -689,7 +689,15 @@ public final class SceneRun {
 					}
 				}
 				case "absorb" -> absorb(p, at);
-				default -> { }
+				default -> {
+					// Tucked in: the toy in the block, by the same rules as a child's play.
+					if (place.then().startsWith("tuck:")) {
+						net.minecraft.resources.Identifier item = net.minecraft.resources.Identifier.parse(place.then().substring("tuck:".length()));
+						Entity tucked = justfatlard.phonics.play.Play.showIn(level, target, level.getBlockState(target),
+							new ItemStack(BuiltInRegistries.ITEM.getValue(item)));
+						if (tucked != null) made.add(tucked);
+					}
+				}
 			}
 		});
 	}

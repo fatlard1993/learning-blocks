@@ -28,7 +28,8 @@ public final class Toys {
 	public static final Identifier TOY_ID = Phonics.id("toy");
 
 	public static final ToyBlock TOY = new ToyBlock(BlockBehaviour.Properties.of()
-		.strength(0.3F, 1.0F)
+		// Breaks at one punch, like a torch.
+		.instabreak()
 		.sound(SoundType.WOOD)
 		.noOcclusion()
 		.setId(ResourceKey.create(Registries.BLOCK, TOY_ID)));
@@ -40,7 +41,7 @@ public final class Toys {
 		PandoricalApi.content().registerBlock(TOY_ID.toString(), new BlockRegistration()
 			.baseBlock("minecraft:oak_planks")
 			.interactive()
-			.strength(0.3F)
+			.strength(0.0F)
 			.requiresCorrectTool(false));
 		for (Toy toy : Toy.values()) {
 			Identifier id = Phonics.id("toy_" + toy.word());

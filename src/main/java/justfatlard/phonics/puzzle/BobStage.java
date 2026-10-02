@@ -129,14 +129,19 @@ final class BobStage {
 			Noun c = Noun.of(child);
 			if (c == null) continue;
 			boolean childCreature = c.kind() == Noun.Kind.CREATURE;
+			// Where the parent says a thing sits in, on or under it, if it says; otherwise a fair guess.
+			var hold = justfatlard.phonics.relate.Relations.holdFor(noun.thing(), justfatlard.phonics.relate.Relations.Rel.valueOf(place.rel().name()));
+			float childSize = hold == null ? 0 : childCreature ? Math.max(hold.scale() * 1.25F, 0.75F) : hold.scale();
+			Vec3 seat = hold == null ? null : base.add(0, hold.y() * own, hold.z() * own);
 			switch (place.rel()) {
-				case IN -> place(scene, child, base.add(0, 0.06 * own, 0), childCreature ? own * 0.75F : own * 0.6F, glide, depth + 1);
-				case ON -> place(scene, child, base.add(0, height * own, 0), childCreature || noun.kind() == Noun.Kind.SURFACE ? size : own * 0.8F,
-					glide, depth + 1);
-				case UNDER -> place(scene, child, base, own * 0.55F, glide, depth + 1);
+				case IN -> place(scene, child, seat != null ? seat : base.add(0, 0.06 * own, 0),
+					own * (hold != null ? childSize : childCreature ? 0.75F : 0.6F), glide, depth + 1);
+				case ON -> place(scene, child, seat != null ? seat : base.add(0, height * own, 0),
+					hold != null ? own * childSize : childCreature || noun.kind() == Noun.Kind.SURFACE ? size : own * 0.8F, glide, depth + 1);
+				case UNDER -> place(scene, child, seat != null ? seat : base, own * (hold != null ? childSize : 0.55F), glide, depth + 1);
 				case HEAD -> place(scene, child, base.add(0, height * own * 0.92, 0), own * 0.6F, glide, depth + 1);
 				case RIDES -> {
-					place(scene, child, base.add(0, height * own * 0.8, 0), own * 0.8F, glide, depth + 1);
+					place(scene, child, seat != null ? seat : base.add(0, height * own * 0.8, 0), own * (hold != null ? childSize : 0.8F), glide, depth + 1);
 					Entity rider = made.get(child);
 					if (rider != null && childCreature && creature) rider.startRiding(entity, true, false);
 				}
@@ -145,7 +150,7 @@ final class BobStage {
 	}
 
 	private static float creatureHeight(Noun noun) {
-		EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(noun.ref())).orElse(null);
+		EntityType<?> type = noun.thing().entity() == null ? null : BuiltInRegistries.ENTITY_TYPE.getOptional(noun.thing().entity()).orElse(null);
 		return type == null ? noun.height() : type.getDimensions().height();
 	}
 
@@ -177,7 +182,7 @@ final class BobStage {
 		Entity entity;
 		Vec3 start = anchor;
 		if (noun.kind() == Noun.Kind.CREATURE) {
-			EntityType<?> type = Outcome.harmlessType(Identifier.parse(noun.ref()), false);
+			EntityType<?> type = noun.thing().entity() == null ? null : Outcome.harmlessType(noun.thing().entity(), false);
 			entity = type == null ? null : type.create(level, EntitySpawnReason.MOB_SUMMONED);
 			if (entity == null) return null;
 			entity.setPermanentlyInvulnerable(true);
@@ -188,10 +193,10 @@ final class BobStage {
 				mob.setNoAi(true);
 				for (EquipmentSlot slot : EquipmentSlot.values()) mob.setDropChance(slot, 0.0F);
 			}
-		} else if (noun.word().equals("hat")) {
+		} else if (noun.thing().block() == null && noun.thing().item() != null) {
 			Display.ItemDisplay display = EntityTypes.ITEM_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
 			if (display == null) return null;
-			display.setItemStack(new ItemStack(Items.LEATHER_HELMET));
+			display.setItemStack(new ItemStack(BuiltInRegistries.ITEM.getValue(noun.thing().item())));
 			display.setItemTransform(ItemDisplayContext.FIXED);
 			display.setBillboardConstraints(Display.BillboardConstraints.VERTICAL);
 			entity = display;
@@ -211,30 +216,27 @@ final class BobStage {
 
 	/** The block each thing is shown as, turned to face the child. */
 	static @Nullable BlockState blockOf(Noun noun) {
-		BlockState state = switch (noun.word()) {
-			case "pot" -> Blocks.FLOWER_POT.defaultBlockState();
-			case "bed" -> Blocks.BED.red().defaultBlockState().setValue(BedBlock.PART, BedPart.HEAD);
-			case "rug" -> Blocks.CARPET.red().defaultBlockState();
-			case "lid" -> Blocks.SPRUCE_SLAB.defaultBlockState();
-			case "crib" -> toy(justfatlard.phonics.toy.Toy.CRIB);
-			case "cap" -> toy(justfatlard.phonics.toy.Toy.CAP);
-			case "wig" -> toy(justfatlard.phonics.toy.Toy.WIG);
-			default -> null;
-		};
-		if (state == null && noun.kind() == Noun.Kind.PLUSH) {
-			justfatlard.phonics.plush.Plush plush = justfatlard.phonics.plush.Plush.of(noun.ref());
-			if (plush != null) state = Phonics.PLUSH.defaultBlockState().setValue(justfatlard.phonics.plush.PlushBlock.KIND, plush);
-		}
-		if (state == null) {
-			Block block = BuiltInRegistries.BLOCK.getOptional(Identifier.parse(noun.ref())).orElse(null);
-			if (block == null || block == Blocks.AIR) return null;
-			state = block.defaultBlockState();
-		}
+		return blockOf(noun.thing());
+	}
+
+	/** The block a thing is, its properties set and turned to face south. */
+	static @Nullable BlockState blockOf(justfatlard.phonics.relate.Thing thing) {
+		if (thing.block() == null) return null;
+		Block block = BuiltInRegistries.BLOCK.getOptional(thing.block()).orElse(null);
+		if (block == null || block == Blocks.AIR) return null;
+		BlockState state = block.defaultBlockState();
+		for (var property : thing.properties().entrySet()) state = with(state, property.getKey(), property.getValue());
 		if (state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) state = state.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH);
 		return state;
 	}
 
-	private static BlockState toy(justfatlard.phonics.toy.Toy toy) {
-		return justfatlard.phonics.toy.Toys.TOY.defaultBlockState().setValue(justfatlard.phonics.toy.ToyBlock.KIND, toy);
+	private static BlockState with(BlockState state, String name, String value) {
+		for (var property : state.getProperties()) if (property.getName().equals(name)) return set(state, property, value);
+		return state;
 	}
+
+	private static <T extends Comparable<T>> BlockState set(BlockState state, net.minecraft.world.level.block.state.properties.Property<T> property, String value) {
+		return property.getValue(value).map(parsed -> state.setValue(property, parsed)).orElse(state);
+	}
+
 }

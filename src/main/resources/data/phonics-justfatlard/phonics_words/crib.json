@@ -50,5 +50,48 @@
         "ticks": 16
       }
     ]
+  },
+  "scene": {
+    "line": "The baby can't sleep!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:villager",
+        "baby": true
+      },
+      {
+        "type": "bubble",
+        "text": "Waah!",
+        "color": 16757683
+      },
+      {
+        "type": "ambient",
+        "id": "tears",
+        "particle": "minecraft:falling_water",
+        "at": "face",
+        "count": 1,
+        "spread": 0.05,
+        "every": 8,
+        "sound": "minecraft:entity.villager.no",
+        "pitch": 1.6,
+        "sound_every": 40
+      }
+    ],
+    "solve": [
+      {
+        "type": "place",
+        "block": "phonics-justfatlard:toy",
+        "properties": {
+          "kind": "crib",
+          "facing": "south"
+        },
+        "then": "tuck:phonics-justfatlard:toy_doll"
+      },
+      {
+        "type": "bubble",
+        "text": "Zzz",
+        "color": 11195647
+      }
+    ]
   }
 }

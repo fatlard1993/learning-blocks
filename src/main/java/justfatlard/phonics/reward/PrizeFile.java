@@ -254,7 +254,7 @@ public final class PrizeFile {
 	/** Objects written out in full even when short, because their fields carry comments. */
 	private static final java.util.Set<String> COMMENTED_OBJECTS = java.util.Set.of(
 		"events", "points", "events.new_word", "events.solved", "events.streak", "events.stage_complete",
-		"events.milestone", "events.daily_visit", "puzzles");
+		"events.milestone", "events.toy_mastered", "events.daily_visit", "puzzles");
 
 	private static final Map<String, String> COMMENTS = Map.ofEntries(
 		Map.entry("enabled", "Everything below, on or off at once."),
@@ -269,6 +269,10 @@ public final class PrizeFile {
 		Map.entry("events.streak", "Every \"length\" words read in a row. Building a different word resets the count."),
 		Map.entry("events.stage_complete", "Every word of a stage band (1a, 1b...) mastered. Pays once per band."),
 		Map.entry("events.milestone", "Totals of different words ever read. Each pays once."),
+		Map.entry("events.toy_mastered", """
+			A plushie or toy earned by mastering every word that brings it (owl by owl, the teddy by
+			hug, the car by car): the toy itself, once, ever, and these prizes as well. On by default:
+			this is how the collection fills."""),
 		Map.entry("events.daily_visit", "The first visit of each real day."),
 		Map.entry("puzzles", """
 			How rounds are asked. scenes: now and then, instead of "Can you make...", the room acts
@@ -311,12 +315,13 @@ public final class PrizeFile {
 		    "new_word": { "enabled": true, "points": 0, "prizes": [ { "item": "minecraft:cookie", "count": 1 } ] },
 		    "solved": { "enabled": false, "first_try_only": true, "points": 1, "prizes": [] },
 		    "streak": { "enabled": true, "length": 3, "points": 0, "prizes": [ { "xp": 10 } ] },
-		    "stage_complete": { "enabled": true, "points": 0, "prizes": [ { "item": "minecraft:emerald", "count": 1 }, { "toybox": "random_new" } ] },
+		    "stage_complete": { "enabled": true, "points": 0, "prizes": [ { "item": "minecraft:emerald", "count": 1 } ] },
 		    "milestone": { "enabled": true, "every": [
-		      { "words": 10, "prizes": [ { "item": "minecraft:emerald", "count": 3 }, { "toybox": "random_new" } ] },
-		      { "words": 25, "prizes": [ { "item": "minecraft:diamond", "count": 1 }, { "toybox": "random_new" } ] },
-		      { "words": 100, "prizes": [ { "item": "minecraft:diamond", "count": 5 }, { "toybox": "random_new" } ] }
+		      { "words": 10, "prizes": [ { "item": "minecraft:emerald", "count": 3 } ] },
+		      { "words": 25, "prizes": [ { "item": "minecraft:diamond", "count": 1 } ] },
+		      { "words": 100, "prizes": [ { "item": "minecraft:diamond", "count": 5 } ] }
 		    ] },
+		    "toy_mastered": { "enabled": true, "points": 0, "prizes": [] },
 		    "daily_visit": { "enabled": false, "points": 0, "prizes": [ { "item": "minecraft:apple", "count": 1 } ] }
 		  },
 		  "points": { "enabled": false, "thresholds": [
@@ -330,5 +335,5 @@ public final class PrizeFile {
 		""";
 
 	/** Names of the events, in the order the file and the editor show them. */
-	public static final List<String> EVENTS = List.of("new_word", "solved", "streak", "stage_complete", "milestone", "daily_visit");
+	public static final List<String> EVENTS = List.of("new_word", "solved", "streak", "stage_complete", "milestone", "toy_mastered", "daily_visit");
 }

@@ -1,0 +1,9 @@
+{
+  "is": "creature",
+  "entity": "minecraft:wolf",
+  "height": 0.85,
+  "tags": [
+    "creature",
+    "wearer"
+  ]
+}

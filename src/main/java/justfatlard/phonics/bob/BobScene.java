@@ -69,55 +69,18 @@ public final class BobScene {
 		return false;
 	}
 
-	/** Do this, exactly. False if Bob could do nothing with it (a thing into itself). */
+	/** Do this, exactly, by the shared rules ({@link justfatlard.phonics.relate.Relations#resolve}). False if Bob could do nothing with it. */
 	public boolean apply(Instruction instruction) {
 		String x = instruction.x();
 		String y = instruction.y();
-		Noun nx = Noun.of(x);
-		Noun ny = Noun.of(y);
-		if (nx == null || ny == null || x.equals(y)) return false;
+		var placement = justfatlard.phonics.relate.Relations.resolve(x, instruction.prep(), y, this::lidOn);
+		if (placement == null) return false;
 		things.add(x);
 		things.add(y);
 		if (instruction.bigX()) big.add(x);
 		if (instruction.bigY()) big.add(y);
-		Rel rel;
-		String child = x;
-		String parent = y;
-		switch (instruction.prep()) {
-			case "in" -> {
-				if (ny.kind() == Noun.Kind.CONTAINER) {
-					String lid = lidOn(y);
-					// The lid is on: it goes on the lid, which is as far in as it can go.
-					if (lid != null && !lid.equals(x)) {
-						rel = Rel.ON;
-						parent = lid;
-					} else rel = Rel.IN;
-				} else if (ny.kind() == Noun.Kind.CREATURE) {
-					// In a cat: it can't go in, so on the cat's head it goes, wedged.
-					rel = nx.kind() == Noun.Kind.CREATURE ? Rel.RIDES : Rel.HEAD;
-				} else if (ny.kind() == Noun.Kind.WEARABLE) rel = Rel.IN;
-				else rel = Rel.ON;
-			}
-			case "on" -> {
-				if (ny.kind() == Noun.Kind.CREATURE) rel = nx.kind() == Noun.Kind.CREATURE ? Rel.RIDES : Rel.HEAD;
-				else rel = Rel.ON;
-			}
-			case "under" -> {
-				if (ny.hasUnder()) rel = Rel.UNDER;
-				else {
-					// Under something with no room under it: that thing ends up on top of this one.
-					child = y;
-					parent = x;
-					rel = Noun.of(parent).kind() == Noun.Kind.CREATURE
-						? (Noun.of(child).kind() == Noun.Kind.CREATURE ? Rel.RIDES : Rel.HEAD) : Rel.ON;
-				}
-			}
-			default -> {
-				return false;
-			}
-		}
-		if (within(parent, child)) return false;
-		where.put(child, new Place(rel, parent));
+		if (placement.parent().equals(placement.child()) || within(placement.parent(), placement.child())) return false;
+		where.put(placement.child(), new Place(Rel.valueOf(placement.rel().name()), placement.parent()));
 		return true;
 	}
 

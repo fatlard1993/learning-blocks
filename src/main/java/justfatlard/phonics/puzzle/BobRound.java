@@ -43,7 +43,7 @@ import org.jspecify.annotations.Nullable;
  * which of two goals Bob should make, and the other tells him.
  */
 public final class BobRound {
-	public enum Mode { GOAL, FIX, SILLY }
+	public enum Mode { GOAL, FIX, SILLY, PREP }
 
 	/** How long Bob takes over each sentence. */
 	private static final int ACT_TICKS = 24;
@@ -111,6 +111,13 @@ public final class BobRound {
 	private final List<Interaction> pickHits = new ArrayList<>();
 	final BobStage stage;
 	final List<BobStage> pictures = new ArrayList<>();
+	/**
+	 * A preposition round: the words on the board ("owl in box"), and two pictures of the same
+	 * two things, one in and one on (or under); which picture is the words.
+	 */
+	final List<String> prepWords = new ArrayList<>();
+	final List<BobScene> prepScenes = new ArrayList<>();
+	int prepRight = -1;
 	/** What is on Bob's stage now. */
 	BobScene acted;
 	@Nullable Villager bob;
@@ -231,6 +238,7 @@ public final class BobRound {
 		java.util.Random random = new java.util.Random(level.getRandom().nextLong());
 		java.util.function.Predicate<String> readable = wanted != null ? word -> true : readable(progress, room.stage);
 		if (mode == Mode.SILLY) return new BobRound(room, level, layout, mode, null, null);
+		if (mode == Mode.PREP) return makePrep(room, level, layout, readable, wanted, random);
 		List<Goal> open = Goals.open(readable, goal -> progress.sentenceMastered(goal.key()));
 		if (mode == Mode.FIX) open = open.stream().filter(goal -> goal.rows().size() == 1).toList();
 		Goal goal = wanted != null ? wanted : Goals.pick(open, g -> progress.sentenceMastered(g.key()), g -> progress.sentenceUsedToday(g.key()),
@@ -259,6 +267,60 @@ public final class BobRound {
 			}
 		}
 		return round;
+	}
+
+	/**
+	 * A preposition round from what this child reads: a small thing and a thing it can be in, on or
+	 * under in two different ways; or the one asked for ({@code wanted}'s first sentence, the other
+	 * way picked to differ). Null if no such pair is readable yet.
+	 */
+	private static @Nullable BobRound makePrep(Room room, ServerLevel level, RoomLayout layout, java.util.function.Predicate<String> readable,
+			@Nullable Goal wanted, java.util.Random random) {
+		List<String[]> options = new ArrayList<>();
+		List<justfatlard.phonics.relate.Thing> things = justfatlard.phonics.relate.Relations.all();
+		if (wanted != null) {
+			Instruction step = wanted.steps().getFirst();
+			for (String other : justfatlard.phonics.bob.Noun.PREPOSITIONS) {
+				if (!other.equals(step.prep()) && prepDiffers(step.x(), step.prep(), other, step.y())) options.add(new String[] {step.x(), step.prep(), other, step.y()});
+			}
+		} else {
+			for (justfatlard.phonics.relate.Thing x : things) {
+				if (!x.small() || x.creature() || !readable.test(x.word())) continue;
+				for (justfatlard.phonics.relate.Thing y : things) {
+					if (y == x || !readable.test(y.word())) continue;
+					for (String[] pair : List.of(new String[] {"in", "on"}, new String[] {"on", "under"}, new String[] {"in", "under"})) {
+						if (!readable.test(pair[0]) || !readable.test(pair[1]) || !prepDiffers(x.word(), pair[0], pair[1], y.word())) continue;
+						options.add(new String[] {x.word(), pair[0], pair[1], y.word()});
+						options.add(new String[] {x.word(), pair[1], pair[0], y.word()});
+					}
+				}
+			}
+		}
+		if (options.isEmpty()) return null;
+		String[] chosen = options.get(random.nextInt(options.size()));
+		BobRound round = new BobRound(room, level, layout, Mode.PREP, null, null);
+		round.prepWords.addAll(List.of(chosen[0], chosen[1], chosen[3]));
+		BobScene right = new BobScene(List.of(chosen[0], chosen[3]));
+		right.apply(new Instruction(chosen[0], false, chosen[1], chosen[3], false));
+		BobScene other = new BobScene(List.of(chosen[0], chosen[3]));
+		other.apply(new Instruction(chosen[0], false, chosen[2], chosen[3], false));
+		round.prepRight = random.nextInt(2);
+		round.prepScenes.add(round.prepRight == 0 ? right : other);
+		round.prepScenes.add(round.prepRight == 0 ? other : right);
+		return round;
+	}
+
+	/** Whether x one way y and x the other way y look different, each with x the one moved: in the box, on the box. */
+	private static boolean prepDiffers(String x, String one, String other, String y) {
+		var a = justfatlard.phonics.relate.Relations.resolve(x, one, y, word -> null);
+		var b = justfatlard.phonics.relate.Relations.resolve(x, other, y, word -> null);
+		return a != null && b != null && a.child().equals(x) && b.child().equals(x) && a.rel() != b.rel()
+			&& a.rel() != justfatlard.phonics.relate.Relations.Rel.HEAD && b.rel() != justfatlard.phonics.relate.Relations.Rel.HEAD;
+	}
+
+	/** The key a preposition round is remembered by: {@code read: owl in box}. */
+	String prepKey() {
+		return "read: " + String.join(" ", prepWords);
 	}
 
 	/**
@@ -292,6 +354,7 @@ public final class BobRound {
 		Word anchor = null;
 		Goal shown = goal != null ? goal : offered.isEmpty() ? null : offered.getFirst();
 		if (shown != null) anchor = find(shown.things().getFirst());
+		if (!prepWords.isEmpty()) anchor = find(prepWords.getFirst());
 		if (anchor == null) anchor = find("cat");
 		if (anchor == null) anchor = Words.all().getFirst();
 		return new Puzzle(anchor, List.of(anchor), List.of(), 0, Puzzle.Kind.WHOLE);
@@ -336,6 +399,20 @@ public final class BobRound {
 				if (step != null) acted.apply(step);
 				stage.show(acted, false);
 			}
+			case PREP -> {
+				// The words on the board, read not built: cards in the row, not to be clicked.
+				addRow(prepWords.size());
+				dealCards(prepWords);
+				for (int i = 0; i < prepWords.size(); i++) {
+					for (Card card : cards) {
+						if (!card.placed() && card.word.equals(prepWords.get(i))) {
+							put(card, 0, i, false);
+							break;
+						}
+					}
+				}
+				for (int i = 0; i < prepScenes.size(); i++) showScene(prepScenes.get(i), i, true);
+			}
 			case SILLY -> {
 				addRow(SILLY_SLOTS);
 				List<String> words = new ArrayList<>(List.of("put", "in", "on"));
@@ -378,9 +455,14 @@ public final class BobRound {
 	/** A goal, framed, small: what Bob is to make. Reading together, a click box over each to pick it by. */
 	private void showPicture(@Nullable Goal shown, int which, boolean pickable) {
 		if (shown == null) return;
+		showScene(shown.end(), which, pickable);
+	}
+
+	/** A scene, framed, small, at picture spot {@code which}; pickable with a click box over it. */
+	private void showScene(BobScene shown, int which, boolean pickable) {
 		Vec3 spot = pictureSpot(which);
 		BobStage picture = new BobStage(level, spot.add(0, 0.07, 0), 0.6F);
-		picture.show(shown.end(), false);
+		picture.show(shown, false);
 		pictures.add(picture);
 		// The frame: a gold edge round a pale mat, so it reads as a picture of what to make.
 		frame(spot, 2.6F, 1.4F);
@@ -468,6 +550,14 @@ public final class BobRound {
 	/** A click on one of this round's things: a card, or reading together a goal to pick. True if it was one. */
 	boolean click(ServerPlayer player, Entity entity) {
 		int picked = pickHits.indexOf(entity);
+		if (picked >= 0 && mode == Mode.PREP) {
+			if (!room.mayPress(player)) {
+				room.notYourTurn(player, room.turn);
+				return true;
+			}
+			pickPrep(player, picked);
+			return true;
+		}
 		if (picked >= 0) {
 			if (!picking) return true;
 			if (picker != null && !picker.equals(player.getUUID())) {
@@ -481,6 +571,11 @@ public final class BobRound {
 		for (Card one : cards) if (one.hit == entity || one.display == entity) card = one;
 		if (card == null) return false;
 		if (room.busy || room.leaving) return true;
+		// A preposition round's words are to read, not to move: a click says the word.
+		if (mode == Mode.PREP) {
+			Narrator.play(player, new Narration().say("word/" + card.word, "card_word", p -> {}, CaptionLine.sentence(List.of(card.word), 0), Narration.GAP));
+			return true;
+		}
 		if (picking) {
 			room.notYourTurn(player, picker);
 			return true;
@@ -593,6 +688,9 @@ public final class BobRound {
 				readRows(narration, rowsAsWords());
 				return narration.say("phrase/whats_wrong");
 			}
+			case PREP -> {
+				return narration.say("phrase/what_does_it_say", 2);
+			}
 			default -> {
 				return narration.say(SILLY, "silly_sentences", p -> {}, CaptionLine.plain("Tell Bob something silly!"), Narration.GAP);
 			}
@@ -636,7 +734,7 @@ public final class BobRound {
 	void press(ServerPlayer player) {
 		if (room.busy || room.leaving) return;
 		room.touch();
-		if (picking) {
+		if (picking || mode == Mode.PREP) {
 			room.replay(player);
 			return;
 		}
@@ -730,6 +828,39 @@ public final class BobRound {
 		Narrator.play(player, telling);
 	}
 
+	/**
+	 * A picture picked in a preposition round. The right one: the words read out, a card lit at a
+	 * time, and it counts. The other: "Hmm, try again", and the round stays.
+	 */
+	private void pickPrep(ServerPlayer player, int which) {
+		if (room.busy || room.leaving) return;
+		room.touch();
+		boolean right = which == prepRight;
+		Narrator.note(player, "prep_pick:" + which + (right ? ":right" : ":wrong"));
+		Narration telling = new Narration();
+		boolean[] happened = new boolean[1];
+		int roundAt = room.round;
+		if (right) {
+			boolean firstTry = !room.missedThisRound;
+			int lessonsBefore = AnswerCommit.lessonsBefore(player);
+			String key = prepKey();
+			boolean justMastered = firstTry && Progress.of(player).sentenceCountsToday(key) && Progress.of(player).sentenceClean(key) + 1 == Progress.masteredAt();
+			boolean fresh = !Progress.of(player).rewardedFor(Progress.sentenceKey(key));
+			room.answers.commit().right(player, "reading " + String.join(" ", prepWords), () -> {
+				Progress.of(player).sentenceRight(player, key, firstTry);
+				Prizes.sentenceSolved(player, key, firstTry);
+			}, lessonsBefore);
+			happened[0] = true;
+			readRows(telling, List.of(prepWords));
+			room.answers.closing(player, telling, lessonsBefore, fresh, false, justMastered);
+		} else {
+			room.answers.commit().wrong(player);
+			Safely.run("Remembering a preposition missed", () -> Progress.of(player).sentenceMissed(player, prepKey(), "picked the other"));
+			telling.say("phrase/hmm").say("phrase/try_again");
+		}
+		room.answers.finish(player, telling, happened, roundAt);
+	}
+
 	/** Bob does it: each sentence in turn, from the start, a beat apart. */
 	private void act(ServerPlayer player, List<List<String>> built) {
 		if (goal == null) return;
@@ -799,6 +930,26 @@ public final class BobRound {
 
 	public List<Goal> offered() {
 		return List.copyOf(offered);
+	}
+
+	/** A preposition round's words, and which of the two pictures is them. */
+	public List<String> prepWords() {
+		return List.copyOf(prepWords);
+	}
+
+	public int prepRight() {
+		return prepRight;
+	}
+
+	/** Whether this one-sentence goal makes a preposition round: some other little word puts the same thing somewhere else. */
+	public static boolean prepPossible(Goal goal) {
+		if (goal.rows().size() != 1) return false;
+		Instruction step = goal.steps().getFirst();
+		if (step.bigX() || step.bigY()) return false;
+		for (String other : justfatlard.phonics.bob.Noun.PREPOSITIONS) {
+			if (!other.equals(step.prep()) && prepDiffers(step.x(), step.prep(), other, step.y())) return true;
+		}
+		return false;
 	}
 
 	public boolean picking() {

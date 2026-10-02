@@ -499,8 +499,9 @@ def main():
     turn = {"north": 0, "east": 90, "south": 180, "west": 270}
     write(ASSETS / "blockstates/toy.json", {
         "variants": {
-            f"facing={facing},kind={name}": {"model": f"{NS}:block/toy_{name}", "y": y}
-            for name in TOYS for facing, y in turn.items()
+            f"facing={facing},hidden={hidden},kind={name}": {"model": f"{NS}:block/hidden"} if hidden == "true"
+            else {"model": f"{NS}:block/toy_{name}", "y": y}
+            for name in TOYS for facing, y in turn.items() for hidden in ("false", "true")
         }
     })
     for name in TOYS:

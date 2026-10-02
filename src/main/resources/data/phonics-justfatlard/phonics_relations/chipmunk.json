@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "phonics-justfatlard:plush",
+  "properties": {
+    "kind": "chipmunk"
+  },
+  "item": "phonics-justfatlard:plush_chipmunk",
+  "height": 0.775,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

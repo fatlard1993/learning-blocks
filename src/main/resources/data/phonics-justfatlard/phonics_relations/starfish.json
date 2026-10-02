@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "phonics-justfatlard:plush",
+  "properties": {
+    "kind": "starfish"
+  },
+  "item": "phonics-justfatlard:plush_starfish",
+  "height": 0.85,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

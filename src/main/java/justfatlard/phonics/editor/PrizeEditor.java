@@ -97,13 +97,14 @@ public final class PrizeEditor {
 
 	private static final Map<String, String> EVENT_NAMES = Map.of(
 		"new_word", "New word", "solved", "Word read", "streak", "Streak",
-		"stage_complete", "Stage complete", "milestone", "Milestones", "daily_visit", "Daily visit");
+		"stage_complete", "Stage complete", "milestone", "Milestones", "toy_mastered", "Toy mastered", "daily_visit", "Daily visit");
 
 	private static final Map<String, String> EVENT_HELP = Map.of(
 		"new_word", "The first time a child ever reads a word; once per word",
 		"solved", "Any word read",
 		"streak", "Every so many words read in a row",
 		"stage_complete", "Every word of a stage band (1a, 1b...) mastered",
+		"toy_mastered", "A plushie or toy, earned by mastering every word that brings it",
 		"daily_visit", "The first visit of each real day");
 
 	public static void register(ScreenApi screens) {
@@ -248,7 +249,7 @@ public final class PrizeEditor {
 					if (event.equals("milestone")) continue;
 					String base = "events." + event;
 					rows.add(new Row.Heading(EVENT_NAMES.get(event), EVENT_HELP.getOrDefault(event, "")));
-					rows.add(new Row.Toggle("Pays", base + ".enabled", false, "Yes", "No", EVENT_HELP.getOrDefault(event, "")));
+					rows.add(new Row.Toggle("Pays", base + ".enabled", event.equals("toy_mastered"), "Yes", "No", EVENT_HELP.getOrDefault(event, "")));
 					if (points) rows.add(new Row.Number("Points", base + ".points", 0, POINTS, "", null));
 					if (event.equals("solved")) {
 						rows.add(new Row.Toggle("First try only", base + ".first_try_only", true, "Yes", "No",
@@ -728,7 +729,7 @@ public final class PrizeEditor {
 	}
 
 	private static boolean defaultBool(String path) {
-		return path.equals("enabled") || path.endsWith("first_try_only") || path.equals("puzzles.scenes")
+		return path.equals("enabled") || path.endsWith("first_try_only") || path.equals("puzzles.scenes") || path.equals("events.toy_mastered.enabled")
 			|| path.equals("puzzles.letters_first") || path.equals("puzzles.first_sound") || path.equals("puzzles.last_sound")
 			|| path.equals("puzzles.middle_vowel") || path.equals("puzzles.whole_word") || path.equals("puzzles.read_it")
 			|| path.equals("puzzles.team_up") || path.equals("puzzles.tell_bob") || path.equals("puzzles.whats_wrong");

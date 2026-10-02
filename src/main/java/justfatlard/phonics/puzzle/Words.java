@@ -46,6 +46,16 @@ public final class Words implements SimpleSynchronousResourceReloadListener {
 	private static volatile List<Word> everything = List.of();
 	private static final java.util.Map<Identifier, List<Integer>> chunks = new java.util.concurrent.ConcurrentHashMap<>();
 	private static final java.util.Set<Identifier> compounds = java.util.concurrent.ConcurrentHashMap.newKeySet();
+	private static final java.util.Map<Identifier, java.util.Set<String>> earns = new java.util.concurrent.ConcurrentHashMap<>();
+
+	/**
+	 * The plushies and toys this word brings or shows, as {@code plush:owl} or {@code toy:car}: from
+	 * its {@code icon} and {@code outcome}, or {@code "earns"} in its file, which overrides them.
+	 * Mastering every word that earns a toy earns the toy.
+	 */
+	public static java.util.Set<String> earns(Word word) {
+		return earns.getOrDefault(word.id(), java.util.Set.of());
+	}
 
 	/**
 	 * A big word's chunks, {@code "chunks": [3, 3]} in its file: how many tiles each has, in order
@@ -135,6 +145,7 @@ public final class Words implements SimpleSynchronousResourceReloadListener {
 		pictureCards.clear();
 		chunks.clear();
 		compounds.clear();
+		earns.clear();
 
 		// One resource per id, already resolved across packs, so a data pack later in the order
 		// replaces a word rather than colliding with it.
@@ -154,6 +165,7 @@ public final class Words implements SimpleSynchronousResourceReloadListener {
 							if (!body.shown().isEmpty()) shownTiles.put(id, List.copyOf(body.shown()));
 							body.pictureCard().ifPresent(card -> pictureCards.put(id, card));
 							readChunks(id, json, body.tiles().size());
+							readEarns(id, json);
 						}
 						else Phonics.LOGGER.info("[{}] Leaving out word {}: it needs {}", Phonics.MOD_ID, id, missing);
 					})
@@ -197,6 +209,52 @@ public final class Words implements SimpleSynchronousResourceReloadListener {
 			return;
 		}
 		chunks.put(id, List.copyOf(sizes));
+	}
+
+	/** What a word earns: {@code "earns"} if it says (a name: a plushie's, else a toy's), else what its icon and outcome name. */
+	private static void readEarns(Identifier id, JsonElement json) {
+		if (!json.isJsonObject()) return;
+		var object = json.getAsJsonObject();
+		java.util.Set<String> found = new java.util.LinkedHashSet<>();
+		if (object.has("earns")) {
+			JsonElement said = object.get("earns");
+			List<JsonElement> names = new ArrayList<>();
+			if (said.isJsonArray()) said.getAsJsonArray().forEach(names::add);
+			else names.add(said);
+			for (JsonElement name : names) {
+				String text = name.getAsString();
+				if (text.contains(":")) found.add(text);
+				else if (justfatlard.phonics.plush.Plush.of(text) != null) found.add("plush:" + text);
+				else if (justfatlard.phonics.toy.Toy.of(text) != null) found.add("toy:" + text);
+			}
+		} else {
+			if (object.has("icon")) scan(object.get("icon"), found);
+			if (object.has("outcome")) scan(object.get("outcome"), found);
+		}
+		if (!found.isEmpty()) earns.put(id, java.util.Set.copyOf(found));
+	}
+
+	private static void scan(JsonElement json, java.util.Set<String> found) {
+		String ns = Phonics.MOD_ID + ":";
+		if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isString()) {
+			String text = json.getAsString();
+			if (text.startsWith(ns + "plush_")) found.add("plush:" + text.substring((ns + "plush_").length()));
+			if (text.startsWith(ns + "toy_")) found.add("toy:" + text.substring((ns + "toy_").length()));
+			return;
+		}
+		if (json.isJsonArray()) {
+			for (JsonElement each : json.getAsJsonArray()) scan(each, found);
+			return;
+		}
+		if (!json.isJsonObject()) return;
+		var object = json.getAsJsonObject();
+		if (object.has("block") && object.has("properties") && object.getAsJsonObject("properties").has("kind")) {
+			String block = object.get("block").getAsString();
+			String kind = object.getAsJsonObject("properties").get("kind").getAsString();
+			if (block.equals(ns + "plush")) found.add("plush:" + kind);
+			if (block.equals(ns + "toy")) found.add("toy:" + kind);
+		}
+		for (var entry : object.entrySet()) if (!entry.getKey().equals("properties")) scan(entry.getValue(), found);
 	}
 
 	/** Turns {@code ns:phonics_words/cat.json} back into {@code ns:cat}. */

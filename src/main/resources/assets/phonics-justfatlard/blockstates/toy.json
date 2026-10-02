@@ -1,308 +1,536 @@
 {
   "variants": {
-    "facing=north,kind=drum": {
+    "facing=north,hidden=false,kind=drum": {
       "model": "phonics-justfatlard:block/toy_drum",
       "y": 0
     },
-    "facing=east,kind=drum": {
+    "facing=north,hidden=true,kind=drum": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=drum": {
       "model": "phonics-justfatlard:block/toy_drum",
       "y": 90
     },
-    "facing=south,kind=drum": {
+    "facing=east,hidden=true,kind=drum": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=drum": {
       "model": "phonics-justfatlard:block/toy_drum",
       "y": 180
     },
-    "facing=west,kind=drum": {
+    "facing=south,hidden=true,kind=drum": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=drum": {
       "model": "phonics-justfatlard:block/toy_drum",
       "y": 270
     },
-    "facing=north,kind=kite": {
+    "facing=west,hidden=true,kind=drum": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=kite": {
       "model": "phonics-justfatlard:block/toy_kite",
       "y": 0
     },
-    "facing=east,kind=kite": {
+    "facing=north,hidden=true,kind=kite": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=kite": {
       "model": "phonics-justfatlard:block/toy_kite",
       "y": 90
     },
-    "facing=south,kind=kite": {
+    "facing=east,hidden=true,kind=kite": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=kite": {
       "model": "phonics-justfatlard:block/toy_kite",
       "y": 180
     },
-    "facing=west,kind=kite": {
+    "facing=south,hidden=true,kind=kite": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=kite": {
       "model": "phonics-justfatlard:block/toy_kite",
       "y": 270
     },
-    "facing=north,kind=top": {
+    "facing=west,hidden=true,kind=kite": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=top": {
       "model": "phonics-justfatlard:block/toy_top",
       "y": 0
     },
-    "facing=east,kind=top": {
+    "facing=north,hidden=true,kind=top": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=top": {
       "model": "phonics-justfatlard:block/toy_top",
       "y": 90
     },
-    "facing=south,kind=top": {
+    "facing=east,hidden=true,kind=top": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=top": {
       "model": "phonics-justfatlard:block/toy_top",
       "y": 180
     },
-    "facing=west,kind=top": {
+    "facing=south,hidden=true,kind=top": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=top": {
       "model": "phonics-justfatlard:block/toy_top",
       "y": 270
     },
-    "facing=north,kind=ring": {
+    "facing=west,hidden=true,kind=top": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=ring": {
       "model": "phonics-justfatlard:block/toy_ring",
       "y": 0
     },
-    "facing=east,kind=ring": {
+    "facing=north,hidden=true,kind=ring": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=ring": {
       "model": "phonics-justfatlard:block/toy_ring",
       "y": 90
     },
-    "facing=south,kind=ring": {
+    "facing=east,hidden=true,kind=ring": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=ring": {
       "model": "phonics-justfatlard:block/toy_ring",
       "y": 180
     },
-    "facing=west,kind=ring": {
+    "facing=south,hidden=true,kind=ring": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=ring": {
       "model": "phonics-justfatlard:block/toy_ring",
       "y": 270
     },
-    "facing=north,kind=cap": {
+    "facing=west,hidden=true,kind=ring": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=cap": {
       "model": "phonics-justfatlard:block/toy_cap",
       "y": 0
     },
-    "facing=east,kind=cap": {
+    "facing=north,hidden=true,kind=cap": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=cap": {
       "model": "phonics-justfatlard:block/toy_cap",
       "y": 90
     },
-    "facing=south,kind=cap": {
+    "facing=east,hidden=true,kind=cap": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=cap": {
       "model": "phonics-justfatlard:block/toy_cap",
       "y": 180
     },
-    "facing=west,kind=cap": {
+    "facing=south,hidden=true,kind=cap": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=cap": {
       "model": "phonics-justfatlard:block/toy_cap",
       "y": 270
     },
-    "facing=north,kind=wig": {
+    "facing=west,hidden=true,kind=cap": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=wig": {
       "model": "phonics-justfatlard:block/toy_wig",
       "y": 0
     },
-    "facing=east,kind=wig": {
+    "facing=north,hidden=true,kind=wig": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=wig": {
       "model": "phonics-justfatlard:block/toy_wig",
       "y": 90
     },
-    "facing=south,kind=wig": {
+    "facing=east,hidden=true,kind=wig": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=wig": {
       "model": "phonics-justfatlard:block/toy_wig",
       "y": 180
     },
-    "facing=west,kind=wig": {
+    "facing=south,hidden=true,kind=wig": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=wig": {
       "model": "phonics-justfatlard:block/toy_wig",
       "y": 270
     },
-    "facing=north,kind=net": {
+    "facing=west,hidden=true,kind=wig": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=net": {
       "model": "phonics-justfatlard:block/toy_net",
       "y": 0
     },
-    "facing=east,kind=net": {
+    "facing=north,hidden=true,kind=net": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=net": {
       "model": "phonics-justfatlard:block/toy_net",
       "y": 90
     },
-    "facing=south,kind=net": {
+    "facing=east,hidden=true,kind=net": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=net": {
       "model": "phonics-justfatlard:block/toy_net",
       "y": 180
     },
-    "facing=west,kind=net": {
+    "facing=south,hidden=true,kind=net": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=net": {
       "model": "phonics-justfatlard:block/toy_net",
       "y": 270
     },
-    "facing=north,kind=pin": {
+    "facing=west,hidden=true,kind=net": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=pin": {
       "model": "phonics-justfatlard:block/toy_pin",
       "y": 0
     },
-    "facing=east,kind=pin": {
+    "facing=north,hidden=true,kind=pin": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=pin": {
       "model": "phonics-justfatlard:block/toy_pin",
       "y": 90
     },
-    "facing=south,kind=pin": {
+    "facing=east,hidden=true,kind=pin": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=pin": {
       "model": "phonics-justfatlard:block/toy_pin",
       "y": 180
     },
-    "facing=west,kind=pin": {
+    "facing=south,hidden=true,kind=pin": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=pin": {
       "model": "phonics-justfatlard:block/toy_pin",
       "y": 270
     },
-    "facing=north,kind=sock": {
+    "facing=west,hidden=true,kind=pin": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=sock": {
       "model": "phonics-justfatlard:block/toy_sock",
       "y": 0
     },
-    "facing=east,kind=sock": {
+    "facing=north,hidden=true,kind=sock": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=sock": {
       "model": "phonics-justfatlard:block/toy_sock",
       "y": 90
     },
-    "facing=south,kind=sock": {
+    "facing=east,hidden=true,kind=sock": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=sock": {
       "model": "phonics-justfatlard:block/toy_sock",
       "y": 180
     },
-    "facing=west,kind=sock": {
+    "facing=south,hidden=true,kind=sock": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=sock": {
       "model": "phonics-justfatlard:block/toy_sock",
       "y": 270
     },
-    "facing=north,kind=crib": {
+    "facing=west,hidden=true,kind=sock": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=crib": {
       "model": "phonics-justfatlard:block/toy_crib",
       "y": 0
     },
-    "facing=east,kind=crib": {
+    "facing=north,hidden=true,kind=crib": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=crib": {
       "model": "phonics-justfatlard:block/toy_crib",
       "y": 90
     },
-    "facing=south,kind=crib": {
+    "facing=east,hidden=true,kind=crib": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=crib": {
       "model": "phonics-justfatlard:block/toy_crib",
       "y": 180
     },
-    "facing=west,kind=crib": {
+    "facing=south,hidden=true,kind=crib": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=crib": {
       "model": "phonics-justfatlard:block/toy_crib",
       "y": 270
     },
-    "facing=north,kind=car": {
+    "facing=west,hidden=true,kind=crib": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=car": {
       "model": "phonics-justfatlard:block/toy_car",
       "y": 0
     },
-    "facing=east,kind=car": {
+    "facing=north,hidden=true,kind=car": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=car": {
       "model": "phonics-justfatlard:block/toy_car",
       "y": 90
     },
-    "facing=south,kind=car": {
+    "facing=east,hidden=true,kind=car": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=car": {
       "model": "phonics-justfatlard:block/toy_car",
       "y": 180
     },
-    "facing=west,kind=car": {
+    "facing=south,hidden=true,kind=car": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=car": {
       "model": "phonics-justfatlard:block/toy_car",
       "y": 270
     },
-    "facing=north,kind=van": {
+    "facing=west,hidden=true,kind=car": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=van": {
       "model": "phonics-justfatlard:block/toy_van",
       "y": 0
     },
-    "facing=east,kind=van": {
+    "facing=north,hidden=true,kind=van": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=van": {
       "model": "phonics-justfatlard:block/toy_van",
       "y": 90
     },
-    "facing=south,kind=van": {
+    "facing=east,hidden=true,kind=van": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=van": {
       "model": "phonics-justfatlard:block/toy_van",
       "y": 180
     },
-    "facing=west,kind=van": {
+    "facing=south,hidden=true,kind=van": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=van": {
       "model": "phonics-justfatlard:block/toy_van",
       "y": 270
     },
-    "facing=north,kind=jet": {
+    "facing=west,hidden=true,kind=van": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=jet": {
       "model": "phonics-justfatlard:block/toy_jet",
       "y": 0
     },
-    "facing=east,kind=jet": {
+    "facing=north,hidden=true,kind=jet": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=jet": {
       "model": "phonics-justfatlard:block/toy_jet",
       "y": 90
     },
-    "facing=south,kind=jet": {
+    "facing=east,hidden=true,kind=jet": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=jet": {
       "model": "phonics-justfatlard:block/toy_jet",
       "y": 180
     },
-    "facing=west,kind=jet": {
+    "facing=south,hidden=true,kind=jet": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=jet": {
       "model": "phonics-justfatlard:block/toy_jet",
       "y": 270
     },
-    "facing=north,kind=bus": {
+    "facing=west,hidden=true,kind=jet": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=bus": {
       "model": "phonics-justfatlard:block/toy_bus",
       "y": 0
     },
-    "facing=east,kind=bus": {
+    "facing=north,hidden=true,kind=bus": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=bus": {
       "model": "phonics-justfatlard:block/toy_bus",
       "y": 90
     },
-    "facing=south,kind=bus": {
+    "facing=east,hidden=true,kind=bus": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=bus": {
       "model": "phonics-justfatlard:block/toy_bus",
       "y": 180
     },
-    "facing=west,kind=bus": {
+    "facing=south,hidden=true,kind=bus": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=bus": {
       "model": "phonics-justfatlard:block/toy_bus",
       "y": 270
     },
-    "facing=north,kind=ship": {
+    "facing=west,hidden=true,kind=bus": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=ship": {
       "model": "phonics-justfatlard:block/toy_ship",
       "y": 0
     },
-    "facing=east,kind=ship": {
+    "facing=north,hidden=true,kind=ship": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=ship": {
       "model": "phonics-justfatlard:block/toy_ship",
       "y": 90
     },
-    "facing=south,kind=ship": {
+    "facing=east,hidden=true,kind=ship": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=ship": {
       "model": "phonics-justfatlard:block/toy_ship",
       "y": 180
     },
-    "facing=west,kind=ship": {
+    "facing=south,hidden=true,kind=ship": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=ship": {
       "model": "phonics-justfatlard:block/toy_ship",
       "y": 270
     },
-    "facing=north,kind=doll": {
+    "facing=west,hidden=true,kind=ship": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=doll": {
       "model": "phonics-justfatlard:block/toy_doll",
       "y": 0
     },
-    "facing=east,kind=doll": {
+    "facing=north,hidden=true,kind=doll": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=doll": {
       "model": "phonics-justfatlard:block/toy_doll",
       "y": 90
     },
-    "facing=south,kind=doll": {
+    "facing=east,hidden=true,kind=doll": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=doll": {
       "model": "phonics-justfatlard:block/toy_doll",
       "y": 180
     },
-    "facing=west,kind=doll": {
+    "facing=south,hidden=true,kind=doll": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=doll": {
       "model": "phonics-justfatlard:block/toy_doll",
       "y": 270
     },
-    "facing=north,kind=block": {
+    "facing=west,hidden=true,kind=doll": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=block": {
       "model": "phonics-justfatlard:block/toy_block",
       "y": 0
     },
-    "facing=east,kind=block": {
+    "facing=north,hidden=true,kind=block": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=block": {
       "model": "phonics-justfatlard:block/toy_block",
       "y": 90
     },
-    "facing=south,kind=block": {
+    "facing=east,hidden=true,kind=block": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=block": {
       "model": "phonics-justfatlard:block/toy_block",
       "y": 180
     },
-    "facing=west,kind=block": {
+    "facing=south,hidden=true,kind=block": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=block": {
       "model": "phonics-justfatlard:block/toy_block",
       "y": 270
     },
-    "facing=north,kind=train": {
+    "facing=west,hidden=true,kind=block": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=train": {
       "model": "phonics-justfatlard:block/toy_train",
       "y": 0
     },
-    "facing=east,kind=train": {
+    "facing=north,hidden=true,kind=train": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=train": {
       "model": "phonics-justfatlard:block/toy_train",
       "y": 90
     },
-    "facing=south,kind=train": {
+    "facing=east,hidden=true,kind=train": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=train": {
       "model": "phonics-justfatlard:block/toy_train",
       "y": 180
     },
-    "facing=west,kind=train": {
+    "facing=south,hidden=true,kind=train": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=train": {
       "model": "phonics-justfatlard:block/toy_train",
       "y": 270
     },
-    "facing=north,kind=truck": {
+    "facing=west,hidden=true,kind=train": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=truck": {
       "model": "phonics-justfatlard:block/toy_truck",
       "y": 0
     },
-    "facing=east,kind=truck": {
+    "facing=north,hidden=true,kind=truck": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=truck": {
       "model": "phonics-justfatlard:block/toy_truck",
       "y": 90
     },
-    "facing=south,kind=truck": {
+    "facing=east,hidden=true,kind=truck": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=truck": {
       "model": "phonics-justfatlard:block/toy_truck",
       "y": 180
     },
-    "facing=west,kind=truck": {
+    "facing=south,hidden=true,kind=truck": {
+      "model": "phonics-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=truck": {
       "model": "phonics-justfatlard:block/toy_truck",
       "y": 270
+    },
+    "facing=west,hidden=true,kind=truck": {
+      "model": "phonics-justfatlard:block/hidden"
     }
   }
 }

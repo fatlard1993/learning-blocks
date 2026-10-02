@@ -1,0 +1,15 @@
+{
+  "is": "plush",
+  "block": "phonics-justfatlard:plush",
+  "properties": {
+    "kind": "snail"
+  },
+  "item": "phonics-justfatlard:plush_snail",
+  "height": 0.562,
+  "tags": [
+    "small",
+    "plush",
+    "wearer",
+    "tiny"
+  ]
+}

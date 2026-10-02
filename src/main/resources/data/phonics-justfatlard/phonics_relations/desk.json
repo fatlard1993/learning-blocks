@@ -1,0 +1,25 @@
+{
+  "is": "prop",
+  "block": "phonics-justfatlard:desk",
+  "item": "phonics-justfatlard:desk",
+  "height": 0.688,
+  "tags": [],
+  "holds": {
+    "on": {
+      "accepts": [
+        "small",
+        "creature"
+      ],
+      "y": 0.69,
+      "scale": 0.6
+    },
+    "under": {
+      "accepts": [
+        "small",
+        "creature"
+      ],
+      "y": 0.0,
+      "scale": 0.55
+    }
+  }
+}

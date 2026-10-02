@@ -1,0 +1,16 @@
+{
+  "is": "block",
+  "block": "minecraft:red_carpet",
+  "height": 0.0625,
+  "tags": [],
+  "holds": {
+    "on": {
+      "accepts": [
+        "small",
+        "creature"
+      ],
+      "y": 0.0625,
+      "scale": 0.6
+    }
+  }
+}

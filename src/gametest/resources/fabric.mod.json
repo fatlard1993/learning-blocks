@@ -56,7 +56,8 @@
       "justfatlard.phonics.gametest.PlushArt",
       "justfatlard.phonics.gametest.PlushiesAndThings",
       "justfatlard.phonics.gametest.TellBob",
-      "justfatlard.phonics.gametest.BigWords"
+      "justfatlard.phonics.gametest.BigWords",
+      "justfatlard.phonics.gametest.ToyPlay"
     ]
   },
   "depends": {

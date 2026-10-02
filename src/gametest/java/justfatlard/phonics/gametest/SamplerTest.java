@@ -131,6 +131,10 @@ public final class SamplerTest implements FabricClientGameTest {
 			BobRound bob = Rooms.of(player).bob();
 			if (bob == null) return;
 			withBob[0] = true;
+			if (bob.mode() == BobRound.Mode.PREP) {
+				check(bob.clickGoal(player, bob.prepRight()), "the right picture could not be picked");
+				return;
+			}
 			for (List<String> row : bob.rowWords()) for (String word : row) bob.clickCard(player, word, true);
 			if (bob.mode() == BobRound.Mode.SILLY) {
 				silly[0] = true;

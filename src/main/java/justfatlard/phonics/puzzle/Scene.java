@@ -441,7 +441,8 @@ public record Scene(String line, List<Step> setup, List<Step> solve) {
 	/**
 	 * A block flies from the button to the character's side (or the middle of the scene), and then:
 	 * {@code sleep} (the character lies down on it, for a bed), {@code absorb} (the litter is pulled
-	 * into it) or {@code none}.
+	 * into it), {@code tuck:<item>} (that toy goes in it, as a child's play puts it: the doll in the
+	 * crib) or {@code none}.
 	 */
 	public record Place(Identifier block, Map<String, String> properties, String then) implements Step {
 		static final MapCodec<Place> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -457,6 +458,10 @@ public record Scene(String line, List<Step> setup, List<Step> solve) {
 
 		@Override
 		public boolean usable() {
+			if (then.startsWith("tuck:")) {
+				return Outcome.blockStateOf(block, properties) != null
+					&& net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(Identifier.parse(then.substring("tuck:".length())));
+			}
 			return Outcome.blockStateOf(block, properties) != null && List.of("sleep", "absorb", "none").contains(then);
 		}
 

@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "phonics-justfatlard:plush",
+  "properties": {
+    "kind": "mole"
+  },
+  "item": "phonics-justfatlard:plush_mole",
+  "height": 0.375,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

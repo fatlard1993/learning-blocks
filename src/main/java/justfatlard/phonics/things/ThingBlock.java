@@ -51,6 +51,37 @@ public class ThingBlock extends Block {
 		return rotate(north, state.getValue(FACING));
 	}
 
+	/** A toy or plushie held and used on this prop: into the box, the jar, the tub, onto the desk, if it fits. */
+	@Override
+	protected net.minecraft.world.InteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, net.minecraft.world.level.Level level,
+			BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hit) {
+		if (level instanceof net.minecraft.server.level.ServerLevel server && justfatlard.phonics.play.Play.put(server, pos, state, player, hand)) {
+			return net.minecraft.world.InteractionResult.SUCCESS;
+		}
+		return net.minecraft.world.InteractionResult.TRY_WITH_EMPTY_HAND;
+	}
+
+	/** Sneaking, what is in or on it comes back out; otherwise, something floating in it bobs. */
+	@Override
+	protected net.minecraft.world.InteractionResult useWithoutItem(BlockState state, net.minecraft.world.level.Level level, BlockPos pos,
+			net.minecraft.world.entity.player.Player player, net.minecraft.world.phys.BlockHitResult hit) {
+		if (!(level instanceof net.minecraft.server.level.ServerLevel server)) return net.minecraft.world.InteractionResult.SUCCESS;
+		if (player.isShiftKeyDown() && justfatlard.phonics.play.Play.takeOut(server, pos, player, net.minecraft.world.InteractionHand.MAIN_HAND)) {
+			return net.minecraft.world.InteractionResult.SUCCESS;
+		}
+		var contents = justfatlard.phonics.play.Play.contentsAt(server, pos);
+		if (contents == null) return net.minecraft.world.InteractionResult.PASS;
+		justfatlard.phonics.play.Play.playContents(server, pos, contents, justfatlard.phonics.play.Anims.FLOAT);
+		return net.minecraft.world.InteractionResult.SUCCESS;
+	}
+
+	/** Gone: whatever was in or on it drops beside it. */
+	@Override
+	protected void affectNeighborsAfterRemoval(BlockState state, net.minecraft.server.level.ServerLevel level, BlockPos pos, boolean moved) {
+		if (!level.getBlockState(pos).is(this)) justfatlard.phonics.play.Play.removed(level, pos);
+		super.affectNeighborsAfterRemoval(state, level, pos, moved);
+	}
+
 	/** The north-facing shape turned to face this way, as the blockstate turns the model. */
 	static VoxelShape rotate(VoxelShape shape, Direction facing) {
 		VoxelShape[] out = {Shapes.empty()};

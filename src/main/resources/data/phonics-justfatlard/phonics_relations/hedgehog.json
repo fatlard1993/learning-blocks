@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "phonics-justfatlard:plush",
+  "properties": {
+    "kind": "hedgehog"
+  },
+  "item": "phonics-justfatlard:plush_hedgehog",
+  "height": 0.537,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

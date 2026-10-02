@@ -43,6 +43,8 @@ public final class Prizes {
 		if (!config.enabled) return;
 		payOwed(player);
 		if (firstToday) award(player, progress, "daily_visit", config.dailyVisit);
+		// Toys whose words were mastered before toys were earned this way: theirs now.
+		Earned.check(player, progress, null);
 		payThresholds(player, progress);
 	}
 
@@ -108,7 +110,25 @@ public final class Prizes {
 				}
 			}
 		}
+		Earned.check(player, progress, word);
 		payThresholds(player, progress);
+		progress.save(player);
+	}
+
+	/**
+	 * A plushie or a toy earned by mastering its words: the toy itself, and whatever else the event
+	 * pays. One a child already has from an older random prize stays theirs, and nothing more comes.
+	 */
+	static void toyMastered(ServerPlayer player, Progress progress, String key, PrizeConfig.Event event) {
+		String name = key.substring(key.indexOf(':') + 1);
+		boolean plush = key.startsWith("plush:");
+		boolean owned = plush ? progress.plushies().keySet().stream().anyMatch(p -> p.word().equals(name))
+			: progress.toys().keySet().stream().anyMatch(t -> t.word().equals(name));
+		List<Prize> prizes = new ArrayList<>();
+		if (!owned) prizes.add(plush ? new Prize.Plushie(name) : new Prize.Toy(name));
+		prizes.addAll(event.prizes());
+		if (prizes.isEmpty()) return;
+		if (pay(player, progress, "toy_mastered " + key, prizes)) progress.points += event.points();
 		progress.save(player);
 	}
 

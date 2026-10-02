@@ -40,6 +40,7 @@ public final class Sampler {
 		FIXIT("Fix the word", "A word on the board with one wrong letter: cot under a cat"),
 		BOB("Tell Bob", "Word cards make a sentence; Bob does exactly what it says"),
 		WHATSWRONG("What's wrong", "Bob's sentence made wrong; fix one card"),
+		PREP("Little words", "Owl in box, or on box: read it, pick the picture"),
 		SENTENCE("Silly sentences", "Any sentence at all, and Bob does it");
 
 		public final String label;
@@ -126,6 +127,9 @@ public final class Sampler {
 				for (justfatlard.phonics.bob.Goal goal : justfatlard.phonics.bob.Goals.all()) if (goal.rows().size() == 1) found.add(goal.id());
 			}
 			case SENTENCE -> found.add("any");
+			case PREP -> {
+				for (justfatlard.phonics.bob.Goal goal : justfatlard.phonics.bob.Goals.all()) if (BobRound.prepPossible(goal)) found.add(goal.id());
+			}
 			case TEAMUP -> {
 				for (Word word : Stages.usable()) {
 					if (word.tiles().size() < 3) continue;
@@ -232,6 +236,7 @@ public final class Sampler {
 			case BOB -> Rooms.startBob(player, BobRound.Mode.GOAL, justfatlard.phonics.bob.Goals.byId(target), null);
 			case WHATSWRONG -> Rooms.startBob(player, BobRound.Mode.FIX, justfatlard.phonics.bob.Goals.byId(target), null);
 			case SENTENCE -> Rooms.startBob(player, BobRound.Mode.SILLY, null, null);
+			case PREP -> Rooms.startBob(player, BobRound.Mode.PREP, justfatlard.phonics.bob.Goals.byId(target), null);
 			case TEAMUP -> {
 				if (word == null) yield false;
 				room.forcedTeamWord = word;

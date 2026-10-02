@@ -1,0 +1,14 @@
+{
+  "is": "toy",
+  "block": "phonics-justfatlard:toy",
+  "properties": {
+    "kind": "cap"
+  },
+  "item": "phonics-justfatlard:toy_cap",
+  "height": 0.362,
+  "tags": [
+    "small",
+    "toy"
+  ],
+  "wearable": true
+}

@@ -1,0 +1,14 @@
+{
+  "is": "toy",
+  "block": "phonics-justfatlard:toy",
+  "properties": {
+    "kind": "wig"
+  },
+  "item": "phonics-justfatlard:toy_wig",
+  "height": 0.619,
+  "tags": [
+    "small",
+    "toy"
+  ],
+  "wearable": true
+}

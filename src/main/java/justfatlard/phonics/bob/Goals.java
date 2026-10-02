@@ -15,42 +15,101 @@ import org.jspecify.annotations.Nullable;
 public final class Goals {
 	private Goals() {}
 
-	private static final List<Goal> ALL = List.of(
-		Goal.of(Goal.Shape.SIMPLE, "put cat in box"),
-		Goal.of(Goal.Shape.SIMPLE, "put hat on dog"),
-		Goal.of(Goal.Shape.SIMPLE, "put rat in tub"),
-		Goal.of(Goal.Shape.SIMPLE, "put cat on bed"),
-		Goal.of(Goal.Shape.SIMPLE, "put cap on pig"),
-		Goal.of(Goal.Shape.SIMPLE, "put ant in pot"),
-		Goal.of(Goal.Shape.SIMPLE, "put dog on rug"),
-		Goal.of(Goal.Shape.SIMPLE, "put fox in bin"),
-		Goal.of(Goal.Shape.SIMPLE, "put cat on pig"),
-		Goal.of(Goal.Shape.SIMPLE, "put wig on cat"),
-		Goal.of(Goal.Shape.SIMPLE, "put bug in box"),
-		Goal.of(Goal.Shape.SIMPLE, "put hen on bed"),
-		Goal.of(Goal.Shape.SIMPLE, "put duck in tub"),
-		Goal.of(Goal.Shape.SIMPLE, "put crab in jar"),
-		Goal.of(Goal.Shape.SIMPLE, "put rat under crib"),
-		Goal.of(Goal.Shape.SIMPLE, "put cat under desk"),
-		Goal.of(Goal.Shape.BIG, "put big cat in box"),
-		Goal.of(Goal.Shape.BIG, "put hat on big dog"),
-		Goal.of(Goal.Shape.BIG, "put rat in big tub"),
-		Goal.of(Goal.Shape.BIG, "put big pig on rug"),
-		Goal.of(Goal.Shape.ARTICLES, "put the cat in the box"),
-		Goal.of(Goal.Shape.ARTICLES, "put a hat on the pig"),
-		Goal.of(Goal.Shape.ARTICLES, "put a rat in the tub"),
-		Goal.of(Goal.Shape.ARTICLES, "put the big dog on the rug"),
-		Goal.of(Goal.Shape.RECIPE, "put cat in box", "put lid on box"),
-		Goal.of(Goal.Shape.RECIPE, "put ant in pot", "put lid on pot"),
-		Goal.of(Goal.Shape.RECIPE, "put crab in jar", "put lid on jar"),
-		Goal.of(Goal.Shape.RECIPE, "put hat on cat", "put cat on bed"));
+	/** The goals written by hand, in order: shape, then the sentence or two. */
+	private static final String[][] CURATED = {
+		{"SIMPLE", "put cat in box"},
+		{"SIMPLE", "put hat on dog"},
+		{"SIMPLE", "put rat in tub"},
+		{"SIMPLE", "put cat on bed"},
+		{"SIMPLE", "put cap on pig"},
+		{"SIMPLE", "put ant in pot"},
+		{"SIMPLE", "put dog on rug"},
+		{"SIMPLE", "put fox in bin"},
+		{"SIMPLE", "put cat on pig"},
+		{"SIMPLE", "put wig on cat"},
+		{"SIMPLE", "put bug in box"},
+		{"SIMPLE", "put hen on bed"},
+		{"SIMPLE", "put duck in tub"},
+		{"SIMPLE", "put crab in jar"},
+		{"SIMPLE", "put rat under crib"},
+		{"SIMPLE", "put cat under desk"},
+		{"BIG", "put big cat in box"},
+		{"BIG", "put hat on big dog"},
+		{"BIG", "put rat in big tub"},
+		{"BIG", "put big pig on rug"},
+		{"ARTICLES", "put the cat in the box"},
+		{"ARTICLES", "put a hat on the pig"},
+		{"ARTICLES", "put a rat in the tub"},
+		{"ARTICLES", "put the big dog on the rug"},
+		{"RECIPE", "put cat in box", "put lid on box"},
+		{"RECIPE", "put ant in pot", "put lid on pot"},
+		{"RECIPE", "put crab in jar", "put lid on jar"},
+		{"RECIPE", "put hat on cat", "put cat on bed"},
+	};
 
+	private static volatile List<Goal> all;
+
+	static {
+		justfatlard.phonics.relate.Relations.onReload(() -> all = null);
+	}
+
+	/**
+	 * Every goal: the ones written by hand, then, made from the things' affordances, one for each
+	 * small thing and each thing it can go in, on or ride ("put doll in crib", "put owl in car",
+	 * "put cap on owl"), all plain sentences. Which a child is given still depends on the words they
+	 * read.
+	 */
 	public static List<Goal> all() {
-		return ALL;
+		List<Goal> made = all;
+		if (made != null) return made;
+		java.util.LinkedHashMap<String, Goal> goals = new java.util.LinkedHashMap<>();
+		for (String[] row : CURATED) {
+			try {
+				Goal goal = Goal.of(Goal.Shape.valueOf(row[0]), java.util.Arrays.copyOfRange(row, 1, row.length));
+				goals.put(goal.key(), goal);
+			} catch (IllegalArgumentException e) {
+				justfatlard.phonics.Phonics.LOGGER.warn("[{}] Leaving out Bob's goal {}: {}", justfatlard.phonics.Phonics.MOD_ID, String.join(" / ",
+					java.util.Arrays.copyOfRange(row, 1, row.length)), e.getMessage());
+			}
+		}
+		int curated = goals.size();
+		for (Goal goal : generated()) goals.putIfAbsent(goal.key(), goal);
+		made = List.copyOf(goals.values());
+		justfatlard.phonics.Phonics.LOGGER.info("[{}] Bob's goals: {} written, {} made from the things' affordances", justfatlard.phonics.Phonics.MOD_ID,
+			curated, made.size() - curated);
+		all = made;
+		return made;
+	}
+
+	/** Goals the things themselves suggest: each small thing with each thing that would take it, in the world as for Bob. */
+	static List<Goal> generated() {
+		List<Goal> out = new ArrayList<>();
+		for (justfatlard.phonics.relate.Thing held : justfatlard.phonics.relate.Relations.all()) {
+			if (held.creature() || !held.small() || held.word().equals("bug") && justfatlard.phonics.relate.Relations.thing("ladybug") == null) continue;
+			for (justfatlard.phonics.relate.Thing target : justfatlard.phonics.relate.Relations.all()) {
+				var fit = justfatlard.phonics.relate.Relations.fit(held, target);
+				if (fit == null) continue;
+				String prep = switch (fit.rel()) {
+					case IN -> "in";
+					case RIDES -> "in";
+					default -> "on";
+				};
+				String sentence = "put " + held.word() + " " + prep + " " + target.word();
+				try {
+					Goal goal = Goal.of(Goal.Shape.SIMPLE, sentence);
+					// Only a goal whose sentence makes the very place the world would put it.
+					var placement = justfatlard.phonics.relate.Relations.resolve(held.word(), prep, target.word(), word -> null);
+					if (placement != null && placement.rel() == fit.rel()) out.add(goal);
+				} catch (IllegalArgumentException e) {
+					// Not a sentence Bob can read: left out.
+				}
+			}
+		}
+		return out;
 	}
 
 	public static @Nullable Goal byId(String id) {
-		for (Goal goal : ALL) if (goal.id().equals(id) || goal.key().equals(id)) return goal;
+		for (Goal goal : all()) if (goal.id().equals(id) || goal.key().equals(id)) return goal;
 		return null;
 	}
 
@@ -64,7 +123,7 @@ public final class Goals {
 	public static List<Goal> open(Predicate<String> readable, Predicate<Goal> mastered) {
 		List<Goal> open = new ArrayList<>();
 		for (Goal.Shape shape : Goal.Shape.values()) {
-			List<Goal> these = ALL.stream().filter(goal -> goal.shape() == shape && goal.cards().stream().allMatch(readable)).toList();
+			List<Goal> these = all().stream().filter(goal -> goal.shape() == shape && goal.cards().stream().allMatch(readable)).toList();
 			open.addAll(these);
 			long done = these.stream().filter(mastered).count();
 			boolean exhausted = these.stream().allMatch(mastered);

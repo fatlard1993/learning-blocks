@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "phonics-justfatlard:plush",
+  "properties": {
+    "kind": "puffin"
+  },
+  "item": "phonics-justfatlard:plush_puffin",
+  "height": 0.562,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

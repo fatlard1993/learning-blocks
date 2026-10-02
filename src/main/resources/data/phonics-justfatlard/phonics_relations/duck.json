@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "phonics-justfatlard:plush",
+  "properties": {
+    "kind": "duck"
+  },
+  "item": "phonics-justfatlard:plush_duck",
+  "height": 0.625,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

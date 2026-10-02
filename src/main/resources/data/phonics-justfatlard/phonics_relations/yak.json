@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "phonics-justfatlard:plush",
+  "properties": {
+    "kind": "yak"
+  },
+  "item": "phonics-justfatlard:plush_yak",
+  "height": 0.625,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

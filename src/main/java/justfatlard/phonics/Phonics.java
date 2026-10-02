@@ -98,7 +98,8 @@ public class Phonics implements ModInitializer {
 
 	/** A plushie: a soft toy, any of the set by its {@code kind}, to keep, place and hear. */
 	public static final justfatlard.phonics.plush.PlushBlock PLUSH = new justfatlard.phonics.plush.PlushBlock(BlockBehaviour.Properties.of()
-		.strength(0.3F, 1.0F)
+		// Breaks at one punch, like a torch: a toy is easy to pick back up.
+		.instabreak()
 		.sound(SoundType.WOOL)
 		.noOcclusion()
 		.setId(ResourceKey.create(Registries.BLOCK, PLUSH_ID)));
@@ -133,10 +134,11 @@ public class Phonics implements ModInitializer {
 		PandoricalApi.content().registerBlock(PLUSH_ID.toString(), new BlockRegistration()
 			.baseBlock("minecraft:white_wool")
 			.interactive()
-			.strength(0.3F)
+			.strength(0.0F)
 			.requiresCorrectTool(false));
 		justfatlard.phonics.things.Things.register();
 		justfatlard.phonics.toy.Toys.register();
+		justfatlard.phonics.play.Play.register();
 		PandoricalApi.content().registerModAssets(MOD_ID);
 		Sounds.init();
 
@@ -183,6 +185,7 @@ public class Phonics implements ModInitializer {
 		CaptionSettings.register();
 		ServerSettings.register();
 
+		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new justfatlard.phonics.relate.Relations());
 		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new Words());
 		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new Captions());
 

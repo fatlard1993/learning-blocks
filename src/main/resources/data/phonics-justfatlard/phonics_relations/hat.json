@@ -1,0 +1,9 @@
+{
+  "is": "item",
+  "item": "minecraft:leather_helmet",
+  "height": 0.3,
+  "tags": [
+    "small"
+  ],
+  "wearable": true
+}

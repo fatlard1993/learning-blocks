@@ -1,0 +1,19 @@
+{
+  "is": "block",
+  "block": "minecraft:red_bed",
+  "properties": {
+    "part": "head"
+  },
+  "height": 0.5625,
+  "tags": [],
+  "holds": {
+    "on": {
+      "accepts": [
+        "small",
+        "creature"
+      ],
+      "y": 0.5625,
+      "scale": 0.6
+    }
+  }
+}

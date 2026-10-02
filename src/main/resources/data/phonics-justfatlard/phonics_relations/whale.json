@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "phonics-justfatlard:plush",
+  "properties": {
+    "kind": "whale"
+  },
+  "item": "phonics-justfatlard:plush_whale",
+  "height": 0.525,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

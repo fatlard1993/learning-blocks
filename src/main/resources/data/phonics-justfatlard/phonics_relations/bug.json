@@ -1,0 +1,15 @@
+{
+  "is": "plush",
+  "block": "phonics-justfatlard:plush",
+  "properties": {
+    "kind": "ladybug"
+  },
+  "item": "phonics-justfatlard:plush_ladybug",
+  "height": 0.425,
+  "tags": [
+    "small",
+    "plush",
+    "wearer",
+    "tiny"
+  ]
+}

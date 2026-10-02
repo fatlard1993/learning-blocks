@@ -1,0 +1,9 @@
+{
+  "is": "block",
+  "block": "minecraft:spruce_slab",
+  "height": 0.12,
+  "tags": [
+    "small"
+  ],
+  "lid": true
+}
