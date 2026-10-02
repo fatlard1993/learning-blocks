@@ -138,7 +138,19 @@ def within(text, part, **extra):
 	return {"text": text, "cut": ["span", i, i + len(part), WORD_TAIL], **extra}
 
 
+# Chunks that aren't words are cut from the big word they belong to, so "ster" sounds the
+# way it does in "lobster"; words a bare carrier says wrong get a carrier that says them right.
+CHUNK_OF = {"puf": "puffin", "munk": "chipmunk", "ster": "lobster", "lob": "lobster"}
+SAID_IN = {"bow": "I tied a bow."}
+
+
 def word_takes(word):
+	if word in CHUNK_OF:
+		text = f"The word is {CHUNK_OF[word]}."
+		i = text.index(word)
+		return [{"text": text, "cut": ["span", i, i + len(word)]}]
+	if word in SAID_IN:
+		return [within(SAID_IN[word], word)]
 	return [
 		within(f"The word is {word}.", word),
 		{"text": f"{word}.", "cut": ["whole"]},
