@@ -8,15 +8,26 @@
   "stage": 8,
   "picture_card": "glad",
   "outcome": {
-    "type": "particles",
-    "particle": "minecraft:happy_villager",
-    "count": 20,
-    "spread": 0.6,
-    "at": "above",
-    "sound": "minecraft:entity.villager.celebrate",
-    "pitch": 1.3,
-    "repeat": 3,
-    "every": 8
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "character",
+        "face": "glad",
+        "gesture": "dance",
+        "lasts": 90
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:happy_villager",
+        "count": 20,
+        "spread": 0.6,
+        "at": "above",
+        "sound": "minecraft:entity.villager.celebrate",
+        "pitch": 1.3,
+        "repeat": 3,
+        "every": 8
+      }
+    ]
   },
   "wrong": {
     "type": "sequence",

@@ -10,6 +10,11 @@
     "type": "sequence",
     "steps": [
       {
+        "type": "weather",
+        "weather": "drizzle",
+        "lasts": 160
+      },
+      {
         "type": "particles",
         "particle": "minecraft:splash",
         "count": 60,

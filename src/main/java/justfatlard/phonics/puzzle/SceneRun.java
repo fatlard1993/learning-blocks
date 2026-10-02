@@ -197,11 +197,55 @@ public final class SceneRun {
 				case Scene.Ring ring -> ring(ring);
 				case Scene.Prop prop -> prop(prop);
 				case Scene.Wrap wrap -> wrap(wrap);
+				case Scene.Feel feel -> feel(feel);
+				case Scene.Gesture gesture -> gesture(gesture);
+				case Scene.Sky sky -> sky(player, sky);
+				case Scene.Weather weather -> weather(player, weather);
 				default -> { }
 			}
 		}
+		// A villager just arrived says hello, if it is standing still to.
+		Entity first = character();
+		if (first instanceof Villager && acts.getOrDefault(first, "still").equals("still")) {
+			room.later(player, 8, p -> {
+				if (first.isAlive() && !solved) justfatlard.phonics.feel.Gestures.run(first, justfatlard.phonics.feel.Gestures.Gesture.WAVE);
+			});
+		}
 		Vec3 at = Vec3.atBottomCenterOf(spot);
 		level.sendParticles(ParticleTypes.POOF, at.x, at.y + 1.0, at.z, 16, 0.4, 0.6, 0.4, 0.02);
+	}
+
+	private void feel(Scene.Feel feel) {
+		justfatlard.phonics.feel.Feelings.Face face = justfatlard.phonics.feel.Feelings.Face.named(feel.face());
+		if (face == null) return;
+		List<Entity> who = feel.all() ? characters : characters.isEmpty() ? List.of() : List.of(characters.getFirst());
+		for (Entity one : who) {
+			Display.ItemDisplay bubble = justfatlard.phonics.feel.Feelings.show(one, face, 0);
+			if (bubble != null) made.add(bubble);
+		}
+	}
+
+	private void gesture(Scene.Gesture gesture) {
+		justfatlard.phonics.feel.Gestures.Gesture named = justfatlard.phonics.feel.Gestures.Gesture.named(gesture.gesture());
+		if (named == null) return;
+		List<Entity> who = gesture.all() ? characters : characters.isEmpty() ? List.of() : List.of(characters.getFirst());
+		for (Entity one : who) {
+			// It stands still for it: whatever it was up to stops.
+			acts.put(one, "still");
+			Vec3 home = homes.get(one);
+			if (home != null) one.snapTo(home.x, home.y, home.z, one.getYRot(), 0.0F);
+			justfatlard.phonics.feel.Gestures.run(one, named);
+		}
+	}
+
+	private void sky(ServerPlayer player, Scene.Sky sky) {
+		justfatlard.phonics.classroom.Sky.Time time = sky.named();
+		if (time != null) justfatlard.phonics.classroom.Sky.glide(player, time.ticks, 30);
+	}
+
+	private void weather(ServerPlayer player, Scene.Weather weather) {
+		justfatlard.phonics.classroom.Sky.Weather named = justfatlard.phonics.classroom.Sky.weatherNamed(weather.weather());
+		if (named != null) justfatlard.phonics.classroom.Sky.setWeather(player, named);
 	}
 
 	private @Nullable Entity create(net.minecraft.resources.Identifier id, boolean baby) {
@@ -241,7 +285,7 @@ public final class SceneRun {
 	private void bubble(Scene.Bubble bubble) {
 		Display.TextDisplay text = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
 		if (text == null) return;
-		Vec3 at = head().add(0, 0.55, 0);
+		Vec3 at = head().add(0, bubbleLift(), 0);
 		text.snapTo(at.x, at.y, at.z, 0, 0);
 		text.setBillboardConstraints(Display.BillboardConstraints.CENTER);
 		text.setText(Component.literal(bubble.text()).withStyle(style -> style.withColor(TextColor.fromRgb(bubble.color())).withBold(true)));
@@ -249,6 +293,12 @@ public final class SceneRun {
 		level.addFreshEntity(text);
 		bubbles.add(text);
 		made.add(text);
+	}
+
+	/** How far over the head a thought bubble floats: higher in a scene with feelings, clear of the face in its bubble. */
+	private double bubbleLift() {
+		boolean feels = scene.setup().stream().anyMatch(step -> step instanceof Scene.Feel) || scene.solve().stream().anyMatch(step -> step instanceof Scene.Feel);
+		return feels ? 1.35 : 0.55;
 	}
 
 	private static final double[][] LITTER_AT = {{-1.3, 0.3}, {0.2, 0.7}, {1.2, 0.1}, {-0.5, 1.4}, {0.9, 1.5}, {-1.8, 1.2}, {1.7, 0.9}, {-0.2, 0.0}};
@@ -458,7 +508,7 @@ public final class SceneRun {
 			}
 			Entity who = character();
 			if (who != null && acts.getOrDefault(who, "still").equals("wander")) for (Display.TextDisplay bubble : bubbles) {
-				Vec3 at = head().add(0, 0.55, 0);
+				Vec3 at = head().add(0, bubbleLift(), 0);
 				bubble.snapTo(at.x, at.y, at.z, 0, 0);
 			}
 		}
@@ -535,6 +585,10 @@ public final class SceneRun {
 			case Scene.Effect effect -> BuiltInRegistries.MOB_EFFECT.get(effect.effect()).ifPresent(found ->
 				player.addEffect(new MobEffectInstance(found, effect.duration(), effect.amplifier())));
 			case Scene.Hut hut -> room.hut(player, spot, hut.lasts(), true);
+			case Scene.Feel feel -> feel(feel);
+			case Scene.Gesture gesture -> gesture(gesture);
+			case Scene.Sky sky -> sky(player, sky);
+			case Scene.Weather weather -> weather(player, weather);
 			default -> { }
 		}
 	}
@@ -774,12 +828,16 @@ public final class SceneRun {
 		level.sendParticles(ParticleTypes.HAPPY_VILLAGER, at.x, at.y, at.z, 16, 0.5, 0.4, 0.5, 0.0);
 		SoundEvent cheer = main instanceof Villager ? SoundEvents.VILLAGER_CELEBRATE : SoundEvents.AMETHYST_BLOCK_CHIME;
 		level.playSound(null, at.x, at.y, at.z, cheer, SoundSource.NEUTRAL, 1.0F, 1.1F);
-		// A nod, if awake.
+		// Everyone glad now (unless the solve left a thought over them, a sleeper's Zzz), and a nod of
+		// thanks from the one it was about, if awake.
+		boolean thinking = scene.solve().stream().anyMatch(step -> step instanceof Scene.Bubble);
+		for (Entity who : characters) {
+			if (!who.isAlive() || thinking || who instanceof LivingEntity living && living.isSleeping()) continue;
+			Display.ItemDisplay glad = justfatlard.phonics.feel.Feelings.show(who, justfatlard.phonics.feel.Feelings.Face.GLAD, 80);
+			if (glad != null) made.add(glad);
+		}
 		if (main != null && !(main instanceof LivingEntity living && living.isSleeping())) {
-			for (int i = 0; i < 4; i++) {
-				float pitch = i % 2 == 0 ? 25.0F : 0.0F;
-				room.later(player, i * 3, p -> main.setXRot(pitch));
-			}
+			justfatlard.phonics.feel.Gestures.run(main, justfatlard.phonics.feel.Gestures.Gesture.NOD);
 		}
 	}
 
@@ -789,6 +847,7 @@ public final class SceneRun {
 	void end(@Nullable ServerPlayer player) {
 		for (Entity entity : made) {
 			if (entity instanceof LivingEntity living && living.isSleeping()) living.stopSleeping();
+			justfatlard.phonics.feel.Gestures.stop(entity);
 			entity.discard();
 		}
 		made.clear();

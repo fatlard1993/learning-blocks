@@ -18,13 +18,14 @@ import org.jspecify.annotations.Nullable;
 /**
  * Two-word phrases: an adjective the child has read and a creature word, "big pig", "six cod". The
  * phrase happens as one thing: the creature, made big, or red, or wet, or brought six times, or
- * brought to a party. A pair that cannot be shown is never offered.
+ * brought to a party, or feeling sad, glad or mad (a face in a bubble over it). A pair that
+ * cannot be shown is never offered.
  */
 public final class Phrases {
 	private Phrases() {}
 
 	/** The adjectives a phrase can start with, all words a child reads anyway. */
-	public static final List<String> ADJECTIVES = List.of("big", "red", "wet", "fun", "six");
+	public static final List<String> ADJECTIVES = List.of("big", "red", "wet", "fun", "six", "sad", "glad", "mad");
 
 	/** The creature a word brings, if that is what it does. */
 	static Outcome.@Nullable SpawnEntity creature(Word noun) {
@@ -82,6 +83,26 @@ public final class Phrases {
 					creature.setDeltaMovement(creature.getDeltaMovement().add(0, 0.4, 0));
 					creature.needsSync = true;
 					puff(creature, ParticleTypes.FIREWORK);
+				});
+			}
+			case "sad" -> {
+				justfatlard.phonics.feel.Feelings.show(creature, justfatlard.phonics.feel.Feelings.Face.SAD, 120);
+				for (int i = 0; i < 60; i += 6) room.later(player, i, p -> puff(creature, ParticleTypes.FALLING_WATER));
+			}
+			case "glad" -> {
+				justfatlard.phonics.feel.Feelings.show(creature, justfatlard.phonics.feel.Feelings.Face.GLAD, 120);
+				for (int i = 10; i < 40; i += 10) room.later(player, i, p -> {
+					creature.setDeltaMovement(creature.getDeltaMovement().add(0, 0.35, 0));
+					creature.needsSync = true;
+					puff(creature, ParticleTypes.HAPPY_VILLAGER);
+				});
+			}
+			case "mad" -> {
+				justfatlard.phonics.feel.Feelings.show(creature, justfatlard.phonics.feel.Feelings.Face.MAD, 120);
+				for (int i = 6; i < 50; i += 12) room.later(player, i, p -> {
+					creature.setDeltaMovement(creature.getDeltaMovement().add(0, 0.2, 0));
+					creature.needsSync = true;
+					puff(creature, ParticleTypes.ANGRY_VILLAGER);
 				});
 			}
 			default -> { }

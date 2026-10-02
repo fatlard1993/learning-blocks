@@ -41,6 +41,10 @@
         "type": "character"
       },
       {
+        "type": "feel",
+        "face": "sleepy"
+      },
+      {
         "type": "bubble",
         "text": "Zzz",
         "color": 11195647

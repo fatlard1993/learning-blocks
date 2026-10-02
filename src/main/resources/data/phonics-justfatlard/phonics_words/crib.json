@@ -60,6 +60,10 @@
         "baby": true
       },
       {
+        "type": "feel",
+        "face": "sleepy"
+      },
+      {
         "type": "bubble",
         "text": "Waah!",
         "color": 16757683

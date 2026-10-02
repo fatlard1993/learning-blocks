@@ -8,27 +8,8 @@
   "stage": 12,
   "icon": "minecraft:gray_wool",
   "outcome": {
-    "type": "sequence",
-    "steps": [
-      {
-        "type": "particles",
-        "particle": "minecraft:large_smoke",
-        "count": 20,
-        "spread": 0.6,
-        "at": "above"
-      },
-      {
-        "type": "particles",
-        "particle": "minecraft:falling_water",
-        "count": 20,
-        "spread": 0.7,
-        "at": "above",
-        "sound": "minecraft:weather.rain.above",
-        "pitch": 0.8,
-        "repeat": 10,
-        "every": 4
-      }
-    ]
+    "type": "weather",
+    "weather": "storm"
   },
   "wrong": {
     "type": "particles",

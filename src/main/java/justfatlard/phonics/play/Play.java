@@ -61,8 +61,20 @@ public final class Play {
 	/** One play a second at most, a block. */
 	private static final int EVERY = 20;
 
-	private record Running(ServerLevel level, BlockPos pos, Anim anim, Display.@Nullable BlockDisplay copy, @Nullable Display contents, float facingYaw,
-			Matrix4f rest, long started) {}
+	/**
+	 * A play going on: the displays playing the block (one of the whole block, or the body and each
+	 * moving part; none for something bobbing in a tub), what is in it, and where it rests.
+	 */
+	private record Running(ServerLevel level, BlockPos pos, Anim anim, List<Piece> pieces, @Nullable Display contents, float facingYaw,
+			Matrix4f rest, long started) {
+		/** The first display, which stands for the rest: gone, and the play is over. */
+		@Nullable Display copy() {
+			return pieces.isEmpty() ? null : pieces.getFirst().display();
+		}
+	}
+
+	/** One display playing a block: the whole of it (no part), its body, or one part. */
+	private record Piece(Display display, @Nullable String body, Anim.@Nullable Part part) {}
 
 	private static final List<Running> running = new ArrayList<>();
 	private static final Map<String, Long> lastPlayed = new HashMap<>();
@@ -96,24 +108,72 @@ public final class Play {
 		Long last = lastPlayed.get(key(level, pos));
 		if (last != null && now - last < EVERY) return false;
 		lastPlayed.put(key(level, pos), now);
-		Display.BlockDisplay copy = EntityTypes.BLOCK_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
-		if (copy == null) return false;
-		Vec3 foot = Vec3.atBottomCenterOf(pos);
-		copy.snapTo(foot.x, foot.y, foot.z, 0, 0);
-		copy.setBlockState(state);
-		copy.setTransformation(new com.mojang.math.Transformation(new Matrix4f().translate(-0.5F, 0, -0.5F)));
-		copy.addTag(PLAYING);
-		level.addFreshEntity(copy);
 		float yaw = facingYaw(state);
+		List<Piece> pieces = pieces(level, pos, state, anim, yaw);
+		if (pieces.isEmpty()) return false;
 		Display contents = contentsAt(level, pos);
 		Matrix4f rest = contents == null ? new Matrix4f() : restPose(contents, state, holdOf(level, pos, contents));
 		level.setBlock(pos, state.setValue(HIDDEN, true), Block.UPDATE_CLIENTS);
 		// Whatever happens before the end, this shows it again.
 		level.scheduleTick(pos, state.getBlock(), anim.length() + 10);
-		running.add(new Running(level, pos.immutable(), anim, copy, contents, yaw, rest, now));
+		running.add(new Running(level, pos.immutable(), anim, pieces, contents, yaw, rest, now));
 		lastStarted = BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath() + ":" + pos.toShortString();
 		step(running.getLast(), 0);
 		return true;
+	}
+
+	/**
+	 * The displays that play a block: one of the whole block; or, for an animation of a toy drawn in
+	 * pieces, an item display of its body and one of each part, each with its piece's model.
+	 */
+	private static List<Piece> pieces(ServerLevel level, BlockPos pos, BlockState state, Anim anim, float facingYaw) {
+		List<Piece> pieces = new ArrayList<>();
+		Vec3 foot = Vec3.atBottomCenterOf(pos);
+		if (anim.pieces() == null || anim.parts().isEmpty()) {
+			Display.BlockDisplay copy = EntityTypes.BLOCK_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
+			if (copy == null) return pieces;
+			copy.setBlockState(state);
+			copy.setTransformation(new com.mojang.math.Transformation(new Matrix4f().translate(-0.5F, 0, -0.5F)));
+			pieces.add(new Piece(copy, null, null));
+		} else {
+			Display.ItemDisplay body = pieceDisplay(level, anim.pieces() + "_body");
+			if (body == null) return pieces;
+			pieces.add(new Piece(body, anim.pieces(), null));
+			for (Anim.Part part : anim.parts()) {
+				Display.ItemDisplay shown = pieceDisplay(level, anim.pieces() + "_" + part.name());
+				if (shown != null) pieces.add(new Piece(shown, null, part));
+			}
+		}
+		for (Piece piece : pieces) {
+			piece.display().snapTo(foot.x, foot.y, foot.z, 0, 0);
+			if (piece.display() instanceof Display.ItemDisplay) {
+				piece.display().setTransformation(new com.mojang.math.Transformation(pieceMatrix(new Matrix4f(), facingYaw, piece.part(), 0)));
+			}
+			piece.display().addTag(PLAYING);
+			level.addFreshEntity(piece.display());
+		}
+		return pieces;
+	}
+
+	private static Display.@Nullable ItemDisplay pieceDisplay(ServerLevel level, String model) {
+		Display.ItemDisplay display = EntityTypes.ITEM_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
+		if (display == null) return null;
+		ItemStack stack = new ItemStack(net.minecraft.world.item.Items.PAPER);
+		stack.set(net.minecraft.core.component.DataComponents.ITEM_MODEL, Phonics.id("toy_part/" + model));
+		display.setItemStack(stack);
+		display.setItemTransform(ItemDisplayContext.NONE);
+		return display;
+	}
+
+	/**
+	 * Where a piece is drawn, from the whole toy's pose: the block's model as an item draws it
+	 * (about its middle, turned half round), stood on the foot, turned the way the toy faces, and
+	 * the part in its own pose.
+	 */
+	private static Matrix4f pieceMatrix(Matrix4f whole, float facingYaw, Anim.@Nullable Part part, int tick) {
+		Matrix4f matrix = new Matrix4f(whole).translate(0, 0.5F, 0).rotateY(facingYaw + (float) Math.PI);
+		if (part != null) matrix.mul(Anim.partMatrix(part, Anim.partAt(part, tick)));
+		return matrix.rotateY((float) Math.PI);
 	}
 
 	private static void tick(MinecraftServer server) {
@@ -122,7 +182,7 @@ public final class Play {
 			int at = (int) (run.level().getGameTime() - run.started());
 			// Unloaded or broken mid-play: the scheduled tick (or the break) shows it again.
 			if (!run.level().isLoaded(run.pos()) || run.copy() != null && run.copy().isRemoved()) {
-				if (run.copy() != null) run.copy().discard();
+				discard(run);
 				it.remove();
 				continue;
 			}
@@ -135,16 +195,22 @@ public final class Play {
 		}
 	}
 
-	/** Everything that happens at this tick: a pose to glide to, a sound, a puff. */
+	/**
+	 * Everything that happens at this tick: a pose to glide to, a sound, a puff. At each tick
+	 * something is posed at, every display is told where to be by the next one, and glides there.
+	 */
 	private static void step(Running run, int at) {
-		List<Anim.Key> keys = run.anim().keys();
-		for (int i = 0; i < keys.size(); i++) {
-			Anim.Key key = keys.get(i);
-			if (key.tick() != at) continue;
-			Anim.Key next = i + 1 < keys.size() ? keys.get(i + 1) : key;
-			int glide = Math.max(1, next.tick() - key.tick());
-			Matrix4f pose = next.matrix(run.facingYaw());
-			if (run.copy() != null) pose(run.copy(), new Matrix4f(pose).translate(-0.5F, 0, -0.5F), glide);
+		java.util.SortedSet<Integer> ticks = run.anim().poseTicks();
+		if (ticks.contains(at)) {
+			java.util.SortedSet<Integer> later = ticks.tailSet(at + 1);
+			int next = later.isEmpty() ? at : later.first();
+			int glide = Math.max(1, next - at);
+			Matrix4f pose = run.anim().wholeAt(next).matrix(run.facingYaw());
+			for (Piece piece : run.pieces()) {
+				Matrix4f matrix = piece.display() instanceof Display.BlockDisplay
+					? new Matrix4f(pose).translate(-0.5F, 0, -0.5F) : pieceMatrix(pose, run.facingYaw(), piece.part(), next);
+				pose(piece.display(), matrix, glide);
+			}
 			if (run.contents() != null && !run.contents().isRemoved()) pose(run.contents(), new Matrix4f(pose).mul(run.rest()), glide);
 		}
 		for (Anim.Event event : run.anim().events()) {
@@ -165,8 +231,12 @@ public final class Play {
 	private static void finish(Running run) {
 		if (run.contents() != null && !run.contents().isRemoved()) pose(run.contents(), new Matrix4f(run.rest()), 1);
 		if (run.copy() == null) return;
-		run.copy().discard();
+		discard(run);
 		show(run.level(), run.pos());
+	}
+
+	private static void discard(Running run) {
+		for (Piece piece : run.pieces()) piece.display().discard();
 	}
 
 	/** The block shown again, if it is still one of ours, hidden. */
@@ -193,7 +263,7 @@ public final class Play {
 	private static void stopAll() {
 		for (Running run : running) {
 			if (run.copy() == null) continue;
-			run.copy().discard();
+			discard(run);
 			if (run.level().isLoaded(run.pos())) show(run.level(), run.pos());
 		}
 		running.clear();
@@ -304,7 +374,7 @@ public final class Play {
 		for (Iterator<Running> it = running.iterator(); it.hasNext(); ) {
 			Running run = it.next();
 			if (run.level() == level && run.pos().equals(pos)) {
-				if (run.copy() != null) run.copy().discard();
+				discard(run);
 				it.remove();
 			}
 		}
@@ -321,7 +391,7 @@ public final class Play {
 	public static void playContents(ServerLevel level, BlockPos pos, Display contents, Anim anim) {
 		if (playing(level, pos)) return;
 		Matrix4f rest = restPose(contents, level.getBlockState(pos), holdOf(level, pos, contents));
-		running.add(new Running(level, pos.immutable(), anim, null, contents, 0, rest, level.getGameTime()));
+		running.add(new Running(level, pos.immutable(), anim, List.of(), contents, 0, rest, level.getGameTime()));
 		step(running.getLast(), 0);
 	}
 
@@ -358,7 +428,7 @@ public final class Play {
 		for (Iterator<Running> it = running.iterator(); it.hasNext(); ) {
 			Running run = it.next();
 			if (run.level() == level && run.pos().equals(pos)) {
-				if (run.copy() != null) run.copy().discard();
+				discard(run);
 				it.remove();
 			}
 		}

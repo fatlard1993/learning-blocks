@@ -26,7 +26,7 @@ record RoomLayout(BlockPos origin) {
 	static final int WORD_Y = 2;
 
 	static final int HALF = 6;
-	static final int HEIGHT = 6;
+	static final int HEIGHT = justfatlard.phonics.classroom.Places.WALL_HEIGHT;
 	static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
 	static final BlockState BOARD = Blocks.DYED_TERRACOTTA.green().defaultBlockState();
 
@@ -163,7 +163,8 @@ record RoomLayout(BlockPos origin) {
 			for (int z = -HALF; z <= HALF; z++) {
 				for (int y = -1; y <= HEIGHT; y++) {
 					at.setWithOffset(origin, x, y, z);
-					boolean edge = Math.abs(x) == HALF || Math.abs(z) == HALF || y == HEIGHT;
+					// Walls, not a lid: the sky stays open, so a child's own rain and snow can fall in.
+					boolean edge = Math.abs(x) == HALF || Math.abs(z) == HALF;
 					BlockState state;
 					if (edge) state = Blocks.BARRIER.defaultBlockState();
 					else if (y == -1) state = Blocks.BIRCH_PLANKS.defaultBlockState();
@@ -174,6 +175,9 @@ record RoomLayout(BlockPos origin) {
 				}
 			}
 		}
+
+		// The room's air: the classroom's own biome, which can rain or (turned cold) snow.
+		justfatlard.phonics.classroom.Sky.paint(level, origin, justfatlard.phonics.classroom.Sky.BIOME);
 
 		level.setBlock(button(), Blocks.STONE_BUTTON.defaultBlockState()
 			.setValue(ButtonBlock.FACE, AttachFace.WALL)

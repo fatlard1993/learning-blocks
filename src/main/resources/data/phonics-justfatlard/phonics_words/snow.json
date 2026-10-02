@@ -9,13 +9,45 @@
     null,
     "ow_long"
   ],
-  "stage": 14,
-  "puzzle": false,
+  "stage": 13,
+  "icon": "minecraft:snowball",
   "outcome": {
+    "type": "weather",
+    "weather": "snow"
+  },
+  "wrong": {
     "type": "particles",
-    "particle": "minecraft:end_rod",
-    "count": 8,
-    "spread": 0.4,
-    "at": "above"
+    "particle": "minecraft:snowflake",
+    "count": 30,
+    "spread": 0.6,
+    "at": "player",
+    "sound": "minecraft:block.powder_snow.step",
+    "pitch": 1.2
+  },
+  "scene": {
+    "line": "He wants to build a snowman!",
+    "setup": [
+      {
+        "type": "character"
+      },
+      {
+        "type": "feel",
+        "face": "sad"
+      },
+      {
+        "type": "prop",
+        "item": "minecraft:carrot"
+      }
+    ],
+    "solve": [
+      {
+        "type": "weather",
+        "weather": "snow"
+      },
+      {
+        "type": "gesture",
+        "gesture": "dance"
+      }
+    ]
   }
 }

@@ -57,6 +57,10 @@
         "baby": true
       },
       {
+        "type": "feel",
+        "face": "sad"
+      },
+      {
         "type": "ambient",
         "id": "tears",
         "particle": "minecraft:falling_water",

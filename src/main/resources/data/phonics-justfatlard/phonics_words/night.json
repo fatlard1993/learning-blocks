@@ -1,0 +1,73 @@
+{
+  "tiles": [
+    "n",
+    "igh",
+    "t"
+  ],
+  "stage": 13,
+  "picture_card": "night",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "sky",
+        "time": "night",
+        "glide": 50
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:end_rod",
+        "count": 16,
+        "spread": 1.2,
+        "at": "above",
+        "sound": "minecraft:block.amethyst_block.chime",
+        "pitch": 0.7
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sky",
+    "time": "night",
+    "flicker": true
+  },
+  "scene": {
+    "line": "It's too bright to sleep!",
+    "setup": [
+      {
+        "type": "character"
+      },
+      {
+        "type": "feel",
+        "face": "sleepy"
+      },
+      {
+        "type": "ambient",
+        "id": "yawn",
+        "particle": "minecraft:white_smoke",
+        "at": "face",
+        "count": 1,
+        "spread": 0.05,
+        "every": 40,
+        "sound": "minecraft:entity.villager.ambient",
+        "pitch": 0.6,
+        "sound_every": 50
+      }
+    ],
+    "solve": [
+      {
+        "type": "sky",
+        "time": "night"
+      },
+      {
+        "type": "place",
+        "block": "minecraft:white_bed",
+        "then": "sleep"
+      },
+      {
+        "type": "bubble",
+        "text": "Zzz",
+        "color": 11195647
+      }
+    ]
+  }
+}

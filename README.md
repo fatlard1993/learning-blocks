@@ -4,7 +4,7 @@ A server-side Fabric mod of reading puzzles for young children, in a quiet class
 
 ## The classroom
 
-Press the **Phonics** button on the action menu (or type `/phonics`) and you are taken to your own classroom: a small room with a green chalkboard, open to a sky that is always daytime and never rains. Every child gets a room of their own, far from everyone else's, so nobody's reading is interrupted and nobody sees anybody else's.
+Press the **Phonics** button on the action menu (or type `/phonics`) and you are taken to your own classroom: a small room with a green chalkboard, open to the sky: a clear noon, unless a word says otherwise, and every child's sky is their own (one child's night or rain is nobody else's). Every child gets a room of their own, far from everyone else's, so nobody's reading is interrupted and nobody sees anybody else's.
 
 Nothing in the classroom can get hurt and nobody gets hungry. It's survival, so that letter tiles can be knocked loose and set down the ordinary way, but that is all: the only blocks that break are letter tiles, a tile can only go in the word's gap or on the floor, nothing else can be placed, and nothing a word puts in the room can be opened, slept in or taken. You can't fall out of it either: step off the edge and you're back on the floor.
 
@@ -30,7 +30,13 @@ Everything the room says is spoken, in one voice (and the lines said most often 
 
 Once a child has read a word, it can come back as a little problem instead of "Can you make...?". There's no picture and no word said: the room acts something out ("Oh no! He's getting wet!", a villager under a rain cloud), asks "What can help?", and offers the usual letters. The right word fixes it (the hat flies onto his head and the cloud drifts away) and the room says "That helped!". A wrong word does its usual silly thing while the rain keeps falling, and they can try again. Clicking the character asks again.
 
-The situations: hat (rain), lit (the room goes dark), bun (a rumbling tummy, crumbs, and hungry looks at the button), cot (a sleepy villager), hot (a shivering villager in the snow; a campfire comes to warm him), map (a lost villager pacing about), bin (litter on the floor), hug (a sad kitten), fan (a hot villager), cup (a thirsty villager by a cauldron), sit (two pups bouncing about; sit calms them), fed (a hungry pig, cow and sheep), hop (a cake behind a little fence; hop gives the jump to get over it), cut (a villager tangled in vines), wet (droopy flowers that bloom once watered), hum (a baby villager who can't sleep), nap (a tired dog), hut (a villager blown about by the wind, leaves flying), mop (a puddle), rod (a villager by a pond who wants to go fishing), vet (a puppy that needs an animal doctor, and a cleric comes), tug (a villager stuck in the floor), pop (a pinata to burst, only with the pinata mod installed), ship (a villager who can't get across the water; a boat comes), fish (a hungry kitty), bone (a puppy that wants something to chew), milk (a thirsty baby villager), hay (a hungry foal), tree (a parrot with nowhere to sit; a little tree comes) and sheep (a villager who needs some wool; a sheep comes). One round in four is a situation, once there's a read word with one; operators can turn them off or change how often on the prize editor's General tab (`puzzles` in prizes.json). They count as lessons and pay like any other round, and everything in them is harmless and gone at the next round and on the way out, the dark included.
+The situations: hat (rain), lit (the room goes dark), bun (a rumbling tummy, crumbs, and hungry looks at the button), cot (a sleepy villager), hot (a shivering villager in the snow; a campfire comes to warm him), map (a lost villager pacing about), bin (litter on the floor), hug (a sad kitten), fan (a hot villager), cup (a thirsty villager by a cauldron), sit (two pups bouncing about; sit calms them), fed (a hungry pig, cow and sheep), hop (a cake behind a little fence; hop gives the jump to get over it), cut (a villager tangled in vines), wet (droopy flowers that bloom once watered), hum (a baby villager who can't sleep), nap (a tired dog), hut (a villager blown about by the wind, leaves flying), mop (a puddle), rod (a villager by a pond who wants to go fishing), vet (a puppy that needs an animal doctor, and a cleric comes), tug (a villager stuck in the floor), pop (a pinata to burst, only with the pinata mod installed), ship (a villager who can't get across the water; a boat comes), fish (a hungry kitty), bone (a puppy that wants something to chew), milk (a thirsty baby villager), hay (a hungry foal), tree (a parrot with nowhere to sit; a little tree comes), sheep (a villager who needs some wool; a sheep comes), night (a sleepy villager who can't sleep in broad daylight; night falls and a bed comes) and snow (a villager who wants to build a snowman). The character's feeling shows in a little bubble over its head (a sad kitten, a cold villager, a hot one, a sleepy one, a lost and scared one), a villager waves hello when it arrives, and once it is solved everyone is glad and the one it was about nods thank you. One round in four is a situation, once there's a read word with one; operators can turn them off or change how often on the prize editor's General tab (`puzzles` in prizes.json). They count as lessons and pay like any other round, and everything in them is harmless and gone at the next round and on the way out, the dark included.
+
+## Sky, weather and feelings
+
+Every child's sky is their own. A word can turn it to dusk, night (the stars come out and the real moon rises), dawn or day (the sun coming up), and make it rain, drizzle, snow or storm (a rumble and a flash in the clouds far off, never a real lightning bolt), or float a fat white cloud over the room; another child, in their own room, keeps their clear noon. It stays so until the next round, which brings a clear noon back (the sun coming up quickly if it was dark), and going home gives back the world's own sky. Dark puts the lights out for a moment, then clicks them back on.
+
+Feelings show as a little bubble with a face in it over whoever feels them: glad, sad, mad, sleepy, surprised, scared (but cute), in love, cold and hot. Characters, creatures, Bob and plushies have them. Doing words are done by a character standing still to do them: a nod, a shake of the head, a wave (a hand held up), a bow, a dance, ducking down, a jump, a spin, hiding behind a bush and peeking out, a shiver, a stomp; each puts it back exactly where it was.
 
 ## Reading together
 
@@ -54,11 +60,11 @@ Once a letter's sound is mastered in the letters level, its capital comes in too
 
 After stage 5 (and past every stage), one round in eight is a plural of a word the child has read: cat with a gap before it and a gap after, and on the floor the first letters of the family (c, b) and an s. Cats: three cats. Bats: three bats. The s says /s/ in cats, bats and pups, and /z/ in dogs, pigs, hogs, hens and cubs. Only creatures have plurals.
 
-One round in seven is a two-word phrase: an adjective the child has read (big, red, wet, fun, six) above a creature word to build. The button reads the adjective, sounds out the noun, then says the two together, and the phrase happens: big pig is one big pig, six cod is six cod, red makes a sheep red (anything else gets a red puff), wet drips, fun makes it hop with sparkles. Building another creature word of the family is friendly: its own phrase happens instead (big hog in a big pig round); any other word does what it always does (big makes you grow). Building bats in a cats round brings three bats. Only pairs the room can show are offered, and only once both words have been read.
+One round in seven is a two-word phrase: an adjective the child has read (big, red, wet, fun, six, sad, glad, mad) above a creature word to build. The button reads the adjective, sounds out the noun, then says the two together, and the phrase happens: big pig is one big pig, six cod is six cod, red makes a sheep red (anything else gets a red puff), wet drips, fun makes it hop with sparkles, and sad, glad and mad put a face over it (a sad pig in tears, a glad dog hopping, a mad cat huffing). Building another creature word of the family is friendly: its own phrase happens instead (big hog in a big pig round); any other word does what it always does (big makes you grow). Building bats in a cats round brings three bats. Only pairs the room can show are offered, and only once both words have been read.
 
 ## Plushies and toys
 
-Thirty-four soft toys, each a word Minecraft has no creature or thing for: owl, duck, ant, rat, ox, shark, crab, worm, moth, yak, teddy (bear), snail, seal, mouse, snake, skunk, hawk, ladybug, mole, crow, pug, deer, whale, fly, beetle and mice (three little mice in a row), and with the big words bobcat, catfish, starfish, chipmunk, puffin, robin, lobster and hedgehog. They are chunky, felt-coloured, big-eyed, and about half a block tall. Put one down anywhere on the server and it faces you; right-click it and it squishes down and bounces back up, squeaks, puffs a heart and says its word, with a caption; one punch breaks it (like a torch), and it comes back as itself.
+Thirty-four soft toys, each a word Minecraft has no creature or thing for: owl, duck, ant, rat, ox, shark, crab, worm, moth, yak, teddy (bear), snail, seal, mouse, snake, skunk, hawk, ladybug, mole, crow, pug, deer, whale, fly, beetle and mice (three little mice in a row), and with the big words bobcat, catfish, starfish, chipmunk, puffin, robin, lobster and hedgehog. They are chunky, felt-coloured, big-eyed, and about half a block tall. Put one down anywhere on the server and it faces you; right-click it and it squishes down and bounces back up, squeaks, puffs a heart, shows a little loving (or glad) face and says its word, with a caption; one punch breaks it (like a torch), and it comes back as itself.
 
 In lessons they stand in for the animals: reading owl brings an owl plushie popping out of the button, a lesson prop that is cleared at the next word (not a prize); built wrong, it pops out and you spin round. Bug is the ladybug now, and hug brings the teddy as well as the hearts.
 
@@ -68,7 +74,7 @@ Nineteen toys, the second family to collect, in the same chunky style: a drum, a
 
 They can still be prizes. `{ "plush": "random_new" }` gives a plushie the child hasn't got yet (any one, once they have them all), `{ "plush": "owl" }` that one; `{ "toy": "random_new" }` and `{ "toy": "drum" }` the same for toys; and `{ "toybox": "random_new" }` one they haven't got from either, every missing one equally likely. New prize files no longer give a random toy for each stage band and milestone, since mastery earns them; a file from before keeps what it had. To switch an existing file over, take the `{ "toybox": "random_new" }` rows out of `stage_complete` and the milestones (the editor's ✕ on each row does it). Each prize list on the editor has **Add a plushie** and **Add a toy**, and a row's arrows go through "A new one" and every kind.
 
-**Play.** Every toy, put down anywhere, plays when right-clicked (once a second at most), saying its word as it goes: the car zooms a little loop and parks, the van honks and bounces, the bus beeps and rocks, the truck tips up with a rumble, the train chugs forward and back puffing smoke, the jet takes off, circles overhead and lands, the ship bobs on the waves, the top spins and wobbles to a stop, the drum bounces on each beat, the kite rises and flutters, the stacking rings pop up and restack, the bowling pin tips over and springs back, the doll dances, the ABC block tumbles, the sock puppet chatters, the crib rocks to a lullaby, the net swishes and catches a butterfly, and the cap and wig spin on their stands. Each moves as one piece, and each ends exactly where it began. Toys, plushies and the props (bin, bathtub, box, jar, fan, mop, corn, mug, desk, fork) all break at a punch, outside the classroom; inside it the room's own rules still hold.
+**Play.** Every toy, put down anywhere, plays when right-clicked (once a second at most), saying its word as it goes: the car zooms a little loop on turning wheels and parks, the van honks and bounces, the bus beeps, folds its doors open and shut and rocks, the truck rumbles and its dump bed tips up on its hinge and back down, the train chugs forward and back on its wheels puffing smoke, the jet takes off with its propeller whirring, circles overhead and lands, the ship bobs on the waves, the top spins and wobbles to a stop, the drum bounces on each beat, the kite rises and flutters with its tail waving, the stacking rings come off the post one by one into a pile beside it and go back on, biggest first, the bowling pin tips over and springs back, the doll dances, the ABC block tumbles, the sock puppet's mouth flaps as it chatters, the crib rocks to a lullaby, the net swishes and catches a butterfly, and the cap and wig spin on their stands. Most move as one piece; the truck, bus, rings, sock puppet, kite, jet, car and train move their parts as well; each ends exactly where it began. Toys, plushies and the props (bin, bathtub, box, jar, fan, mop, corn, mug, desk, fork) all break at a punch, outside the classroom; inside it the room's own rules still hold.
 
 **Toys together.** A toy or plushie held and used on another goes in, on or onto it: the doll or any plushie into the crib (tucked in), toys and plushies into the box, a plushie into the bathtub (where it floats and bobs), the little critters (ant, ladybug, worm, mice, fly, beetle, snail, moth, crab) into the jar or the mug, anything small into the bin or onto the desk; a plushie or the doll rides the car, van, bus, truck, train, ship or jet, and goes with it when it plays; the cap or the wig goes on a plushie or the doll. One thing at a time. Sneak and right-click with an empty hand to take it back out; break the toy and both drop. What is put there stays, through a reload or a restart. These are the same rules Bob follows (see Sentences with Bob).
 
@@ -76,7 +82,7 @@ They can still be prizes. `{ "plush": "random_new" }` gives a plushie the child 
 
 Props are things words need that Minecraft hasn't got and that aren't toys, plain objects to put down, not collected: a bin, a bathtub, a cardboard box (open, its flaps folded out), a glass jar, a desk fan, a mop, an ear of corn, a mug, a school desk and a fork. A key is Minecraft's trial key, so there is no new one.
 
-A word with no item at all can have a picture card, `"picture_card": "<name>"`: a small pixel picture (`textures/card/<name>.png` in the mod) on a panel beside the word, drawn by Pandorical. The moon, a sad face, a glad face, a mouth and a town have one. Only players with Pandorical see a card, and it is gone with the round.
+A word with no item at all can have a picture card, `"picture_card": "<name>"`: a small pixel picture (`textures/card/<name>.png` in the mod) on a panel beside the word, drawn by Pandorical. The moon, a sad face, a glad face, a mouth and a town have one, and so do night, day, dark, dusk, dawn, mad, cold, nod, wave and hide. Only players with Pandorical see a card, and it is gone with the round.
 
 ## Big words
 
@@ -107,6 +113,8 @@ From stage 5, one round in five (`tell_bob_every`; `tell_bob` switches it off) i
 - **Little words**: every fourth of Bob's rounds, the board shows three words, "owl in box", and the floor two framed pictures of the same two things, one in and one on (or under). The child reads it and clicks the picture it says; the other gets "Hmm, try again". It practises the little words, and is remembered like a sentence.
 
 Bob's world is the same as the child's: one set of rules says what goes in, on, under or onto what (`phonics_relations/<thing>.json`, written by `generate_relations.py`), for Bob, the pictures, the toys in the world and the situations. Bob's goals are the 28 written ones and every sentence the rules make with a small thing and a thing that takes it ("put doll in crib", "put owl in car", "put duck in tub", "put cap on owl", "put ant in jar"): about 950 in all, of which a child is only ever given ones whose words they read (about 140 at stage 5, 320 at stage 8, 680 at stage 12). Silly sentences have every toy, plushie and prop the child can read. Crib has a situation now: the baby can't sleep, and the crib comes with the doll tucked in.
+
+Bob waves hello when he arrives, nods as he says "Okay!", shakes his head, surprised, at a sentence that isn't it, and jumps for joy when it is. Goals made from the rules lean towards plushies and toys: one with only props in it (put mug on desk) comes at most one time in five (`bob_prop_share`, on the editor's General tab), and never two in a row.
 
 Sentences are mastered the way words are, clean on three different days, and the progress screen has a Sentences section: each sentence tried, its clean days and misses.
 
@@ -149,11 +157,11 @@ Long stages come in bands, so the gate (and "You're ready for new words!", and `
 | Band | Words | Rounds at mastery 3 |
 |------|-------|---------------------|
 | 1a | ant nap pat sat tap | 15 |
-| 1b | cap cat man map mat pad sad tag | 24 |
+| 1b | cap cat man map mat pad sad tag mad | 27 |
 | 1c | bat hat rat bag ham rag ram fan van jam wag yap zap yak wax | 45 |
 | 2a | pin sip sit tip pig dig kid | 21 |
 | 2b | bin hit rip big hid fin lit win jig lid wig six zip mix fix | 45 |
-| 3a | pop pot top cot mop cod dog hop | 24 |
+| 3a | pop pot top cot mop nod cod dog hop | 27 |
 | 3b | hot hog rod jog log ox box fox | 24 |
 | 4a | pup sun cup cut pug tug gum mud mug bun bus | 33 |
 | 4b | hut run tub bug cub hug hum rug fun yum | 30 |
@@ -164,16 +172,16 @@ Long stages come in bands, so the gate (and "You're ready for new words!", and `
 | 7 | chip path ship chop dish moth bath shed fish wish chick quick quill shell | 42 |
 | 8a | snap spin stop step trip drip grin drop crab crib drum clap | 36 |
 | 8b | swim twig glad sled frog flap flag chest truck clock block | 33 |
-| 9a | pine cape gate kite snake cake mice bone rope | 27 |
-| 9b | rose cube vine dive mole hive mule fly whale | 27 |
+| 9a | pine cape gate kite snake cake mice bone hide rope | 30 |
+| 9b | rose cube vine dive mole hive mule wave fly whale | 30 |
 | 10a | pie moo coat goat meat moon seed bee bean boat boot rain | 36 |
 | 10b | tree train loop seal snail food mail rail leaf sheep beetle | 33 |
-| 11a | sand mask nest tent desk gift lamp milk raft | 27 |
-| 11b | jump melt pink sing king ring honk skunk | 24 |
-| 12a | star turn car corn dirt storm burp horn bird deer | 30 |
-| 12b | herd horse jar fern farm fork worm torch shark | 27 |
-| 13a | town cow coin down hay high crow hawk crown mouse | 30 |
-| 13b | house joy owl light play clay cloud howl oink mouth | 30 |
+| 11a | sand mask nest tent desk dusk gift lamp milk cold | 30 |
+| 11b | raft jump melt pink sing king ring honk skunk | 27 |
+| 12a | star turn car corn dirt storm dark burp horn bird | 30 |
+| 12b | deer herd horse jar fern farm fork worm torch shark | 30 |
+| 13a | night snow town cow day coin dawn down hay high crow hawk | 36 |
+| 13b | crown mouse house joy owl light play clay cloud howl oink mouth | 36 |
 | 14a | pancake sunset bobcat cupcake sandbox snowman popcorn bathtub | 24 |
 | 14b | hedgehog catfish rainbow starfish robin puffin lobster chipmunk | 24 |
 
@@ -203,6 +211,8 @@ Rounds come in four kinds. At first the first sound is swapped (_at: cat, bat, h
 | 14, big words | chunks: cat\|fish, rob\|in | **bobcat**, **catfish**, **starfish**, **chipmunk**, **puffin**, **robin**, **lobster**, **hedgehog** their plushie, **sunset** a sunset glow, **cupcake** a cupcake and a happy burp, **popcorn** popping, **rainbow** a rainbow shimmer, **snowman** snowflakes, **pancake** a pancake stack, **sandbox** a puff of sand, **bathtub** a bathtub and a splash |
 
 Added with the plushies, toys and props (each brings its plushie, toy or prop, and a friendly spin when built wrong): stage 1 ant, rat, yak, sad (a picture card); 2 pin, wig; 3 ox; 4 pug, mug; 5 net; 6 duck; 7 moth; 8 crab, crib, glad (card); 9 kite, snake, mole, whale, fly, mice; 10 snail, seal, beetle, moon (card); 11 ring, king (a gold crown), skunk, desk; 12 shark, worm, deer, fork, corn, jar; 13 owl, mouse, hawk, crow, mouth and town (cards).
+
+Added with the sky, weather and feelings (each sky word glides the child's own sky, and a wrong one is a blink of it and back): stage 1 mad (a villager stomps, a mad face over him; card); 3 nod (a villager nods, glad; card); 9 wave (a villager waves hello; card) and hide (a rabbit hides behind a bush and peeks out; card); 11 dusk (the sky goes to dusk; card) and cold (snow falls, and a villager shivers with a cold face; card); 12 dark (the lights go out, then click back on; card); 13 night (night falls, stars and the moon; card), day (night, then the sun comes up; card), dawn (card) and snow (it snows, a real snow; with a situation). Words that are real now: rain rains, storm storms, wet drizzles, cloud drifts a cloud over, moon and star bring the night, sun comes up, sunset turns the sky to dusk, sad, glad and hot bring a villager feeling it (sad bows its head, glad dances, hot sweats).
 
 Gem (an emerald) and kit (leather armour) are kept as word files but are not puzzles: gem's soft g is never taught, and kit is a word many children don't know. They are there to turn back on with `"puzzle": true`.
 
@@ -368,6 +378,8 @@ The file as first written:
   // word on the board with one wrong letter (from stage 2); whats_wrong_every: one round in
   // this many is a word to fix. silly_counts: whether a silly sentence told to Bob (Silly
   // sentences, from the action menu) counts as a lesson; never towards mastery.
+  // bob_prop_share: out of 100, at most how often Bob's goal is one with only props in it (a
+  // mug on a desk) rather than a plushie or a toy; never two of those in a row.
   "puzzles": {
     "scenes": true,
     "scene_every": 4,
@@ -387,7 +399,8 @@ The file as first written:
     "tell_bob_every": 5,
     "whats_wrong": true,
     "whats_wrong_every": 6,
-    "silly_counts": false
+    "silly_counts": false,
+    "bob_prop_share": 20
   }
 }
 ```
@@ -420,7 +433,7 @@ Words are data, not code. Each is one file, `data/<namespace>/phonics_words/<wor
 
 `keyword: true` makes a word a letter's keyword too (zap for z): said and done at the end of that letter's chant in the letters level. `puzzle: false` makes it nothing else (apple): never a puzzle, in no family, and never in My words.
 
-`scene` (optional) makes the word a situation, asked once it has been read: `line` (said instead of "Can you make...", and recorded by the sound generator as `scene/<word>`), `setup` (what's in the room) and `solve` (what the right word does). Setup steps: `character` (`entity`, a villager by default, harmless only; `baby`; `act` `still`, `wander`, `shiver`, `bounce`, `stuck` or `hungry` (glancing over at the button); up to three, the first the one the scene is about), `ambient` (particles kept up over the character: `particle`, `at` `over`/`head`/`face`/`body`/`beside`, `count`, `spread`, `every`, an optional `sound` every `sound_every` ticks, and `drift` to float away when solved), `bubble` (a thought over its head: `text`, `color`), `dim` (the room goes dark for the child), `litter` (`items` lying on the floor), `block` (`block` at squares `at` from the scene's spot, `[east, south]` or `[east, south, up]`, beside the character by default, and what it `becomes` when solved), `wrap` (`item`s wound round the character), `ring` (a ring of `block` round the spot), `prop` (an `item` turning on the spot). Solve steps: `give` (an `item` flies to the character, or to every one with `all`, `then` `wear`, `hold`, `eat`, `drink`, `snip` the wrapping, `pull` a stuck one free, or `soak` a puddle), `place` (a `block` flies beside it, `then` `sleep`, `absorb` the litter, or `none`), `burst` (particles and a sound), `bubble`, `light`, `pose` (every character `sit`s or `lie`s down), `visit` (a helper `entity` comes from the button `to` `beside`, `over` or `front`, with a villager's `profession`), `tune`, `effect` (a beneficial effect on the child), `hut`. After the solve the trouble stops by itself, the blocks become what they become, and the character cheers up.
+`scene` (optional) makes the word a situation, asked once it has been read: `line` (said instead of "Can you make...", and recorded by the sound generator as `scene/<word>`), `setup` (what's in the room) and `solve` (what the right word does). Setup steps (and in a solve, `feel`, `gesture`, `sky` and `weather` too): `feel` (a `face` in a bubble over the character, or every one with `all`), `gesture` (the character does it: `nod`, `shake`, `wave`, `bow`, `dance`, `duck`, `jump`, `spin`, `hide`, `shiver`, `stomp`), `sky` (the child's own sky to `day`, `dusk`, `night` or `dawn`), `weather` (`rain`, `drizzle`, `snow`, `storm` or `clear`), `character` (`entity`, a villager by default, harmless only; `baby`; `act` `still`, `wander`, `shiver`, `bounce`, `stuck` or `hungry` (glancing over at the button); up to three, the first the one the scene is about), `ambient` (particles kept up over the character: `particle`, `at` `over`/`head`/`face`/`body`/`beside`, `count`, `spread`, `every`, an optional `sound` every `sound_every` ticks, and `drift` to float away when solved), `bubble` (a thought over its head: `text`, `color`), `dim` (the room goes dark for the child), `litter` (`items` lying on the floor), `block` (`block` at squares `at` from the scene's spot, `[east, south]` or `[east, south, up]`, beside the character by default, and what it `becomes` when solved), `wrap` (`item`s wound round the character), `ring` (a ring of `block` round the spot), `prop` (an `item` turning on the spot). Solve steps: `give` (an `item` flies to the character, or to every one with `all`, `then` `wear`, `hold`, `eat`, `drink`, `snip` the wrapping, `pull` a stuck one free, or `soak` a puddle), `place` (a `block` flies beside it, `then` `sleep`, `absorb` the litter, or `none`), `burst` (particles and a sound), `bubble`, `light`, `pose` (every character `sit`s or `lie`s down), `visit` (a helper `entity` comes from the button `to` `beside`, `over` or `front`, with a villager's `profession`), `tune`, `effect` (a beneficial effect on the child), `hut`. After the solve the trouble stops by itself, the blocks become what they become, and the character cheers up.
 
 `wrong` (optional, same shape as `outcome`) is what the word does when it's built but wasn't the word asked for: a funnier, harmless version, over in a couple of seconds, with nothing left behind. Without one, or if it names something missing, the word does its ordinary outcome instead.
 
@@ -447,6 +460,10 @@ A puzzle is made from a family of words sharing everything but one tile (cat, ba
 | `hut` | A tiny wooden hut round the child for `lasts` ticks: its doorway always open, a roof only over a child of ordinary size, only in empty squares |
 | `creatures_do` | Every creature in the room: `what` is `hearts`, `sit`, `spin`, `hop`, `bounce`, `sneeze` or `freeze` |
 | `strike` | A lightning rod out of the button, struck by a little bolt of sparks (particles, not real lightning: no thunder, no fire), gone after `lasts` ticks |
+| `sky` | The child's own sky glides (`glide` ticks) to `time`: `day`, `dusk`, `night` or `dawn`, from `from` if given (the night before a sunrise); `flicker` is two blinks of it and back. Back to a clear noon at the next round |
+| `weather` | The child's own `weather`: `rain`, `drizzle`, `snow`, `storm` (a rumble and a far-off flash, never a bolt) or `cloud` (a cloud drifts over); for `lasts` ticks, or until the next round |
+| `character` | A character (`entity`, a villager by default, harmless only; `baby`, `profession`) hops out of the button to stand in front of the child, with a `face` in a bubble (`glad`, `sad`, `mad`, `sleepy`, `surprised`, `scared`, `love`, `cold`, `hot`) and a `gesture` (as a scene's), and goes in a puff after `lasts` ticks |
+| `dark` | The lights go out for the child for `lasts` ticks (Pandorical clients), then click back on; `flicker` is two blinks |
 | `sequence` | Several of these in order: `steps` |
 | `prefer` | The first of its `options` this server can run: a mod's thing where the mod is installed, a vanilla one where it isn't |
 

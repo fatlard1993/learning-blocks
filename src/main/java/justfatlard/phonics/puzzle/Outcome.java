@@ -72,6 +72,10 @@ import org.jspecify.annotations.Nullable;
  * { "type": "firework_burst", "shape": "large_ball", "colors": [ 16711680, 65280 ] }
  * { "type": "creatures_come" }
  * { "type": "sequence",     "steps": [ { ... }, { ... } ] }
+ * { "type": "sky",          "time": "night", "glide": 40, "flicker": false }
+ * { "type": "weather",      "weather": "rain", "lasts": 0 }
+ * { "type": "character",    "entity": "minecraft:villager", "face": "sad", "gesture": "nod", "lasts": 100 }
+ * { "type": "dark",         "lasts": 60, "flicker": false }
  * }</pre>
  *
  * <p>Everything comes out of the room's button, dispenser-fashion, so the child sees the word they
@@ -144,7 +148,7 @@ public sealed interface Outcome {
 
 	enum Kind implements StringRepresentable {
 		SPAWN_ENTITY, EQUIP_ITEM, GIVE_ITEM, EFFECT, PLACE_BLOCK, SCALE, PARTICLES, PUSH, FIREWORK_BURST, CREATURES_COME, SEQUENCE,
-		THROW_AT_PLAYER, BONK, SPIN, CREATURES_GO, ROLL, TUNE, PULL, HUT, CREATURES_DO, STRIKE, PREFER;
+		THROW_AT_PLAYER, BONK, SPIN, CREATURES_GO, ROLL, TUNE, PULL, HUT, CREATURES_DO, STRIKE, PREFER, SKY, WEATHER, CHARACTER, DARK;
 
 		public static final Codec<Kind> CODEC = StringRepresentable.fromEnum(Kind::values);
 
@@ -175,6 +179,10 @@ public sealed interface Outcome {
 				case HUT -> Hut.CODEC;
 				case CREATURES_DO -> CreaturesDo.CODEC;
 				case STRIKE -> Strike.CODEC;
+				case SKY -> Sky.CODEC;
+				case WEATHER -> Weather.CODEC;
+				case CHARACTER -> Character.CODEC;
+				case DARK -> Dark.CODEC;
 				case PREFER -> self.listOf(1, 4).fieldOf("options").xmap(Prefer::new, Prefer::options);
 				case SEQUENCE -> self.listOf(1, 8).fieldOf("steps").xmap(Sequence::new, Sequence::steps);
 			};
@@ -182,6 +190,186 @@ public sealed interface Outcome {
 	}
 
 	Codec<Outcome> CODEC = Codec.recursive("outcome", self -> Kind.CODEC.dispatch("type", Outcome::kind, kind -> kind.codec(self)));
+
+	// --- Sky, weather and feelings ---
+
+	/**
+	 * This child's sky, theirs only: it glides on to {@code day}, {@code dusk}, {@code night} or
+	 * {@code dawn} and stays so until the next round. A {@code flicker} is only a blink of it and back,
+	 * for a word built by mistake.
+	 */
+	record Sky(String time, Optional<String> from, int glide, boolean flicker) implements Outcome {
+		static final MapCodec<Sky> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+			Codec.STRING.fieldOf("time").forGetter(Sky::time),
+			Codec.STRING.optionalFieldOf("from").forGetter(Sky::from),
+			Codec.intRange(0, 200).optionalFieldOf("glide", 40).forGetter(Sky::glide),
+			Codec.BOOL.optionalFieldOf("flicker", false).forGetter(Sky::flicker)
+		).apply(instance, Sky::new));
+
+		@Override
+		public Kind kind() {
+			return Kind.SKY;
+		}
+
+		private static justfatlard.phonics.classroom.Sky.@Nullable Time named(String time) {
+			for (justfatlard.phonics.classroom.Sky.Time one : justfatlard.phonics.classroom.Sky.Time.values()) {
+				if (one.name().toLowerCase(Locale.ROOT).equals(time)) return one;
+			}
+			return null;
+		}
+
+		/** The time it ends at. */
+		public justfatlard.phonics.classroom.Sky.@Nullable Time to() {
+			return named(time);
+		}
+
+		@Override
+		public boolean usable() {
+			return named(time) != null && from.map(name -> named(name) != null).orElse(true);
+		}
+
+		@Override
+		public void run(ServerPlayer player, Stage room) {
+			justfatlard.phonics.classroom.Sky.Time to = named(time);
+			if (to == null) return;
+			if (flicker) {
+				justfatlard.phonics.classroom.Sky.flicker(player, to.ticks);
+				return;
+			}
+			// From another time first, at once: the night before the sun comes up.
+			justfatlard.phonics.classroom.Sky.Time start = from.map(Sky::named).orElse(null);
+			room.dispenseEffect(player, p -> {
+				if (start != null) justfatlard.phonics.classroom.Sky.setTime(p, start.ticks);
+				justfatlard.phonics.classroom.Sky.glide(p, to.ticks, glide);
+			});
+		}
+	}
+
+	/**
+	 * This child's weather, theirs only: {@code rain}, {@code drizzle}, {@code snow}, {@code storm} (a
+	 * rumble and a flash, never a bolt), or a {@code cloud} drifting over. It stays until the next
+	 * round, or for {@code lasts} ticks if that is set.
+	 */
+	record Weather(String weather, int lasts) implements Outcome {
+		static final MapCodec<Weather> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+			Codec.STRING.fieldOf("weather").forGetter(Weather::weather),
+			Codec.intRange(0, 20 * 60).optionalFieldOf("lasts", 0).forGetter(Weather::lasts)
+		).apply(instance, Weather::new));
+
+		@Override
+		public Kind kind() {
+			return Kind.WEATHER;
+		}
+
+		@Override
+		public boolean usable() {
+			return weather.equals("cloud") || justfatlard.phonics.classroom.Sky.weatherNamed(weather) != null;
+		}
+
+		@Override
+		public void run(ServerPlayer player, Stage room) {
+			if (weather.equals("cloud")) {
+				room.puffFromButton("cloud");
+				justfatlard.phonics.classroom.Sky.cloud(player.level(), Vec3.atBottomCenterOf(room.origin()), lasts > 0 ? lasts : 140);
+				return;
+			}
+			justfatlard.phonics.classroom.Sky.Weather to = justfatlard.phonics.classroom.Sky.weatherNamed(weather);
+			if (to == null) return;
+			room.dispenseEffect(player, p -> justfatlard.phonics.classroom.Sky.setWeather(p, to));
+			if (lasts > 0) justfatlard.phonics.Later.after(player, Dispenser.FLIGHT + lasts, p -> {
+				if (justfatlard.phonics.classroom.Sky.weatherOf(p) == to) justfatlard.phonics.classroom.Sky.setWeather(p, justfatlard.phonics.classroom.Sky.Weather.CLEAR);
+			});
+		}
+	}
+
+	/**
+	 * A character hops out of the button to stand in front of the child, feeling something (a face
+	 * in a bubble over it) and doing something (a nod, a wave, a dance), then goes in a puff. A
+	 * villager unless it says otherwise; harmless, like any creature a word brings.
+	 */
+	record Character(Identifier entity, boolean baby, Optional<Identifier> profession, Optional<String> face, Optional<String> gesture,
+			int lasts) implements Outcome {
+		static final MapCodec<Character> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+			Identifier.CODEC.optionalFieldOf("entity", Identifier.withDefaultNamespace("villager")).forGetter(Character::entity),
+			Codec.BOOL.optionalFieldOf("baby", false).forGetter(Character::baby),
+			Identifier.CODEC.optionalFieldOf("profession").forGetter(Character::profession),
+			Codec.STRING.optionalFieldOf("face").forGetter(Character::face),
+			Codec.STRING.optionalFieldOf("gesture").forGetter(Character::gesture),
+			Codec.intRange(20, 20 * 30).optionalFieldOf("lasts", 100).forGetter(Character::lasts)
+		).apply(instance, Character::new));
+
+		@Override
+		public Kind kind() {
+			return Kind.CHARACTER;
+		}
+
+		@Override
+		public boolean usable() {
+			return harmlessType(entity, baby) != null && profession.map(BuiltInRegistries.VILLAGER_PROFESSION::containsKey).orElse(true)
+				&& face.map(name -> justfatlard.phonics.feel.Feelings.Face.named(name) != null).orElse(true)
+				&& gesture.map(name -> justfatlard.phonics.feel.Gestures.Gesture.named(name) != null).orElse(true);
+		}
+
+		@Override
+		public void run(ServerPlayer player, Stage room) {
+			EntityType<?> type = harmlessType(entity, baby);
+			if (type == null) return;
+			Entity made = type.create(player.level(), EntitySpawnReason.MOB_SUMMONED);
+			if (made == null) return;
+			made.setPermanentlyInvulnerable(true);
+			made.addTag(SPAWNED_TAG);
+			if (made instanceof Mob mob) {
+				mob.setPersistenceRequired();
+				if (baby) mob.setBaby(true);
+				for (EquipmentSlot slot : EquipmentSlot.values()) mob.setDropChance(slot, 0.0F);
+			}
+			if (made instanceof Villager villager && profession.isPresent()) {
+				BuiltInRegistries.VILLAGER_PROFESSION.get(profession.get()).ifPresent(found -> {
+					villager.setVillagerData(villager.getVillagerData().withProfession(found));
+					villager.setVillagerDataFinalized(true);
+				});
+			}
+			room.dispenseCharacter(player, made, landed -> {
+				face.map(justfatlard.phonics.feel.Feelings.Face::named).ifPresent(feeling -> justfatlard.phonics.feel.Feelings.show(landed, feeling, lasts));
+				gesture.map(justfatlard.phonics.feel.Gestures.Gesture::named).ifPresent(doing -> {
+					justfatlard.phonics.feel.Gestures.run(landed, doing);
+					// Done twice over, if there is time: a wave, then another.
+					if (lasts > doing.length * 2 + 20) justfatlard.phonics.Later.after(player, doing.length + 16, p -> {
+						if (landed.isAlive()) justfatlard.phonics.feel.Gestures.run(landed, doing);
+					});
+				});
+			}, lasts);
+		}
+	}
+
+	/** The lights go out, for this child only, then click back on; a {@code flicker} is two blinks of it. */
+	record Dark(int lasts, boolean flicker) implements Outcome {
+		static final MapCodec<Dark> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+			Codec.intRange(4, 20 * 10).optionalFieldOf("lasts", 60).forGetter(Dark::lasts),
+			Codec.BOOL.optionalFieldOf("flicker", false).forGetter(Dark::flicker)
+		).apply(instance, Dark::new));
+
+		@Override
+		public Kind kind() {
+			return Kind.DARK;
+		}
+
+		@Override
+		public boolean usable() {
+			return true;
+		}
+
+		@Override
+		public void run(ServerPlayer player, Stage room) {
+			if (flicker) {
+				justfatlard.phonics.classroom.Sky.dark(player, 4);
+				justfatlard.phonics.Later.after(player, 9, p -> justfatlard.phonics.classroom.Sky.dark(p, 4));
+				return;
+			}
+			room.puffFromButton("dark");
+			justfatlard.phonics.classroom.Sky.dark(player, lasts);
+		}
+	}
 
 	// --- Creatures ---
 

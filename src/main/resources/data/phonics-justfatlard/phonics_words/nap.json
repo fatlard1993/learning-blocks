@@ -59,6 +59,10 @@
         "act": "still"
       },
       {
+        "type": "feel",
+        "face": "sleepy"
+      },
+      {
         "type": "bubble",
         "text": "...",
         "color": 14540253

@@ -1,0 +1,34 @@
+{
+  "tiles": [
+    "d",
+    "aw",
+    "n"
+  ],
+  "stage": 13,
+  "picture_card": "dawn",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "sky",
+        "time": "dawn",
+        "from": "night",
+        "glide": 50
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:end_rod",
+        "count": 10,
+        "spread": 1.0,
+        "at": "above",
+        "sound": "minecraft:entity.chicken.ambient",
+        "pitch": 0.7
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sky",
+    "time": "dawn",
+    "flicker": true
+  }
+}

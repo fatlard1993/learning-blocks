@@ -8,7 +8,8 @@
     "LevelMixin",
     "PlayerLoadedMixin",
     "PunchMixin",
-    "TeleportCommandMixin"
+    "TeleportCommandMixin",
+    "TimePacketMixin"
   ],
   "injectors": {
     "defaultRequire": 1

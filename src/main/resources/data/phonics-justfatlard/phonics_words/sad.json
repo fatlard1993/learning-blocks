@@ -7,15 +7,26 @@
   "stage": 1,
   "picture_card": "sad",
   "outcome": {
-    "type": "particles",
-    "particle": "minecraft:falling_water",
-    "count": 14,
-    "spread": 0.4,
-    "at": "above",
-    "sound": "minecraft:entity.villager.no",
-    "pitch": 1.2,
-    "repeat": 4,
-    "every": 8
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "character",
+        "face": "sad",
+        "gesture": "bow",
+        "lasts": 90
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:falling_water",
+        "count": 14,
+        "spread": 0.4,
+        "at": "above",
+        "sound": "minecraft:entity.villager.no",
+        "pitch": 1.2,
+        "repeat": 4,
+        "every": 8
+      }
+    ]
   },
   "wrong": {
     "type": "sequence",

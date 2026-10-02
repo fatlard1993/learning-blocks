@@ -143,9 +143,40 @@ public final class Goals {
 		if (from.isEmpty()) from = new ArrayList<>(open.stream().filter(goal -> !usedToday.test(goal)).toList());
 		if (from.isEmpty()) from = new ArrayList<>(open);
 		if (from.size() > 1 && last != null) from.remove(last);
+		// Plushies and toys first: a goal with only props in it (a mug on a desk) at most one time in
+		// five (bob_prop_share), and never two in a row, while there is anything else to give.
+		boolean propsNow = !propsOnly(last) && random.nextInt(100) < justfatlard.phonics.reward.PrizeConfig.bobPropShare();
+		boolean both = from.stream().anyMatch(Goals::propsOnly) && from.stream().anyMatch(goal -> !propsOnly(goal));
+		if (both) from.removeIf(goal -> propsOnly(goal) != propsNow);
 		Collections.shuffle(from, random);
-		from.sort(java.util.Comparator.comparingInt(clean));
+		from.sort(java.util.Comparator.<Goal>comparingInt(clean).thenComparing(goal -> !hasToy(goal)));
 		return from.getFirst();
+	}
+
+	/** A made goal with nothing in it but props: no plushie, toy or creature. A written one never counts. */
+	public static boolean propsOnly(@Nullable Goal goal) {
+		if (goal == null || curated(goal)) return false;
+		for (String word : goal.things()) {
+			justfatlard.phonics.relate.Thing thing = justfatlard.phonics.relate.Relations.thing(word);
+			if (thing == null || thing.creature() || thing.tags().contains("plush") || thing.tags().contains("toy")) return false;
+		}
+		return true;
+	}
+
+	/** Whether a plushie or a toy is in it. */
+	static boolean hasToy(Goal goal) {
+		for (String word : goal.things()) {
+			justfatlard.phonics.relate.Thing thing = justfatlard.phonics.relate.Relations.thing(word);
+			if (thing != null && (thing.tags().contains("plush") || thing.tags().contains("toy"))) return true;
+		}
+		return false;
+	}
+
+	private static boolean curated(Goal goal) {
+		for (String[] row : CURATED) {
+			if (String.join(" / ", java.util.Arrays.copyOfRange(row, 1, row.length)).equals(goal.key())) return true;
+		}
+		return false;
 	}
 
 	/** The extra cards on the floor, words that make some other sentence: another thing, another little word. */

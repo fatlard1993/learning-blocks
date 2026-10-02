@@ -25,6 +25,10 @@
         "act": "wander"
       },
       {
+        "type": "feel",
+        "face": "scared"
+      },
+      {
         "type": "bubble",
         "text": "?",
         "color": 16769126

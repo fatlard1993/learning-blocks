@@ -41,6 +41,10 @@
         "act": "stuck"
       },
       {
+        "type": "feel",
+        "face": "scared"
+      },
+      {
         "type": "bubble",
         "text": "!",
         "color": 16746598

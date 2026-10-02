@@ -35,6 +35,13 @@ public interface Stage {
 
 	void dispenseCreature(ServerPlayer player, Entity creature);
 
+	/**
+	 * A character, out of the button in a hop to stand still in front of the child, facing them:
+	 * no mind of its own, so it can feel and gesture. {@code landed} when it is down; gone in a puff
+	 * after {@code lasts}.
+	 */
+	void dispenseCharacter(ServerPlayer player, Entity character, java.util.function.Consumer<Entity> landed, int lasts);
+
 	void dispenseItem(ServerPlayer player, ItemStack stack);
 
 	void dispenseWorn(ServerPlayer player, ItemStack stack, Consumer<ServerPlayer> wear);

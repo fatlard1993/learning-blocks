@@ -450,6 +450,8 @@ public final class BobRound {
 		villager.addTag(BobStage.TAG);
 		level.addFreshEntity(villager);
 		bob = villager;
+		// Hello!
+		justfatlard.phonics.feel.Gestures.run(villager, justfatlard.phonics.feel.Gestures.Gesture.WAVE);
 	}
 
 	/** A goal, framed, small: what Bob is to make. Reading together, a click box over each to pick it by. */
@@ -758,7 +760,7 @@ public final class BobRound {
 		int roundAt = room.round;
 		Narration telling = new Narration();
 		readRows(telling, built);
-		telling.sayAs("Bob", "phrase/bob_okay", "bob_okay", null, 2);
+		telling.sayAs("Bob", "phrase/bob_okay", "bob_okay", p -> nod(), 2);
 		telling.then("act", p -> act(p, built), ACT_TICKS * built.size());
 		telling.sayAs("Bob", "phrase/bob_did_it", "bob_did_it", null, Narration.GAP);
 		if (right) {
@@ -786,7 +788,7 @@ public final class BobRound {
 		} else {
 			room.answers.commit().wrong(player);
 			Safely.run("Remembering a sentence missed", () -> Progress.of(player).sentenceMissed(player, target.key(), said));
-			telling.say("phrase/not_quite", 4);
+			telling.then("bob_puzzled", p -> puzzled(), 2).say("phrase/not_quite", 4);
 			if (mode == Mode.GOAL) {
 				telling.then("cards_home", p -> allHome(), 10)
 					.then("reset", p -> reset(), 10);
@@ -807,7 +809,7 @@ public final class BobRound {
 		if (step == null) {
 			telling.then("shrug", p -> shrug(), 10).say("phrase/hmm");
 		} else {
-			telling.sayAs("Bob", "phrase/bob_okay", "bob_okay", null, 2);
+			telling.sayAs("Bob", "phrase/bob_okay", "bob_okay", p -> nod(), 2);
 			telling.then("act", p -> actSilly(step), ACT_TICKS);
 			telling.sayAs("Bob", "phrase/bob_did_it", "bob_did_it", null, Narration.GAP);
 			telling.say("phrase/giggle");
@@ -906,14 +908,29 @@ public final class BobRound {
 		level.sendParticles(ParticleTypes.HAPPY_VILLAGER, at.x, at.y + 0.8, at.z, 12, 1.0, 0.4, 0.4, 0.0);
 	}
 
+	/** Bob nods: okay, he'll do it. */
+	private void nod() {
+		if (bob != null) justfatlard.phonics.feel.Gestures.run(bob, justfatlard.phonics.feel.Gestures.Gesture.NOD);
+	}
+
+	/** That wasn't it: Bob shakes his head, puzzled. */
+	private void puzzled() {
+		if (bob == null) return;
+		justfatlard.phonics.feel.Gestures.run(bob, justfatlard.phonics.feel.Gestures.Gesture.SHAKE);
+		justfatlard.phonics.feel.Feelings.show(bob, justfatlard.phonics.feel.Feelings.Face.SURPRISED, 40);
+	}
+
 	private void shrug() {
 		if (bob == null) return;
+		justfatlard.phonics.feel.Gestures.run(bob, justfatlard.phonics.feel.Gestures.Gesture.SHAKE);
 		level.playSound(null, bob.getX(), bob.getY(), bob.getZ(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 0.8F, 1.0F);
 		level.sendParticles(ParticleTypes.CLOUD, bob.getX(), bob.getY() + 2.2, bob.getZ(), 6, 0.2, 0.1, 0.2, 0.01);
 	}
 
 	private void hooray() {
 		if (bob == null) return;
+		justfatlard.phonics.feel.Feelings.show(bob, justfatlard.phonics.feel.Feelings.Face.GLAD, 60);
+		justfatlard.phonics.feel.Gestures.run(bob, justfatlard.phonics.feel.Gestures.Gesture.JUMP);
 		level.playSound(null, bob.getX(), bob.getY(), bob.getZ(), SoundEvents.VILLAGER_CELEBRATE, SoundSource.NEUTRAL, 0.9F, 1.1F);
 		level.sendParticles(ParticleTypes.HAPPY_VILLAGER, bob.getX(), bob.getY() + 1.8, bob.getZ(), 16, 0.4, 0.4, 0.4, 0.0);
 	}

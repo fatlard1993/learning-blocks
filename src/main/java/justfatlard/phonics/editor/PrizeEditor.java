@@ -227,6 +227,7 @@ public final class PrizeEditor {
 				rows.add(new Row.Toggle("What's wrong", "puzzles.whats_wrong", true, "On", "Off",
 					"Bob's sentence made wrong, one card to fix; from stage 2, a word with one wrong letter"));
 				rows.add(new Row.Number("Fix a word every", "puzzles.whats_wrong_every", 6, SCENE_EVERY, " rounds", null));
+				rows.add(new Row.Number("Bob's props at most", "puzzles.bob_prop_share", 20, REVIEW_SHARE, "%", null));
 				rows.add(new Row.Toggle("Silly sentences count", "puzzles.silly_counts", false, "Yes", "No",
 					"Whether a silly sentence told to Bob counts as a lesson (never towards mastery)"));
 				List<String> problems = PrizeConfig.lastProblems();
@@ -586,7 +587,7 @@ public final class PrizeEditor {
 				int fallback = path.equals("puzzles.scene_every") ? 4 : path.equals("puzzles.mastery_clean") ? 3
 					: path.equals("puzzles.tell_bob_every") ? 5 : path.equals("puzzles.whats_wrong_every") ? 6
 					: path.equals("puzzles.letter_word_every") || path.equals("puzzles.team_up_every") ? 3 : path.equals("puzzles.read_it_every") ? 5
-					: path.equals("puzzles.review_share") ? 30 : ladder[0];
+					: path.equals("puzzles.review_share") ? 30 : path.equals("puzzles.bob_prop_share") ? 20 : ladder[0];
 				PrizeFile.set(tree, path, new JsonPrimitive(step(ladder, integer(tree, path, fallback), by)));
 			}
 			case "clear" -> {
@@ -719,7 +720,7 @@ public final class PrizeEditor {
 		if (path.equals("puzzles.scene_every")) return SCENE_EVERY;
 		if (path.equals("puzzles.letter_word_every") || path.equals("puzzles.team_up_every")) return LETTER_WORD_EVERY;
 		if (path.equals("puzzles.read_it_every") || path.equals("puzzles.tell_bob_every") || path.equals("puzzles.whats_wrong_every")) return SCENE_EVERY;
-		if (path.equals("puzzles.review_share")) return REVIEW_SHARE;
+		if (path.equals("puzzles.review_share") || path.equals("puzzles.bob_prop_share")) return REVIEW_SHARE;
 		if (path.endsWith(".points") && path.startsWith("points.thresholds")) return TOTALS;
 		if (path.endsWith(".points")) return POINTS;
 		if (path.equals("puzzles.mastery_clean")) return MASTERY;

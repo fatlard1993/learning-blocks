@@ -255,6 +255,164 @@ CARDS = {
 }
 
 
+# --- Round I's cards: the sky, feelings and doing words -----------------------------------------
+
+class Grid:
+    """A 16 by 16 card drawn with a few shapes, as rows of palette letters for CARDS."""
+
+    def __init__(self, fill):
+        self.rows = [[fill] * 16 for _ in range(16)]
+
+    def dot(self, x, y, ch):
+        if 0 <= x < 16 and 0 <= y < 16:
+            self.rows[y][x] = ch
+
+    def disc(self, cx, cy, r, ch, below=None):
+        for y in range(16):
+            for x in range(16):
+                if (x + 0.5 - cx) ** 2 + (y + 0.5 - cy) ** 2 <= r * r and (below is None or y < below):
+                    self.rows[y][x] = ch
+
+    def band(self, y0, y1, ch):
+        for y in range(y0, y1):
+            self.rows[y] = [ch] * 16
+
+    def done(self):
+        return ["".join(row) for row in self.rows]
+
+
+def night_card():
+    g = Grid("n")
+    for x, y in ((2, 1), (6, 3), (1, 5), (4, 8), (13, 9), (8, 10), (2, 11), (10, 5)):
+        g.dot(x, y, "w")
+    g.disc(11.5, 4.5, 3.3, "m")
+    g.disc(13.2, 3.4, 2.7, "n")
+    g.disc(8, 21, 9, "g")
+    return {"n": rgb(0x1E2A5A), "w": rgb(0xFFFFFF), "m": rgb(0xF6E27A), "g": rgb(0x24402E)}, g.done()
+
+
+def day_card():
+    g = Grid("s")
+    g.disc(4.5, 4.5, 2.7, "y")
+    for x, y in ((4, 0), (4, 8), (0, 4), (8, 4), (1, 1), (7, 1), (1, 7), (7, 7)):
+        g.dot(x, y, "o")
+    for cx, cy, r in ((11, 5.5, 1.9), (13, 4.6, 2.0), (14.8, 5.8, 1.4)):
+        g.disc(cx, cy, r, "c")
+    g.disc(8, 22, 10.5, "g")
+    return {"s": rgb(0x8CCBF2), "y": rgb(0xF6D146), "o": rgb(0xF0A830), "c": rgb(0xFFFFFF), "g": rgb(0x5DB04A)}, g.done()
+
+
+def dark_card():
+    g = Grid("k")
+    for x in (4, 10):
+        g.dot(x, 7, "w")
+        g.dot(x + 1, 7, "w")
+        g.dot(x, 8, "w")
+        g.dot(x + 1, 8, "p")
+    return {"k": rgb(0x14121A), "w": rgb(0xF4F0E6), "p": rgb(0x3A3550)}, g.done()
+
+
+def dusk_card():
+    g = Grid("a")
+    g.band(4, 8, "b")
+    g.band(8, 12, "c")
+    g.disc(8, 12.4, 2.6, "y", below=12)
+    g.band(12, 16, "g")
+    for x, y in ((3, 1), (12, 2)):
+        g.dot(x, y, "w")
+    return {"a": rgb(0x3B2E6E), "b": rgb(0x8E5A9E), "c": rgb(0xF08A4C), "y": rgb(0xF6C24A), "g": rgb(0x2E4A3A), "w": rgb(0xFFFFFF)}, g.done()
+
+
+def dawn_card():
+    g = Grid("a")
+    g.band(4, 8, "b")
+    g.band(8, 12, "c")
+    g.disc(8, 12.4, 3.4, "y", below=12)
+    g.band(12, 16, "g")
+    return {"a": rgb(0x9CC8F0), "b": rgb(0xF2A6B8), "c": rgb(0xF8E08A), "y": rgb(0xFFF2A0), "g": rgb(0x5DB04A)}, g.done()
+
+
+def hide_card():
+    """A bush, and two eyes peeking out of it."""
+    g = Grid(".")
+    for cx, cy, r in ((5, 10, 4.2), (11, 10, 4.2), (8, 7.5, 4.6), (8, 12, 4.0)):
+        g.disc(cx, cy, r, "g")
+    for cx, cy in ((4.5, 9), (11.5, 11.5), (8.5, 5.5)):
+        g.disc(cx, cy, 1.2, "d")
+    for x in (6, 9):
+        g.dot(x, 9, "w")
+        g.dot(x + 1, 9, "k")
+    return {"g": rgb(0x5DB04A), "d": rgb(0x3E8A3A), "w": rgb(0xFFFFFF), "k": rgb(0x2B2222)}, g.done()
+
+
+def emote_card(name, marks=()):
+    """The face out of a feeling's bubble (generate_emotes.py), cropped to the card."""
+    import generate_emotes
+    pixels = getattr(generate_emotes, name)().pixels()
+    letters, palette, rows = "abcdefghijklmnopqrstuvwxyz", {}, []
+    for y in range(6, 22):
+        row = ""
+        for x in range(8, 24):
+            px = tuple(pixels[y][x])
+            # Only the face: the bubble round it is left out.
+            if px[3] == 0 or (x + 0.5 - 16) ** 2 + (y + 0.5 - 14) ** 2 > 9.6 ** 2:
+                row += "."
+                continue
+            if px not in palette:
+                palette[px] = letters[len(palette)]
+            row += palette[px]
+        rows.append(row)
+    rows = [list(row) for row in rows]
+    for x, y, colour in marks:
+        if colour not in palette:
+            palette[colour] = letters[len(palette)]
+        rows[y][x] = palette[colour]
+    return {ch: px for px, ch in palette.items()}, ["".join(row) for row in rows]
+
+
+def wave_card():
+    """The waving hand, halved, with a swish either side."""
+    import generate_emotes
+    pixels = generate_emotes.hand().pixels()
+    letters, palette, rows = "abcdefghijklmnopqrstuvwxyz", {}, []
+    for y in range(0, 32, 2):
+        row = ""
+        for x in range(0, 32, 2):
+            px = tuple(pixels[y + 1][x + 1])
+            if px[3] == 0:
+                row += "."
+                continue
+            if px not in palette:
+                palette[px] = letters[len(palette)]
+            row += palette[px]
+        rows.append(list(row))
+    swish = rgb(0x5EB8F2)
+    palette[swish] = "z"
+    for x, y in ((1, 3), (0, 5), (1, 7), (14, 3), (15, 5), (14, 7)):
+        rows[y][x] = "z"
+    return {ch: px for px, ch in palette.items()}, ["".join(row) for row in rows]
+
+
+def nod_card():
+    """A happy face with its eyes shut, and arrows up and down either side of it: a nod."""
+    g = Grid(".")
+    g.disc(8, 8.5, 4.9, "#")
+    g.disc(8, 8.5, 4.1, "y")
+    for x, y in ((6, 7), (6, 8), (10, 7), (10, 8), (6, 10), (7, 11), (8, 11), (9, 11), (10, 10)):
+        g.dot(x, y, "k")
+    for x in (1, 14):
+        for y in range(2, 15):
+            g.dot(x, y, "b")
+        for dx in (-1, 1):
+            g.dot(x + dx, 3, "b")
+            g.dot(x + dx, 13, "b")
+    return {"y": rgb(0xF6D146), "k": rgb(0x2B2222), "b": rgb(0x3A7BD5)}, g.done()
+
+
+CARDS.update({"night": night_card(), "day": day_card(), "dark": dark_card(), "dusk": dusk_card(), "dawn": dawn_card(),
+              "hide": hide_card(), "mad": emote_card("mad"), "cold": emote_card("cold"), "wave": wave_card(), "nod": nod_card()})
+
+
 def card(name):
     palette, rows = CARDS[name]
     assert len(rows) == 16 and all(len(r) == 16 for r in rows), name

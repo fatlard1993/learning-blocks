@@ -8,17 +8,26 @@
   "stage": 13,
   "icon": "minecraft:snow_block",
   "outcome": {
-    "type": "prefer",
-    "options": [
+    "type": "sequence",
+    "steps": [
       {
-        "type": "place_block",
-        "block": "cloud-kingdoms-justfatlard:cloud",
-        "lasts": 100
+        "type": "weather",
+        "weather": "cloud"
       },
       {
-        "type": "place_block",
-        "block": "minecraft:snow_block",
-        "lasts": 100
+        "type": "prefer",
+        "options": [
+          {
+            "type": "place_block",
+            "block": "cloud-kingdoms-justfatlard:cloud",
+            "lasts": 100
+          },
+          {
+            "type": "place_block",
+            "block": "minecraft:snow_block",
+            "lasts": 100
+          }
+        ]
       }
     ]
   },

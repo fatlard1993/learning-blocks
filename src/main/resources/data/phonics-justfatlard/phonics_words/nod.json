@@ -1,0 +1,24 @@
+{
+  "tiles": [
+    "n",
+    "o",
+    "d"
+  ],
+  "stage": 3,
+  "picture_card": "nod",
+  "outcome": {
+    "type": "character",
+    "face": "glad",
+    "gesture": "nod",
+    "lasts": 80
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:happy_villager",
+    "count": 8,
+    "spread": 0.4,
+    "at": "above",
+    "sound": "minecraft:entity.villager.yes",
+    "pitch": 1.4
+  }
+}

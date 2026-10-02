@@ -21,6 +21,11 @@
         "spread": 0.6,
         "at": "player",
         "sound": "minecraft:block.campfire.crackle"
+      },
+      {
+        "type": "character",
+        "face": "hot",
+        "lasts": 90
       }
     ]
   },
@@ -51,6 +56,10 @@
       {
         "type": "character",
         "act": "shiver"
+      },
+      {
+        "type": "feel",
+        "face": "cold"
       },
       {
         "type": "bubble",

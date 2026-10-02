@@ -7,15 +7,25 @@
   "stage": 10,
   "picture_card": "moon",
   "outcome": {
-    "type": "particles",
-    "particle": "minecraft:end_rod",
-    "count": 20,
-    "spread": 1.2,
-    "at": "above",
-    "sound": "minecraft:block.amethyst_block.chime",
-    "pitch": 0.8,
-    "repeat": 3,
-    "every": 10
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "sky",
+        "time": "night",
+        "glide": 40
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:end_rod",
+        "count": 20,
+        "spread": 1.2,
+        "at": "above",
+        "sound": "minecraft:block.amethyst_block.chime",
+        "pitch": 0.8,
+        "repeat": 3,
+        "every": 10
+      }
+    ]
   },
   "wrong": {
     "type": "sequence",

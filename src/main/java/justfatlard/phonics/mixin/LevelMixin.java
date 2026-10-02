@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * No weather in the classroom.
+ * No weather in the classroom's own world: each child's is their own, sent to them alone.
  *
  * <p>A datapack dimension shares the overworld's weather, and a dimension type has no switch for
  * it: the game decides from skylight and ceiling alone, the End being the one dimension it names.
@@ -20,6 +20,7 @@ public abstract class LevelMixin {
 
 	@Inject(method = "canHaveWeather", at = @At("HEAD"), cancellable = true)
 	private void phonics$noWeatherInClass(CallbackInfoReturnable<Boolean> callback) {
-		if (Places.isClassroom((Level) (Object) this)) callback.setReturnValue(false);
+		// The server's level only: each child is told of their own weather (see Sky), and their game draws it.
+		if ((Object) this instanceof net.minecraft.server.level.ServerLevel && Places.isClassroom((Level) (Object) this)) callback.setReturnValue(false);
 	}
 }

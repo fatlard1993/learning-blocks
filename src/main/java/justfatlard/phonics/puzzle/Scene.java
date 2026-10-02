@@ -60,7 +60,7 @@ public record Scene(String line, List<Step> setup, List<Step> solve) {
 
 	enum Kind implements StringRepresentable {
 		CHARACTER, AMBIENT, BUBBLE, DIM, LITTER, BLOCK, GIVE, PLACE, BURST, LIGHT,
-		WRAP, RING, PROP, POSE, VISIT, TUNE, EFFECT, HUT;
+		WRAP, RING, PROP, POSE, VISIT, TUNE, EFFECT, HUT, FEEL, GESTURE, SKY, WEATHER;
 
 		static final Codec<Kind> CODEC = StringRepresentable.fromEnum(Kind::values);
 
@@ -89,12 +89,16 @@ public record Scene(String line, List<Step> setup, List<Step> solve) {
 				case TUNE -> Tune.CODEC;
 				case EFFECT -> Effect.CODEC;
 				case HUT -> Hut.CODEC;
+				case FEEL -> Feel.CODEC;
+				case GESTURE -> Gesture.CODEC;
+				case SKY -> Sky.CODEC;
+				case WEATHER -> Weather.CODEC;
 			};
 		}
 	}
 
 	public sealed interface Step permits Character, Ambient, Bubble, Dim, Litter, Block, Give, Place, Burst, Light,
-			Wrap, Ring, Prop, Pose, Visit, Tune, Effect, Hut {
+			Wrap, Ring, Prop, Pose, Visit, Tune, Effect, Hut, Feel, Gesture, Sky, Weather {
 		Codec<Step> CODEC = Kind.CODEC.dispatch("type", Step::kind, Kind::codec);
 
 		Kind kind();
@@ -507,6 +511,99 @@ public record Scene(String line, List<Step> setup, List<Step> solve) {
 		@Override
 		public boolean usable() {
 			return true;
+		}
+	}
+
+	// --- Feelings, gestures, sky and weather ---
+
+	/**
+	 * A feeling in a bubble over the character (or every character, {@code all}): in the setup, how
+	 * they feel until it is solved; in a solve, how they feel after. Solved, everyone is glad.
+	 */
+	public record Feel(String face, boolean all) implements Step {
+		static final MapCodec<Feel> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+			Codec.STRING.fieldOf("face").forGetter(Feel::face),
+			Codec.BOOL.optionalFieldOf("all", false).forGetter(Feel::all)
+		).apply(instance, Feel::new));
+
+		@Override
+		public Kind kind() {
+			return Kind.FEEL;
+		}
+
+		@Override
+		public boolean usable() {
+			return justfatlard.phonics.feel.Feelings.Face.named(face) != null;
+		}
+	}
+
+	/** The character does something: a nod, a wave, a bow, a dance. Only one standing still can. */
+	public record Gesture(String gesture, boolean all) implements Step {
+		static final MapCodec<Gesture> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+			Codec.STRING.fieldOf("gesture").forGetter(Gesture::gesture),
+			Codec.BOOL.optionalFieldOf("all", false).forGetter(Gesture::all)
+		).apply(instance, Gesture::new));
+
+		@Override
+		public Kind kind() {
+			return Kind.GESTURE;
+		}
+
+		@Override
+		public boolean usable() {
+			return justfatlard.phonics.feel.Gestures.Gesture.named(gesture) != null;
+		}
+
+		@Override
+		public int ticks() {
+			justfatlard.phonics.feel.Gestures.Gesture named = justfatlard.phonics.feel.Gestures.Gesture.named(gesture);
+			return named == null ? 6 : named.length;
+		}
+	}
+
+	/** The child's own sky goes to {@code day}, {@code dusk}, {@code night} or {@code dawn}. */
+	public record Sky(String time) implements Step {
+		static final MapCodec<Sky> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+			Codec.STRING.fieldOf("time").forGetter(Sky::time)
+		).apply(instance, Sky::new));
+
+		@Override
+		public Kind kind() {
+			return Kind.SKY;
+		}
+
+		public justfatlard.phonics.classroom.Sky.@org.jspecify.annotations.Nullable Time named() {
+			for (justfatlard.phonics.classroom.Sky.Time one : justfatlard.phonics.classroom.Sky.Time.values()) {
+				if (one.name().toLowerCase(Locale.ROOT).equals(time)) return one;
+			}
+			return null;
+		}
+
+		@Override
+		public boolean usable() {
+			return named() != null;
+		}
+
+		@Override
+		public int ticks() {
+			return 30;
+		}
+	}
+
+	/** The child's own weather: {@code rain}, {@code drizzle}, {@code snow}, {@code storm} or {@code clear}. */
+	public record Weather(String weather) implements Step {
+		static final MapCodec<Weather> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+			Codec.STRING.fieldOf("weather").forGetter(Weather::weather)
+		).apply(instance, Weather::new));
+
+		@Override
+		public Kind kind() {
+			return Kind.WEATHER;
+		}
+
+		@Override
+		public boolean usable() {
+			return justfatlard.phonics.classroom.Sky.weatherNamed(weather) != null;
 		}
 	}
 }

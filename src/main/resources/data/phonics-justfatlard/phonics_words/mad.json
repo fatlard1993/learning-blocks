@@ -1,0 +1,24 @@
+{
+  "tiles": [
+    "m",
+    "a",
+    "d"
+  ],
+  "stage": 1,
+  "picture_card": "mad",
+  "outcome": {
+    "type": "character",
+    "face": "mad",
+    "gesture": "stomp",
+    "lasts": 90
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:angry_villager",
+    "count": 6,
+    "spread": 0.4,
+    "at": "above",
+    "sound": "minecraft:entity.villager.no",
+    "pitch": 1.3
+  }
+}

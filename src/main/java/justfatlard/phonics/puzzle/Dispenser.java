@@ -266,6 +266,53 @@ public final class Dispenser implements Stage {
 		keep(creature);
 	}
 
+	@Override
+	public void dispenseCharacter(ServerPlayer player, Entity character, java.util.function.Consumer<Entity> landed, int lasts) {
+		puff();
+		Vec3 from = mouth();
+		Vec3 to = standingFor(player);
+		Vec3 toward = player.position().subtract(to);
+		float yaw = (float) Math.toDegrees(Math.atan2(-toward.x, toward.z));
+		if (character instanceof Mob mob) mob.setNoAi(true);
+		character.setNoGravity(true);
+		character.snapTo(from.x, from.y, from.z, yaw, 0.0F);
+		level.addFreshEntity(character);
+		sent("character", from);
+		keep(character);
+		for (int i = 1; i <= FLIGHT; i++) {
+			double t = i / (double) FLIGHT;
+			Vec3 at = from.lerp(to, t).add(0, Math.sin(Math.PI * t) * 1.2, 0);
+			boolean last = i == FLIGHT;
+			Later.after(player, i, p -> {
+				if (!character.isAlive()) return;
+				character.snapTo(at.x, at.y, at.z, yaw, 0.0F);
+				character.setYHeadRot(yaw);
+				if (character instanceof net.minecraft.world.entity.LivingEntity living) living.setYBodyRot(yaw);
+				if (last) {
+					level.sendParticles(ParticleTypes.POOF, at.x, at.y + 0.1, at.z, 6, 0.3, 0.05, 0.3, 0.01);
+					landed.accept(character);
+				}
+			});
+		}
+		if (lasts > 0) {
+			Later.after(player, FLIGHT + lasts, p -> {
+				if (!character.isAlive()) return;
+				level.sendParticles(ParticleTypes.POOF, character.getX(), character.getY() + character.getBbHeight() / 2, character.getZ(),
+					12, 0.3, 0.3, 0.3, 0.02);
+				justfatlard.phonics.feel.Feelings.clear(character);
+				character.discard();
+				spawned.remove(character.getUUID());
+			});
+		}
+	}
+
+	/** Where a character stands to be seen: on the floor a little in front of the child, toward the board, inside the walls. */
+	private Vec3 standingFor(ServerPlayer player) {
+		double x = Math.max(origin.getX() + 0.5 - 3.5, Math.min(origin.getX() + 0.5 + 3.5, player.getX()));
+		double z = Math.max(origin.getZ() + 0.5 - 3.0, Math.min(origin.getZ() + 0.5 + 2.0, player.getZ() - 2.2));
+		return new Vec3(x, origin.getY(), z);
+	}
+
 	/** An item thrown from the button to land at the child's feet, picked up the ordinary way. */
 	@Override
 	public void dispenseItem(ServerPlayer player, ItemStack stack) {

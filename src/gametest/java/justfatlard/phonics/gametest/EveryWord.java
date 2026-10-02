@@ -74,6 +74,21 @@ public final class EveryWord implements FabricClientGameTest {
 				case Outcome.SpawnEntity spawn -> check(room.creatures().stream().anyMatch(entity ->
 						entity.getType() == BuiltInRegistries.ENTITY_TYPE.getValue(spawn.entity())),
 					word.id() + "'s " + spawn.entity() + " is not in the room");
+				case Outcome.Sky sky -> {
+					if (!sky.flicker()) check(justfatlard.phonics.classroom.Sky.timeOf(player) == sky.to().ticks,
+						word.id() + "'s sky did not turn to " + sky.time() + ": " + justfatlard.phonics.classroom.Sky.timeOf(player));
+				}
+				case Outcome.Weather weather -> check(weather.weather().equals("cloud") ? justfatlard.phonics.classroom.Sky.clouds() > 0
+						: justfatlard.phonics.classroom.Sky.weatherOf(player) == justfatlard.phonics.classroom.Sky.weatherNamed(weather.weather()),
+					word.id() + "'s " + weather.weather() + " never came: " + justfatlard.phonics.classroom.Sky.weatherOf(player));
+				case Outcome.Character character -> {
+					Entity who = room.creatures().stream().filter(entity -> entity.getType() == BuiltInRegistries.ENTITY_TYPE.getValue(character.entity()))
+						.reduce((a, b) -> b).orElse(null);
+					check(who != null, word.id() + "'s " + character.entity() + " is not in the room");
+					character.face().ifPresent(face -> check(justfatlard.phonics.feel.Feelings.of(who) == justfatlard.phonics.feel.Feelings.Face.named(face),
+						word.id() + "'s " + character.entity() + " is not feeling " + face));
+				}
+				case Outcome.Dark dark -> check(dark.flicker() || justfatlard.phonics.classroom.Sky.isDark(player), word.id() + " did not put the lights out");
 				default -> { }
 			}
 		}

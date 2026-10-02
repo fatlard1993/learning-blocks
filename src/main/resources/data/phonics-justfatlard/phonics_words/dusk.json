@@ -1,0 +1,34 @@
+{
+  "tiles": [
+    "d",
+    "u",
+    "s",
+    "k"
+  ],
+  "stage": 11,
+  "picture_card": "dusk",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "sky",
+        "time": "dusk",
+        "glide": 50
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:end_rod",
+        "count": 8,
+        "spread": 1.4,
+        "at": "above",
+        "sound": "minecraft:block.amethyst_block.chime",
+        "pitch": 0.6
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sky",
+    "time": "dusk",
+    "flicker": true
+  }
+}

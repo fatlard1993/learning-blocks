@@ -11,6 +11,12 @@
     "type": "sequence",
     "steps": [
       {
+        "type": "sky",
+        "time": "day",
+        "from": "dawn",
+        "glide": 40
+      },
+      {
         "type": "particles",
         "particle": "minecraft:end_rod",
         "count": 30,

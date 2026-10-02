@@ -27,6 +27,8 @@ public final class Places {
 
 	/** The height a child stands at: the floor is the layer under it. */
 	public static final int FLOOR_Y = 64;
+	/** How high a room's walls stand over its floor; it has no lid, for its sky. */
+	public static final int WALL_HEIGHT = 6;
 
 	public static boolean isClassroom(Level level) {
 		return level.dimension().equals(CLASSROOM);

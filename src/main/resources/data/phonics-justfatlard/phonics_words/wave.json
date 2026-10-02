@@ -1,0 +1,31 @@
+{
+  "tiles": [
+    "w",
+    "a",
+    "v",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "a_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "picture_card": "wave",
+  "outcome": {
+    "type": "character",
+    "face": "glad",
+    "gesture": "wave",
+    "lasts": 90
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:splash",
+    "count": 60,
+    "spread": 0.7,
+    "at": "player",
+    "sound": "minecraft:entity.player.splash",
+    "pitch": 1.2
+  }
+}

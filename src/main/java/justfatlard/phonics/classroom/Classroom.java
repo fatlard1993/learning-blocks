@@ -4,7 +4,6 @@ import java.util.Set;
 import justfatlard.phonics.Safely;
 import justfatlard.phonics.puzzle.Room;
 import justfatlard.phonics.puzzle.Rooms;
-import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,7 +45,7 @@ public final class Classroom {
 
 		// The level mixin keeps the classroom's own weather off, but the overworld announces the
 		// moment it starts or stops raining to every player on the server, wherever they stand.
-		// That tick, the classroom says otherwise to its own.
+		// That tick, each child in the classroom is told their own weather again.
 		boolean raining = server.overworld().isRaining();
 		boolean turned = raining != wasRaining;
 		wasRaining = raining;
@@ -56,25 +55,20 @@ public final class Classroom {
 		}
 	}
 
-	/** Dry sky, a full stomach, and back on the floor after a fall. */
+	/** Their own sky, a full stomach, and back on the floor after a fall. */
 	private static void care(ServerPlayer player, boolean turned) {
 		ServerLevel classroom = (ServerLevel) player.level();
-		if (turned) clearSky(player);
+		if (turned) Sky.overworldTurned(player);
 		if (player.getFoodData().getFoodLevel() < 20) player.getFoodData().setFoodLevel(20);
 		if (player.getFoodData().getSaturationLevel() < 5) player.getFoodData().setSaturation(5);
 
-		if (player.getY() < Places.FLOOR_Y - FELL) {
+		// Under the floor, or (the room has no lid, for its sky) up over the walls on a stack of something.
+		if (player.getY() < Places.FLOOR_Y - FELL || player.getY() >= Places.FLOOR_Y + Places.WALL_HEIGHT) {
 			Room room = Rooms.of(player);
 			Vec3 back = room != null ? room.spawn() : Vec3.atBottomCenterOf(Plots.origin(player));
 			player.resetFallDistance();
 			player.setDeltaMovement(Vec3.ZERO);
 			player.teleportTo(classroom, back.x, back.y, back.z, Set.of(), Room.FACING_YAW, 0, true);
 		}
-	}
-
-	private static void clearSky(ServerPlayer player) {
-		player.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.STOP_RAINING, 0.0F));
-		player.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.RAIN_LEVEL_CHANGE, 0.0F));
-		player.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.THUNDER_LEVEL_CHANGE, 0.0F));
 	}
 }

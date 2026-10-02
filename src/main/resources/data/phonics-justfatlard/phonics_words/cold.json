@@ -1,0 +1,41 @@
+{
+  "tiles": [
+    "c",
+    "o",
+    "l",
+    "d"
+  ],
+  "sounds": [
+    null,
+    "o_long",
+    null,
+    null
+  ],
+  "stage": 11,
+  "picture_card": "cold",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "weather",
+        "weather": "snow",
+        "lasts": 160
+      },
+      {
+        "type": "character",
+        "face": "cold",
+        "gesture": "shiver",
+        "lasts": 100
+      }
+    ]
+  },
+  "wrong": {
+    "type": "particles",
+    "particle": "minecraft:snowflake",
+    "count": 30,
+    "spread": 0.6,
+    "at": "player",
+    "sound": "minecraft:entity.player.hurt_freeze",
+    "pitch": 1.3
+  }
+}

@@ -974,6 +974,8 @@ final class RoundLifecycle {
 
 	/** The last round's tiles, gone from the rows, the hands and the floor, and whatever a word put down. */
 	void clearRound() {
+		// A word's night or rain is over: a clear noon for the next.
+		for (ServerPlayer one : room.present()) justfatlard.phonics.classroom.Sky.reset(one);
 		if (room.bob != null) {
 			room.bob.clear();
 			room.bob = null;

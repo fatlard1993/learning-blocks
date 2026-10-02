@@ -16,15 +16,25 @@
   "compound": true,
   "picture_card": "sunset",
   "outcome": {
-    "type": "particles",
-    "particle": "minecraft:flame",
-    "count": 12,
-    "spread": 1.0,
-    "at": "above",
-    "sound": "minecraft:block.amethyst_block.chime",
-    "pitch": 0.8,
-    "repeat": 3,
-    "every": 10
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "sky",
+        "time": "dusk",
+        "glide": 50
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:flame",
+        "count": 12,
+        "spread": 1.0,
+        "at": "above",
+        "sound": "minecraft:block.amethyst_block.chime",
+        "pitch": 0.8,
+        "repeat": 3,
+        "every": 10
+      }
+    ]
   },
   "wrong": {
     "type": "sequence",

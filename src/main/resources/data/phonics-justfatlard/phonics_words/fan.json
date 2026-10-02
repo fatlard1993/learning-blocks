@@ -62,6 +62,10 @@
         "type": "character"
       },
       {
+        "type": "feel",
+        "face": "hot"
+      },
+      {
         "type": "bubble",
         "text": "Phew!",
         "color": 16757575

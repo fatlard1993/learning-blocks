@@ -302,7 +302,9 @@ public final class PrizeFile {
 			Bob's sentence already made and acted out wrong, one card to fix (from stage 5), and a
 			word on the board with one wrong letter (from stage 2); whats_wrong_every: one round in
 			this many is a word to fix. silly_counts: whether a silly sentence told to Bob (Silly
-			sentences, from the action menu) counts as a lesson; never towards mastery."""),
+			sentences, from the action menu) counts as a lesson; never towards mastery.
+			bob_prop_share: out of 100, at most how often Bob's goal is one with only props in it (a
+			mug on a desk) rather than a plushie or a toy; never two of those in a row."""),
 		Map.entry("points", """
 			Points add up from the events above that give them. Each threshold pays once, the
 			first time the total reaches it. Off by default."""));
@@ -330,7 +332,7 @@ public final class PrizeFile {
 		  ] },
 		  "puzzles": { "scenes": true, "scene_every": 4, "letters_first": true, "mastery_clean": 3, "letter_word_every": 3, "read_it": true, "read_it_every": 5, "review_share": 30,
 		    "first_sound": true, "last_sound": true, "middle_vowel": true, "whole_word": true, "team_up": true, "team_up_every": 3,
-		    "tell_bob": true, "tell_bob_every": 5, "whats_wrong": true, "whats_wrong_every": 6, "silly_counts": false }
+		    "tell_bob": true, "tell_bob_every": 5, "whats_wrong": true, "whats_wrong_every": 6, "silly_counts": false, "bob_prop_share": 20 }
 		}
 		""";
 

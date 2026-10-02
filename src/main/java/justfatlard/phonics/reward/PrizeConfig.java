@@ -213,6 +213,7 @@ public final class PrizeConfig {
 	private static volatile int whatsWrongEvery = 6;
 	private static volatile boolean whatsWrong = true;
 	private static volatile boolean sillyCounts = false;
+	private static volatile int bobPropShare = 20;
 
 	/** From stage 5, one round in this many is Bob's: telling him what to do, or fixing what he did; 0 for none. */
 	public static int tellBobEvery() {
@@ -227,6 +228,19 @@ public final class PrizeConfig {
 	/** From stage 2, one round in this many is a word with one wrong letter to fix; 0 for none. */
 	public static int whatsWrongEvery() {
 		return whatsWrong ? whatsWrongEvery : 0;
+	}
+
+	/**
+	 * Out of 100, at most how often a goal made from the things' affordances is one with props only
+	 * (a mug on a desk) rather than a plushie or a toy; and never two in a row.
+	 */
+	public static int bobPropShare() {
+		return bobPropShare;
+	}
+
+	/** For tests. */
+	public static void useBobPropShare(int share) {
+		bobPropShare = Math.max(0, Math.min(100, share));
 	}
 
 	/** Whether a silly sentence told to Bob counts as a lesson. Never towards mastery. */
@@ -327,6 +341,7 @@ public final class PrizeConfig {
 		whatsWrong = bool(puzzlesJson, "whats_wrong", true, problems);
 		whatsWrongEvery = Math.max(0, integer(puzzlesJson, "whats_wrong_every", 6, problems));
 		sillyCounts = bool(puzzlesJson, "silly_counts", false, problems);
+		bobPropShare = Math.max(0, Math.min(100, integer(puzzlesJson, "bob_prop_share", 20, problems)));
 		return new PrizeConfig(
 			bool(json, "enabled", true, problems),
 			Math.max(0, integer(json, "daily_cap", 0, problems)),

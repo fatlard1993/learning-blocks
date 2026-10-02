@@ -139,6 +139,14 @@ public class Phonics implements ModInitializer {
 		justfatlard.phonics.things.Things.register();
 		justfatlard.phonics.toy.Toys.register();
 		justfatlard.phonics.play.Play.register();
+		justfatlard.phonics.classroom.Sky.register();
+		justfatlard.phonics.feel.Feelings.register();
+		justfatlard.phonics.feel.Gestures.register();
+		ServerEntityLevelChangeEvents.AFTER_PLAYER_CHANGE_LEVEL.register((player, from, to) -> {
+			if (justfatlard.phonics.classroom.Places.isClassroom(from)) justfatlard.phonics.classroom.Sky.forget(player);
+		});
+		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
+			server.execute(() -> justfatlard.phonics.classroom.Sky.forget(handler.player)));
 		PandoricalApi.content().registerModAssets(MOD_ID);
 		Sounds.init();
 

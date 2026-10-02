@@ -1,0 +1,40 @@
+{
+  "tiles": [
+    "h",
+    "i",
+    "d",
+    "e"
+  ],
+  "sounds": [
+    null,
+    "i_long",
+    null,
+    "silent"
+  ],
+  "stage": 9,
+  "picture_card": "hide",
+  "outcome": {
+    "type": "character",
+    "entity": "minecraft:rabbit",
+    "gesture": "hide",
+    "lasts": 90
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:poof",
+        "count": 8,
+        "spread": 0.3,
+        "at": "player"
+      },
+      {
+        "type": "bonk",
+        "items": [
+          "minecraft:oak_leaves"
+        ]
+      }
+    ]
+  }
+}

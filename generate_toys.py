@@ -44,11 +44,19 @@ def pair(box):
     return [box, mirror(box)]
 
 
-def wheels(x0, x1, zs, y=0, size=2.2, role="tyre"):
-    """Four (or more) wheels, either side, at these z's."""
+def wheels(x0, x1, zs, y=0, size=2.2, role="tyre", part=None, hub=None):
+    """Four (or more) wheels, either side, at these z's. With a part name, each wheel is its own
+    part (part0, part1 at the first z, left and right...) with a hub bar across its outside, so it
+    can be seen to turn."""
     out = []
-    for z in zs:
-        out += pair(((x0, y, z), (x0 + 1.2, y + size, z + size), role))
+    for i, z in enumerate(zs):
+        if part is None:
+            out += pair(((x0, y, z), (x0 + 1.2, y + size, z + size), role))
+            continue
+        left, right = {"part": f"{part}{2 * i}"}, {"part": f"{part}{2 * i + 1}"}
+        wheel = ((x0, y, z), (x0 + 1.2, y + size, z + size), role)
+        bar = ((x0 - 0.2, y + size / 2 - 0.3, z + 0.2), (x0, y + size / 2 + 0.3, z + size - 0.2), hub)
+        out += [wheel + (left,), bar + (left,), mirror(wheel) + (right,), mirror(bar) + (right,)]
     return out
 
 
@@ -119,6 +127,8 @@ def kite():
         ((7.5, 0, 7.6), (8.9, 0.4, 9.6), "string"),
         ((7.5, 0.4, 7.9), (7.7, 1.4, 8.1), "string"),
     ]
+    # The tail, everything under the sail, is a part of its own: it waves.
+    boxes = [box + ({"part": "tail"},) if len(box) == 3 and box[1][1] <= 7.8 else box for box in boxes]
     return c, {}, boxes
 
 def top():
@@ -141,11 +151,11 @@ def ring():
     c = {"base": WOOD, "red": RED, "orange": ORANGE, "yellow": YELLOW, "green": GREEN, "blue": BLUE, "knob": RED}
     boxes = [
         ((4, 0, 4), (12, 1, 12), "base"),
-        ((4, 1, 4), (12, 2.6, 12), "red"),
-        ((4.5, 2.6, 4.5), (11.5, 4.2, 11.5), "orange"),
-        ((5, 4.2, 5), (11, 5.8, 11), "yellow"),
-        ((5.5, 5.8, 5.5), (10.5, 7.4, 10.5), "green"),
-        ((6, 7.4, 6), (10, 9, 10), "blue"),
+        ((4, 1, 4), (12, 2.6, 12), "red", {"part": "ring0"}),
+        ((4.5, 2.6, 4.5), (11.5, 4.2, 11.5), "orange", {"part": "ring1"}),
+        ((5, 4.2, 5), (11, 5.8, 11), "yellow", {"part": "ring2"}),
+        ((5.5, 5.8, 5.5), (10.5, 7.4, 10.5), "green", {"part": "ring3"}),
+        ((6, 7.4, 6), (10, 9, 10), "blue", {"part": "ring4"}),
         ((7.2, 9, 7.2), (8.8, 10, 8.8), "base"),
         ((6.8, 10, 6.8), (9.2, 11.6, 9.2), "knob"),
     ]
@@ -234,22 +244,27 @@ def pin():
 
 
 def sock():
-    c = {"sock": CREAM, "stripe": RED, "mouth": RED, "heel": shade(CREAM, 0.9)}
-    face = Face(6, 4, CREAM)
-    face.disc(6, 6, 2.6, BLACK)
-    face.disc(6, 6, 1.2, CREAM)
-    face.disc(18, 6, 2.6, BLACK)
-    face.disc(18, 6, 1.2, CREAM)
-    face.rect(6, 12, 18, 15, RED)
+    c = {"sock": CREAM, "stripe": RED, "mouth": RED, "heel": shade(CREAM, 0.9), "inside": rgb(0x8C2A2A)}
+    # The top of the head with its button eyes, and the jaw under it with a red lip: the jaw opens.
+    face = Face(6, 2.6, CREAM)
+    face.disc(6, 5.5, 2.6, BLACK)
+    face.disc(6, 5.5, 1.2, CREAM)
+    face.disc(18, 5.5, 2.6, BLACK)
+    face.disc(18, 5.5, 1.2, CREAM)
+    face.rect(4, 8, 20, 11, RED)
+    jaw = Face(6, 1.4, CREAM)
+    jaw.rect(4, 0, 20, 2, RED)
     boxes = [
         ((5, 0, 6.5), (11, 1.6, 11), "stripe"),
         ((5, 1.6, 6.5), (11, 3, 11), "sock"),
         ((5, 3, 6.5), (11, 4.4, 11), "stripe"),
         ((5, 4.4, 6.5), (11, 9, 11), "sock"),
-        ((5, 7, 2.8), (11, 11, 6.5), "sock", {"north": "@face"}),
+        ((5, 8.4, 2.8), (11, 11, 6.5), "sock", {"north": "@face"}),
+        ((5.4, 8.0, 3.2), (10.6, 8.4, 6.5), "inside"),
+        ((5, 7, 2.8), (11, 8.4, 6.5), "sock", {"north": "@jaw", "up": "mouth", "part": "jaw"}),
         ((5, 9, 6.5), (11, 11, 9), "heel"),
     ]
-    return c, {"face": face}, boxes
+    return c, {"face": face, "jaw": jaw}, boxes
 
 
 def crib():
@@ -281,7 +296,7 @@ def car():
         ((9.6, 2.2, 2.1), (11, 3.2, 2.5), "light"),
         ((4.4, 1.2, 1.8), (11.6, 1.8, 2.5), "bumper"),
     ]
-    boxes += wheels(3, 13, (3.4, 10.4))
+    boxes += wheels(3, 13, (3.4, 10.4), part="wheel", hub="bumper")
     return c, {"side": side, "front": front}, boxes
 
 
@@ -303,8 +318,10 @@ def van():
 
 
 def jet():
-    c = {"body": CREAM, "nose": RED, "wing": BLUE, "fin": RED, "glass": SKY, "tyre": BLACK}
+    c = {"body": CREAM, "nose": RED, "wing": BLUE, "fin": RED, "glass": SKY, "tyre": BLACK, "blade": SILVER}
     boxes = [
+        ((7.5, 3.0, -0.6), (8.5, 4.0, 0.2), "fin", {"part": "prop"}),
+        ((4.4, 3.25, -0.45), (11.6, 3.75, -0.15), "blade", {"part": "prop"}),
         ((6.5, 2, 1.5), (9.5, 5, 14.5), "body"),
         ((7, 2.5, 0.2), (9, 4.5, 1.5), "nose"),
         ((7, 5, 2.6), (9, 6, 5.6), "glass"),
@@ -319,9 +336,14 @@ def jet():
 
 
 def bus():
-    c = {"body": YELLOW, "tyre": BLACK, "stripe": BLACK, "light": RED, "bumper": BLACK}
+    c = {"body": YELLOW, "tyre": BLACK, "stripe": BLACK, "light": RED, "bumper": BLACK, "door": shade(YELLOW, 0.88)}
     side = windows(8, 3, YELLOW, SKY, 4)
     front = windows(8, 3, YELLOW, SKY, 1)
+    # A folding door on the right, near the front: two leaves, each a tall window in a frame.
+    door = Face(2, 7, shade(YELLOW, 0.88))
+    door.rect(1, 2, 7, 13, SKY)
+    door.rect(1, 2, 7, 4, shade(SKY, 1.12))
+    door.rect(1, 16, 7, 26, shade(YELLOW, 0.8))
     boxes = [
         ((3.5, 1.2, 1), (12.5, 4.5, 15), "body"),
         ((3.5, 4.5, 1), (12.5, 9.5, 15), "body", {"east": "@side", "west": "@side", "north": "@front"}),
@@ -329,9 +351,11 @@ def bus():
         ((4.2, 2.2, 0.6), (5.6, 3.2, 1), "light"),
         ((10.4, 2.2, 0.6), (11.8, 3.2, 1), "light"),
         ((3.6, 1.2, 0.5), (12.4, 1.8, 1), "bumper"),
+        ((12.5, 1.4, 2.0), (12.8, 8.6, 3.8), "door", {"east": "@door", "part": "door0"}),
+        ((12.5, 1.4, 3.8), (12.8, 8.6, 5.6), "door", {"east": "@door", "part": "door1"}),
     ]
     boxes += wheels(2.4, 13.6, (2.2, 11.8))
-    return c, {"side": side, "front": front}, boxes
+    return c, {"side": side, "front": front, "door": door}, boxes
 
 
 def ship():
@@ -403,7 +427,7 @@ def train():
         ((6.4, 10.4, 2.4), (9.6, 11.2, 5.6), "chimney"),
         ((5, 0.4, 0.4), (11, 2, 1.5), "catcher"),
     ]
-    boxes += wheels(2.8, 13.2, (2.4, 6.4, 10.8), size=2.4)
+    boxes += wheels(2.8, 13.2, (2.4, 6.4, 10.8), size=2.4, part="wheel", hub="catcher")
     return c, {"face": face, "side": side}, boxes
 
 
@@ -413,11 +437,11 @@ def truck():
     side = windows(5, 3, ORANGE, SKY, 1)
     boxes = [
         ((4.5, 1.2, 1), (11.5, 8, 6), "cab", {"north": "@front", "east": "@side", "west": "@side"}),
-        ((4, 1.2, 6), (12, 2.4, 15), "bed"),
-        ((4, 2.4, 6), (4.8, 6, 15), "bed"),
-        ((11.2, 2.4, 6), (12, 6, 15), "bed"),
-        ((4.8, 2.4, 14.2), (11.2, 6, 15), "bed"),
-        ((4.8, 2.4, 6), (11.2, 2.6, 14.2), "inside"),
+        ((4, 1.2, 6), (12, 2.4, 15), "bed", {"part": "bed"}),
+        ((4, 2.4, 6), (4.8, 6, 15), "bed", {"part": "bed"}),
+        ((11.2, 2.4, 6), (12, 6, 15), "bed", {"part": "bed"}),
+        ((4.8, 2.4, 14.2), (11.2, 6, 15), "bed", {"part": "bed"}),
+        ((4.8, 2.4, 6), (11.2, 2.6, 14.2), "inside", {"part": "bed"}),
         ((5, 2.2, 0.6), (6.4, 3.2, 1), "light"),
         ((9.6, 2.2, 0.6), (11, 3.2, 1), "light"),
         ((4.6, 1.2, 0.4), (11.4, 1.8, 1), "bumper"),
@@ -466,6 +490,7 @@ def build(name, make):
     write_png(ASSETS / f"textures/block/toy_{name}.png", sheet)
 
     elements = []
+    parts = {}
     for box in boxes:
         lo, hi, role = box[0], box[1], box[2]
         sides = box[3] if len(box) > 3 else {}
@@ -479,7 +504,20 @@ def build(name, make):
             axis, angle, origin = sides["rot"]
             element["rotation"] = {"origin": list(origin), "axis": axis, "angle": angle}
         elements.append(element)
-    write(ASSETS / f"models/block/toy_{name}.json", {
+        parts.setdefault(sides.get("part", "body"), []).append(element)
+    write(ASSETS / f"models/block/toy_{name}.json", model(name, elements))
+    # A toy whose play moves a part of it (the truck's bed, the car's wheels) is also drawn in pieces:
+    # its body and each part on its own, for the displays that play it (play/Anims.java). Shown by an
+    # item display, so each has an item model too, under toy_part/.
+    if len(parts) > 1:
+        for piece, piece_elements in parts.items():
+            write(ASSETS / f"models/block/toy_{name}_{piece}.json", model(name, piece_elements))
+            write(ASSETS / f"items/toy_part/{name}_{piece}.json",
+                  {"model": {"type": "minecraft:model", "model": f"{NS}:block/toy_{name}_{piece}"}})
+
+
+def model(name, elements):
+    return {
         "parent": "minecraft:block/block",
         "textures": {"toy": f"{NS}:block/toy_{name}", "particle": f"{NS}:block/toy_{name}"},
         "elements": elements,
@@ -490,7 +528,7 @@ def build(name, make):
             "thirdperson_righthand": {"rotation": [75, 225, 0], "translation": [0, 2.5, 0], "scale": [0.45, 0.45, 0.45]},
             "firstperson_righthand": {"rotation": [0, 225, 0], "translation": [0, 2, 0], "scale": [0.5, 0.5, 0.5]},
         },
-    })
+    }
 
 
 def main():

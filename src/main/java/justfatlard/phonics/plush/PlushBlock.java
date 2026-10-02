@@ -72,7 +72,13 @@ public class PlushBlock extends Block {
 			}
 			if (justfatlard.phonics.play.Play.playing(server, pos) || state.getValue(justfatlard.phonics.play.Play.HIDDEN)) return InteractionResult.SUCCESS;
 			squeak(server, pos, state.getValue(KIND), reader);
-			justfatlard.phonics.play.Play.play(server, pos, state, justfatlard.phonics.play.Anims.SQUISH);
+			if (justfatlard.phonics.play.Play.play(server, pos, state, justfatlard.phonics.play.Anims.SQUISH)) {
+				// A squeeze, and it loves you back.
+				justfatlard.phonics.relate.Thing thing = justfatlard.phonics.relate.Relations.forBlock(state);
+				float height = thing != null ? thing.height() : 0.6F;
+				justfatlard.phonics.feel.Feelings.showAt(server, net.minecraft.world.phys.Vec3.atBottomCenterOf(pos).add(0, height, 0),
+					server.getRandom().nextInt(3) == 0 ? justfatlard.phonics.feel.Feelings.Face.GLAD : justfatlard.phonics.feel.Feelings.Face.LOVE, 30);
+			}
 		}
 		return InteractionResult.SUCCESS;
 	}

@@ -1,0 +1,17 @@
+{
+  "tiles": [
+    "d",
+    "ar",
+    "k"
+  ],
+  "stage": 12,
+  "picture_card": "dark",
+  "outcome": {
+    "type": "dark",
+    "lasts": 60
+  },
+  "wrong": {
+    "type": "dark",
+    "flicker": true
+  }
+}
