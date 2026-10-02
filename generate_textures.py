@@ -24,7 +24,6 @@ import zlib
 HERE = pathlib.Path(__file__).parent
 ASSETS = HERE / "src/main/resources/assets/phonics-justfatlard"
 OUT = ASSETS / "textures/block"
-ICON = ASSETS / "icon.png"
 
 SIZE = 64
 SCALE = 5
@@ -264,22 +263,6 @@ def letter_texture(name, lit=False):
     return g
 
 
-def icon():
-    """Three tiles, c a t, side by side on a clear ground, 128 square."""
-    n = 128
-    g = [[CLEAR] * n for _ in range(n)]
-    tile_w, tile_h, gap = 40, 62, 4
-    top = (n - tile_h) // 2
-    for i, name in enumerate("cat"):
-        left = i * (tile_w + gap)
-        face = tile(tile_w, "icon" + name, height=tile_h)
-        for y in range(tile_h):
-            g[top + y][left:left + tile_w] = face[y]
-        x0, y0 = left + (tile_w - GLYPH_W * SCALE + 1) // 2, top + (tile_h - GLYPH_H * SCALE) // 2
-        stamp(g, FONT[name], colour_of(name), x0, y0, SCALE)
-    return g
-
-
 def main():
     for name in FONT:
         write_png(OUT / f"letter_{name}.png", letter_texture(name))
@@ -295,8 +278,7 @@ def main():
         write_png(OUT / f"letter_{name}_lit.png", blank_texture(name, lit=True))
     write_png(OUT / "letter_top.png", tile(SIZE, "top"))
     write_png(OUT / "letter_top_lit.png", tile(SIZE, "top", lit=True))
-    write_png(ICON, icon())
-    print(f"Wrote {2 * (len(FONT) + len(DIGRAPHS) + 1)} textures to {OUT.relative_to(HERE)} and the icon")
+    print(f"Wrote {2 * (len(FONT) + len(DIGRAPHS) + 1)} textures to {OUT.relative_to(HERE)}; the icon is generate_icon.py's")
 
 
 if __name__ == "__main__":
