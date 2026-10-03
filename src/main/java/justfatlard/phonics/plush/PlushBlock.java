@@ -110,8 +110,8 @@ public class PlushBlock extends Block {
 	/** A squeak, a puff, and its word, with its caption, for whoever squeezed it. */
 	public static void squeak(ServerLevel level, BlockPos pos, Plush plush, ServerPlayer player) {
 		lastSqueezed = plush;
-		level.playSound(null, pos, SoundEvents.WOOL_HIT, SoundSource.BLOCKS, 1.0F, 1.6F);
-		level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.5F, 1.9F);
+		// The squish, as it squashes down; then its word.
+		Sounds.effectAt(level, pos, Sounds.PLUSH_SQUISH);
 		level.sendParticles(ParticleTypes.HEART, pos.getX() + 0.5, pos.getY() + 0.9, pos.getZ() + 0.5, 2, 0.2, 0.1, 0.2, 0.0);
 		String word = "word/" + plush.word();
 		if (Sounds.isRecorded(word)) Narrator.play(player, new Narration().say(word));

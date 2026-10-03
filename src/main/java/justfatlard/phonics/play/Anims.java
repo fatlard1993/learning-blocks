@@ -25,10 +25,10 @@ public final class Anims {
 
 	private static final Map<Toy, Anim> TOYS = new EnumMap<>(Toy.class);
 
-	/** Plushies all squish alike: down, up, a little settle, soft. */
+	/** Plushies all squish alike: down, up, a little settle, soft. Its sound is the squeeze's own (PlushBlock.squeak). */
 	public static final Anim SQUISH = Anim.of()
 		.squash(3, 1.18F, 0.68F).squash(7, 0.9F, 1.2F).squash(11, 1.06F, 0.94F).squash(15, 0.98F, 1.02F).rest(18)
-		.sound(0, SoundEvents.WOOL_HIT, 1.6F).sound(3, SoundEvents.SLIME_SQUISH_SMALL, 1.6F).puff(7, ParticleTypes.HEART, 2, 0.9F);
+		.puff(7, ParticleTypes.HEART, 2, 0.9F);
 
 	static {
 		// car: zooms a little loop ahead and to the left, nose round the bend, and parks back.

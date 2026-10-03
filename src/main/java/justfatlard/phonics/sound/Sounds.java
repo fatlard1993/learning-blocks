@@ -242,6 +242,21 @@ public final class Sounds {
 			1.0F, sound.pitch());
 	}
 
+	/** The plushie squeeze: soft and fluffy, with a little boop. */
+	public static final String PLUSH_SQUISH = "sfx/plush_squish";
+
+	/**
+	 * A sound effect from a block (an {@code sfx/} key), heard by everybody near it, a little higher or
+	 * lower each time (0.95 to 1.05) so it never sounds the same twice. No caption.
+	 */
+	public static void effectAt(Level level, BlockPos pos, String key) {
+		if (level.isClientSide()) return;
+		Resolved sound = resolve(key);
+		remember(key, pos.immutable(), level.getGameTime());
+		float pitch = sound.pitch() * (0.95F + level.getRandom().nextFloat() * 0.1F);
+		level.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, sound.sound(), SoundSource.BLOCKS, 1.0F, pitch);
+	}
+
 	private record Resolved(Holder<SoundEvent> sound, float pitch) {}
 
 	private static Resolved resolve(String key) {

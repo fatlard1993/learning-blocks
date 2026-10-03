@@ -364,6 +364,8 @@ public final class Dispenser implements Stage {
 			reserved.remove(spot.east());
 			if (!level.getBlockState(spot).isAir()) return;
 			placeAt(spot, state);
+			// A plushie lands with its own soft squish.
+			if (state.is(Phonics.PLUSH)) justfatlard.phonics.sound.Sounds.effectAt(level, spot, justfatlard.phonics.sound.Sounds.PLUSH_SQUISH);
 			if (lasts > 0) later(p, lasts, q -> vanishBlock(spot, state));
 		});
 	}

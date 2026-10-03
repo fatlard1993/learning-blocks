@@ -108,6 +108,9 @@ public final class PlushiesAndThings implements FabricClientGameTest {
 			player.gameMode.useItemOn(player, level, ItemStack.EMPTY, InteractionHand.MAIN_HAND,
 				new BlockHitResult(Vec3.atCenterOf(at), Direction.NORTH, at, false));
 			check(PlushBlock.lastSqueezed == Plush.OWL, "right-clicking the owl did not squeeze it");
+			check(justfatlard.phonics.sound.Sounds.isRecorded("sfx/plush_squish"), "the plushie squish is not found under sounds/sfx/");
+			check(justfatlard.phonics.sound.Sounds.recent().stream().anyMatch(played -> played.key().equals("sfx/plush_squish") && at.equals(played.at())),
+				"squeezing the owl did not play its squish: " + justfatlard.phonics.sound.Sounds.recent());
 			// Broken mid-squish, it is the owl again, once, and nothing else.
 			check(justfatlard.phonics.play.Play.playing(level, at), "the owl is not squishing");
 			Drops.expect(player, at, java.util.Map.of("plush_owl", 1), "the owl, broken mid-squish,");
