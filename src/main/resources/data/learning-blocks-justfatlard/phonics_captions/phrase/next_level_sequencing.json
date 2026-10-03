@@ -1,0 +1,55 @@
+{
+	"duration": 3.28,
+	"words": [
+		{
+			"text": "You",
+			"start": 0.145,
+			"end": 0.16
+		},
+		{
+			"text": "can",
+			"start": 0.2,
+			"end": 0.32
+		},
+		{
+			"text": "put",
+			"start": 0.38,
+			"end": 0.56
+		},
+		{
+			"text": "things",
+			"start": 0.606,
+			"end": 0.88
+		},
+		{
+			"text": "in",
+			"start": 0.933,
+			"end": 1.04
+		},
+		{
+			"text": "order!",
+			"start": 1.12,
+			"end": 1.6
+		},
+		{
+			"text": "Ready",
+			"start": 1.693,
+			"end": 2.16
+		},
+		{
+			"text": "for",
+			"start": 2.2,
+			"end": 2.32
+		},
+		{
+			"text": "more",
+			"start": 2.368,
+			"end": 2.56
+		},
+		{
+			"text": "thinking!",
+			"start": 2.622,
+			"end": 3.28
+		}
+	]
+}

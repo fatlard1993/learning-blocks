@@ -1,0 +1,40 @@
+{
+	"duration": 3.88,
+	"words": [
+		{
+			"text": "Put",
+			"start": 0.148,
+			"end": 0.16
+		},
+		{
+			"text": "them",
+			"start": 0.192,
+			"end": 0.32
+		},
+		{
+			"text": "in",
+			"start": 0.347,
+			"end": 0.4
+		},
+		{
+			"text": "order:",
+			"start": 0.48,
+			"end": 1.36
+		},
+		{
+			"text": "first,",
+			"start": 1.453,
+			"end": 2.24
+		},
+		{
+			"text": "next,",
+			"start": 2.352,
+			"end": 3.12
+		},
+		{
+			"text": "last!",
+			"start": 3.216,
+			"end": 3.76
+		}
+	]
+}

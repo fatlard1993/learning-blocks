@@ -1,0 +1,45 @@
+{
+	"duration": 2.8,
+	"words": [
+		{
+			"text": "Oops,",
+			"start": 0.4,
+			"end": 0.72
+		},
+		{
+			"text": "one",
+			"start": 0.76,
+			"end": 0.88
+		},
+		{
+			"text": "is",
+			"start": 0.933,
+			"end": 1.04
+		},
+		{
+			"text": "wrong!",
+			"start": 1.12,
+			"end": 1.76
+		},
+		{
+			"text": "Can",
+			"start": 1.82,
+			"end": 2.0
+		},
+		{
+			"text": "you",
+			"start": 2.02,
+			"end": 2.08
+		},
+		{
+			"text": "find",
+			"start": 2.16,
+			"end": 2.48
+		},
+		{
+			"text": "it?",
+			"start": 2.533,
+			"end": 2.8
+		}
+	]
+}

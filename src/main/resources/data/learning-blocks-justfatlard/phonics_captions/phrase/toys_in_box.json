@@ -1,0 +1,45 @@
+{
+	"duration": 2.76,
+	"words": [
+		{
+			"text": "Toys",
+			"start": 0.282,
+			"end": 0.32
+		},
+		{
+			"text": "in",
+			"start": 0.347,
+			"end": 0.4
+		},
+		{
+			"text": "the",
+			"start": 0.42,
+			"end": 0.48
+		},
+		{
+			"text": "box,",
+			"start": 0.62,
+			"end": 1.36
+		},
+		{
+			"text": "plushies",
+			"start": 1.413,
+			"end": 1.84
+		},
+		{
+			"text": "in",
+			"start": 1.893,
+			"end": 2.0
+		},
+		{
+			"text": "the",
+			"start": 2.07,
+			"end": 2.28
+		},
+		{
+			"text": "crib!",
+			"start": 2.336,
+			"end": 2.64
+		}
+	]
+}

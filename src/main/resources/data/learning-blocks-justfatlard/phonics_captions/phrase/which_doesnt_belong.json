@@ -1,0 +1,25 @@
+{
+	"duration": 1.6,
+	"words": [
+		{
+			"text": "Which",
+			"start": 0.187,
+			"end": 0.32
+		},
+		{
+			"text": "one",
+			"start": 0.38,
+			"end": 0.56
+		},
+		{
+			"text": "doesn't",
+			"start": 0.613,
+			"end": 0.96
+		},
+		{
+			"text": "belong?",
+			"start": 1.04,
+			"end": 1.6
+		}
+	]
+}

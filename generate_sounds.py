@@ -408,6 +408,31 @@ PHRASES = {
 	"next_level_comparing": {"text": '[excited] You know more and fewer! Ready for more numbers!', "model": EXPRESSIVE},
 	"bob_so_many": {"text": "[amazed] Whoa! That's a LOT!", "model": EXPRESSIVE, "voice": BOB},
 	"bob_counted": {"text": "[proudly] I counted them all!", "model": EXPRESSIVE, "voice": BOB},
+	"put_in_pens": {"text": '[cheerful] Put the animals in their pens!', "model": EXPRESSIVE},
+	"sort_by_colour": {"text": '[cheerful] Sort them by colour!', "model": EXPRESSIVE},
+	"sort_by_size": {"text": '[playful] Big ones here, little ones there!', "model": EXPRESSIVE},
+	"toys_in_box": {"text": '[cheerful] Toys in the box, plushies in the crib!', "model": EXPRESSIVE},
+	"same_or_different": {"text": '[curious] Same or different?', "model": EXPRESSIVE},
+	"find_the_mistake": {"text": '[playful] Oops, one is wrong! Can you find it?', "model": EXPRESSIVE},
+	"copy_it": {"text": '[cheerful] Can you make one just like it?', "model": EXPRESSIVE},
+	"listen": {"text": '[whispers] Listen!', "model": EXPRESSIVE},
+	"which_doesnt_belong": {"text": "[curious] Which one doesn't belong?", "model": EXPRESSIVE},
+	"bye_bye": {"text": '[cheerful] Bye bye!', "model": EXPRESSIVE},
+	"look_carefully": {"text": '[curious] Look carefully!', "model": EXPRESSIVE},
+	"whats_missing": {"text": "[curious] What's missing?", "model": EXPRESSIVE},
+	"what_happens_first": {"text": '[curious] What happens first?', "model": EXPRESSIVE},
+	"first_next_last": {"text": '[cheerful] Put them in order: first, next, last!', "model": EXPRESSIVE},
+	"little_to_big": {"text": '[cheerful] Put them in order, little to big!', "model": EXPRESSIVE},
+	"wake_up": {"text": '[cheerful] Wake up!', "model": EXPRESSIVE},
+	"eat_breakfast": {"text": '[cheerful] Eat breakfast!', "model": EXPRESSIVE},
+	"put_on_boots": {"text": '[cheerful] Put on your boots!', "model": EXPRESSIVE},
+	"go_outside": {"text": '[excited] Go outside!', "model": EXPRESSIVE},
+	"next_level_matching": {"text": '[excited] You can sort and match! Ready for more!', "model": EXPRESSIVE},
+	"next_level_patterns": {"text": '[excited] You know your patterns! Ready for more!', "model": EXPRESSIVE},
+	"next_level_odd_one": {"text": '[excited] You can spot the odd one out! Ready for more!', "model": EXPRESSIVE},
+	"next_level_sequencing": {"text": '[excited] You can put things in order! Ready for more thinking!', "model": EXPRESSIVE},
+	"bob_sorted": {"text": "[proudly] All sorted!", "model": EXPRESSIVE, "voice": BOB},
+	"bob_wrong_pen": {"text": "[surprised] Oops! Wrong pen!", "model": EXPRESSIVE, "voice": BOB},
 	"subject_reading": {"variants": [{"text": "[cheerful] Reading time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's read!", "model": EXPRESSIVE}]},
 	"subject_numbers": {"variants": [{"text": "[cheerful] Numbers time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's count!", "model": EXPRESSIVE}]},
 	"subject_logic": {"variants": [{"text": "[cheerful] Thinking time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's figure it out!", "model": EXPRESSIVE}]},
@@ -482,11 +507,13 @@ def clips():
 		yield f"word/{word}", [{**t, "caption": word, "tiles": data["tiles"], "sounds": data.get("sounds") or [None] * len(data["tiles"])} for t in word_takes(word)]
 	# Plushies whose name isn't a puzzle word still say it when squeezed.
 	for word in ("teddy", "ladybug", "blue", "yellow", "apples", "cows", "carrots", "kittens", "beds", "chickens",
-			"cakes", "blocks", "villagers", "more", "fewer", "same", "taller", "shorter", "plus", "minus", "equals"):
+			"cakes", "blocks", "villagers", "more", "fewer", "same", "taller", "shorter", "plus", "minus", "equals", "different", "low", "first", "next", "last", "sprout",
+			"flower", "left", "right", "little", "all"):
 		if not (WORDS / f"{word}.json").exists():
 			yield f"word/{word}", [{**t, "caption": word, "tiles": [word], "sounds": ["silent"]} for t in word_takes(word)]
 	for name, line in {"hungry_pigs": "The three pigs are hungry, but there's only one carrot!",
-			"cake_for_everyone": "[cheerful] Each villager wants a cake!"}.items():
+			"cake_for_everyone": "[cheerful] Each villager wants a cake!",
+			"mixed_up_morning": "[playful] Oh no, he's all mixed up! Can you put his morning in order?"}.items():
 		yield f"scene/{name}", [{"text": line, "cut": ["whole"], **({"model": EXPRESSIVE} if "[" in line else {})}]
 	for n, said in enumerate(NUMBER_NAMES):
 		yield f"number/{n}", [{"text": f"{said.capitalize()}.", "cut": ["whole"], "caption": said}]

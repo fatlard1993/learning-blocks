@@ -1,0 +1,55 @@
+{
+	"duration": 3.36,
+	"words": [
+		{
+			"text": "You",
+			"start": 0.145,
+			"end": 0.16
+		},
+		{
+			"text": "can",
+			"start": 0.2,
+			"end": 0.32
+		},
+		{
+			"text": "spot",
+			"start": 0.4,
+			"end": 0.72
+		},
+		{
+			"text": "the",
+			"start": 0.76,
+			"end": 0.88
+		},
+		{
+			"text": "odd",
+			"start": 0.94,
+			"end": 1.12
+		},
+		{
+			"text": "one",
+			"start": 1.16,
+			"end": 1.28
+		},
+		{
+			"text": "out!",
+			"start": 1.42,
+			"end": 1.92
+		},
+		{
+			"text": "Ready",
+			"start": 2.053,
+			"end": 2.72
+		},
+		{
+			"text": "for",
+			"start": 2.74,
+			"end": 2.8
+		},
+		{
+			"text": "more!",
+			"start": 2.88,
+			"end": 3.36
+		}
+	]
+}

@@ -1,0 +1,20 @@
+{
+	"duration": 2.08,
+	"words": [
+		{
+			"text": "Oops!",
+			"start": 0.347,
+			"end": 0.64
+		},
+		{
+			"text": "Wrong",
+			"start": 0.68,
+			"end": 0.88
+		},
+		{
+			"text": "pen!",
+			"start": 1.0,
+			"end": 2.08
+		}
+	]
+}

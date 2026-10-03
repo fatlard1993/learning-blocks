@@ -1,0 +1,40 @@
+{
+	"duration": 2.72,
+	"words": [
+		{
+			"text": "You",
+			"start": 0.1,
+			"end": 0.16
+		},
+		{
+			"text": "know",
+			"start": 0.192,
+			"end": 0.32
+		},
+		{
+			"text": "your",
+			"start": 0.368,
+			"end": 0.56
+		},
+		{
+			"text": "patterns!",
+			"start": 0.649,
+			"end": 1.44
+		},
+		{
+			"text": "Ready",
+			"start": 1.52,
+			"end": 1.92
+		},
+		{
+			"text": "for",
+			"start": 1.96,
+			"end": 2.08
+		},
+		{
+			"text": "more!",
+			"start": 2.192,
+			"end": 2.72
+		}
+	]
+}

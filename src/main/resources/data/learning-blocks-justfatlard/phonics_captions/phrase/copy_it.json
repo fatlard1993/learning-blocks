@@ -1,0 +1,40 @@
+{
+	"duration": 1.56,
+	"words": [
+		{
+			"text": "Can",
+			"start": 0.07,
+			"end": 0.08
+		},
+		{
+			"text": "you",
+			"start": 0.12,
+			"end": 0.24
+		},
+		{
+			"text": "make",
+			"start": 0.272,
+			"end": 0.4
+		},
+		{
+			"text": "one",
+			"start": 0.46,
+			"end": 0.64
+		},
+		{
+			"text": "just",
+			"start": 0.688,
+			"end": 0.88
+		},
+		{
+			"text": "like",
+			"start": 0.944,
+			"end": 1.2
+		},
+		{
+			"text": "it?",
+			"start": 1.253,
+			"end": 1.44
+		}
+	]
+}

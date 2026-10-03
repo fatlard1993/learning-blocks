@@ -1,0 +1,15 @@
+{
+	"duration": 1.2,
+	"words": [
+		{
+			"text": "Bye",
+			"start": 0.148,
+			"end": 0.16
+		},
+		{
+			"text": "bye!",
+			"start": 0.36,
+			"end": 1.2
+		}
+	]
+}

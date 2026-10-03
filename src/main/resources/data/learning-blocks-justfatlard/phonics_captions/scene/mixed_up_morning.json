@@ -1,0 +1,70 @@
+{
+	"duration": 5.28,
+	"words": [
+		{
+			"text": "Oh",
+			"start": 0.213,
+			"end": 0.24
+		},
+		{
+			"text": "no,",
+			"start": 0.453,
+			"end": 1.36
+		},
+		{
+			"text": "he's",
+			"start": 1.413,
+			"end": 1.6
+		},
+		{
+			"text": "all",
+			"start": 1.62,
+			"end": 1.68
+		},
+		{
+			"text": "mixed",
+			"start": 1.76,
+			"end": 2.16
+		},
+		{
+			"text": "up!",
+			"start": 2.267,
+			"end": 3.04
+		},
+		{
+			"text": "Can",
+			"start": 3.18,
+			"end": 3.6
+		},
+		{
+			"text": "you",
+			"start": 3.62,
+			"end": 3.68
+		},
+		{
+			"text": "put",
+			"start": 3.74,
+			"end": 3.92
+		},
+		{
+			"text": "his",
+			"start": 3.96,
+			"end": 4.08
+		},
+		{
+			"text": "morning",
+			"start": 4.14,
+			"end": 4.56
+		},
+		{
+			"text": "in",
+			"start": 4.587,
+			"end": 4.64
+		},
+		{
+			"text": "order?",
+			"start": 4.707,
+			"end": 5.28
+		}
+	]
+}
