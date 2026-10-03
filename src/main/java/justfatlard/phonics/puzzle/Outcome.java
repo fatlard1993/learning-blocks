@@ -322,6 +322,8 @@ public sealed interface Outcome {
 				mob.setPersistenceRequired();
 				if (baby) mob.setBaby(true);
 				for (EquipmentSlot slot : EquipmentSlot.values()) mob.setDropChance(slot, 0.0F);
+				// It stands still to be looked at, and takes nothing: a villager would pick up the next word's carrots.
+				mob.setCanPickUpLoot(false);
 			}
 			if (made instanceof Villager villager && profession.isPresent()) {
 				BuiltInRegistries.VILLAGER_PROFESSION.get(profession.get()).ifPresent(found -> {
@@ -421,6 +423,8 @@ public sealed interface Outcome {
 			if (spawned instanceof Mob mob) {
 				mob.setPersistenceRequired();
 				if (baby) mob.setBaby(true);
+				// Nothing a word brings takes what the next word gives: a villager would pick up carrots, a fox food.
+				mob.setCanPickUpLoot(false);
 			}
 			if (spawned instanceof TamableAnimal pet && tamedToPlayer) {
 				// Not tame(): that awards "Best Friends Forever", and nothing in the classroom counts.

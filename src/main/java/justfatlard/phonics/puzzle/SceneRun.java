@@ -258,6 +258,7 @@ public final class SceneRun {
 		if (entity instanceof Mob mob) {
 			mob.setPersistenceRequired();
 			mob.setNoAi(true);
+			mob.setCanPickUpLoot(false);
 			if (baby) mob.setBaby(true);
 			for (EquipmentSlot slot : EquipmentSlot.values()) mob.setDropChance(slot, 0.0F);
 		}
