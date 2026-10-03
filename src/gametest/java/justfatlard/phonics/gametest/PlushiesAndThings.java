@@ -108,10 +108,19 @@ public final class PlushiesAndThings implements FabricClientGameTest {
 			player.gameMode.useItemOn(player, level, ItemStack.EMPTY, InteractionHand.MAIN_HAND,
 				new BlockHitResult(Vec3.atCenterOf(at), Direction.NORTH, at, false));
 			check(PlushBlock.lastSqueezed == Plush.OWL, "right-clicking the owl did not squeeze it");
-			check(player.gameMode.destroyBlock(at), "the owl would not break");
-			List<ItemEntity> dropped = level.getEntitiesOfClass(ItemEntity.class, new AABB(at).inflate(1.5));
-			check(dropped.stream().anyMatch(e -> PlushItem.kindOf(e.getItem()) == Plush.OWL), "the owl did not drop itself: " + dropped);
-			dropped.forEach(ItemEntity::discard);
+			// Broken mid-squish, it is the owl again, once, and nothing else.
+			check(justfatlard.phonics.play.Play.playing(level, at), "the owl is not squishing");
+			Drops.expect(player, at, java.util.Map.of("plush_owl", 1), "the owl, broken mid-squish,");
+			// Every plushie, at rest: itself, once, and nothing else.
+			for (Plush kind : Plush.values()) {
+				level.setBlock(at, Phonics.PLUSH.defaultBlockState().setValue(PlushBlock.KIND, kind).setValue(PlushBlock.FACING, Direction.NORTH), 3);
+				Drops.expect(player, at, java.util.Map.of("plush_" + kind.name().toLowerCase(java.util.Locale.ROOT), 1), "the " + kind + " plushie");
+			}
+			// Every prop: itself, once.
+			for (String prop : justfatlard.phonics.things.Things.all().keySet()) {
+				level.setBlock(at, net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(Phonics.id(prop)).defaultBlockState(), 3);
+				Drops.expect(player, at, java.util.Map.of(prop, 1), "the " + prop);
+			}
 
 			// A toy too: squeezed, it says its word; broken, it is itself again.
 			level.setBlock(at, Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, Toy.DRUM).setValue(ToyBlock.FACING, Direction.NORTH), 3);
@@ -130,10 +139,7 @@ public final class PlushiesAndThings implements FabricClientGameTest {
 			BlockPos at = drumAt[0];
 			List<String> said = Narrator.log(player);
 			check(said.subList(Math.min(heardBefore[0], said.size()), said.size()).contains("clip:word/drum"), "the drum did not say its word: " + said);
-			check(player.gameMode.destroyBlock(at), "the drum would not break");
-			List<ItemEntity> toyDrops = level.getEntitiesOfClass(ItemEntity.class, new AABB(at).inflate(1.5));
-			check(toyDrops.stream().anyMatch(e -> ToyItem.kindOf(e.getItem()) == Toy.DRUM), "the drum did not drop itself: " + toyDrops);
-			toyDrops.forEach(ItemEntity::discard);
+			Drops.expect(player, at, java.util.Map.of("toy_drum", 1), "the drum");
 		});
 
 		// Plushie prizes.

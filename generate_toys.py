@@ -586,7 +586,8 @@ def main():
         "type": "minecraft:block",
         "pools": [{
             "rolls": 1,
-            "conditions": [{"condition": "minecraft:block_state_property", "block": f"{NS}:toy", "properties": {"kind": name}}],
+            # 26's shape (see generate_plushies.py): the old one is not read, and every toy would drop.
+            "condition": {"type": "minecraft:match_block", "blocks": f"{NS}:toy", "state": {"kind": name}},
             "entries": [{"type": "minecraft:item", "name": f"{NS}:toy_{name}"}],
         } for name in TOYS],
         "random_sequence": f"{NS}:blocks/toy",

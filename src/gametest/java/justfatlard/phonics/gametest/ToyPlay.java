@@ -179,7 +179,10 @@ public final class ToyPlay implements FabricClientGameTest {
 			session.waitTicks(5);
 			shoot(session, "phonics-play-all-" + frame);
 		}
-		session.waitTicks(50);
+		// Past the end of the longest play (the rings, off and back on, take over three seconds).
+		int longest = 0;
+		for (Toy toy : Toy.values()) longest = Math.max(longest, Anims.of(toy).length());
+		session.waitTicks(Math.max(50, longest - 20 + 20));
 		session.onServer(server -> {
 			ServerLevel level = (ServerLevel) session.player().level();
 			BlockPos base = origin[0];
@@ -294,12 +297,25 @@ public final class ToyPlay implements FabricClientGameTest {
 			check(player.getInventory().contains(stack -> ToyItem.kindOf(stack) == Toy.DOLL), "the doll did not come back to the hand");
 			// Breaking the loaded car drops the car and the owl.
 			BlockPos car = origin[0].offset(-4, 0, 7);
-			check(player.gameMode.destroyBlock(car), "the car would not break");
-			List<ItemEntity> drops = level.getEntitiesOfClass(ItemEntity.class, new AABB(car).inflate(1.5));
-			check(drops.stream().anyMatch(e -> ToyItem.kindOf(e.getItem()) == Toy.CAR), "the car did not drop: " + drops);
-			check(drops.stream().anyMatch(e -> e.getItem().is(Plushies.item(Plush.OWL))), "the owl in the car did not drop: " + drops);
+			Drops.expect(player, car, java.util.Map.of("toy_car", 1, "plush_owl", 1), "the car with the owl in it");
 			check(Play.contentsAt(level, car) == null, "the owl's display was left where the car was");
-			drops.forEach(ItemEntity::discard);
+			// The crib with the doll tucked in: the crib and the doll, and nothing else.
+			player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(justfatlard.phonics.toy.Toys.item(Toy.DOLL)));
+			check(Play.put(level, crib, level.getBlockState(crib), player, InteractionHand.MAIN_HAND), "the doll would not go back in the crib");
+			Drops.expect(player, crib, java.util.Map.of("toy_crib", 1, "toy_doll", 1), "the crib with the doll in it");
+			// Every toy, at rest and mid-play: itself, once, and nothing else.
+			for (Toy kind : Toy.values()) {
+				// Each on a square of its own: a square plays once a second at most.
+				BlockPos spot = origin[0].offset(kind.ordinal() % 10 - 5, 0, kind.ordinal() < 10 ? -1 : -2);
+				String id = "toy_" + kind.name().toLowerCase(java.util.Locale.ROOT);
+				BlockState state = justfatlard.phonics.toy.Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, kind).setValue(ToyBlock.FACING, Direction.NORTH);
+				level.setBlock(spot, state, 3);
+				Drops.expect(player, spot, java.util.Map.of(id, 1), "the " + kind);
+				level.setBlock(spot, state, 3);
+				check(Play.play(level, spot, state, Anims.of(kind)), kind + " would not play");
+				Drops.expect(player, spot, java.util.Map.of(id, 1), "the " + kind + ", broken mid-play,");
+				check(!Play.displayAt(level, spot), kind + "'s playing pieces were left behind");
+			}
 		});
 
 		// A preposition round: owl in box, or on it.

@@ -662,7 +662,7 @@ def main():
         write(DATA / f"loot_table/blocks/{name}.json", {
             "type": "minecraft:block",
             "pools": [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": f"{NS}:{name}"}],
-                       "conditions": [{"condition": "minecraft:survives_explosion"}]}],
+                       "condition": {"type": "minecraft:survives_explosion"}}],
             "random_sequence": f"{NS}:blocks/{name}",
         })
     lang_path = ASSETS / "lang/en_us.json"

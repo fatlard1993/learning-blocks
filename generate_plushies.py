@@ -147,8 +147,8 @@ def duck():
 def ant():
     c = {"body": rgb(0x4A3329), "dark": rgb(0x2E201B), "face": rgb(0x6A4A3C), "leg": rgb(0x241915)}
     f = Face(4.5, 4.5, c["face"])
-    f.big_eye(5, 7, 4, WHITE)
-    f.big_eye(13, 7, 4, WHITE)
+    f.eye(5, 7, 3.2)
+    f.eye(13, 7, 3.2)
     f.cheeks(13, 6.5)
     f.smile(14.5, 2)
     boxes = [
@@ -758,19 +758,22 @@ def puffin():
         ((4.5, 1, 5), (11.5, 8, 11), "body", {"north": "face"}),
         ((5, 0.4, 5.4), (11, 1, 10.6), "body"),
         ((5.3, 8, 5.8), (10.7, 9, 10.2), "body"),
-        # The beak: a big triangle in bands, grey-blue at the base, a pale stripe, yellow, then
-        # orange-red to the tip.
-        ((6.9, 1.6, 4.4), (9.1, 5.2, 5.0), "base"),
-        ((6.95, 1.8, 4.1), (9.05, 5.0, 4.4), "stripe"),
-        ((7.0, 2.0, 3.4), (9.0, 4.7, 4.1), "band"),
-        ((7.15, 2.2, 2.6), (8.85, 4.3, 3.4), "tip"),
-        ((7.3, 2.4, 1.9), (8.7, 3.7, 2.6), "tip"),
-        ((7.5, 2.6, 1.3), (8.5, 3.2, 1.9), "tip"),
+        # The beak: tall and flat side to side, only a little way out, tapering to its tip. Its
+        # bands are painted down its sides: grey-blue at the face, a pale stripe, yellow, then the
+        # orange-red tip.
+        ((7.1, 1.7, 3.75), (8.9, 5.5, 5.0), "base", {"east": "pattern", "west": "pattern_flip", "north": "band"}),
+        ((7.3, 2.4, 2.6), (8.7, 4.6, 3.75), "tip"),
         ((6.5, 0.6, 11), (9.5, 2.2, 12.6), "body"),
     ]
     boxes += pair(((3.8, 2, 6), (4.5, 7.4, 10.4), "body"))
     boxes += pair(((5.0, 0, 3.6), (7.6, 0.6, 6.2), "feet"))
-    return c, f, boxes
+    # The beak's side, back (at the face) to front: grey-blue, a pale stripe, yellow.
+    side = Face(1.25, 3.75, c["base"])
+    side.rect(2, 0, 3, side.h, c["stripe"])
+    side.rect(3, 0, side.w, side.h, c["band"])
+    return c, f, boxes, side
+
+
 def robin():
     c = {"body": rgb(0x8A6448), "breast": rgb(0xE8653A), "beak": rgb(0xF2C14A), "dark": rgb(0x6A4A34), "leg": rgb(0x5A4030)}
     f = Face(7, 7, c["body"])
@@ -909,7 +912,13 @@ def build(name, make):
         faces = {}
         for side in ("north", "south", "east", "west", "up", "down"):
             which = sides.get(side, role)
-            uv = face_uv if which == "face" else pattern_uv if which == "pattern" else swatch[which]
+            # "face" on a side is the drawn face; a box whose colour is called face (the ant's head, the
+            # yak's, the hedgehog's) is that colour on its other sides, not the face again and again.
+            picture = which == "face" and (side in sides or "face" not in swatch)
+            uv = face_uv if picture else pattern_uv if which == "pattern" else swatch[which] if which != "pattern_flip" else None
+            if which == "pattern_flip":
+                # The pattern mirrored: the far side of a thing painted the same way round from the front.
+                uv = [pattern_uv[2], pattern_uv[1], pattern_uv[0], pattern_uv[3]]
             faces[side] = {"uv": uv, "texture": "#plush"}
         element = {"from": list(lo), "to": list(hi), "faces": faces}
         if "rot" in sides:
@@ -953,13 +962,14 @@ def main():
     # One item for each, drawn as its block.
     for name in PLUSHIES:
         write(ASSETS / f"items/plush_{name}.json", {"model": {"type": "minecraft:model", "model": f"{NS}:block/plush_{name}"}})
-    # Broken, it comes back as itself.
-    # A pool a kind, each only for its own kind: broken, a plushie is itself again.
+    # A pool a kind, each only for its own kind: broken, a plushie is itself again. The condition
+    # is 26's own shape ("condition", "match_block", "state"): the older "conditions" and
+    # "block_state_property" are no longer read, and every pool would pay out, every kind at once.
     write(DATA / "loot_table/blocks/plush.json", {
         "type": "minecraft:block",
         "pools": [{
             "rolls": 1,
-            "conditions": [{"condition": "minecraft:block_state_property", "block": f"{NS}:plush", "properties": {"kind": name}}],
+            "condition": {"type": "minecraft:match_block", "blocks": f"{NS}:plush", "state": {"kind": name}},
             "entries": [{"type": "minecraft:item", "name": f"{NS}:plush_{name}"}],
         } for name in PLUSHIES],
         "random_sequence": f"{NS}:blocks/plush",

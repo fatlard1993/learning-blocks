@@ -166,6 +166,43 @@ public final class PlushArt implements FabricClientGameTest {
 		session.onServer(server -> look(session.player(), origin[0].offset(-4, 0, 20), -35.0F, 22.0F));
 		session.waitTicks(20);
 		shoot(session, "phonics-tiles-side");
+
+		// Close: the ant (two button eyes), the puffin (its tall flat beak), the yak and the hedgehog,
+		// front and side, and as items.
+		session.onServer(server -> {
+			ServerPlayer player = session.player();
+			ServerLevel level = (ServerLevel) player.level();
+			BlockPos base = origin[0].offset(0, 0, 17);
+			for (int x = -6; x <= 6; x++) for (int z = -2; z <= 2; z++) for (int y = 0; y <= 2; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 3);
+			Plush[] close = {Plush.ANT, Plush.PUFFIN, Plush.YAK, Plush.HEDGEHOG};
+			for (int i = 0; i < close.length; i++) {
+				level.setBlock(base.offset(i * 3 - 4, 0, 0), Phonics.PLUSH.defaultBlockState().setValue(PlushBlock.KIND, close[i]).setValue(PlushBlock.FACING, Direction.NORTH), 3);
+			}
+			player.getInventory().clearContent();
+			for (int i = 0; i < close.length; i++) player.getInventory().setItem(9 + i, Plushies.stack(close[i]));
+			look(player, base.offset(0, 0, -2), 0.0F, 32.0F);
+		});
+		session.waitTicks(30);
+		shoot(session, "phonics-plush-close-front");
+		// Side on: the puffin from its left, the ant from its right.
+		session.onServer(server -> {
+			ServerPlayer player = session.player();
+			Vec3 at = Vec3.atBottomCenterOf(origin[0].offset(-1, 0, 17)).add(-1.5, 0, 0);
+			player.teleportTo((ServerLevel) player.level(), at.x, at.y, at.z, java.util.Set.of(), -90.0F, 42.0F, true);
+		});
+		session.waitTicks(20);
+		shoot(session, "phonics-plush-close-side");
+		session.onServer(server -> {
+			ServerPlayer player = session.player();
+			Vec3 at = Vec3.atBottomCenterOf(origin[0].offset(-4, 0, 17)).add(1.5, 0, 0);
+			player.teleportTo((ServerLevel) player.level(), at.x, at.y, at.z, java.util.Set.of(), 90.0F, 42.0F, true);
+		});
+		session.waitTicks(20);
+		shoot(session, "phonics-plush-close-side-ant");
+		session.context().setScreen(() -> new InventoryScreen(net.minecraft.client.Minecraft.getInstance().player));
+		session.waitTicks(20);
+		shoot(session, "phonics-plush-close-icons");
+		session.context().setScreen(() -> null);
 	}
 
 	private static void look(ServerPlayer player, BlockPos at, float yaw, float pitch) {

@@ -3,15 +3,13 @@
   "pools": [
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "owl"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "owl"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -21,15 +19,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "duck"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "duck"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -39,15 +35,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "ant"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "ant"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -57,15 +51,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "rat"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "rat"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -75,15 +67,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "ox"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "ox"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -93,15 +83,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "shark"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "shark"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -111,15 +99,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "crab"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "crab"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -129,15 +115,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "worm"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "worm"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -147,15 +131,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "moth"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "moth"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -165,15 +147,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "yak"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "yak"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -183,15 +163,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "teddy"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "teddy"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -201,15 +179,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "snail"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "snail"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -219,15 +195,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "seal"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "seal"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -237,15 +211,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "mouse"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "mouse"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -255,15 +227,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "snake"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "snake"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -273,15 +243,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "skunk"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "skunk"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -291,15 +259,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "hawk"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "hawk"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -309,15 +275,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "ladybug"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "ladybug"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -327,15 +291,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "mole"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "mole"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -345,15 +307,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "crow"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "crow"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -363,15 +323,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "pug"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "pug"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -381,15 +339,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "deer"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "deer"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -399,15 +355,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "whale"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "whale"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -417,15 +371,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "fly"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "fly"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -435,15 +387,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "beetle"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "beetle"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -453,15 +403,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "mice"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "mice"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -471,15 +419,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "bobcat"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "bobcat"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -489,15 +435,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "catfish"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "catfish"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -507,15 +451,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "starfish"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "starfish"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -525,15 +467,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "chipmunk"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "chipmunk"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -543,15 +483,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "puffin"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "puffin"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -561,15 +499,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "robin"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "robin"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -579,15 +515,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "lobster"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "lobster"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -597,15 +531,13 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "phonics-justfatlard:plush",
-          "properties": {
-            "kind": "hedgehog"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "phonics-justfatlard:plush",
+        "state": {
+          "kind": "hedgehog"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
