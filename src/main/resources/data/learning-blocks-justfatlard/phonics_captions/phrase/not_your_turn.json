@@ -1,9 +1,9 @@
 {
-	"duration": 1.44,
+	"duration": 1.76,
 	"words": [
 		{
 			"text": "Wait",
-			"start": 0.277,
+			"start": 0.256,
 			"end": 0.32
 		},
 		{
@@ -13,13 +13,13 @@
 		},
 		{
 			"text": "your",
-			"start": 0.512,
-			"end": 0.64
+			"start": 0.528,
+			"end": 0.72
 		},
 		{
 			"text": "turn!",
-			"start": 0.752,
-			"end": 1.44
+			"start": 0.896,
+			"end": 1.76
 		}
 	]
 }

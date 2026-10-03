@@ -64,7 +64,7 @@ WORDS = RESOURCES / "data/learning-blocks-justfatlard/phonics_words"
 CACHE = HERE / ".sound-cache"
 TAKES = HERE / "sound-takes.json"
 
-VOICE = "XrExE9yKIg1WjnnlVkGX"  # Matilda, the teacher
+VOICE = "cgSgspJ2msm6clMCkdW9"  # Jessica, the teacher: playful, bright, warm
 BOB = "IKne3meq5aSn9XLyUdCD"  # Charlie, deep and energetic: Bob, the helper who does exactly what he's told
 SPEECH = "eleven_multilingual_v2"
 EXPRESSIVE = "eleven_v3"  # the only model that acts out [laughs] rather than reading it
@@ -130,7 +130,7 @@ def short(vowel, word):
 
 def long(vowel, word):
 	"""The letter's name, which is also its long sound."""
-	return [{"text": f"{vowel}, as in {word}", "cut": ["span", 0, 1]}]
+	return [{"text": f"{vowel}, as in {word}", "cut": ["span", 0, 1]}, {"text": f"{vowel.upper()}.", "cut": ["whole"]}]
 
 
 def within(text, part, **extra):
@@ -201,10 +201,11 @@ PHONEMES = {
 	"ck": stop("kuh", "kit"),
 	"gg": stop("guh", "got"),
 	"qu": [{"text": "kwuh", "cut": ["until", 2]}, {"text": "quilt", "cut": ["span", 0, 2]}],
-	"ll": digraph("ll", "lll"),
-	"ff": digraph("ff", "fff"),
-	"ss": digraph("ss", "sss"),
-	"zz": digraph("zz", "zzz"),
+	# A doubled letter says what the single one does, by whichever take that one uses.
+	"ll": hold("l", "log"),
+	"ff": hold("f", "fish"),
+	"ss": hold("s", "sun"),
+	"zz": hold("z", "zip"),
 	"ai": team("ai", "rain"),
 	"ee": team("ee", "bee"),
 	"ea": team("ea", "bean"),
@@ -225,7 +226,7 @@ PHONEMES = {
 	"aw": team("aw", "paw"),
 	# ow says two things: "cow" (phoneme/ow) and "snow", for words that set sounds: ["ow_long"].
 	"ow_long": team("ow", "snow"),
-	"wh": [{"text": "whale", "cut": ["span", 0, 2]}],
+	"wh": [{"text": "whale", "cut": ["span", 0, 2]}, {"text": "what", "cut": ["span", 0, 2]}],
 	"dge": [{"text": "hedge", "cut": ["span", 2, 5, WORD_TAIL]}],
 	"y_long": team("y", "fly"),
 	"le": [{"text": "beetle", "cut": ["span", 4, 6, WORD_TAIL]}],
@@ -233,6 +234,23 @@ PHONEMES = {
 	"ng": [{"text": "ring", "cut": ["span", 2, 4]}, {"text": "sing", "cut": ["span", 2, 4], "stretch": 1.5}],
 	"nk": [{"text": "pink", "cut": ["span", 2, 4]}],
 }
+
+
+# Jessica's own takes, chosen by ear: where a cut or a slow-down didn't carry her voice, the
+# sound is said outright, or cut from a word that holds it better.
+for _key, _take in {
+	"ai": {"text": "Ay!", "cut": ["whole"]},
+	"ay": {"text": "Ay!", "cut": ["whole"]},
+	"y_long": {"text": "Eye.", "cut": ["whole"]},
+	"aw": {"text": "Aww.", "cut": ["whole"]},
+	"er": {"text": "Errr.", "cut": ["whole"]},
+	"h": {"text": "hit", "cut": ["span", 0, 2, 0.02]},
+	"p": {"text": "puh", "cut": ["until", 1], "tail": 0.045},
+	"u": {"text": "Uh.", "cut": ["whole"]},
+	"l": {"text": "Llll.", "cut": ["whole"]},
+	"ll": {"text": "Llll.", "cut": ["whole"]},
+}.items():
+	PHONEMES[_key] = PHONEMES[_key] + [_take]
 
 # Spelled the way the voice says them best; the caption is the letter itself.
 NAMES = {
@@ -506,7 +524,7 @@ def recorded(key, spec, fresh_wanted):
 def window(spec, starts, ends, length):
 	kind, *args = spec["cut"]
 	if kind == "until":
-		return starts[0], starts[args[0]] + STOP_TAIL
+		return starts[0], starts[args[0]] + spec.get("tail", STOP_TAIL)
 	if kind == "span":
 		tail = args[2] if len(args) > 2 else 0.0
 		return starts[args[0]], min(length, ends[args[1] - 1] + tail)

@@ -1,20 +1,20 @@
 {
-	"duration": 1.3,
+	"duration": 1.254,
 	"words": [
 		{
 			"text": "Which",
 			"start": 0.0,
-			"end": 0.267
+			"end": 0.244
 		},
 		{
 			"text": "letter",
-			"start": 0.325,
-			"end": 0.557
+			"start": 0.302,
+			"end": 0.534
 		},
 		{
 			"text": "says...",
-			"start": 0.615,
-			"end": 1.3
+			"start": 0.592,
+			"end": 1.254
 		}
 	]
 }

@@ -1,25 +1,25 @@
 {
-	"duration": 1.44,
+	"duration": 1.84,
 	"words": [
 		{
 			"text": "You",
-			"start": 0.22,
-			"end": 0.24
+			"start": 0.14,
+			"end": 0.16
 		},
 		{
 			"text": "did",
-			"start": 0.28,
-			"end": 0.4
+			"start": 0.2,
+			"end": 0.32
 		},
 		{
 			"text": "it",
-			"start": 0.453,
-			"end": 0.56
+			"start": 0.373,
+			"end": 0.48
 		},
 		{
 			"text": "together!",
-			"start": 0.631,
-			"end": 1.44
+			"start": 0.569,
+			"end": 1.84
 		}
 	]
 }

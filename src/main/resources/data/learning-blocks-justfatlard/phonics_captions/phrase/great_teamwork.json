@@ -1,15 +1,15 @@
 {
-	"duration": 1.6,
+	"duration": 1.92,
 	"words": [
 		{
 			"text": "Great",
-			"start": 0.333,
-			"end": 0.4
+			"start": 0.267,
+			"end": 0.32
 		},
 		{
 			"text": "teamwork!",
-			"start": 0.471,
-			"end": 1.52
+			"start": 0.418,
+			"end": 1.92
 		}
 	]
 }

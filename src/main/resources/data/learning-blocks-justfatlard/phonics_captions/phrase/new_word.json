@@ -1,25 +1,25 @@
 {
-	"duration": 1.76,
+	"duration": 1.32,
 	"words": [
 		{
 			"text": "That's",
 			"start": 0.134,
-			"end": 0.2
-		},
-		{
-			"text": "a",
-			"start": 0.22,
 			"end": 0.24
 		},
 		{
+			"text": "a",
+			"start": 0.3,
+			"end": 0.36
+		},
+		{
 			"text": "new",
-			"start": 0.28,
-			"end": 0.4
+			"start": 0.39,
+			"end": 0.48
 		},
 		{
 			"text": "word!",
-			"start": 0.512,
-			"end": 1.76
+			"start": 0.592,
+			"end": 1.2
 		}
 	]
 }

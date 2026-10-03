@@ -1,20 +1,20 @@
 {
-	"duration": 1.068,
+	"duration": 0.929,
 	"words": [
 		{
 			"text": "Pick",
 			"start": 0.0,
-			"end": 0.267
+			"end": 0.221
 		},
 		{
 			"text": "a",
-			"start": 0.313,
-			"end": 0.337
+			"start": 0.255,
+			"end": 0.279
 		},
 		{
 			"text": "letter!",
-			"start": 0.395,
-			"end": 1.068
+			"start": 0.325,
+			"end": 0.929
 		}
 	]
 }

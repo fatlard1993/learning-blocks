@@ -1,35 +1,35 @@
 {
-	"duration": 2.136,
+	"duration": 1.904,
 	"words": [
 		{
 			"text": "The",
 			"start": 0.0,
-			"end": 0.151
+			"end": 0.139
 		},
 		{
 			"text": "puppy",
-			"start": 0.209,
-			"end": 0.499
+			"start": 0.186,
+			"end": 0.441
 		},
 		{
 			"text": "needs",
-			"start": 0.557,
-			"end": 0.755
+			"start": 0.499,
+			"end": 0.708
 		},
 		{
 			"text": "an",
-			"start": 0.789,
-			"end": 0.848
+			"start": 0.743,
+			"end": 0.801
 		},
 		{
 			"text": "animal",
-			"start": 0.917,
-			"end": 1.231
+			"start": 0.848,
+			"end": 1.091
 		},
 		{
 			"text": "doctor!",
-			"start": 1.289,
-			"end": 2.136
+			"start": 1.138,
+			"end": 1.904
 		}
 	]
 }

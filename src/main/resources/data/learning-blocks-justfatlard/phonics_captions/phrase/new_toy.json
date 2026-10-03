@@ -1,25 +1,25 @@
 {
-	"duration": 1.72,
+	"duration": 2.04,
 	"words": [
 		{
 			"text": "Ooh!",
-			"start": 0.072,
-			"end": 0.6
+			"start": 0.15,
+			"end": 0.64
 		},
 		{
 			"text": "A",
-			"start": 0.7,
+			"start": 0.72,
 			"end": 0.8
 		},
 		{
 			"text": "new",
-			"start": 0.84,
-			"end": 0.96
+			"start": 0.88,
+			"end": 1.12
 		},
 		{
 			"text": "toy!",
-			"start": 1.08,
-			"end": 1.6
+			"start": 1.28,
+			"end": 1.92
 		}
 	]
 }

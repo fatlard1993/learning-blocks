@@ -1,25 +1,25 @@
 {
-	"duration": 2.0,
+	"duration": 1.76,
 	"words": [
 		{
 			"text": "Hooray,",
-			"start": 0.168,
-			"end": 0.64
+			"start": 0.147,
+			"end": 0.8
 		},
 		{
 			"text": "that",
-			"start": 0.688,
-			"end": 0.88
+			"start": 0.832,
+			"end": 0.96
 		},
 		{
 			"text": "fixed",
-			"start": 0.933,
-			"end": 1.2
+			"start": 1.027,
+			"end": 1.36
 		},
 		{
 			"text": "it!",
-			"start": 1.28,
-			"end": 2.0
+			"start": 1.413,
+			"end": 1.76
 		}
 	]
 }

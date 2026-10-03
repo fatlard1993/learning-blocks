@@ -1,20 +1,20 @@
 {
-	"duration": 2.24,
+	"duration": 2.56,
 	"words": [
 		{
 			"text": "Uh",
 			"start": 0.72,
-			"end": 1.04
+			"end": 1.2
 		},
 		{
 			"text": "oh,",
-			"start": 1.12,
-			"end": 1.52
+			"start": 1.307,
+			"end": 1.92
 		},
 		{
 			"text": "that's...",
-			"start": 1.584,
-			"end": 2.24
+			"start": 1.968,
+			"end": 2.56
 		}
 	]
 }

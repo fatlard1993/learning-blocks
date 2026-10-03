@@ -1,15 +1,15 @@
 {
-	"duration": 2.88,
+	"duration": 3.12,
 	"words": [
 		{
 			"text": "Silly!",
-			"start": 0.88,
-			"end": 2.08
+			"start": 0.68,
+			"end": 2.0
 		},
 		{
 			"text": "That's...",
-			"start": 2.16,
-			"end": 2.88
+			"start": 2.112,
+			"end": 3.12
 		}
 	]
 }

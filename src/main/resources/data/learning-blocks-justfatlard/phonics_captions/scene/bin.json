@@ -1,20 +1,20 @@
 {
-	"duration": 1.115,
+	"duration": 1.022,
 	"words": [
 		{
 			"text": "What",
 			"start": 0.0,
-			"end": 0.244
+			"end": 0.197
 		},
 		{
 			"text": "a",
-			"start": 0.279,
-			"end": 0.313
+			"start": 0.232,
+			"end": 0.255
 		},
 		{
 			"text": "mess!",
-			"start": 0.383,
-			"end": 1.115
+			"start": 0.302,
+			"end": 1.022
 		}
 	]
 }

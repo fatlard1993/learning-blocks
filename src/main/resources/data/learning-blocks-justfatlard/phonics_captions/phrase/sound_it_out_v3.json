@@ -1,20 +1,20 @@
 {
-	"duration": 1.115,
+	"duration": 0.882,
 	"words": [
 		{
 			"text": "Let's",
 			"start": 0.0,
-			"end": 0.29
+			"end": 0.244
 		},
 		{
 			"text": "hear",
-			"start": 0.348,
-			"end": 0.557
+			"start": 0.279,
+			"end": 0.43
 		},
 		{
 			"text": "it!",
-			"start": 0.639,
-			"end": 1.115
+			"start": 0.488,
+			"end": 0.882
 		}
 	]
 }

@@ -1,9 +1,9 @@
 {
-	"duration": 2.08,
+	"duration": 1.36,
 	"words": [
 		{
 			"text": "You",
-			"start": 0.145,
+			"start": 0.1,
 			"end": 0.16
 		},
 		{
@@ -13,18 +13,18 @@
 		},
 		{
 			"text": "a",
-			"start": 0.54,
-			"end": 0.6
+			"start": 0.52,
+			"end": 0.56
 		},
 		{
 			"text": "new",
-			"start": 0.63,
+			"start": 0.6,
 			"end": 0.72
 		},
 		{
 			"text": "word!",
-			"start": 0.832,
-			"end": 2.08
+			"start": 0.816,
+			"end": 1.36
 		}
 	]
 }

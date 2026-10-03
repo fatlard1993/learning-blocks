@@ -1,5 +1,5 @@
 {
-	"duration": 1.95,
+	"duration": 1.858,
 	"words": [
 		{
 			"text": "The",
@@ -8,28 +8,28 @@
 		},
 		{
 			"text": "puppy",
-			"start": 0.209,
-			"end": 0.488
+			"start": 0.197,
+			"end": 0.453
 		},
 		{
 			"text": "wants",
-			"start": 0.546,
-			"end": 0.755
+			"start": 0.499,
+			"end": 0.662
 		},
 		{
 			"text": "something",
-			"start": 0.789,
-			"end": 1.057
+			"start": 0.685,
+			"end": 0.964
 		},
 		{
 			"text": "to",
-			"start": 1.091,
-			"end": 1.138
+			"start": 0.998,
+			"end": 1.057
 		},
 		{
 			"text": "chew!",
-			"start": 1.207,
-			"end": 1.95
+			"start": 1.115,
+			"end": 1.858
 		}
 	]
 }

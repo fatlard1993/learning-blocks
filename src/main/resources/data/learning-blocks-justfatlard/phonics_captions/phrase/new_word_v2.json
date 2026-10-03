@@ -1,30 +1,30 @@
 {
-	"duration": 1.96,
+	"duration": 2.4,
 	"words": [
 		{
 			"text": "Ooh,",
-			"start": 0.12,
-			"end": 0.4
-		},
-		{
-			"text": "a",
-			"start": 0.48,
+			"start": 0.147,
 			"end": 0.56
 		},
 		{
+			"text": "a",
+			"start": 0.6,
+			"end": 0.64
+		},
+		{
 			"text": "brand",
-			"start": 0.613,
-			"end": 0.88
+			"start": 0.693,
+			"end": 0.96
 		},
 		{
 			"text": "new",
-			"start": 0.94,
-			"end": 1.12
+			"start": 1.02,
+			"end": 1.2
 		},
 		{
 			"text": "word!",
-			"start": 1.232,
-			"end": 1.84
+			"start": 1.344,
+			"end": 2.4
 		}
 	]
 }

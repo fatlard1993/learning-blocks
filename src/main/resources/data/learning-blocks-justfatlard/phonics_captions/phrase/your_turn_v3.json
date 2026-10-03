@@ -3,22 +3,22 @@
 	"words": [
 		{
 			"text": "Ready?",
-			"start": 0.344,
-			"end": 0.72
+			"start": 0.347,
+			"end": 0.76
 		},
 		{
 			"text": "It's",
-			"start": 0.827,
-			"end": 1.12
+			"start": 0.88,
+			"end": 1.2
 		},
 		{
 			"text": "your",
-			"start": 1.152,
+			"start": 1.216,
 			"end": 1.28
 		},
 		{
 			"text": "go!",
-			"start": 1.387,
+			"start": 1.36,
 			"end": 1.76
 		}
 	]

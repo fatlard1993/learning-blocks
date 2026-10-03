@@ -1,40 +1,40 @@
 {
-	"duration": 2.508,
+	"duration": 2.043,
 	"words": [
 		{
 			"text": "The",
 			"start": 0.0,
-			"end": 0.163
+			"end": 0.151
 		},
 		{
 			"text": "animals",
-			"start": 0.244,
-			"end": 0.592
+			"start": 0.221,
+			"end": 0.522
 		},
 		{
 			"text": "are",
-			"start": 0.627,
-			"end": 0.755
+			"start": 0.557,
+			"end": 0.65
 		},
 		{
 			"text": "hungry!",
-			"start": 0.789,
-			"end": 1.335
+			"start": 0.673,
+			"end": 1.057
 		},
 		{
 			"text": "Let's",
-			"start": 1.463,
-			"end": 1.695
+			"start": 1.091,
+			"end": 1.3
 		},
 		{
 			"text": "get",
-			"start": 1.741,
-			"end": 1.916
+			"start": 1.347,
+			"end": 1.474
 		},
 		{
 			"text": "them...",
-			"start": 1.962,
-			"end": 2.508
+			"start": 1.509,
+			"end": 2.043
 		}
 	]
 }

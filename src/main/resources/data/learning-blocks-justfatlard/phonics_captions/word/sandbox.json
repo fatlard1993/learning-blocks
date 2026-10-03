@@ -1,10 +1,10 @@
 {
-	"duration": 0.707,
+	"duration": 0.625,
 	"words": [
 		{
 			"text": "sandbox",
 			"start": 0.0,
-			"end": 0.707
+			"end": 0.625
 		}
 	]
 }

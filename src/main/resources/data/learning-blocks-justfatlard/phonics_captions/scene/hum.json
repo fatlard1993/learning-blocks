@@ -1,25 +1,25 @@
 {
-	"duration": 1.486,
+	"duration": 1.347,
 	"words": [
 		{
 			"text": "The",
 			"start": 0.0,
-			"end": 0.163
+			"end": 0.139
 		},
 		{
 			"text": "baby",
-			"start": 0.221,
-			"end": 0.499
+			"start": 0.197,
+			"end": 0.406
 		},
 		{
 			"text": "can't",
-			"start": 0.557,
-			"end": 0.789
+			"start": 0.453,
+			"end": 0.662
 		},
 		{
 			"text": "sleep!",
-			"start": 0.836,
-			"end": 1.486
+			"start": 0.697,
+			"end": 1.347
 		}
 	]
 }

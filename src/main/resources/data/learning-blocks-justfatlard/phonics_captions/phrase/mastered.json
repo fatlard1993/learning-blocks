@@ -1,20 +1,20 @@
 {
-	"duration": 1.16,
+	"duration": 1.4,
 	"words": [
 		{
 			"text": "You've",
-			"start": 0.18,
-			"end": 0.4
+			"start": 0.21,
+			"end": 0.56
 		},
 		{
 			"text": "got",
-			"start": 0.46,
-			"end": 0.64
+			"start": 0.64,
+			"end": 0.88
 		},
 		{
 			"text": "it!",
-			"start": 0.72,
-			"end": 1.04
+			"start": 0.987,
+			"end": 1.28
 		}
 	]
 }

@@ -1,25 +1,25 @@
 {
-	"duration": 1.765,
+	"duration": 1.44,
 	"words": [
 		{
 			"text": "Brr!",
 			"start": 0.0,
-			"end": 0.522
+			"end": 0.313
 		},
 		{
 			"text": "He's",
-			"start": 0.65,
-			"end": 0.848
+			"start": 0.395,
+			"end": 0.592
 		},
 		{
 			"text": "so",
-			"start": 0.882,
-			"end": 1.01
+			"start": 0.627,
+			"end": 0.731
 		},
 		{
 			"text": "cold!",
-			"start": 1.103,
-			"end": 1.765
+			"start": 0.801,
+			"end": 1.44
 		}
 	]
 }

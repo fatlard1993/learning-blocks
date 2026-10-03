@@ -1,29 +1,29 @@
 {
-	"duration": 1.4,
+	"duration": 1.28,
 	"words": [
 		{
 			"text": "Tell",
-			"start": 0.139,
-			"end": 0.16
+			"start": 0.214,
+			"end": 0.24
 		},
 		{
 			"text": "Bob",
-			"start": 0.24,
-			"end": 0.48
+			"start": 0.32,
+			"end": 0.56
 		},
 		{
 			"text": "what",
-			"start": 0.512,
-			"end": 0.64
-		},
-		{
-			"text": "to",
-			"start": 0.667,
+			"start": 0.592,
 			"end": 0.72
 		},
 		{
+			"text": "to",
+			"start": 0.773,
+			"end": 0.88
+		},
+		{
 			"text": "do!",
-			"start": 0.853,
+			"start": 0.987,
 			"end": 1.28
 		}
 	]

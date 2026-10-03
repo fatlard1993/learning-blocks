@@ -1,25 +1,25 @@
 {
-	"duration": 1.579,
+	"duration": 1.393,
 	"words": [
 		{
 			"text": "Hmm,",
 			"start": 0.0,
-			"end": 0.406
+			"end": 0.325
 		},
 		{
 			"text": "what's",
-			"start": 0.464,
-			"end": 0.697
+			"start": 0.441,
+			"end": 0.65
 		},
 		{
 			"text": "wrong",
-			"start": 0.72,
-			"end": 0.94
+			"start": 0.673,
+			"end": 0.836
 		},
 		{
 			"text": "here?",
-			"start": 0.998,
-			"end": 1.579
+			"start": 0.882,
+			"end": 1.393
 		}
 	]
 }

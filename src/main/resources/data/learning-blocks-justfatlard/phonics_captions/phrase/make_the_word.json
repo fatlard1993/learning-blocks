@@ -1,20 +1,20 @@
 {
-	"duration": 1.068,
+	"duration": 0.929,
 	"words": [
 		{
 			"text": "Can",
 			"start": 0.0,
-			"end": 0.209
+			"end": 0.174
 		},
 		{
 			"text": "you",
-			"start": 0.279,
-			"end": 0.36
+			"start": 0.221,
+			"end": 0.29
 		},
 		{
 			"text": "make...",
-			"start": 0.43,
-			"end": 1.068
+			"start": 0.337,
+			"end": 0.929
 		}
 	]
 }

@@ -1,10 +1,10 @@
 {
-	"duration": 0.3,
+	"duration": 0.265,
 	"words": [
 		{
 			"text": "to",
 			"start": 0.0,
-			"end": 0.3
+			"end": 0.265
 		}
 	]
 }

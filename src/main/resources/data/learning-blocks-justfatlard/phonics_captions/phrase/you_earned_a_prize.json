@@ -1,25 +1,25 @@
 {
-	"duration": 1.32,
+	"duration": 2.08,
 	"words": [
 		{
 			"text": "You",
-			"start": 0.136,
-			"end": 0.16
+			"start": 0.21,
+			"end": 0.24
 		},
 		{
 			"text": "earned",
-			"start": 0.194,
-			"end": 0.4
+			"start": 0.286,
+			"end": 0.56
 		},
 		{
 			"text": "a",
-			"start": 0.56,
-			"end": 0.72
+			"start": 0.6,
+			"end": 0.64
 		},
 		{
 			"text": "prize!",
-			"start": 0.773,
-			"end": 1.2
+			"start": 0.8,
+			"end": 2.08
 		}
 	]
 }

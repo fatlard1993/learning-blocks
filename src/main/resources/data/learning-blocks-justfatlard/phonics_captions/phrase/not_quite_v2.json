@@ -1,40 +1,40 @@
 {
-	"duration": 3.12,
+	"duration": 4.08,
 	"words": [
 		{
 			"text": "Oh,",
-			"start": 0.667,
-			"end": 1.04
+			"start": 0.96,
+			"end": 1.28
 		},
 		{
 			"text": "Bob!",
-			"start": 1.16,
-			"end": 1.6
-		},
-		{
-			"text": "That's",
-			"start": 1.68,
+			"start": 1.44,
 			"end": 2.08
 		},
 		{
+			"text": "That's",
+			"start": 2.176,
+			"end": 2.64
+		},
+		{
 			"text": "not",
-			"start": 2.12,
-			"end": 2.24
+			"start": 2.66,
+			"end": 2.72
 		},
 		{
 			"text": "what",
-			"start": 2.272,
-			"end": 2.4
+			"start": 2.752,
+			"end": 2.88
 		},
 		{
 			"text": "we",
-			"start": 2.453,
-			"end": 2.56
+			"start": 2.96,
+			"end": 3.12
 		},
 		{
 			"text": "wanted!",
-			"start": 2.629,
-			"end": 3.12
+			"start": 3.211,
+			"end": 4.08
 		}
 	]
 }

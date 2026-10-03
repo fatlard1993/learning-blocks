@@ -1,40 +1,40 @@
 {
-	"duration": 1.95,
+	"duration": 1.811,
 	"words": [
 		{
 			"text": "Can",
 			"start": 0.0,
-			"end": 0.186
+			"end": 0.174
 		},
 		{
 			"text": "you",
-			"start": 0.244,
-			"end": 0.313
+			"start": 0.221,
+			"end": 0.29
 		},
 		{
 			"text": "find",
-			"start": 0.383,
-			"end": 0.604
+			"start": 0.337,
+			"end": 0.499
 		},
 		{
 			"text": "the",
-			"start": 0.65,
-			"end": 0.72
+			"start": 0.534,
+			"end": 0.604
 		},
 		{
 			"text": "letter",
-			"start": 0.766,
-			"end": 0.998
+			"start": 0.65,
+			"end": 0.871
 		},
 		{
 			"text": "that",
-			"start": 1.045,
-			"end": 1.161
+			"start": 0.917,
+			"end": 1.045
 		},
 		{
 			"text": "says...",
-			"start": 1.207,
-			"end": 1.95
+			"start": 1.091,
+			"end": 1.811
 		}
 	]
 }

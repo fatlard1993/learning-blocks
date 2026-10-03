@@ -1,25 +1,25 @@
 {
-	"duration": 1.3,
+	"duration": 1.115,
 	"words": [
 		{
 			"text": "Nine",
 			"start": 0.0,
-			"end": 0.302
+			"end": 0.244
 		},
 		{
 			"text": "more",
-			"start": 0.337,
-			"end": 0.511
+			"start": 0.267,
+			"end": 0.406
 		},
 		{
 			"text": "to",
-			"start": 0.546,
-			"end": 0.592
+			"start": 0.43,
+			"end": 0.476
 		},
 		{
 			"text": "go!",
-			"start": 0.65,
-			"end": 1.3
+			"start": 0.522,
+			"end": 1.115
 		}
 	]
 }

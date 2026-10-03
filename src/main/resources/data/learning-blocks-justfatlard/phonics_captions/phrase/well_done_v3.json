@@ -1,20 +1,20 @@
 {
-	"duration": 1.64,
+	"duration": 1.68,
 	"words": [
 		{
 			"text": "Yes!",
-			"start": 0.34,
-			"end": 0.72
+			"start": 0.26,
+			"end": 0.64
 		},
 		{
 			"text": "That's",
-			"start": 0.784,
-			"end": 1.12
+			"start": 0.752,
+			"end": 1.4
 		},
 		{
 			"text": "it!",
-			"start": 1.227,
-			"end": 1.52
+			"start": 1.467,
+			"end": 1.68
 		}
 	]
 }

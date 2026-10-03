@@ -1,35 +1,35 @@
 {
-	"duration": 1.68,
+	"duration": 2.0,
 	"words": [
 		{
 			"text": "Your",
-			"start": 0.067,
-			"end": 0.08
+			"start": 0.208,
+			"end": 0.24
 		},
 		{
 			"text": "prizes",
-			"start": 0.16,
-			"end": 0.64
-		},
-		{
-			"text": "come",
-			"start": 0.672,
+			"start": 0.32,
 			"end": 0.8
 		},
 		{
-			"text": "home",
-			"start": 0.848,
-			"end": 1.04
+			"text": "come",
+			"start": 0.832,
+			"end": 0.96
 		},
 		{
-			"text": "with",
-			"start": 1.072,
+			"text": "home",
+			"start": 1.008,
 			"end": 1.2
 		},
 		{
+			"text": "with",
+			"start": 1.232,
+			"end": 1.36
+		},
+		{
 			"text": "you!",
-			"start": 1.28,
-			"end": 1.68
+			"start": 1.44,
+			"end": 2.0
 		}
 	]
 }

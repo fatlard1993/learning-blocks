@@ -1,30 +1,30 @@
 {
-	"duration": 1.393,
+	"duration": 1.161,
 	"words": [
 		{
 			"text": "Can",
 			"start": 0.0,
-			"end": 0.186
+			"end": 0.174
 		},
 		{
 			"text": "you",
-			"start": 0.244,
-			"end": 0.313
+			"start": 0.221,
+			"end": 0.29
 		},
 		{
 			"text": "find",
-			"start": 0.383,
-			"end": 0.604
+			"start": 0.337,
+			"end": 0.511
 		},
 		{
 			"text": "the",
-			"start": 0.65,
-			"end": 0.72
+			"start": 0.546,
+			"end": 0.615
 		},
 		{
 			"text": "big...",
-			"start": 0.766,
-			"end": 1.393
+			"start": 0.662,
+			"end": 1.161
 		}
 	]
 }

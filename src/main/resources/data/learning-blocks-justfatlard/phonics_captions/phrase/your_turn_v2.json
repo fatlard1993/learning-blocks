@@ -1,25 +1,25 @@
 {
-	"duration": 1.6,
+	"duration": 1.76,
 	"words": [
 		{
 			"text": "Okay,",
-			"start": 0.277,
+			"start": 0.483,
 			"end": 0.72
 		},
 		{
 			"text": "your",
-			"start": 0.752,
-			"end": 0.88
+			"start": 0.768,
+			"end": 0.96
 		},
 		{
 			"text": "turn",
-			"start": 0.944,
+			"start": 1.008,
 			"end": 1.2
 		},
 		{
 			"text": "now!",
-			"start": 1.28,
-			"end": 1.6
+			"start": 1.3,
+			"end": 1.76
 		}
 	]
 }

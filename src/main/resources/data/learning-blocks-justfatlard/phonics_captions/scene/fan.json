@@ -1,25 +1,25 @@
 {
-	"duration": 1.579,
+	"duration": 1.393,
 	"words": [
 		{
 			"text": "Phew!",
 			"start": 0.0,
-			"end": 0.406
+			"end": 0.348
 		},
 		{
 			"text": "It's",
-			"start": 0.441,
-			"end": 0.604
+			"start": 0.418,
+			"end": 0.627
 		},
 		{
 			"text": "so",
-			"start": 0.639,
-			"end": 0.813
+			"start": 0.662,
+			"end": 0.778
 		},
 		{
 			"text": "hot!",
-			"start": 0.894,
-			"end": 1.579
+			"start": 0.848,
+			"end": 1.393
 		}
 	]
 }

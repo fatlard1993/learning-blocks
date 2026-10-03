@@ -1,25 +1,25 @@
 {
-	"duration": 1.393,
+	"duration": 1.161,
 	"words": [
 		{
 			"text": "Let's",
 			"start": 0.0,
-			"end": 0.279
+			"end": 0.244
 		},
 		{
 			"text": "sound",
-			"start": 0.325,
-			"end": 0.58
+			"start": 0.267,
+			"end": 0.464
 		},
 		{
 			"text": "it",
-			"start": 0.627,
-			"end": 0.697
+			"start": 0.511,
+			"end": 0.569
 		},
 		{
 			"text": "out!",
-			"start": 0.755,
-			"end": 1.393
+			"start": 0.615,
+			"end": 1.161
 		}
 	]
 }

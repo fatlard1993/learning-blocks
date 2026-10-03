@@ -1,25 +1,25 @@
 {
-	"duration": 1.533,
+	"duration": 1.393,
 	"words": [
 		{
 			"text": "The",
 			"start": 0.0,
-			"end": 0.163
+			"end": 0.139
 		},
 		{
 			"text": "baby",
-			"start": 0.221,
-			"end": 0.511
+			"start": 0.197,
+			"end": 0.418
 		},
 		{
 			"text": "is",
-			"start": 0.569,
-			"end": 0.65
+			"start": 0.464,
+			"end": 0.546
 		},
 		{
 			"text": "thirsty!",
-			"start": 0.708,
-			"end": 1.533
+			"start": 0.58,
+			"end": 1.393
 		}
 	]
 }

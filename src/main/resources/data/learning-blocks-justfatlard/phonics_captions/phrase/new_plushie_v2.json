@@ -1,35 +1,35 @@
 {
-	"duration": 2.0,
+	"duration": 2.32,
 	"words": [
 		{
 			"text": "A",
-			"start": 0.072,
-			"end": 0.08
+			"start": 0.12,
+			"end": 0.16
 		},
 		{
 			"text": "new",
-			"start": 0.14,
-			"end": 0.32
+			"start": 0.22,
+			"end": 0.4
 		},
 		{
 			"text": "plushie",
-			"start": 0.387,
-			"end": 0.8
-		},
-		{
-			"text": "for",
-			"start": 0.82,
-			"end": 0.88
-		},
-		{
-			"text": "your",
-			"start": 0.912,
+			"start": 0.48,
 			"end": 1.04
 		},
 		{
+			"text": "for",
+			"start": 1.1,
+			"end": 1.28
+		},
+		{
+			"text": "your",
+			"start": 1.312,
+			"end": 1.44
+		},
+		{
 			"text": "collection!",
-			"start": 1.113,
-			"end": 2.0
+			"start": 1.513,
+			"end": 2.32
 		}
 	]
 }

@@ -1,25 +1,25 @@
 {
-	"duration": 1.115,
+	"duration": 0.975,
 	"words": [
 		{
 			"text": "Can",
 			"start": 0.0,
-			"end": 0.197
+			"end": 0.174
 		},
 		{
 			"text": "you",
-			"start": 0.255,
-			"end": 0.325
+			"start": 0.221,
+			"end": 0.29
 		},
 		{
 			"text": "read",
-			"start": 0.395,
-			"end": 0.58
+			"start": 0.325,
+			"end": 0.488
 		},
 		{
 			"text": "it?",
-			"start": 0.639,
-			"end": 1.115
+			"start": 0.534,
+			"end": 0.975
 		}
 	]
 }

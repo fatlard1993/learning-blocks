@@ -1,5 +1,5 @@
 {
-	"duration": 2.16,
+	"duration": 2.72,
 	"words": [
 		{
 			"text": "The",
@@ -13,33 +13,33 @@
 		},
 		{
 			"text": "makes",
-			"start": 0.52,
-			"end": 0.72
+			"start": 0.533,
+			"end": 0.8
 		},
 		{
 			"text": "the",
-			"start": 0.76,
-			"end": 0.88
+			"start": 0.84,
+			"end": 0.96
 		},
 		{
 			"text": "O",
-			"start": 1.0,
-			"end": 1.12
-		},
-		{
-			"text": "say",
-			"start": 1.18,
+			"start": 1.16,
 			"end": 1.36
 		},
 		{
-			"text": "its",
+			"text": "say",
 			"start": 1.42,
 			"end": 1.6
 		},
 		{
+			"text": "its",
+			"start": 1.68,
+			"end": 1.92
+		},
+		{
 			"text": "name!",
-			"start": 1.696,
-			"end": 2.16
+			"start": 2.048,
+			"end": 2.72
 		}
 	]
 }

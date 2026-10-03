@@ -1,15 +1,15 @@
 {
-	"duration": 1.161,
+	"duration": 1.022,
 	"words": [
 		{
 			"text": "What's",
 			"start": 0.0,
-			"end": 0.29
+			"end": 0.267
 		},
 		{
 			"text": "inside?",
-			"start": 0.337,
-			"end": 1.161
+			"start": 0.302,
+			"end": 1.022
 		}
 	]
 }

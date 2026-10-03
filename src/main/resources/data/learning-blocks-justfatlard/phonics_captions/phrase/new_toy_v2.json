@@ -1,35 +1,35 @@
 {
-	"duration": 2.0,
+	"duration": 2.24,
 	"words": [
 		{
 			"text": "A",
-			"start": 0.072,
-			"end": 0.08
+			"start": 0.304,
+			"end": 0.336
 		},
 		{
 			"text": "new",
-			"start": 0.16,
+			"start": 0.352,
 			"end": 0.4
 		},
 		{
 			"text": "toy",
-			"start": 0.5,
-			"end": 0.8
+			"start": 0.52,
+			"end": 0.88
 		},
 		{
 			"text": "for",
-			"start": 0.84,
-			"end": 0.96
-		},
-		{
-			"text": "your",
-			"start": 0.976,
+			"start": 0.92,
 			"end": 1.04
 		},
 		{
+			"text": "your",
+			"start": 1.088,
+			"end": 1.28
+		},
+		{
 			"text": "toybox!",
-			"start": 1.14,
-			"end": 2.0
+			"start": 1.38,
+			"end": 2.24
 		}
 	]
 }

@@ -1,35 +1,35 @@
 {
-	"duration": 1.811,
+	"duration": 1.486,
 	"words": [
 		{
 			"text": "Oh!",
 			"start": 0.0,
-			"end": 0.279
+			"end": 0.209
 		},
 		{
 			"text": "It's",
-			"start": 0.313,
-			"end": 0.476
+			"start": 0.244,
+			"end": 0.395
 		},
 		{
 			"text": "so",
-			"start": 0.522,
-			"end": 0.697
+			"start": 0.43,
+			"end": 0.534
 		},
 		{
 			"text": "dark",
-			"start": 0.778,
-			"end": 1.022
+			"start": 0.592,
+			"end": 0.789
 		},
 		{
 			"text": "in",
-			"start": 1.08,
-			"end": 1.138
+			"start": 0.836,
+			"end": 0.894
 		},
 		{
 			"text": "here!",
-			"start": 1.207,
-			"end": 1.811
+			"start": 0.952,
+			"end": 1.486
 		}
 	]
 }

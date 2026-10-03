@@ -1,9 +1,9 @@
 {
-	"duration": 2.48,
+	"duration": 2.72,
 	"words": [
 		{
 			"text": "Ooh,",
-			"start": 0.14,
+			"start": 0.12,
 			"end": 0.48
 		},
 		{
@@ -13,23 +13,23 @@
 		},
 		{
 			"text": "yet!",
-			"start": 0.8,
-			"end": 1.12
+			"start": 0.82,
+			"end": 1.2
 		},
 		{
 			"text": "It's",
-			"start": 1.307,
-			"end": 1.76
-		},
-		{
-			"text": "their",
-			"start": 1.787,
+			"start": 1.387,
 			"end": 1.92
 		},
 		{
+			"text": "their",
+			"start": 1.947,
+			"end": 2.08
+		},
+		{
 			"text": "turn.",
-			"start": 2.016,
-			"end": 2.48
+			"start": 2.192,
+			"end": 2.72
 		}
 	]
 }

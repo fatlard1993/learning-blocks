@@ -1,30 +1,30 @@
 {
-	"duration": 1.486,
+	"duration": 1.3,
 	"words": [
 		{
 			"text": "Read",
 			"start": 0.0,
-			"end": 0.267
+			"end": 0.255
 		},
 		{
 			"text": "it,",
-			"start": 0.313,
-			"end": 0.476
+			"start": 0.302,
+			"end": 0.395
 		},
 		{
 			"text": "then",
-			"start": 0.534,
-			"end": 0.685
+			"start": 0.418,
+			"end": 0.546
 		},
 		{
 			"text": "find",
-			"start": 0.755,
-			"end": 0.998
+			"start": 0.604,
+			"end": 0.824
 		},
 		{
 			"text": "it!",
-			"start": 1.057,
-			"end": 1.486
+			"start": 0.882,
+			"end": 1.3
 		}
 	]
 }

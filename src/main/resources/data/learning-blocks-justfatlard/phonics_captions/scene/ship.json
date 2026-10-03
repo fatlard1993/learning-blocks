@@ -1,35 +1,35 @@
 {
-	"duration": 1.811,
+	"duration": 1.625,
 	"words": [
 		{
 			"text": "He",
 			"start": 0.0,
-			"end": 0.163
+			"end": 0.139
 		},
 		{
 			"text": "can't",
-			"start": 0.209,
-			"end": 0.464
+			"start": 0.174,
+			"end": 0.372
 		},
 		{
 			"text": "get",
-			"start": 0.511,
-			"end": 0.627
+			"start": 0.406,
+			"end": 0.511
 		},
 		{
 			"text": "across",
-			"start": 0.662,
-			"end": 0.952
+			"start": 0.534,
+			"end": 0.789
 		},
 		{
 			"text": "the",
-			"start": 0.998,
-			"end": 1.068
+			"start": 0.824,
+			"end": 0.894
 		},
 		{
 			"text": "water!",
-			"start": 1.103,
-			"end": 1.811
+			"start": 0.929,
+			"end": 1.625
 		}
 	]
 }

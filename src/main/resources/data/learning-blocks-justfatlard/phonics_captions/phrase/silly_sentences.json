@@ -4,31 +4,31 @@
 		{
 			"text": "[playful,",
 			"start": 0.0,
-			"end": 0.08
+			"end": 0.064
 		},
 		{
 			"text": "giggly]",
-			"start": 0.084,
-			"end": 0.14
+			"start": 0.067,
+			"end": 0.32
 		},
 		{
 			"text": "Tell",
-			"start": 0.144,
-			"end": 0.16
-		},
-		{
-			"text": "Bob",
-			"start": 0.24,
+			"start": 0.352,
 			"end": 0.48
 		},
 		{
+			"text": "Bob",
+			"start": 0.54,
+			"end": 0.72
+		},
+		{
 			"text": "something",
-			"start": 0.512,
-			"end": 0.8
+			"start": 0.76,
+			"end": 1.12
 		},
 		{
 			"text": "silly!",
-			"start": 0.907,
+			"start": 1.2,
 			"end": 1.76
 		}
 	]

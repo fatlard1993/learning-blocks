@@ -1,50 +1,50 @@
 {
-	"duration": 2.64,
+	"duration": 3.04,
 	"words": [
 		{
 			"text": "All",
-			"start": 0.136,
-			"end": 0.16
+			"start": 0.275,
+			"end": 0.32
 		},
 		{
 			"text": "done",
-			"start": 0.208,
-			"end": 0.4
+			"start": 0.384,
+			"end": 0.64
 		},
 		{
 			"text": "for",
-			"start": 0.42,
-			"end": 0.48
+			"start": 0.68,
+			"end": 0.8
 		},
 		{
 			"text": "today!",
-			"start": 0.573,
-			"end": 1.36
+			"start": 0.893,
+			"end": 1.72
 		},
 		{
 			"text": "Off",
-			"start": 1.44,
-			"end": 1.68
+			"start": 1.81,
+			"end": 2.08
 		},
 		{
 			"text": "you",
-			"start": 1.7,
-			"end": 1.76
+			"start": 2.1,
+			"end": 2.16
 		},
 		{
 			"text": "go",
-			"start": 1.813,
-			"end": 1.92
+			"start": 2.24,
+			"end": 2.4
 		},
 		{
 			"text": "and",
-			"start": 1.94,
-			"end": 2.0
+			"start": 2.42,
+			"end": 2.48
 		},
 		{
 			"text": "play!",
-			"start": 2.096,
-			"end": 2.64
+			"start": 2.56,
+			"end": 3.04
 		}
 	]
 }

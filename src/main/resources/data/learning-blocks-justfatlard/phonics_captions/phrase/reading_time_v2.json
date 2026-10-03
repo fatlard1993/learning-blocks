@@ -1,5 +1,5 @@
 {
-	"duration": 2.24,
+	"duration": 2.64,
 	"words": [
 		{
 			"text": "Hello!",
@@ -8,28 +8,28 @@
 		},
 		{
 			"text": "Let's",
-			"start": 0.62,
-			"end": 1.12
+			"start": 0.6,
+			"end": 1.04
 		},
 		{
 			"text": "do",
-			"start": 1.147,
+			"start": 1.093,
 			"end": 1.2
 		},
 		{
 			"text": "some",
-			"start": 1.248,
-			"end": 1.44
+			"start": 1.232,
+			"end": 1.36
 		},
 		{
 			"text": "reading",
-			"start": 1.47,
+			"start": 1.4,
 			"end": 1.68
 		},
 		{
 			"text": "first!",
-			"start": 1.773,
-			"end": 2.24
+			"start": 1.747,
+			"end": 2.64
 		}
 	]
 }

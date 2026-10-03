@@ -1,25 +1,25 @@
 {
-	"duration": 1.3,
+	"duration": 1.161,
 	"words": [
 		{
 			"text": "Five",
 			"start": 0.0,
-			"end": 0.337
+			"end": 0.267
 		},
 		{
 			"text": "more",
-			"start": 0.372,
-			"end": 0.534
+			"start": 0.302,
+			"end": 0.441
 		},
 		{
 			"text": "to",
-			"start": 0.569,
-			"end": 0.615
+			"start": 0.464,
+			"end": 0.511
 		},
 		{
 			"text": "go!",
-			"start": 0.662,
-			"end": 1.3
+			"start": 0.557,
+			"end": 1.161
 		}
 	]
 }

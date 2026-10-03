@@ -1,15 +1,15 @@
 {
-	"duration": 1.115,
+	"duration": 1.022,
 	"words": [
 		{
 			"text": "He's",
 			"start": 0.0,
-			"end": 0.279
+			"end": 0.232
 		},
 		{
 			"text": "lost!",
-			"start": 0.348,
-			"end": 1.115
+			"start": 0.279,
+			"end": 1.022
 		}
 	]
 }

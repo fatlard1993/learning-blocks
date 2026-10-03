@@ -1,30 +1,30 @@
 {
-	"duration": 1.672,
+	"duration": 1.44,
 	"words": [
 		{
 			"text": "Oh",
 			"start": 0.0,
-			"end": 0.197
+			"end": 0.163
 		},
 		{
 			"text": "no!",
-			"start": 0.267,
-			"end": 0.534
+			"start": 0.209,
+			"end": 0.418
 		},
 		{
 			"text": "He's",
-			"start": 0.569,
-			"end": 0.72
+			"start": 0.453,
+			"end": 0.615
 		},
 		{
 			"text": "getting",
-			"start": 0.755,
-			"end": 0.975
+			"start": 0.65,
+			"end": 0.859
 		},
 		{
 			"text": "wet!",
-			"start": 1.033,
-			"end": 1.672
+			"start": 0.906,
+			"end": 1.44
 		}
 	]
 }

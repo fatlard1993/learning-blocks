@@ -1,15 +1,15 @@
 {
-	"duration": 1.28,
+	"duration": 1.2,
 	"words": [
 		{
 			"text": "Your",
-			"start": 0.139,
+			"start": 0.147,
 			"end": 0.16
 		},
 		{
 			"text": "turn!",
 			"start": 0.24,
-			"end": 1.28
+			"end": 1.2
 		}
 	]
 }

@@ -1,30 +1,30 @@
 {
-	"duration": 2.4,
+	"duration": 2.88,
 	"words": [
 		{
 			"text": "Woohoo!",
-			"start": 0.139,
-			"end": 0.8
+			"start": 0.107,
+			"end": 0.96
 		},
 		{
 			"text": "The",
-			"start": 0.92,
-			"end": 1.28
+			"start": 1.06,
+			"end": 1.36
 		},
 		{
 			"text": "portal",
-			"start": 1.326,
-			"end": 1.6
-		},
-		{
-			"text": "is",
-			"start": 1.653,
+			"start": 1.417,
 			"end": 1.76
 		},
 		{
+			"text": "is",
+			"start": 1.84,
+			"end": 2.0
+		},
+		{
 			"text": "open!",
-			"start": 1.872,
-			"end": 2.4
+			"start": 2.144,
+			"end": 2.88
 		}
 	]
 }

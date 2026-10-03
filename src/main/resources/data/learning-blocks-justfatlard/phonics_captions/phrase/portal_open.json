@@ -1,35 +1,35 @@
 {
-	"duration": 2.08,
+	"duration": 2.32,
 	"words": [
 		{
 			"text": "All",
-			"start": 0.136,
-			"end": 0.16
+			"start": 0.21,
+			"end": 0.24
 		},
 		{
 			"text": "done!",
-			"start": 0.24,
+			"start": 0.304,
 			"end": 0.64
 		},
 		{
 			"text": "The",
-			"start": 0.74,
-			"end": 1.04
+			"start": 0.72,
+			"end": 0.96
 		},
 		{
 			"text": "portal",
-			"start": 1.097,
-			"end": 1.44
+			"start": 1.006,
+			"end": 1.28
 		},
 		{
 			"text": "is",
-			"start": 1.493,
-			"end": 1.6
+			"start": 1.333,
+			"end": 1.44
 		},
 		{
 			"text": "open!",
-			"start": 1.68,
-			"end": 2.08
+			"start": 1.536,
+			"end": 2.32
 		}
 	]
 }

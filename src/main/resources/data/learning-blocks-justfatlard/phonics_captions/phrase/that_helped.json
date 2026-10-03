@@ -1,15 +1,15 @@
 {
-	"duration": 1.44,
+	"duration": 1.52,
 	"words": [
 		{
 			"text": "That",
-			"start": 0.192,
-			"end": 0.32
+			"start": 0.197,
+			"end": 0.24
 		},
 		{
 			"text": "helped!",
-			"start": 0.377,
-			"end": 1.44
+			"start": 0.331,
+			"end": 1.52
 		}
 	]
 }

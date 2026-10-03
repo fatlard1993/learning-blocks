@@ -1,14 +1,14 @@
 {
-	"duration": 1.718,
+	"duration": 1.533,
 	"words": [
 		{
 			"text": "Aww,",
 			"start": 0.0,
-			"end": 0.313
+			"end": 0.279
 		},
 		{
 			"text": "the",
-			"start": 0.337,
+			"start": 0.313,
 			"end": 0.418
 		},
 		{
@@ -18,18 +18,18 @@
 		},
 		{
 			"text": "one",
-			"start": 0.731,
-			"end": 0.848
+			"start": 0.72,
+			"end": 0.836
 		},
 		{
 			"text": "is",
-			"start": 0.882,
-			"end": 0.952
+			"start": 0.871,
+			"end": 0.94
 		},
 		{
 			"text": "sad!",
-			"start": 1.01,
-			"end": 1.718
+			"start": 0.987,
+			"end": 1.533
 		}
 	]
 }

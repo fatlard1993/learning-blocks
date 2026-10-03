@@ -1,20 +1,20 @@
 {
-	"duration": 1.44,
+	"duration": 1.6,
 	"words": [
 		{
 			"text": "Reading",
-			"start": 0.2,
-			"end": 0.48
+			"start": 0.344,
+			"end": 0.4
 		},
 		{
 			"text": "time",
-			"start": 0.528,
+			"start": 0.464,
 			"end": 0.72
 		},
 		{
 			"text": "first!",
-			"start": 0.813,
-			"end": 1.44
+			"start": 0.84,
+			"end": 1.6
 		}
 	]
 }
