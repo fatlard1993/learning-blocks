@@ -482,7 +482,7 @@ def clips():
 		yield f"word/{word}", [{**t, "caption": word, "tiles": data["tiles"], "sounds": data.get("sounds") or [None] * len(data["tiles"])} for t in word_takes(word)]
 	# Plushies whose name isn't a puzzle word still say it when squeezed.
 	for word in ("teddy", "ladybug", "blue", "yellow", "apples", "cows", "carrots", "kittens", "beds", "chickens",
-			"cakes", "blocks", "villagers", "more", "fewer", "same", "taller", "shorter"):
+			"cakes", "blocks", "villagers", "more", "fewer", "same", "taller", "shorter", "plus", "minus", "equals"):
 		if not (WORDS / f"{word}.json").exists():
 			yield f"word/{word}", [{**t, "caption": word, "tiles": [word], "sounds": ["silent"]} for t in word_takes(word)]
 	for name, line in {"hungry_pigs": "The three pigs are hungry, but there's only one carrot!",
