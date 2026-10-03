@@ -346,7 +346,7 @@ public final class TellBob implements FabricClientGameTest {
 			Visit.set(fake, null);
 		});
 		session.command("/learn leave");
-		session.waitTicks(30);
+		Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
 	}
 
 	private static Word word(String text) {

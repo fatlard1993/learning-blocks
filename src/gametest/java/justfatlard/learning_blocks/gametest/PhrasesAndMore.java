@@ -227,7 +227,7 @@ public final class PhrasesAndMore implements FabricClientGameTest {
 		});
 		shoot(session, "phonics-plural-cats");
 		session.command("/learn leave");
-		session.waitTicks(20);
+		Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
 	}
 
 	/** Solve the round and press; on once the next round has come, which is after everything this one did. */

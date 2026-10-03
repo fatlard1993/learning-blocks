@@ -121,7 +121,7 @@ public final class Bands implements FabricClientGameTest {
 		session.waitTicks(10);
 		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("phonics-bands-progress").disableCounterPrefix());
 		session.command("/learn leave");
-		session.waitTicks(20);
+		Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
 	}
 
 	private static void press(ServerPlayer player, Room room) {

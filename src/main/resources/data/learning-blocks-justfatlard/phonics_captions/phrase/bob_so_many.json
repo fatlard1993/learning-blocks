@@ -1,0 +1,25 @@
+{
+	"duration": 2.56,
+	"words": [
+		{
+			"text": "Whoa!",
+			"start": 0.24,
+			"end": 0.88
+		},
+		{
+			"text": "That's",
+			"start": 1.04,
+			"end": 1.76
+		},
+		{
+			"text": "a",
+			"start": 1.8,
+			"end": 1.84
+		},
+		{
+			"text": "LOT!",
+			"start": 1.98,
+			"end": 2.56
+		}
+	]
+}

@@ -1,0 +1,15 @@
+{
+	"duration": 1.2,
+	"words": [
+		{
+			"text": "How",
+			"start": 0.12,
+			"end": 0.24
+		},
+		{
+			"text": "many?",
+			"start": 0.304,
+			"end": 1.2
+		}
+	]
+}

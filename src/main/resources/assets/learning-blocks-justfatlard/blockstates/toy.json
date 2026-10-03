@@ -531,6 +531,174 @@
     },
     "facing=west,hidden=true,kind=truck": {
       "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=abacus": {
+      "model": "learning-blocks-justfatlard:block/toy_abacus",
+      "y": 0
+    },
+    "facing=north,hidden=true,kind=abacus": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=abacus": {
+      "model": "learning-blocks-justfatlard:block/toy_abacus",
+      "y": 90
+    },
+    "facing=east,hidden=true,kind=abacus": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=abacus": {
+      "model": "learning-blocks-justfatlard:block/toy_abacus",
+      "y": 180
+    },
+    "facing=south,hidden=true,kind=abacus": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=abacus": {
+      "model": "learning-blocks-justfatlard:block/toy_abacus",
+      "y": 270
+    },
+    "facing=west,hidden=true,kind=abacus": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=dice": {
+      "model": "learning-blocks-justfatlard:block/toy_dice",
+      "y": 0
+    },
+    "facing=north,hidden=true,kind=dice": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=dice": {
+      "model": "learning-blocks-justfatlard:block/toy_dice",
+      "y": 90
+    },
+    "facing=east,hidden=true,kind=dice": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=dice": {
+      "model": "learning-blocks-justfatlard:block/toy_dice",
+      "y": 180
+    },
+    "facing=south,hidden=true,kind=dice": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=dice": {
+      "model": "learning-blocks-justfatlard:block/toy_dice",
+      "y": 270
+    },
+    "facing=west,hidden=true,kind=dice": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=dominoes": {
+      "model": "learning-blocks-justfatlard:block/toy_dominoes",
+      "y": 0
+    },
+    "facing=north,hidden=true,kind=dominoes": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=dominoes": {
+      "model": "learning-blocks-justfatlard:block/toy_dominoes",
+      "y": 90
+    },
+    "facing=east,hidden=true,kind=dominoes": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=dominoes": {
+      "model": "learning-blocks-justfatlard:block/toy_dominoes",
+      "y": 180
+    },
+    "facing=south,hidden=true,kind=dominoes": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=dominoes": {
+      "model": "learning-blocks-justfatlard:block/toy_dominoes",
+      "y": 270
+    },
+    "facing=west,hidden=true,kind=dominoes": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=bears": {
+      "model": "learning-blocks-justfatlard:block/toy_bears",
+      "y": 0
+    },
+    "facing=north,hidden=true,kind=bears": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=bears": {
+      "model": "learning-blocks-justfatlard:block/toy_bears",
+      "y": 90
+    },
+    "facing=east,hidden=true,kind=bears": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=bears": {
+      "model": "learning-blocks-justfatlard:block/toy_bears",
+      "y": 180
+    },
+    "facing=south,hidden=true,kind=bears": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=bears": {
+      "model": "learning-blocks-justfatlard:block/toy_bears",
+      "y": 270
+    },
+    "facing=west,hidden=true,kind=bears": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=sorter": {
+      "model": "learning-blocks-justfatlard:block/toy_sorter",
+      "y": 0
+    },
+    "facing=north,hidden=true,kind=sorter": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=sorter": {
+      "model": "learning-blocks-justfatlard:block/toy_sorter",
+      "y": 90
+    },
+    "facing=east,hidden=true,kind=sorter": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=sorter": {
+      "model": "learning-blocks-justfatlard:block/toy_sorter",
+      "y": 180
+    },
+    "facing=south,hidden=true,kind=sorter": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=sorter": {
+      "model": "learning-blocks-justfatlard:block/toy_sorter",
+      "y": 270
+    },
+    "facing=west,hidden=true,kind=sorter": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=scale": {
+      "model": "learning-blocks-justfatlard:block/toy_scale",
+      "y": 0
+    },
+    "facing=north,hidden=true,kind=scale": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=scale": {
+      "model": "learning-blocks-justfatlard:block/toy_scale",
+      "y": 90
+    },
+    "facing=east,hidden=true,kind=scale": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=scale": {
+      "model": "learning-blocks-justfatlard:block/toy_scale",
+      "y": 180
+    },
+    "facing=south,hidden=true,kind=scale": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=scale": {
+      "model": "learning-blocks-justfatlard:block/toy_scale",
+      "y": 270
+    },
+    "facing=west,hidden=true,kind=scale": {
+      "model": "learning-blocks-justfatlard:block/hidden"
     }
   }
 }

@@ -1,0 +1,25 @@
+{
+	"duration": 1.84,
+	"words": [
+		{
+			"text": "I",
+			"start": 0.22,
+			"end": 0.24
+		},
+		{
+			"text": "counted",
+			"start": 0.31,
+			"end": 0.8
+		},
+		{
+			"text": "them",
+			"start": 0.864,
+			"end": 1.12
+		},
+		{
+			"text": "all!",
+			"start": 1.26,
+			"end": 1.84
+		}
+	]
+}

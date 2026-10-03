@@ -1,0 +1,25 @@
+{
+	"duration": 1.44,
+	"words": [
+		{
+			"text": "Which",
+			"start": 0.0,
+			"end": 0.255
+		},
+		{
+			"text": "tower",
+			"start": 0.302,
+			"end": 0.569
+		},
+		{
+			"text": "is",
+			"start": 0.615,
+			"end": 0.697
+		},
+		{
+			"text": "taller?",
+			"start": 0.743,
+			"end": 1.44
+		}
+	]
+}

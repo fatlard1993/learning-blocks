@@ -304,6 +304,102 @@
           "name": "learning-blocks-justfatlard:toy_truck"
         }
       ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "learning-blocks-justfatlard:toy",
+        "state": {
+          "kind": "abacus"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:toy_abacus"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "learning-blocks-justfatlard:toy",
+        "state": {
+          "kind": "dice"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:toy_dice"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "learning-blocks-justfatlard:toy",
+        "state": {
+          "kind": "dominoes"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:toy_dominoes"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "learning-blocks-justfatlard:toy",
+        "state": {
+          "kind": "bears"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:toy_bears"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "learning-blocks-justfatlard:toy",
+        "state": {
+          "kind": "sorter"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:toy_sorter"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "learning-blocks-justfatlard:toy",
+        "state": {
+          "kind": "scale"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:toy_scale"
+        }
+      ]
     }
   ],
   "random_sequence": "learning-blocks-justfatlard:blocks/toy"

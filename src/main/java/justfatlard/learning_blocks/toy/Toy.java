@@ -11,7 +11,9 @@ public enum Toy implements StringRepresentable {
 	DRUM(Sound.DRUM), KITE(Sound.FLUTTER), TOP(Sound.WHIRR), RING(Sound.DING), CAP(Sound.SQUEAK), WIG(Sound.SQUEAK),
 	NET(Sound.FLUTTER), PIN(Sound.CLACK), SOCK(Sound.SQUEAK), CRIB(Sound.CLACK), CAR(Sound.TOOT), VAN(Sound.TOOT),
 	JET(Sound.WHOOSH), BUS(Sound.TOOT), SHIP(Sound.TOOT), DOLL(Sound.SQUEAK), BLOCK(Sound.CLACK), TRAIN(Sound.TOOT),
-	TRUCK(Sound.TOOT);
+	TRUCK(Sound.TOOT),
+	// The counting toys, for Numbers: earned by mastering numbers, not by reading a word.
+	ABACUS(Sound.CLACK), DICE(Sound.CLACK), DOMINOES(Sound.CLACK), BEARS(Sound.SQUEAK), SORTER(Sound.CLACK), SCALE(Sound.DING);
 
 	/** A toy's own little noise, as it is squeezed or pops out. */
 	public enum Sound {

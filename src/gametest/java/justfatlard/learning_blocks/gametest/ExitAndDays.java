@@ -236,7 +236,7 @@ public final class ExitAndDays implements FabricClientGameTest {
 			check(Schedules.of(player.getUUID()).name().equals(player.getGameProfile().name()), "joining did not refresh the stored name");
 		});
 		session.command("/learn leave");
-		session.waitTicks(20);
+		Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
 	}
 
 	/** The log since the last mark. */

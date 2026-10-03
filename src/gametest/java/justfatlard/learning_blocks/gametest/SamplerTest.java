@@ -118,7 +118,7 @@ public final class SamplerTest implements FabricClientGameTest {
 		answer(session, false);
 		Waits.until(session, 900, "the next sample never ended", () -> !Rooms.of(session.player()).practice() && !Rooms.of(session.player()).busy());
 		session.command("/learn leave");
-		session.waitTicks(30);
+		Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
 	}
 
 	/** Answer the round: the right picture or card, or the right tiles and the button; a wrong tile first, if asked. */

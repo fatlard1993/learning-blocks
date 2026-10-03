@@ -170,7 +170,7 @@ public final class Mastery implements FabricClientGameTest {
 			check(now.stageFloor() == 4 && Stages.current(now) == 4, "a reader from before gates was moved: " + Stages.describe(now));
 		});
 		session.command("/learn leave");
-		session.waitTicks(20);
+		Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
 	}
 
 	private static void waitTold(Smoke.Session session) {

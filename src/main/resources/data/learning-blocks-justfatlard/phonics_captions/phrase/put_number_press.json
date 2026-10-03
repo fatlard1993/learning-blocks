@@ -1,0 +1,55 @@
+{
+	"duration": 2.09,
+	"words": [
+		{
+			"text": "Put",
+			"start": 0.0,
+			"end": 0.186
+		},
+		{
+			"text": "a",
+			"start": 0.232,
+			"end": 0.255
+		},
+		{
+			"text": "number",
+			"start": 0.302,
+			"end": 0.511
+		},
+		{
+			"text": "in",
+			"start": 0.546,
+			"end": 0.592
+		},
+		{
+			"text": "the",
+			"start": 0.627,
+			"end": 0.697
+		},
+		{
+			"text": "gap",
+			"start": 0.731,
+			"end": 0.94
+		},
+		{
+			"text": "and",
+			"start": 0.987,
+			"end": 1.057
+		},
+		{
+			"text": "press",
+			"start": 1.091,
+			"end": 1.3
+		},
+		{
+			"text": "the",
+			"start": 1.335,
+			"end": 1.405
+		},
+		{
+			"text": "button!",
+			"start": 1.44,
+			"end": 2.09
+		}
+	]
+}

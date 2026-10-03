@@ -1,0 +1,30 @@
+{
+	"duration": 1.486,
+	"words": [
+		{
+			"text": "Which",
+			"start": 0.0,
+			"end": 0.232
+		},
+		{
+			"text": "picture",
+			"start": 0.279,
+			"end": 0.546
+		},
+		{
+			"text": "has",
+			"start": 0.58,
+			"end": 0.697
+		},
+		{
+			"text": "that",
+			"start": 0.743,
+			"end": 0.859
+		},
+		{
+			"text": "many?",
+			"start": 0.906,
+			"end": 1.486
+		}
+	]
+}

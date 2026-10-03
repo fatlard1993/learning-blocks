@@ -1,0 +1,241 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "toy": "learning-blocks-justfatlard:block/toy_dice",
+    "particle": "learning-blocks-justfatlard:block/toy_dice"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        3
+      ],
+      "to": [
+        8,
+        6,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            8.0,
+            0.0,
+            14.0,
+            6.0
+          ],
+          "texture": "#toy"
+        },
+        "south": {
+          "uv": [
+            8.0,
+            8.0,
+            14.0,
+            14.0
+          ],
+          "texture": "#toy"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            8.0,
+            6.0,
+            14.0
+          ],
+          "texture": "#toy"
+        },
+        "west": {
+          "uv": [
+            0.0,
+            8.0,
+            6.0,
+            14.0
+          ],
+          "texture": "#toy"
+        },
+        "up": {
+          "uv": [
+            8.0,
+            8.0,
+            14.0,
+            14.0
+          ],
+          "texture": "#toy"
+        },
+        "down": {
+          "uv": [
+            8.0,
+            0.0,
+            14.0,
+            6.0
+          ],
+          "texture": "#toy"
+        }
+      }
+    },
+    {
+      "from": [
+        9.5,
+        0,
+        1.5
+      ],
+      "to": [
+        14,
+        4.5,
+        6
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            8.0,
+            6.0,
+            14.0
+          ],
+          "texture": "#toy"
+        },
+        "south": {
+          "uv": [
+            0.0,
+            8.0,
+            6.0,
+            14.0
+          ],
+          "texture": "#toy"
+        },
+        "east": {
+          "uv": [
+            8.0,
+            8.0,
+            14.0,
+            14.0
+          ],
+          "texture": "#toy"
+        },
+        "west": {
+          "uv": [
+            8.0,
+            8.0,
+            14.0,
+            14.0
+          ],
+          "texture": "#toy"
+        },
+        "up": {
+          "uv": [
+            8.0,
+            0.0,
+            14.0,
+            6.0
+          ],
+          "texture": "#toy"
+        },
+        "down": {
+          "uv": [
+            8.0,
+            0.0,
+            14.0,
+            6.0
+          ],
+          "texture": "#toy"
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.75,
+          2.25,
+          3.75
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        20,
+        205,
+        0
+      ],
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "scale": [
+        0.95,
+        0.95,
+        0.95
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.9,
+        0.9,
+        0.9
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.45,
+        0.45,
+        0.45
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        2,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    }
+  }
+}

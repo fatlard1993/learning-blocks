@@ -1,0 +1,35 @@
+{
+	"duration": 1.718,
+	"words": [
+		{
+			"text": "Read",
+			"start": 0.0,
+			"end": 0.255
+		},
+		{
+			"text": "it!",
+			"start": 0.302,
+			"end": 0.476
+		},
+		{
+			"text": "Which",
+			"start": 0.627,
+			"end": 0.836
+		},
+		{
+			"text": "number",
+			"start": 0.882,
+			"end": 1.08
+		},
+		{
+			"text": "is",
+			"start": 1.138,
+			"end": 1.219
+		},
+		{
+			"text": "it?",
+			"start": 1.289,
+			"end": 1.718
+		}
+	]
+}

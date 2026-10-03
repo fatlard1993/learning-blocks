@@ -1,0 +1,30 @@
+{
+	"duration": 2.24,
+	"words": [
+		{
+			"text": "Each",
+			"start": 0.349,
+			"end": 0.4
+		},
+		{
+			"text": "villager",
+			"start": 0.464,
+			"end": 0.96
+		},
+		{
+			"text": "wants",
+			"start": 1.027,
+			"end": 1.36
+		},
+		{
+			"text": "a",
+			"start": 1.4,
+			"end": 1.44
+		},
+		{
+			"text": "cake!",
+			"start": 1.568,
+			"end": 2.24
+		}
+	]
+}

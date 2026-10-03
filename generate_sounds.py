@@ -380,6 +380,34 @@ PHRASES = {
 	"what_comes_next": {"text": "[curious] What comes next?", "model": EXPRESSIVE},
 	"next_level_numbers": {"text": "[excited] You know one to five! Ready for more numbers!", "model": EXPRESSIVE},
 	"next_level_logic": {"text": "[excited] You can find what comes next! Ready for trickier ones!", "model": EXPRESSIVE},
+	"how_many": {"text": '[curious] How many?', "model": EXPRESSIVE},
+	"quick_look": {"text": '[excited] Quick, look!', "model": EXPRESSIVE},
+	"count_with_me": {"text": "[cheerful] Let's count them!", "model": EXPRESSIVE},
+	"read_the_number": {"text": 'Read it! Which number is it?'},
+	"make": {"text": 'Make...'},
+	"put_number_press": {"text": 'Put a number in the gap and press the button!'},
+	"every_kitten_needs_a_bed": {"text": '[cheerful] Every kitten needs a bed!', "model": EXPRESSIVE},
+	"how_many_more": {"text": 'How many more...'},
+	"how_many_toys": {"text": '[curious] How many toys have you got?', "model": EXPRESSIVE},
+	"how_many_plushies": {"text": '[curious] How many plushies have you got?', "model": EXPRESSIVE},
+	"which_has_more": {"text": 'Which pen has more?'},
+	"which_has_fewer": {"text": 'Which pen has fewer?'},
+	"more_or_same": {"text": 'Or are they the same?'},
+	"the_same": {"text": "[happy] They're the same!", "model": EXPRESSIVE},
+	"which_is_taller": {"text": 'Which tower is taller?'},
+	"which_is_shorter": {"text": 'Which tower is shorter?'},
+	"how_many_more_blocks": {"text": 'How many more blocks to make them the same?'},
+	"put_in_order": {"text": '[cheerful] Put the numbers in order!', "model": EXPRESSIVE},
+	"what_comes_after": {"text": 'What comes after...'},
+	"what_comes_before": {"text": 'What comes before...'},
+	"which_picture_has": {"text": 'Which picture has that many?'},
+	"team_count": {"text": '[cheerful] You count these, and you count those! How many altogether?', "model": EXPRESSIVE},
+	"too_many": {"text": "[laughs] Whoa, that's too many!", "model": EXPRESSIVE},
+	"not_enough": {"text": '[playful] Hmm, not enough!', "model": EXPRESSIVE},
+	"next_level_counting": {"text": '[excited] You can count to ten! Ready for more!', "model": EXPRESSIVE},
+	"next_level_comparing": {"text": '[excited] You know more and fewer! Ready for more numbers!', "model": EXPRESSIVE},
+	"bob_so_many": {"text": "[amazed] Whoa! That's a LOT!", "model": EXPRESSIVE, "voice": BOB},
+	"bob_counted": {"text": "[proudly] I counted them all!", "model": EXPRESSIVE, "voice": BOB},
 	"subject_reading": {"variants": [{"text": "[cheerful] Reading time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's read!", "model": EXPRESSIVE}]},
 	"subject_numbers": {"variants": [{"text": "[cheerful] Numbers time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's count!", "model": EXPRESSIVE}]},
 	"subject_logic": {"variants": [{"text": "[cheerful] Thinking time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's figure it out!", "model": EXPRESSIVE}]},
@@ -453,9 +481,13 @@ def clips():
 		word = "".join(data["tiles"])
 		yield f"word/{word}", [{**t, "caption": word, "tiles": data["tiles"], "sounds": data.get("sounds") or [None] * len(data["tiles"])} for t in word_takes(word)]
 	# Plushies whose name isn't a puzzle word still say it when squeezed.
-	for word in ("teddy", "ladybug", "blue", "yellow"):
+	for word in ("teddy", "ladybug", "blue", "yellow", "apples", "cows", "carrots", "kittens", "beds", "chickens",
+			"cakes", "blocks", "villagers", "more", "fewer", "same", "taller", "shorter"):
 		if not (WORDS / f"{word}.json").exists():
 			yield f"word/{word}", [{**t, "caption": word, "tiles": [word], "sounds": ["silent"]} for t in word_takes(word)]
+	for name, line in {"hungry_pigs": "The three pigs are hungry, but there's only one carrot!",
+			"cake_for_everyone": "[cheerful] Each villager wants a cake!"}.items():
+		yield f"scene/{name}", [{"text": line, "cut": ["whole"], **({"model": EXPRESSIVE} if "[" in line else {})}]
 	for n, said in enumerate(NUMBER_NAMES):
 		yield f"number/{n}", [{"text": f"{said.capitalize()}.", "cut": ["whole"], "caption": said}]
 	for letter, said in NAMES.items():

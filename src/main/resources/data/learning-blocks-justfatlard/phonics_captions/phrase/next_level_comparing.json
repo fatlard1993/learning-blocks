@@ -1,0 +1,50 @@
+{
+	"duration": 3.92,
+	"words": [
+		{
+			"text": "You",
+			"start": 0.145,
+			"end": 0.16
+		},
+		{
+			"text": "know",
+			"start": 0.224,
+			"end": 0.48
+		},
+		{
+			"text": "more",
+			"start": 0.592,
+			"end": 1.04
+		},
+		{
+			"text": "and",
+			"start": 1.14,
+			"end": 1.44
+		},
+		{
+			"text": "fewer!",
+			"start": 1.52,
+			"end": 2.08
+		},
+		{
+			"text": "Ready",
+			"start": 2.213,
+			"end": 2.88
+		},
+		{
+			"text": "for",
+			"start": 2.92,
+			"end": 3.04
+		},
+		{
+			"text": "more",
+			"start": 3.072,
+			"end": 3.2
+		},
+		{
+			"text": "numbers!",
+			"start": 3.27,
+			"end": 3.92
+		}
+	]
+}

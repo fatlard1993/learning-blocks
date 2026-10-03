@@ -269,7 +269,7 @@ public final class SubjectsTest implements FabricClientGameTest {
 			Subjects.onlyForTests(Set.of("reading"));
 		});
 		session.command("/learn leave");
-		session.waitTicks(80);
+		Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
 	}
 
 	/** From where a child stands, looking at the board and the floor before it. */

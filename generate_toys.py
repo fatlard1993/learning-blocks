@@ -482,16 +482,162 @@ def truck():
     return c, {"front": front, "side": side}, boxes
 
 
+
+# --- The counting toys (round M): for Numbers, earned by mastering numbers -------------------
+
+# A die's pips on a 3x3 grid: which cells for each number.
+PIPS = {1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8]}
+
+
+def pips(face, n, colour, x0=0, y0=0, w=None, h=None, r=None, inset=0):
+    """A die's pips for n in this part of a face (pixels), on its 3x3 grid, kept {inset} in from its edges."""
+    w = face.w if w is None else w
+    h = face.h if h is None else h
+    r = r or min(w, h) / 9
+    x0, y0, w, h = x0 + inset, y0 + inset, w - 2 * inset, h - 2 * inset
+    for cell in PIPS[n]:
+        cx = x0 + w * (cell % 3 * 2 + 1) / 6
+        cy = y0 + h * (cell // 3 * 2 + 1) / 6
+        face.disc(cx, cy, r, colour)
+
+
+def abacus():
+    """A counting frame: a wooden frame on two feet, four wires of five bright beads, some pushed
+    across to count."""
+    c = {"wood": WOOD, "foot": shade(WOOD, 0.85), "wire": SILVER, "red": RED, "yellow": YELLOW, "green": GREEN, "blue": BLUE}
+    boxes = [
+        ((2, 0.8, 7.2), (3.2, 13, 8.8), "wood"), ((12.8, 0.8, 7.2), (14, 13, 8.8), "wood"),
+        ((1.4, 0, 5.4), (3.8, 0.8, 10.6), "foot"), ((12.2, 0, 5.4), (14.6, 0.8, 10.6), "foot"),
+        ((3.2, 11.8, 7.4), (12.8, 13, 8.6), "wood"), ((3.2, 1.6, 7.4), (12.8, 2.8, 8.6), "wood"),
+    ]
+    # Counted beads pushed to the left, the rest to the right: 5, 3, 4, 1 counted.
+    for row, (colour, counted) in enumerate([("red", 5), ("yellow", 3), ("green", 4), ("blue", 1)]):
+        y = 10.2 - row * 2.2
+        boxes.append(((3.2, y - 0.2, 7.8), (12.8, y + 0.2, 8.2), "wire"))
+        for i in range(5):
+            x = 3.3 + i * 1.3 if i < counted else 12.7 - (5 - i) * 1.3
+            boxes.append(((x, y - 0.8, 7.2), (x + 1.2, y + 0.8, 8.8), colour))
+    return c, {}, boxes
+
+
+def dice():
+    """Two big wooden dice, white with black pips: one square on, one turned a little."""
+    c = {"white": CREAM, "black": BLACK}
+    faces = {}
+    for n in (5, 3, 2):
+        f = Face(6, 6, CREAM)
+        pips(f, n, BLACK)
+        faces[str(n)] = f
+    small = {"north": "@3", "south": "@3", "east": "@2", "west": "@2", "up": "@5", "down": "@5"}
+    boxes = [
+        ((2, 0, 3), (8, 6, 9), "white", {"north": "@5", "south": "@2", "east": "@3", "west": "@3", "up": "@2", "down": "@5"}),
+        ((9.5, 0, 1.5), (14, 4.5, 6), "white", dict(small, rot=("y", 22.5, (11.75, 2.25, 3.75)))),
+    ]
+    return c, faces, boxes
+
+
+def dominoes():
+    """Dominoes: black with white pips, two lying crossed and one standing up behind."""
+    c = {"black": BLACK, "white": CREAM}
+
+    def domino(top, bottom, across=False):
+        f = Face(7, 3.5, BLACK) if across else Face(3.5, 7, BLACK)
+        r = 1.6
+        if across:
+            pips(f, top, CREAM, 0, 0, f.w / 2, f.h, r, 2)
+            pips(f, bottom, CREAM, f.w / 2, 0, f.w / 2, f.h, r, 2)
+            f.rect(f.w / 2 - 0.5, 1, f.w / 2 + 0.5, f.h - 1, CREAM)
+        else:
+            pips(f, top, CREAM, 0, 0, f.w, f.h / 2, r, 2)
+            pips(f, bottom, CREAM, 0, f.h / 2, f.w, f.h / 2, r, 2)
+            f.rect(1, f.h / 2 - 0.5, f.w - 1, f.h / 2 + 0.5, CREAM)
+        return f
+    faces = {"a": domino(2, 3), "b": domino(4, 1, across=True), "c": domino(6, 5)}
+    # Big: a domino 3 by 6 (two 3x3 halves), so the pips read.
+    boxes = [
+        ((1.5, 0, 1.5), (5, 1, 8.5), "black", {"up": "@a"}),
+        ((6, 0, 2), (13, 1, 5.5), "black", {"up": "@b"}),
+        ((8, 0, 9), (11.5, 7, 10.2), "black", {"north": "@c", "south": "@c"}),
+    ]
+    return c, faces, boxes
+
+
+def bears():
+    """Counting bears: a little family of bright bears, six colours, in two rows."""
+    colours = [("red", RED), ("yellow", YELLOW), ("green", GREEN), ("blue", BLUE), ("orange", ORANGE), ("purple", PURPLE)]
+    c = {name: colour for name, colour in colours}
+    c.update({f"{name}_ear": shade(colour, 0.8) for name, colour in colours[:4]})
+    c["eye"] = BLACK
+    boxes = []
+    spots = [(1.2, 9), (4.9, 9.4), (8.6, 9), (12.3, 9.4), (3, 4.2), (10.6, 4.2)]
+    for (name, colour), (x, z) in zip(colours, spots):
+        ear = f"{name}_ear" if f"{name}_ear" in c else name
+        h = 3.0 if z > 6 else 3.6
+        boxes += [
+            ((x, 0, z), (x + 2.6, h, z + 2), name),
+            ((x + 0.2, h, z + 0.1), (x + 2.4, h + 2.2, z + 1.9), name),
+            ((x + 0.1, h + 2, z + 0.7), (x + 0.8, h + 2.7, z + 1.3), ear),
+            ((x + 1.8, h + 2, z + 0.7), (x + 2.5, h + 2.7, z + 1.3), ear),
+            ((x + 0.6, h + 1.2, z - 0.1), (x + 1.0, h + 1.6, z + 0.1), "eye"),
+            ((x + 1.6, h + 1.2, z - 0.1), (x + 2.0, h + 1.6, z + 0.1), "eye"),
+        ]
+    return c, {}, boxes
+
+
+def sorter():
+    """A shape sorter: a red box with a circle, a square and a triangle cut in its lid, and the
+    shapes beside it."""
+    c = {"red": RED, "blue": BLUE, "yellow": YELLOW, "green": GREEN}
+    lid = Face(8, 8, RED)
+    hole = shade(RED, 0.45)
+    lid.disc(9, 9, 5, hole)
+    lid.rect(18, 4, 28, 14, hole)
+    for row in range(10):
+        lid.rect(16 - row, 18 + row, 17 + row, 19 + row, hole)
+    boxes = [
+        ((2, 0, 6.5), (10, 6, 14.5), "red", {"up": "@lid"}),
+        # In front of it: a square block, a stepped triangle and a round one (two crossed boxes).
+        ((11.5, 0, 8), (14.5, 3, 11), "green"),
+        ((1.5, 0, 1.5), (5.5, 1, 4), "yellow"), ((2.2, 1, 1.5), (4.8, 2, 4), "yellow"), ((2.9, 2, 1.5), (4.1, 3, 4), "yellow"),
+        ((8, 0, 1.5), (12, 2.5, 4.5), "blue"), ((8.5, 0, 1), (11.5, 2.5, 5), "blue"),
+    ]
+    return c, {"lid": lid}, boxes
+
+
+def scale():
+    """A balance scale tipped by its load: a wooden post, a red beam leaning down to the heavier
+    pan, a big block on that side and a little one on the other."""
+    c = {"wood": WOOD, "red": RED, "knob": YELLOW, "pan": SILVER, "string": CREAM, "big": BLUE, "small": GREEN}
+    tilt = ("z", 22.5, (8, 10.4, 8))
+    boxes = [
+        ((4, 0, 6), (12, 1, 10), "wood"),
+        ((7.3, 1, 7.3), (8.7, 10, 8.7), "wood"),
+        ((1.5, 10, 7.5), (14.5, 10.8, 8.5), "red", {"rot": tilt}),
+        ((7, 9.6, 7), (9, 11.2, 9), "knob"),
+        # The low side: string, pan and the big block.
+        ((2.3, 4.6, 7.8), (2.7, 8.2, 8.2), "string"),
+        ((0.5, 4, 6), (4.5, 4.6, 10), "pan"),
+        ((1.2, 4.6, 6.7), (3.8, 7.2, 9.3), "big"),
+        # The high side.
+        ((13.3, 9.2, 7.8), (13.7, 12.6, 8.2), "string"),
+        ((11.5, 8.6, 6), (15.5, 9.2, 10), "pan"),
+        ((12.8, 9.2, 7.3), (14.2, 10.6, 8.7), "small"),
+    ]
+    return c, {}, boxes
+
 TOYS = {
     "drum": drum, "kite": kite, "top": top, "ring": ring, "cap": cap, "wig": wig, "net": net, "pin": pin,
     "sock": sock, "crib": crib, "car": car, "van": van, "jet": jet, "bus": bus, "ship": ship, "doll": doll,
     "block": block, "train": train, "truck": truck,
+    "abacus": abacus, "dice": dice, "dominoes": dominoes, "bears": bears, "sorter": sorter, "scale": scale,
 }
 
 NAMES = {"top": "Spinning top", "ring": "Stacking rings", "cap": "Toy cap", "wig": "Dress-up wig", "net": "Butterfly net",
          "pin": "Bowling pin", "sock": "Sock puppet", "crib": "Doll's crib", "car": "Toy car", "van": "Toy van",
          "jet": "Toy jet", "bus": "Toy bus", "ship": "Toy ship", "doll": "Doll", "block": "ABC block",
-         "train": "Toy train", "truck": "Toy truck", "drum": "Drum", "kite": "Kite"}
+         "train": "Toy train", "truck": "Toy truck", "drum": "Drum", "kite": "Kite",
+         "abacus": "Abacus", "dice": "Dice", "dominoes": "Dominoes", "bears": "Counting bears", "sorter": "Shape sorter",
+         "scale": "Balance scale"}
 
 # Worn on the head, as the little models round G made (generate_things.py writes those).
 WORN = {"cap", "wig"}

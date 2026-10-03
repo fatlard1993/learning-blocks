@@ -1,0 +1,20 @@
+{
+	"duration": 1.76,
+	"words": [
+		{
+			"text": "Hmm,",
+			"start": 0.47,
+			"end": 0.64
+		},
+		{
+			"text": "not",
+			"start": 0.76,
+			"end": 1.12
+		},
+		{
+			"text": "enough!",
+			"start": 1.2,
+			"end": 1.76
+		}
+	]
+}

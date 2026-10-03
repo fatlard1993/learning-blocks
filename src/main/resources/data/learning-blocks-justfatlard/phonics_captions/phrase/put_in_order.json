@@ -1,0 +1,30 @@
+{
+	"duration": 2.08,
+	"words": [
+		{
+			"text": "Put",
+			"start": 0.216,
+			"end": 0.24
+		},
+		{
+			"text": "the",
+			"start": 0.3,
+			"end": 0.48
+		},
+		{
+			"text": "numbers",
+			"start": 0.55,
+			"end": 1.04
+		},
+		{
+			"text": "in",
+			"start": 1.12,
+			"end": 1.28
+		},
+		{
+			"text": "order!",
+			"start": 1.387,
+			"end": 2.08
+		}
+	]
+}

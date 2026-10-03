@@ -47,6 +47,7 @@
   "item.learning-blocks-justfatlard.plush_robin": "Robin plushie",
   "item.learning-blocks-justfatlard.plush_lobster": "Lobster plushie",
   "item.learning-blocks-justfatlard.plush_hedgehog": "Hedgehog plushie",
+  "block.learning-blocks-justfatlard.number": "Number Tile",
   "item.learning-blocks-justfatlard.toy_drum": "Drum",
   "item.learning-blocks-justfatlard.toy_kite": "Kite",
   "item.learning-blocks-justfatlard.toy_top": "Spinning top",
@@ -66,5 +67,10 @@
   "item.learning-blocks-justfatlard.toy_block": "ABC block",
   "item.learning-blocks-justfatlard.toy_train": "Toy train",
   "item.learning-blocks-justfatlard.toy_truck": "Toy truck",
-  "block.learning-blocks-justfatlard.number": "Number Tile"
+  "item.learning-blocks-justfatlard.toy_abacus": "Abacus",
+  "item.learning-blocks-justfatlard.toy_dice": "Dice",
+  "item.learning-blocks-justfatlard.toy_dominoes": "Dominoes",
+  "item.learning-blocks-justfatlard.toy_bears": "Counting bears",
+  "item.learning-blocks-justfatlard.toy_sorter": "Shape sorter",
+  "item.learning-blocks-justfatlard.toy_scale": "Balance scale"
 }

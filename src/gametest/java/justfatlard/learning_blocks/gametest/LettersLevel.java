@@ -257,7 +257,7 @@ public final class LettersLevel implements FabricClientGameTest {
 			check(room.stage() == 1 && room.letterTarget() == null, "stage 1 did not skip the letters");
 		});
 		session.command("/learn leave");
-		session.waitTicks(20);
+		Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
 	}
 
 	private static void press(ServerPlayer player, Room room) {

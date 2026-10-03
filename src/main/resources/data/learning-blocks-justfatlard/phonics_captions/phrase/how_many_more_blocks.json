@@ -1,0 +1,50 @@
+{
+	"duration": 1.95,
+	"words": [
+		{
+			"text": "How",
+			"start": 0.0,
+			"end": 0.163
+		},
+		{
+			"text": "many",
+			"start": 0.209,
+			"end": 0.337
+		},
+		{
+			"text": "more",
+			"start": 0.383,
+			"end": 0.522
+		},
+		{
+			"text": "blocks",
+			"start": 0.546,
+			"end": 0.824
+		},
+		{
+			"text": "to",
+			"start": 0.859,
+			"end": 0.906
+		},
+		{
+			"text": "make",
+			"start": 0.952,
+			"end": 1.091
+		},
+		{
+			"text": "them",
+			"start": 1.115,
+			"end": 1.231
+		},
+		{
+			"text": "the",
+			"start": 1.277,
+			"end": 1.347
+		},
+		{
+			"text": "same?",
+			"start": 1.382,
+			"end": 1.95
+		}
+	]
+}

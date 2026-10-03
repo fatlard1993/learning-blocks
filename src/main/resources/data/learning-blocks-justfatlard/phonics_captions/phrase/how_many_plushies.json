@@ -1,0 +1,35 @@
+{
+	"duration": 1.68,
+	"words": [
+		{
+			"text": "How",
+			"start": 0.14,
+			"end": 0.16
+		},
+		{
+			"text": "many",
+			"start": 0.208,
+			"end": 0.4
+		},
+		{
+			"text": "plushies",
+			"start": 0.467,
+			"end": 0.96
+		},
+		{
+			"text": "have",
+			"start": 0.992,
+			"end": 1.12
+		},
+		{
+			"text": "you",
+			"start": 1.16,
+			"end": 1.28
+		},
+		{
+			"text": "got?",
+			"start": 1.34,
+			"end": 1.68
+		}
+	]
+}

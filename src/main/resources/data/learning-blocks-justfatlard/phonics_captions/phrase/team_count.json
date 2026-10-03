@@ -1,0 +1,55 @@
+{
+	"duration": 3.88,
+	"words": [
+		{
+			"text": "You",
+			"start": 0.18,
+			"end": 0.24
+		},
+		{
+			"text": "count",
+			"start": 0.293,
+			"end": 0.56
+		},
+		{
+			"text": "these,",
+			"start": 0.613,
+			"end": 1.04
+		},
+		{
+			"text": "and",
+			"start": 1.08,
+			"end": 1.2
+		},
+		{
+			"text": "you",
+			"start": 1.24,
+			"end": 1.36
+		},
+		{
+			"text": "count",
+			"start": 1.413,
+			"end": 1.68
+		},
+		{
+			"text": "those!",
+			"start": 1.747,
+			"end": 2.48
+		},
+		{
+			"text": "How",
+			"start": 2.58,
+			"end": 2.88
+		},
+		{
+			"text": "many",
+			"start": 2.912,
+			"end": 3.04
+		},
+		{
+			"text": "altogether?",
+			"start": 3.098,
+			"end": 3.76
+		}
+	]
+}
