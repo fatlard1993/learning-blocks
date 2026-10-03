@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "hedgehog"
+  },
+  "item": "learning-blocks-justfatlard:plush_hedgehog",
+  "height": 0.537,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "mouse"
+  },
+  "item": "learning-blocks-justfatlard:plush_mouse",
+  "height": 0.525,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "is": "toy",
+  "block": "learning-blocks-justfatlard:toy",
+  "properties": {
+    "kind": "cap"
+  },
+  "item": "learning-blocks-justfatlard:toy_cap",
+  "height": 0.362,
+  "tags": [
+    "small",
+    "toy"
+  ],
+  "wearable": true
+}

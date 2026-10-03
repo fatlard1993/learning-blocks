@@ -1,0 +1,17 @@
+{
+  "is": "prop",
+  "block": "learning-blocks-justfatlard:jar",
+  "item": "learning-blocks-justfatlard:jar",
+  "height": 0.625,
+  "tags": [],
+  "holds": {
+    "in": {
+      "accepts": [
+        "tiny"
+      ],
+      "y": 0.08,
+      "scale": 0.5,
+      "sound": "minecraft:block.glass.place"
+    }
+  }
+}

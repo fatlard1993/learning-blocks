@@ -1,0 +1,17 @@
+{
+  "is": "prop",
+  "block": "learning-blocks-justfatlard:bin",
+  "item": "learning-blocks-justfatlard:bin",
+  "height": 0.875,
+  "tags": [],
+  "holds": {
+    "in": {
+      "accepts": [
+        "small"
+      ],
+      "y": 0.45,
+      "scale": 0.55,
+      "sound": "minecraft:block.metal.place"
+    }
+  }
+}

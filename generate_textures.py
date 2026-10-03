@@ -22,7 +22,7 @@ import struct
 import zlib
 
 HERE = pathlib.Path(__file__).parent
-ASSETS = HERE / "src/main/resources/assets/phonics-justfatlard"
+ASSETS = HERE / "src/main/resources/assets/learning-blocks-justfatlard"
 OUT = ASSETS / "textures/block"
 
 SIZE = 64

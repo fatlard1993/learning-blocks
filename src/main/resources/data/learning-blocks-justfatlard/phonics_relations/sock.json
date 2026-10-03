@@ -1,0 +1,13 @@
+{
+  "is": "toy",
+  "block": "learning-blocks-justfatlard:toy",
+  "properties": {
+    "kind": "sock"
+  },
+  "item": "learning-blocks-justfatlard:toy_sock",
+  "height": 0.688,
+  "tags": [
+    "small",
+    "toy"
+  ]
+}

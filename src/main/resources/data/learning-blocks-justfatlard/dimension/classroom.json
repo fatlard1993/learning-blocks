@@ -1,0 +1,13 @@
+{
+  "type": "learning-blocks-justfatlard:classroom",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "learning-blocks-justfatlard:classroom",
+      "features": false,
+      "lakes": false,
+      "layers": [],
+      "structure_overrides": []
+    }
+  }
+}

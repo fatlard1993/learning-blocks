@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "duck"
+  },
+  "item": "learning-blocks-justfatlard:plush_duck",
+  "height": 0.625,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "lobster"
+  },
+  "item": "learning-blocks-justfatlard:plush_lobster",
+  "height": 0.531,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

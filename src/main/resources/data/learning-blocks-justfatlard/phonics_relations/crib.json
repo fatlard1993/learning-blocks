@@ -1,0 +1,38 @@
+{
+  "is": "toy",
+  "block": "learning-blocks-justfatlard:toy",
+  "properties": {
+    "kind": "crib"
+  },
+  "item": "learning-blocks-justfatlard:toy_crib",
+  "height": 0.5,
+  "tags": [
+    "small",
+    "toy"
+  ],
+  "holds": {
+    "in": {
+      "accepts": [
+        "plush",
+        "doll"
+      ],
+      "y": 0.12,
+      "scale": 0.6,
+      "sound": "minecraft:block.note_block.chime"
+    },
+    "on": {
+      "accepts": [
+        "small"
+      ],
+      "y": 0.5,
+      "scale": 0.6
+    },
+    "under": {
+      "accepts": [
+        "tiny"
+      ],
+      "y": 0.0,
+      "scale": 0.45
+    }
+  }
+}

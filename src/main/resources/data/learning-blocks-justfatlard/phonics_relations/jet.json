@@ -1,0 +1,25 @@
+{
+  "is": "toy",
+  "block": "learning-blocks-justfatlard:toy",
+  "properties": {
+    "kind": "jet"
+  },
+  "item": "learning-blocks-justfatlard:toy_jet",
+  "height": 0.562,
+  "tags": [
+    "small",
+    "toy"
+  ],
+  "holds": {
+    "ride": {
+      "accepts": [
+        "plush",
+        "doll"
+      ],
+      "y": 0.3,
+      "z": 0.0,
+      "scale": 0.55,
+      "sound": "minecraft:block.note_block.didgeridoo"
+    }
+  }
+}

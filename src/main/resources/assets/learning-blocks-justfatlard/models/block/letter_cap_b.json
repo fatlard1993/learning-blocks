@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "learning-blocks-justfatlard:block/letter_cap_b",
+    "top": "learning-blocks-justfatlard:block/letter_top",
+    "bottom": "learning-blocks-justfatlard:block/letter_top"
+  }
+}

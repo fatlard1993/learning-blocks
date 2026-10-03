@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "catfish"
+  },
+  "item": "learning-blocks-justfatlard:plush_catfish",
+  "height": 0.412,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "tiles": [
+    "c",
+    "a",
+    "p"
+  ],
+  "stage": 1,
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "equip_item",
+        "item": "learning-blocks-justfatlard:toy_cap",
+        "slot": "head"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 6,
+        "spread": 0.4,
+        "at": "above",
+        "sound": "minecraft:entity.chicken.egg",
+        "pitch": 1.9
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "learning-blocks-justfatlard:toy_cap"
+    ]
+  },
+  "icon": "learning-blocks-justfatlard:toy_cap",
+  "picture": "clear"
+}

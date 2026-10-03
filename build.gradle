@@ -19,7 +19,7 @@ loom {
     splitEnvironmentSourceSets()
 
     mods {
-        "phonics-justfatlard" {
+        "learning-blocks-justfatlard" {
             sourceSet sourceSets.main
             sourceSet sourceSets.client
         }

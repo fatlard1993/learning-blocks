@@ -1,0 +1,86 @@
+{
+  "tiles": [
+    "h",
+    "u",
+    "g"
+  ],
+  "stage": 4,
+  "icon": "learning-blocks-justfatlard:plush_teddy",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "learning-blocks-justfatlard:plush",
+        "properties": {
+          "kind": "teddy",
+          "facing": "south"
+        },
+        "at": "near"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 8,
+        "spread": 0.5,
+        "at": "above",
+        "sound": "minecraft:entity.villager.celebrate",
+        "pitch": 1.3
+      },
+      {
+        "type": "creatures_come"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "particles",
+        "particle": "minecraft:poof",
+        "count": 6,
+        "spread": 0.3,
+        "at": "above"
+      },
+      {
+        "type": "creatures_do",
+        "what": "sneeze"
+      }
+    ]
+  },
+  "scene": {
+    "line": "Aww, the little one is sad!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:cat",
+        "baby": true
+      },
+      {
+        "type": "feel",
+        "face": "sad"
+      },
+      {
+        "type": "ambient",
+        "id": "tears",
+        "particle": "minecraft:falling_water",
+        "at": "face",
+        "count": 1,
+        "spread": 0.05,
+        "every": 6,
+        "sound": "minecraft:entity.cat.ambient",
+        "pitch": 1.6,
+        "sound_every": 40
+      }
+    ],
+    "solve": [
+      {
+        "type": "burst",
+        "particle": "minecraft:heart",
+        "count": 12,
+        "spread": 0.4,
+        "sound": "minecraft:entity.cat.purreow"
+      }
+    ]
+  }
+}

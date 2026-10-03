@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "yak"
+  },
+  "item": "learning-blocks-justfatlard:plush_yak",
+  "height": 0.625,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

@@ -1,17 +1,22 @@
 {
 	"overview": [
-		"Reading puzzles for young children, in a classroom of their own: hear each letter, put one in the gap, and see what the word does.",
-		"Press the Phonics button to go in, and the door to come home with everything you went in with."
+		"Learning Blocks: learning games for young children, in a classroom of their own. Reading first: hear each letter, put one in the gap, and see what the word does; numbers and logic to come.",
+		"Press the Learning Blocks button (or /learn) to go in, and walk through the portal to come home with everything you went in with."
 	],
 	"versions": {
+		"0.2.0": [
+			"Phonics is now Learning Blocks, the first subject of several: Reading.",
+			"Everything carries over: plushies, toys, letter tiles and props in worlds and inventories, each reader's progress, toys and daily schedule, and the server's prizes and schedules settings.",
+			"/learn is the command now; /phonics still works."
+		],
 		"0.1.0": [
 			"A classroom with one puzzle: _ A T, three letters to try, and a button that reads the word out.",
 			"CAT brings a cat, BAT a bat, HAT a hat on your head.",
 			"Every letter, word and cheer is spoken, with big captions that light up each word as it is said.",
 			"Letter tiles say their sound when placed, picked up or hit.",
-			"Prizes to take home for new words, streaks and more, set by the server in config/phonics/prizes.json.",
+			"Prizes to take home for new words, streaks and more, set by the server in config/learning-blocks/prizes.json.",
 			"A book, My Words, that lists every word you have read.",
-			"Operators can change every prize in game with /phonics prizes, items and all.",
+			"Operators can change every prize in game with /learn prizes, items and all.",
 			"Captions can be turned off, made smaller, or moved; they now sit at the top by default.",
 			"A prize held back by the daily cap is paid on a later day instead of lost.",
 			"Forty more words in five stages, one short vowel at a time: pigs, puppies, beds, fireworks and more.",

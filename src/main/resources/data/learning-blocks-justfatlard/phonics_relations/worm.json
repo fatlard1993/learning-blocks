@@ -1,0 +1,15 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "worm"
+  },
+  "item": "learning-blocks-justfatlard:plush_worm",
+  "height": 0.656,
+  "tags": [
+    "small",
+    "plush",
+    "wearer",
+    "tiny"
+  ]
+}

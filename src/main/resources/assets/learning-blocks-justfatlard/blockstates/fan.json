@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "learning-blocks-justfatlard:block/fan",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "learning-blocks-justfatlard:block/fan",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "learning-blocks-justfatlard:block/fan",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "learning-blocks-justfatlard:block/fan",
+      "y": 270
+    }
+  }
+}

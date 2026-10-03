@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "bobcat"
+  },
+  "item": "learning-blocks-justfatlard:plush_bobcat",
+  "height": 0.912,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

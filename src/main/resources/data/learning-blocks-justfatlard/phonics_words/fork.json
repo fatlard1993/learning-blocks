@@ -1,0 +1,24 @@
+{
+  "tiles": [
+    "f",
+    "or",
+    "k"
+  ],
+  "stage": 12,
+  "picture": "clear",
+  "icon": "learning-blocks-justfatlard:fork",
+  "outcome": {
+    "type": "place_block",
+    "block": "learning-blocks-justfatlard:fork",
+    "at": "near",
+    "properties": {
+      "facing": "south"
+    }
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "learning-blocks-justfatlard:fork"
+    ]
+  }
+}

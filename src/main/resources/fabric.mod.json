@@ -1,22 +1,22 @@
 {
 	"schemaVersion": 1,
-	"id": "phonics-justfatlard",
+	"id": "learning-blocks-justfatlard",
 	"version": "${version}",
-	"name": "Phonics",
-	"description": "Early-reading puzzles for young children, in a quiet classroom dimension of their own: hear the letters, make the word, see what it does.",
+	"name": "Learning Blocks",
+	"description": "Learning games for young children, in a quiet classroom dimension of their own. Reading first: hear the letters, make the word, see what it does.",
 	"authors": [
 		"justfatlard"
 	],
 	"license": "MIT",
-	"icon": "assets/phonics-justfatlard/icon.png",
+	"icon": "assets/learning-blocks-justfatlard/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"justfatlard.phonics.Phonics"
+			"justfatlard.learning_blocks.LearningBlocks"
 		]
 	},
 	"mixins": [
-		"phonics-justfatlard.mixins.json"
+		"learning-blocks-justfatlard.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=${loaderVersion}",
@@ -26,8 +26,8 @@
 		"pandorical": ">=15.0.0"
 	},
 	"contact": {
-		"homepage": "https://github.com/fatlard1993/phonics",
-		"sources": "https://github.com/fatlard1993/phonics",
-		"issues": "https://github.com/fatlard1993/phonics/issues"
+		"homepage": "https://github.com/fatlard1993/learning-blocks",
+		"sources": "https://github.com/fatlard1993/learning-blocks",
+		"issues": "https://github.com/fatlard1993/learning-blocks/issues"
 	}
 }

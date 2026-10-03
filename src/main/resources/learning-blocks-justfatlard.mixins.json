@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "justfatlard.learning_blocks.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "CachedNamesAccessor",
+    "InventoryChangeTriggerMixin",
+    "LevelMixin",
+    "PlayerLoadedMixin",
+    "PunchMixin",
+    "TeleportCommandMixin",
+    "TimePacketMixin",
+    "OldClassroomMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "is": "prop",
+  "block": "learning-blocks-justfatlard:tub",
+  "item": "learning-blocks-justfatlard:tub",
+  "height": 0.625,
+  "tags": [],
+  "holds": {
+    "in": {
+      "accepts": [
+        "plush",
+        "doll",
+        "creature"
+      ],
+      "y": 0.32,
+      "scale": 0.6,
+      "float": true,
+      "sound": "minecraft:entity.player.splash"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "robin"
+  },
+  "item": "learning-blocks-justfatlard:plush_robin",
+  "height": 0.525,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

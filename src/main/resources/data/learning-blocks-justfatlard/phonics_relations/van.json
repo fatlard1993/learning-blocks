@@ -1,0 +1,25 @@
+{
+  "is": "toy",
+  "block": "learning-blocks-justfatlard:toy",
+  "properties": {
+    "kind": "van"
+  },
+  "item": "learning-blocks-justfatlard:toy_van",
+  "height": 0.594,
+  "tags": [
+    "small",
+    "toy"
+  ],
+  "holds": {
+    "ride": {
+      "accepts": [
+        "plush",
+        "doll"
+      ],
+      "y": 0.45,
+      "z": 0.0,
+      "scale": 0.55,
+      "sound": "minecraft:block.note_block.didgeridoo"
+    }
+  }
+}

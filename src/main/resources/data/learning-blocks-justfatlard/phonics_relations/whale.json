@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "whale"
+  },
+  "item": "learning-blocks-justfatlard:plush_whale",
+  "height": 0.525,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

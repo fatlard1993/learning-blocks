@@ -1,0 +1,15 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "moth"
+  },
+  "item": "learning-blocks-justfatlard:plush_moth",
+  "height": 0.575,
+  "tags": [
+    "small",
+    "plush",
+    "wearer",
+    "tiny"
+  ]
+}

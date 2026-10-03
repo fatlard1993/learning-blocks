@@ -1,0 +1,35 @@
+{
+  "tiles": [
+    "w",
+    "i",
+    "g"
+  ],
+  "stage": 2,
+  "picture": "clear",
+  "icon": "learning-blocks-justfatlard:toy_wig",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "equip_item",
+        "item": "learning-blocks-justfatlard:toy_wig",
+        "slot": "head"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 6,
+        "spread": 0.4,
+        "at": "above",
+        "sound": "minecraft:entity.chicken.egg",
+        "pitch": 1.9
+      }
+    ]
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "learning-blocks-justfatlard:toy_wig"
+    ]
+  }
+}

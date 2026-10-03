@@ -1,0 +1,22 @@
+{
+  "is": "toy",
+  "block": "learning-blocks-justfatlard:toy",
+  "properties": {
+    "kind": "drum"
+  },
+  "item": "learning-blocks-justfatlard:toy_drum",
+  "height": 0.537,
+  "tags": [
+    "small",
+    "toy"
+  ],
+  "holds": {
+    "on": {
+      "accepts": [
+        "small"
+      ],
+      "y": 0.537,
+      "scale": 0.6
+    }
+  }
+}

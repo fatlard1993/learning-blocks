@@ -1,0 +1,13 @@
+{
+  "is": "toy",
+  "block": "learning-blocks-justfatlard:toy",
+  "properties": {
+    "kind": "pin"
+  },
+  "item": "learning-blocks-justfatlard:toy_pin",
+  "height": 0.719,
+  "tags": [
+    "small",
+    "toy"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "tiles": [
+    "sh",
+    "i",
+    "p"
+  ],
+  "stage": 7,
+  "icon": "learning-blocks-justfatlard:toy_ship",
+  "picture": "clear",
+  "outcome": {
+    "type": "spawn_entity",
+    "entity": "minecraft:oak_boat"
+  },
+  "wrong": {
+    "type": "spawn_entity",
+    "entity": "minecraft:oak_boat",
+    "lasts": 40
+  },
+  "scene": {
+    "line": "He can't get across the water!",
+    "setup": [
+      {
+        "type": "character",
+        "entity": "minecraft:villager",
+        "act": "still"
+      },
+      {
+        "type": "block",
+        "block": "minecraft:light_blue_carpet",
+        "at": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      }
+    ],
+    "solve": [
+      {
+        "type": "visit",
+        "entity": "minecraft:oak_boat",
+        "to": "front"
+      }
+    ]
+  }
+}

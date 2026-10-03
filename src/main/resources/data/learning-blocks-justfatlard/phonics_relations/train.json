@@ -1,0 +1,25 @@
+{
+  "is": "toy",
+  "block": "learning-blocks-justfatlard:toy",
+  "properties": {
+    "kind": "train"
+  },
+  "item": "learning-blocks-justfatlard:toy_train",
+  "height": 0.7,
+  "tags": [
+    "small",
+    "toy"
+  ],
+  "holds": {
+    "ride": {
+      "accepts": [
+        "plush",
+        "doll"
+      ],
+      "y": 0.5,
+      "z": 0.15,
+      "scale": 0.55,
+      "sound": "minecraft:block.note_block.didgeridoo"
+    }
+  }
+}

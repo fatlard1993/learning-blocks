@@ -15,7 +15,7 @@ import pathlib
 from generate_textures import write_png
 
 HERE = pathlib.Path(__file__).parent
-NS = "phonics-justfatlard"
+NS = "learning-blocks-justfatlard"
 ASSETS = HERE / "src/main/resources/assets" / NS
 DATA = HERE / "src/main/resources/data" / NS
 
@@ -520,7 +520,7 @@ BLOCKS = {
         turned(cube((13.5, 9, 2.6), (14, 12.4, 13.4), "#flap"), "z", -22.5, (14, 9, 8)),
     ], (2, 0, 2, 14, 9, 14), "minecraft:sandstone"),
     # A glass jar, open, its screw thread at the neck: for putting things in.
-    "jar": ({"glass": "phonics-justfatlard:block/prop_jar", "rim": "minecraft:block/iron_block", "base": "phonics-justfatlard:block/prop_jar_base"}, [
+    "jar": ({"glass": "learning-blocks-justfatlard:block/prop_jar", "rim": "minecraft:block/iron_block", "base": "learning-blocks-justfatlard:block/prop_jar_base"}, [
         cube((5, 0, 5), (11, 0.6, 11), "#base"),
         cube((5, 0.6, 5), (11, 8, 5.6), "#glass"),
         cube((5, 0.6, 10.4), (11, 8, 11), "#glass"),
@@ -555,7 +555,7 @@ BLOCKS = {
         turned(cube((6, 0.4, 10.4), (10, 3.2, 12), "#strings"), "x", 22.5, (8, 3.2, 10.4)),
     ], (5, 0, 5, 11, 16, 11), "minecraft:white_wool"),
     # An ear of corn on its side, the husk peeled back at the stalk end.
-    "corn": ({"cob": "phonics-justfatlard:block/prop_corn", "husk": "minecraft:block/lime_terracotta", "stalk": "minecraft:block/green_terracotta"}, [
+    "corn": ({"cob": "learning-blocks-justfatlard:block/prop_corn", "husk": "minecraft:block/lime_terracotta", "stalk": "minecraft:block/green_terracotta"}, [
         cube((4, 0.6, 6), (12.6, 4.4, 10), "#cob"),
         cube((12.6, 1.2, 6.6), (13.6, 3.8, 9.4), "#cob"),
         cube((1, 1.6, 7.4), (3, 3.4, 8.6), "#stalk"),

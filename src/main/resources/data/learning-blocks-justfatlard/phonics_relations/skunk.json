@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "skunk"
+  },
+  "item": "learning-blocks-justfatlard:plush_skunk",
+  "height": 0.838,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

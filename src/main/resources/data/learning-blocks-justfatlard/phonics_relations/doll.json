@@ -1,0 +1,15 @@
+{
+  "is": "toy",
+  "block": "learning-blocks-justfatlard:toy",
+  "properties": {
+    "kind": "doll"
+  },
+  "item": "learning-blocks-justfatlard:toy_doll",
+  "height": 0.775,
+  "tags": [
+    "small",
+    "toy",
+    "doll",
+    "wearer"
+  ]
+}

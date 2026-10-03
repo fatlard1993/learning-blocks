@@ -1,0 +1,24 @@
+{
+  "tiles": [
+    "c",
+    "or",
+    "n"
+  ],
+  "stage": 12,
+  "picture": "clear",
+  "icon": "learning-blocks-justfatlard:corn",
+  "outcome": {
+    "type": "place_block",
+    "block": "learning-blocks-justfatlard:corn",
+    "at": "near",
+    "properties": {
+      "facing": "south"
+    }
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "learning-blocks-justfatlard:corn"
+    ]
+  }
+}

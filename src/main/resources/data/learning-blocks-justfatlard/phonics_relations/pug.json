@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "pug"
+  },
+  "item": "learning-blocks-justfatlard:plush_pug",
+  "height": 0.537,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

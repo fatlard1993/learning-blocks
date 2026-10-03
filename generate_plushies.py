@@ -23,7 +23,7 @@ import random
 from generate_textures import write_png
 
 HERE = pathlib.Path(__file__).parent
-NS = "phonics-justfatlard"
+NS = "learning-blocks-justfatlard"
 ASSETS = HERE / "src/main/resources/assets" / NS
 DATA = HERE / "src/main/resources/data" / NS
 

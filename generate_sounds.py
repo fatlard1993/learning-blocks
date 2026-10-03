@@ -58,9 +58,9 @@ import urllib.request
 
 HERE = pathlib.Path(__file__).parent
 RESOURCES = HERE / "src/main/resources"
-SOUNDS = RESOURCES / "assets/phonics-justfatlard/sounds"
-CAPTIONS = RESOURCES / "data/phonics-justfatlard/phonics_captions"
-WORDS = RESOURCES / "data/phonics-justfatlard/phonics_words"
+SOUNDS = RESOURCES / "assets/learning-blocks-justfatlard/sounds"
+CAPTIONS = RESOURCES / "data/learning-blocks-justfatlard/phonics_captions"
+WORDS = RESOURCES / "data/learning-blocks-justfatlard/phonics_words"
 CACHE = HERE / ".sound-cache"
 TAKES = HERE / "sound-takes.json"
 

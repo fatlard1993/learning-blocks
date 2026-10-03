@@ -24,7 +24,7 @@ from generate_plushies import Face, felt, rgb, shade, write, CLEAR, INK, WHITE, 
 from generate_textures import tile, stamp, write_png, VOWEL, CONSONANT
 
 HERE = pathlib.Path(__file__).parent
-NS = "phonics-justfatlard"
+NS = "learning-blocks-justfatlard"
 ASSETS = HERE / "src/main/resources/assets" / NS
 DATA = HERE / "src/main/resources/data" / NS
 

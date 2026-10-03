@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "starfish"
+  },
+  "item": "learning-blocks-justfatlard:plush_starfish",
+  "height": 0.85,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

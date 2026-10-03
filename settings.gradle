@@ -6,7 +6,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'phonics'
+rootProject.name = 'learning-blocks'
 
 include ':pandorical'
 project(':pandorical').projectDir = new File(rootProject.projectDir, '../pandorical')

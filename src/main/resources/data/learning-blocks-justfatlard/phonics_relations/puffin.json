@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "puffin"
+  },
+  "item": "learning-blocks-justfatlard:plush_puffin",
+  "height": 0.562,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

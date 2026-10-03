@@ -1,0 +1,53 @@
+{
+  "tiles": [
+    "d",
+    "r",
+    "u",
+    "m"
+  ],
+  "stage": 8,
+  "icon": "learning-blocks-justfatlard:toy_drum",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "learning-blocks-justfatlard:toy",
+        "properties": {
+          "kind": "drum",
+          "facing": "south"
+        },
+        "at": "near"
+      },
+      {
+        "type": "tune",
+        "instrument": "basedrum",
+        "notes": [
+          12,
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "every": 5
+      }
+    ]
+  },
+  "wrong": {
+    "type": "tune",
+    "instrument": "snare",
+    "notes": [
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12
+    ],
+    "every": 2
+  },
+  "picture": "clear"
+}

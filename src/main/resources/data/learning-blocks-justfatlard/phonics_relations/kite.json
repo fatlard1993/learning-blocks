@@ -1,0 +1,13 @@
+{
+  "is": "toy",
+  "block": "learning-blocks-justfatlard:toy",
+  "properties": {
+    "kind": "kite"
+  },
+  "item": "learning-blocks-justfatlard:toy_kite",
+  "height": 0.988,
+  "tags": [
+    "small",
+    "toy"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "tiles": [
+    "d",
+    "e",
+    "s",
+    "k"
+  ],
+  "stage": 11,
+  "picture": "clear",
+  "icon": "learning-blocks-justfatlard:desk",
+  "outcome": {
+    "type": "place_block",
+    "block": "learning-blocks-justfatlard:desk",
+    "at": "near",
+    "properties": {
+      "facing": "south"
+    }
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "learning-blocks-justfatlard:desk",
+        "at": "near",
+        "properties": {
+          "facing": "south"
+        },
+        "lasts": 40
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 16
+      }
+    ]
+  }
+}

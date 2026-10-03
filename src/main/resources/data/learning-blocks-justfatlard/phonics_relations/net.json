@@ -1,0 +1,13 @@
+{
+  "is": "toy",
+  "block": "learning-blocks-justfatlard:toy",
+  "properties": {
+    "kind": "net"
+  },
+  "item": "learning-blocks-justfatlard:toy_net",
+  "height": 0.919,
+  "tags": [
+    "small",
+    "toy"
+  ]
+}

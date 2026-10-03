@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "crow"
+  },
+  "item": "learning-blocks-justfatlard:plush_crow",
+  "height": 0.75,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "tiles": [
+    "n",
+    "e",
+    "t"
+  ],
+  "stage": 5,
+  "picture": "clear",
+  "icon": "learning-blocks-justfatlard:toy_net",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "learning-blocks-justfatlard:toy",
+        "properties": {
+          "kind": "net",
+          "facing": "south"
+        },
+        "at": "near"
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 6,
+        "spread": 0.4,
+        "at": "above",
+        "sound": "minecraft:block.wool.place",
+        "pitch": 1.4
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "learning-blocks-justfatlard:toy",
+        "properties": {
+          "kind": "net",
+          "facing": "south"
+        },
+        "at": "near",
+        "lasts": 40
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 16
+      }
+    ]
+  }
+}

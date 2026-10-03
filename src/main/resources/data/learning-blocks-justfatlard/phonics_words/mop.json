@@ -1,0 +1,80 @@
+{
+  "tiles": [
+    "m",
+    "o",
+    "p"
+  ],
+  "stage": 3,
+  "outcome": {
+    "type": "place_block",
+    "block": "learning-blocks-justfatlard:mop",
+    "at": "near",
+    "properties": {
+      "facing": "south"
+    }
+  },
+  "wrong": {
+    "type": "bonk",
+    "items": [
+      "learning-blocks-justfatlard:mop"
+    ],
+    "sound": "minecraft:entity.player.splash"
+  },
+  "scene": {
+    "line": "What a splashy mess!",
+    "setup": [
+      {
+        "type": "block",
+        "block": "minecraft:light_blue_carpet",
+        "at": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "becomes": "minecraft:air"
+      },
+      {
+        "type": "ambient",
+        "id": "splash",
+        "particle": "minecraft:splash",
+        "at": "beside",
+        "count": 4,
+        "spread": 0.6,
+        "every": 6,
+        "sound": "minecraft:entity.player.splash",
+        "pitch": 1.4,
+        "sound_every": 50
+      }
+    ],
+    "solve": [
+      {
+        "type": "give",
+        "item": "learning-blocks-justfatlard:mop",
+        "then": "soak"
+      }
+    ]
+  },
+  "icon": "learning-blocks-justfatlard:mop",
+  "picture": "clear"
+}

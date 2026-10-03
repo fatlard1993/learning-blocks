@@ -1,0 +1,70 @@
+{
+  "tiles": [
+    "j",
+    "e",
+    "t"
+  ],
+  "stage": 5,
+  "icon": "learning-blocks-justfatlard:toy_jet",
+  "outcome": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "learning-blocks-justfatlard:toy",
+        "properties": {
+          "kind": "jet",
+          "facing": "south"
+        },
+        "at": "near"
+      },
+      {
+        "type": "push",
+        "up": 1.1
+      },
+      {
+        "type": "effect",
+        "effect": "minecraft:slow_falling",
+        "duration": 80
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:heart",
+        "count": 6,
+        "spread": 0.4,
+        "at": "above",
+        "sound": "minecraft:entity.player.attack.sweep",
+        "pitch": 1.6
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:cloud",
+        "count": 20,
+        "spread": 0.4,
+        "at": "player",
+        "sound": "minecraft:entity.breeze.wind_burst"
+      }
+    ]
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "learning-blocks-justfatlard:toy",
+        "properties": {
+          "kind": "jet",
+          "facing": "south"
+        },
+        "at": "near",
+        "lasts": 40
+      },
+      {
+        "type": "spin",
+        "turns": 1.0,
+        "ticks": 16
+      }
+    ]
+  },
+  "picture": "clear"
+}

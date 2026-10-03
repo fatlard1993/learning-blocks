@@ -1,0 +1,41 @@
+{
+  "tiles": [
+    "t",
+    "u",
+    "b"
+  ],
+  "stage": 4,
+  "icon": "learning-blocks-justfatlard:tub",
+  "outcome": {
+    "type": "place_block",
+    "block": "learning-blocks-justfatlard:tub",
+    "at": "near",
+    "properties": {
+      "facing": "south"
+    }
+  },
+  "wrong": {
+    "type": "sequence",
+    "steps": [
+      {
+        "type": "place_block",
+        "block": "learning-blocks-justfatlard:tub",
+        "at": "near",
+        "lasts": 50,
+        "properties": {
+          "facing": "south"
+        }
+      },
+      {
+        "type": "particles",
+        "particle": "minecraft:splash",
+        "count": 50,
+        "spread": 0.3,
+        "at": "face",
+        "sound": "minecraft:entity.player.splash",
+        "pitch": 1.3
+      }
+    ]
+  },
+  "picture": "clear"
+}

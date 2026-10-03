@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "teddy"
+  },
+  "item": "learning-blocks-justfatlard:plush_teddy",
+  "height": 0.825,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

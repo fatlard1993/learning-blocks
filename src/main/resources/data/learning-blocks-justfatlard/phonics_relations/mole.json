@@ -1,0 +1,14 @@
+{
+  "is": "plush",
+  "block": "learning-blocks-justfatlard:plush",
+  "properties": {
+    "kind": "mole"
+  },
+  "item": "learning-blocks-justfatlard:plush_mole",
+  "height": 0.375,
+  "tags": [
+    "small",
+    "plush",
+    "wearer"
+  ]
+}

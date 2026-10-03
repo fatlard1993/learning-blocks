@@ -14,7 +14,7 @@ import pathlib
 import string
 
 HERE = pathlib.Path(__file__).parent
-NS = "phonics-justfatlard"
+NS = "learning-blocks-justfatlard"
 ASSETS = HERE / "src/main/resources/assets" / NS
 
 # Two letters, one sound: consonant digraphs and doubles, qu, and the vowel teams.
