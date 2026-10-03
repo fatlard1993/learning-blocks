@@ -359,22 +359,6 @@
         "type": "minecraft:match_block",
         "blocks": "learning-blocks-justfatlard:toy",
         "state": {
-          "kind": "bears"
-        }
-      },
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "learning-blocks-justfatlard:toy_bears"
-        }
-      ]
-    },
-    {
-      "rolls": 1,
-      "condition": {
-        "type": "minecraft:match_block",
-        "blocks": "learning-blocks-justfatlard:toy",
-        "state": {
           "kind": "sorter"
         }
       },

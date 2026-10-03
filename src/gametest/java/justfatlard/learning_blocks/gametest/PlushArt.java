@@ -205,7 +205,7 @@ public final class PlushArt implements FabricClientGameTest {
 		session.context().setScreen(() -> null);
 
 		// The counting toys (Numbers): each close, three-quarter on; then all of them as items.
-		Toy[] counting = {Toy.ABACUS, Toy.DICE, Toy.DOMINOES, Toy.BEARS, Toy.SORTER, Toy.SCALE};
+		Toy[] counting = {Toy.ABACUS, Toy.DICE, Toy.DOMINOES, Toy.SORTER, Toy.SCALE};
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			ServerLevel level = (ServerLevel) player.level();

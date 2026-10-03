@@ -145,8 +145,11 @@ public final class ProgressView {
 
 		line.accept(Stages.describe(progress));
 		// The other subjects this reader has on: where they are in each.
-		for (justfatlard.learning_blocks.subject.Subject subject : justfatlard.learning_blocks.subject.Subjects.on(reader)) {
-			if (subject != justfatlard.learning_blocks.subject.Subjects.READING) subject.summary(progress).forEach(line);
+		// The other subjects this reader has on, or has done any of: where they are in each.
+		for (justfatlard.learning_blocks.subject.Subject subject : justfatlard.learning_blocks.subject.Subjects.ALL) {
+			if (subject == justfatlard.learning_blocks.subject.Subjects.READING) continue;
+			boolean any = memory.items().keySet().stream().anyMatch(key -> key.startsWith(subject.id() + ":"));
+			if (any || justfatlard.learning_blocks.subject.Subjects.on(reader, subject)) subject.summary(progress).forEach(line);
 		}
 		int[] week = week(memory);
 		line.accept("This week: " + (week[0] + 59) / 60 + " minutes, " + week[1] + " rounds");

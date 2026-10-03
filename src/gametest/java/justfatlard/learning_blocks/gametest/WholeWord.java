@@ -132,7 +132,7 @@ public final class WholeWord implements FabricClientGameTest {
 				check(log.contains("clip:word/bell") && log.contains("outcome"), "bell was not read out and done: " + log);
 			});
 			session.command("/learn leave");
-			Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
+			Waits.home(session);
 		});
 	}
 

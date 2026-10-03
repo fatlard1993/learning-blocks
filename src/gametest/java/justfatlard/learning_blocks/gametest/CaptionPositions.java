@@ -90,7 +90,7 @@ public final class CaptionPositions implements FabricClientGameTest {
 			session.waitTicks(10);
 			session.onServer(server -> CaptionSettings.set(session.player(), true, "large", "top"));
 			session.command("/learn leave");
-			Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
+			Waits.home(session);
 		});
 	}
 

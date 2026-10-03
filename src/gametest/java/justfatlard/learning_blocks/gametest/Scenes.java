@@ -199,7 +199,7 @@ public final class Scenes implements FabricClientGameTest {
 				PrizeConfig.load(server);
 			});
 			session.command("/learn leave");
-			Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
+			Waits.home(session);
 		});
 	}
 

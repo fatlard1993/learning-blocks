@@ -101,6 +101,26 @@ public final class Anims {
 			drum.sound(i * 5, note(SoundEvents.NOTE_BLOCK_BASEDRUM), 1.0F).squash(i * 5 + 1, 1.08F, 0.88F).key(i * 5 + 3, 0, 0.12F, 0);
 		}
 		TOYS.put(Toy.DRUM, drum.rest(22));
+		// The counting toys. Abacus: five little hops, a clack for each, counted.
+		Anim abacus = Anim.of();
+		for (int i = 0; i < 5; i++) abacus.sound(i * 5, SoundEvents.WOOD_HIT, 1.2F + i * 0.1F).key(i * 5 + 2, 0, 0.08F, 0, i % 2 == 0 ? 6 : -6, 0, 0).key(i * 5 + 4, 0, 0, 0);
+		TOYS.put(Toy.ABACUS, abacus.rest(28));
+		// Dice: up, a tumble over and round, and down with a rattle.
+		TOYS.put(Toy.DICE, Anim.of().sound(0, SoundEvents.WOOD_HIT, 1.5F).key(4, 0, 0.6F, 0, 90, 0, 45).key(8, 0, 0.8F, 0, 200, 0, 120)
+			.key(12, 0, 0.4F, 0, 300, 0, 200).key(15, 0, 0, 0, 360, 0, 360).sound(15, SoundEvents.WOOD_HIT, 1.1F).sound(17, SoundEvents.WOOD_HIT, 1.3F)
+			.key(18, 0, 0.08F, 0, 360, 0, 360).key(20, 0, 0, 0, 360, 0, 360).rest(24));
+		// Dominoes: a wobble, a tip and a clatter of clacks, and back.
+		Anim dominoes = Anim.of().key(3, 0, 0, 0, 0, 0, 6).key(6, 0, 0, 0, 0, 0, -6).key(10, 0, 0, 0, 0, 0, 14);
+		for (int i = 0; i < 4; i++) dominoes.sound(10 + i * 2, SoundEvents.WOOD_HIT, 1.0F + i * 0.15F);
+		TOYS.put(Toy.DOMINOES, dominoes.key(20, 0, 0, 0, 0, 0, 14).key(26, 0, 0, 0, 0, 0, 0).rest(28));
+		// Shape sorter: shakes, a plonk as a shape drops in, and a happy little hop.
+		TOYS.put(Toy.SORTER, Anim.of().key(2, 0, 0, 0, 8, 0, 0).key(4, 0, 0, 0, -8, 0, 0).key(6, 0, 0, 0, 8, 0, 0).key(8, 0, 0, 0, 0, 0, 0)
+			.sound(10, SoundEvents.WOOD_PLACE, 0.9F).squash(12, 1.08F, 0.9F).key(16, 0, 0.25F, 0).sound(16, note(SoundEvents.NOTE_BLOCK_BELL), 1.3F)
+			.key(20, 0, 0, 0).rest(24));
+		// Balance scale: rocks one way and the other, balancing, and settles with a ding.
+		Anim scale = Anim.of();
+		for (int i = 0; i < 4; i++) scale.key(3 + i * 6, 0, 0, 0, 0, 0, (i % 2 == 0 ? 8 : -8) * (4 - i) / 4.0F);
+		TOYS.put(Toy.SCALE, scale.key(27, 0, 0, 0, 0, 0, 0).sound(27, note(SoundEvents.NOTE_BLOCK_BELL), 1.5F).rest(30));
 		// kite: it lifts off its reel and flies up and back on its string, the sail fluttering and
 		// the tail waving under it, and settles back onto the reel.
 		Anim kite = Anim.of().pieces("kite").sound(0, SoundEvents.PHANTOM_FLAP, 1.6F).sound(16, SoundEvents.PHANTOM_FLAP, 1.8F)

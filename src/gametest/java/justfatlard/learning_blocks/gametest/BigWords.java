@@ -156,7 +156,7 @@ public final class BigWords implements FabricClientGameTest {
 		session.waitTicks(30);
 		shoot(session, "phonics-big-read-it");
 		session.command("/learn leave");
-		Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
+		Waits.home(session);
 	}
 
 	/** The row's positions, a tile at a time, as the board shows them. */

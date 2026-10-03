@@ -29,15 +29,21 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * A round of a subject other than Reading: a question on the board and said aloud, and a few
- * blocks on the floor to pick from by a click or a punch. The right one: it is said, the room
- * cheers, and it counts as any round does (the item's memory and mastery, prizes, the lesson, the
- * day's count, a toy earned); another: it says what it is, wiggles, and the question is asked
- * again. Everything else a round is - the turn, the door, the prompts, the idle replays - is the
- * room's, as for Reading's rounds; the room holds a stand-in puzzle meanwhile, as for Bob's.
+ * things to pick from by a click or a punch - blocks on the floor, by default, or whatever a kind
+ * stands there (pictures, pens, towers). The right one: it is told, the room cheers, and it counts
+ * as any round does (the item's memory and mastery, prizes, the lesson, the day's count, a toy
+ * earned); another: it is told what it is, wiggles, and the question is asked again. A kind can
+ * hold a pick without a verdict (a tile put in a gap, the next number put in a row) and give the
+ * verdict later, from the button. Everything else a round is - the turn, the door, the prompts,
+ * the idle replays - is the room's, as for Reading's rounds; the room holds a stand-in puzzle
+ * meanwhile, as for Bob's.
  */
 public abstract class SubjectRound {
-	/** Something to pick: a block on a stand, what it says, and what the caption shows. */
-	public record Choice(String id, BlockState block, String clip, String said) {}
+	/** Something to pick: a block on a stand (or null, for a kind that stands something else there), what it says, and what the caption shows. */
+	public record Choice(String id, @Nullable BlockState block, String clip, String said) {}
+
+	/** What a pick comes to: right, wrong, or held for later (a tile put in a gap, the next one of a row). */
+	protected enum Verdict { RIGHT, WRONG, HOLD }
 
 	/** On everything a subject's round makes, so what slips through (a restart mid-round) is swept up with the next. */
 	static final String TAG = justfatlard.learning_blocks.LearningBlocks.MOD_ID + ".subject";
@@ -65,7 +71,7 @@ public abstract class SubjectRound {
 	/** The item it asks: {@code numbers:numeral:3}. */
 	public abstract String item();
 
-	/** The right answer among the choices. */
+	/** The right answer among the choices (one of them, where several would do). */
 	protected abstract Choice answer();
 
 	/** The board: what the question shows. */
@@ -77,7 +83,7 @@ public abstract class SubjectRound {
 	/** Whether this child has finished the subject's level: its "ready for more" moment, once. */
 	protected abstract boolean levelDone(Progress progress);
 
-	/** The level's key, for the stage_complete prize paid once: {@code numbers:1}. */
+	/** The level's key, for the stage_complete prize paid once: {@code numbers:N0}. */
 	protected abstract String levelKey();
 
 	/** The "ready for more" line, said when the level is done. */
@@ -86,8 +92,58 @@ public abstract class SubjectRound {
 	/** Its words, for the caption while it is unrecorded. */
 	protected abstract String nextLevelWords();
 
+	/** What this pick comes to: by default, right if it is the answer. */
+	protected Verdict judge(ServerPlayer player, Choice picked) {
+		return picked.equals(answer()) ? Verdict.RIGHT : Verdict.WRONG;
+	}
+
+	/** What happens on a pick before its verdict is told (Bob does what the card says): nothing, by default. */
+	protected @Nullable Narration act(ServerPlayer player, Choice picked) {
+		return null;
+	}
+
+	/** A held pick: what it does and says (the tile into the gap). */
+	protected void hold(ServerPlayer player, Choice picked, Narration telling) {}
+
+	/** The right answer told: by default, the choice says itself, and anything it shows is shown. */
+	protected void tellRight(ServerPlayer player, Choice picked, Narration telling) {
+		telling.say(picked.clip(), "right:" + picked.id(), p -> showRight(p, picked), CaptionLine.plain(picked.said()), AnswerNarration.WORD_GAP);
+	}
+
+	/** A wrong answer told: by default, a wiggle, "oops, that's" and what it is; then the question again. */
+	protected void tellWrong(ServerPlayer player, Choice picked, Narration telling) {
+		BlockPos at = spotOf(picked);
+		telling.then("wiggle", p -> wiggle(at), 2)
+			.say("phrase/oops_thats", 2)
+			.say(picked.clip(), "said:" + picked.id(), p -> {}, CaptionLine.plain(picked.said()), AnswerNarration.WORD_GAP);
+	}
+
 	/** After the right answer: anything it shows (the pattern's gap filled). */
 	protected void showRight(ServerPlayer player, Choice right) {}
+
+	/** The button pressed in this round: true if the round answers it itself; otherwise it asks again. */
+	protected boolean press(ServerPlayer player) {
+		return false;
+	}
+
+	/** Where choice {@code i} of {@code n} stands: on the floor in front of the board, by default. */
+	protected BlockPos spotFor(int i, int n) {
+		return layout.shelfSpot(i, n);
+	}
+
+	/** How big the box that hears a choice picked is: a block, by default. */
+	protected float hitWidth(Choice choice) {
+		return 1.1F;
+	}
+
+	protected float hitHeight(Choice choice) {
+		return 1.2F;
+	}
+
+	/** What stands at a choice's spot: its block, by default. */
+	protected void stand(Choice choice, BlockPos spot) {
+		if (choice.block() != null) set(spot, choice.block());
+	}
 
 	/** A line said, captioned with its words while it is still unrecorded (its placeholder plays). */
 	protected static Narration line(Narration narration, String clip, String words) {
@@ -105,31 +161,42 @@ public abstract class SubjectRound {
 		return new Puzzle(anchor, List.of(anchor), List.of(), 0, Puzzle.Kind.WHOLE);
 	}
 
-	/** Laid out: the board, and the choices on stands, each with a box that hears it picked. */
+	/** Laid out: the board, and the choices on their spots, each with a box that hears it picked. */
 	void start(ServerPlayer player) {
 		board();
 		for (int i = 0; i < choices.size(); i++) {
 			Choice choice = choices.get(i);
-			BlockPos spot = layout.shelfSpot(i, choices.size());
-			set(spot, choice.block());
+			BlockPos spot = spotFor(i, choices.size());
+			stand(choice, spot);
 			net.minecraft.world.entity.Interaction hit = EntityTypes.INTERACTION.create(level, EntitySpawnReason.TRIGGERED);
 			if (hit == null) continue;
 			Vec3 at = Vec3.atBottomCenterOf(spot);
 			hit.snapTo(at.x, at.y, at.z, 0, 0);
-			hit.setWidth(1.1F);
-			hit.setHeight(1.2F);
+			hit.setWidth(hitWidth(choice));
+			hit.setHeight(hitHeight(choice));
 			hit.setResponse(true);
 			hit.addTag(TAG);
 			level.addFreshEntity(hit);
 			hits.put(hit.getUUID(), choice);
 			made.add(hit.getUUID());
 		}
+		started(player);
 	}
+
+	/** After the board and the choices: anything else a kind sets going (creatures out of the button). */
+	protected void started(ServerPlayer player) {}
 
 	/** A block the round put down, to be taken up again with it. */
 	protected void set(BlockPos pos, BlockState state) {
 		level.setBlock(pos, state, RoomLayout.FLAGS);
 		placed.add(pos.immutable());
+	}
+
+	/** An entity the round made, to go with it, and added to the world. */
+	protected <T extends Entity> T add(T entity) {
+		made(entity);
+		level.addFreshEntity(entity);
+		return entity;
 	}
 
 	/** An entity the round made, to go with it. */
@@ -138,10 +205,20 @@ public abstract class SubjectRound {
 		made.add(entity.getUUID());
 	}
 
+	/** A choice's box gone: it can't be picked again (a tile put in a row). */
+	protected void unhit(Choice choice) {
+		hits.entrySet().removeIf(entry -> {
+			if (!entry.getValue().equals(choice)) return false;
+			Entity box = level.getEntity(entry.getKey());
+			if (box != null) box.discard();
+			return true;
+		});
+	}
+
 	/** Where a choice stands. */
 	protected @Nullable BlockPos spotOf(Choice choice) {
 		int i = choices.indexOf(choice);
-		return i < 0 ? null : layout.shelfSpot(i, choices.size());
+		return i < 0 ? null : spotFor(i, choices.size());
 	}
 
 	/** A click or punch on one of the choices' boxes: true if it was one. */
@@ -156,6 +233,13 @@ public abstract class SubjectRound {
 		return true;
 	}
 
+	/** The button, in this round: the round's own, or the question again. */
+	void pressed(ServerPlayer player) {
+		if (room.busy || room.leaving) return;
+		room.touch();
+		if (!press(player)) room.replay(player);
+	}
+
 	/** The right choice. For tests. */
 	public Choice rightForTests() {
 		return answer();
@@ -166,16 +250,37 @@ public abstract class SubjectRound {
 		pick(player, choice);
 	}
 
+	/** The button pressed, as the button does. For tests. */
+	public void pressForTests(ServerPlayer player) {
+		pressed(player);
+	}
+
 	private void pick(ServerPlayer player, Choice picked) {
 		if (room.busy || room.leaving) return;
 		room.touch();
 		Narrator.note(player, "picked:" + subject().id() + ":" + picked.id());
+		Verdict verdict = judge(player, picked);
+		if (verdict == Verdict.HOLD) {
+			Narration telling = new Narration();
+			hold(player, picked, telling);
+			room.answers.finish(player, telling, new boolean[1], room.round);
+			return;
+		}
+		conclude(player, picked, verdict == Verdict.RIGHT, act(player, picked));
+	}
+
+	/**
+	 * The verdict: right (counted, told, and on to the next round) or wrong (told, and asked again).
+	 * {@code before}, if given, is said first: what the button did with a held pick.
+	 */
+	protected void conclude(ServerPlayer player, Choice picked, boolean right, @Nullable Narration before) {
 		boolean[] happened = new boolean[1];
 		int roundAt = room.round;
 		Narration telling = new Narration();
+		if (before != null) for (Narration.Step step : before.steps()) telling.add(step);
 		Progress progress = Progress.of(player);
 		String item = item();
-		if (picked.equals(answer())) {
+		if (right) {
 			boolean firstTry = !room.missedThisRound;
 			int lessonsBefore = AnswerCommit.lessonsBefore(player);
 			boolean justMastered = !room.practice && firstTry && progress.itemCountsToday(item) && progress.itemClean(item) + 1 == Progress.masteredAt();
@@ -188,24 +293,21 @@ public abstract class SubjectRound {
 			boolean nowDone = !room.practice && !wasDone && levelDone(Progress.of(player));
 			if (nowDone) Safely.run("A level of " + subject().id() + " done", () -> Prizes.levelComplete(player, levelKey()));
 			happened[0] = true;
-			telling.say(picked.clip(), "right:" + picked.id(), p -> showRight(p, picked), CaptionLine.plain(picked.said()), AnswerNarration.WORD_GAP);
+			tellRight(player, picked, telling);
 			if (nowDone) line(telling.then("next_level", p -> room.rounds.flourish(p), 2), nextLevelLine(), nextLevelWords());
 			// Not "a new word!": a new item's prizes still come, in the prize line.
 			room.answers.closing(player, telling, lessonsBefore, false, false, justMastered);
 		} else {
 			room.answers.commit().wrong(player);
 			if (!room.practice) Safely.run("Remembering a miss", () -> Progress.of(player).itemMissed(player, item, picked.id()));
-			BlockPos at = spotOf(picked);
-			telling.then("wiggle", p -> wiggle(at), 2)
-				.say("phrase/oops_thats", 2)
-				.say(picked.clip(), "said:" + picked.id(), p -> {}, CaptionLine.plain(picked.said()), AnswerNarration.WORD_GAP);
+			tellWrong(player, picked, telling);
 			ask(telling);
 		}
 		room.answers.finish(player, telling, happened, roundAt);
 	}
 
 	/** A friendly little hop and a puff at the one picked that was not it. */
-	private void wiggle(@Nullable BlockPos at) {
+	protected void wiggle(@Nullable BlockPos at) {
 		if (at == null) return;
 		Vec3 top = Vec3.atCenterOf(at).add(0, 0.6, 0);
 		level.sendParticles(ParticleTypes.NOTE, top.x, top.y + 0.3, top.z, 3, 0.3, 0.1, 0.3, 1.0);

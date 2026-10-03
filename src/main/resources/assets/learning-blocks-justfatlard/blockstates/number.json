@@ -62,6 +62,15 @@
     },
     "number=20": {
       "model": "learning-blocks-justfatlard:block/number_20"
+    },
+    "number=21": {
+      "model": "learning-blocks-justfatlard:block/number_21"
+    },
+    "number=22": {
+      "model": "learning-blocks-justfatlard:block/number_22"
+    },
+    "number=23": {
+      "model": "learning-blocks-justfatlard:block/number_23"
     }
   }
 }

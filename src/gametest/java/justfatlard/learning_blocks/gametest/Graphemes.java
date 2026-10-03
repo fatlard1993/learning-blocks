@@ -104,7 +104,7 @@ public final class Graphemes implements FabricClientGameTest {
 			shoot(session, "phonics-review-two-letter");
 			session.onServer(server -> justfatlard.learning_blocks.review.Review.press(session.player(), "close"));
 			session.command("/learn leave");
-			Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
+			Waits.home(session);
 		});
 	}
 

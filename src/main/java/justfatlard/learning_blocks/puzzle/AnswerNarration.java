@@ -63,8 +63,7 @@ final class AnswerNarration {
 		}
 		// Another subject's round is answered by picking a block; the button asks again.
 		if (room.subjectRound != null) {
-			room.touch();
-			room.replay(player);
+			room.subjectRound.pressed(player);
 			return;
 		}
 		room.touch();

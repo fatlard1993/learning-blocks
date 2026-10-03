@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * schedule of some of each, by the commands. Then a classroom with all three on: a reading round, a
  * numbers round (with its hello and green frame; a wrong pick, then a click on the right tile),
  * and a logic round, each counted for the day and taking a lesson off. Numbers end to end: the last
- * numeral mastered finishes the level ("ready for more", paid once) and earns a toy linked to the
+ * numeral mastered finishes N0 ("ready for more", paid once) and earns a toy linked to the
  * numerals. And the sampler: a numbers round of one number and a logic round, practice only, the
  * saved progress untouched; a kind that isn't one says what is.
  */
@@ -59,6 +59,7 @@ public final class SubjectsTest implements FabricClientGameTest {
 				Subjects.onlyForTests(Set.of("reading"));
 				PrizeConfig.useSubjectMix(Subjects.Mix.ALTERNATE, 3);
 				Earned.clearItemLinksForTests();
+				Numbers.linkToys();
 			}
 		});
 	}
@@ -176,7 +177,7 @@ public final class SubjectsTest implements FabricClientGameTest {
 			}
 			check(hit != null, "no click box over the right tile among " + choices);
 			Rooms.clickEntity(player, player.level(), hit);
-			check(Narrator.log(player).contains("picked:numbers:" + round.target()), "the click on " + tile + " was not a pick");
+			check(Narrator.log(player).contains("picked:numbers:" + round.number()), "the click on " + tile + " was not a pick");
 		});
 		Waits.until(session, 900, "a logic round never came after numbers", () -> {
 			Room room = Rooms.of(session.player());
@@ -207,17 +208,19 @@ public final class SubjectsTest implements FabricClientGameTest {
 			check(Progress.of(player).itemClean(Logic.AB) == 1, "the pattern, right first try, is not one clean: " + Progress.of(player).itemClean(Logic.AB));
 			check(room.frameColour() == DyeColor.BLUE, "back to reading, the frame is not blue");
 
-			// Numbers end to end: four numerals mastered, the fifth one short; a toy waits on all five.
+			// Numbers end to end: every numeral of N0 mastered but 3, one short; a toy waits on all of them.
 			Progress progress = Progress.of(player);
-			for (int n = 1; n <= 5; n++) progress.setItemCleanForTests(player, Numbers.numeral(n), n == 3 ? Progress.masteredAt() - 1 : Progress.masteredAt());
+			for (int n = 0; n <= 10; n++) progress.setItemCleanForTests(player, Numbers.numeral(n), n == 3 ? Progress.masteredAt() - 1 : Progress.masteredAt());
 			// Its words too, if any earn it: a toy with both needs both.
 			String toy = "toy:" + justfatlard.learning_blocks.toy.Toy.values()[0].word();
 			for (justfatlard.learning_blocks.puzzle.Word word : Earned.wordsFor(toy)) progress.masterForTests(player, word);
-			Earned.linkItems(toy, Numbers.INSTANCE.items());
+			List<String> numerals = new java.util.ArrayList<>();
+			for (int n = 0; n <= 10; n++) numerals.add(Numbers.numeral(n));
+			Earned.linkItems(toy, numerals);
 			check(!Earned.earned(progress, toy), "the linked toy was earned before its numerals were all mastered");
 			check(!Numbers.INSTANCE.levelDone(progress), "the level is done with three short");
 			room.newSubjectRound(player, Numbers.INSTANCE, "find", "3");
-			check(room.subjectRound() instanceof NumberRound number && number.target() == 3, "a numbers round of 3 was not made");
+			check(room.subjectRound() instanceof NumberRound number && number.number() == 3, "a numbers round of 3 was not made");
 		});
 		Waits.until(session, 300, "the numbers round of 3 never settled", () -> !Rooms.of(session.player()).busy());
 		session.onServer(server -> {
@@ -226,13 +229,13 @@ public final class SubjectsTest implements FabricClientGameTest {
 			round.pickForTests(player, round.rightForTests());
 			Progress progress = Progress.of(player);
 			check(progress.itemMastered(Numbers.numeral(3)) && Numbers.INSTANCE.levelDone(progress), "3 right first try did not master it and the level");
-			check(progress.rewardedFor("level:numbers:1"), "the numbers level was not paid");
+			check(progress.rewardedFor("level:numbers:N0"), "the numbers level was not paid");
 			check(progress.rewardedFor(Numbers.numeral(3)), "a first right answer for 3 was not new");
 			check(Earned.earned(progress, "toy:" + justfatlard.learning_blocks.toy.Toy.values()[0].word()), "the toy linked to the numerals was not earned");
-			check(Subjects.mastered(progress, "numbers:numeral:3") && !Subjects.mastered(progress, "numbers:numeral:9"), "Subjects.mastered is wrong");
+			check(Subjects.mastered(progress, "numbers:numeral:3") && !Subjects.mastered(progress, "numbers:count:9"), "Subjects.mastered is wrong");
 		});
 		Waits.until(session, 900, "the level's end never finished", () -> !Rooms.of(session.player()).busy()
-			&& !(Rooms.of(session.player()).subjectRound() instanceof NumberRound number && number.target() == 3));
+			&& !(Rooms.of(session.player()).subjectRound() instanceof NumberRound number && number.number() == 3));
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			check(Narrator.log(player).contains("clip:phrase/next_level_numbers"), "\"ready for more numbers\" was not said");
@@ -243,11 +246,11 @@ public final class SubjectsTest implements FabricClientGameTest {
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			before[0] = Progress.savedForTests(player);
-			check(Sampler.runSubject(player, Numbers.INSTANCE, "count", null) != null, "a kind numbers hasn't got was not refused");
-			check(Sampler.runSubject(player, Numbers.INSTANCE, "find", "9") != null, "a number not in the level was not refused");
+			check(Sampler.runSubject(player, Numbers.INSTANCE, "sing", null) != null, "a kind numbers hasn't got was not refused");
+			check(Sampler.runSubject(player, Numbers.INSTANCE, "find", "42") != null, "a number find can't ask was not refused");
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack().withEntity(player), "learn try numbers find 4");
 			Room room = Rooms.of(player);
-			check(room.practice() && room.subjectRound() instanceof NumberRound number && number.target() == 4, "/learn try numbers find 4 did not ask for 4");
+			check(room.practice() && room.subjectRound() instanceof NumberRound number && number.number() == 4, "/learn try numbers find 4 did not ask for 4");
 			NumberRound round = (NumberRound) room.subjectRound();
 			round.pickForTests(player, round.rightForTests());
 			// As for Reading's samples: answered, and nothing saved changed (the ordinary round after may).
@@ -263,6 +266,8 @@ public final class SubjectsTest implements FabricClientGameTest {
 			PatternRound round = (PatternRound) room.subjectRound();
 			round.pickForTests(player, round.rightForTests());
 			check(Progress.savedForTests(player).equals(before[0]), "a logic sample changed the saved progress");
+			// The lesson still owed from the five set above, let go, so the way home is open.
+			Travel.setLessons(player, 0);
 		});
 		Waits.until(session, 900, "the logic sample never ended", () -> !Rooms.of(session.player()).practice() && !Rooms.of(session.player()).busy());
 		session.onServer(server -> {

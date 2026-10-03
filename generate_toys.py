@@ -562,28 +562,6 @@ def dominoes():
     return c, faces, boxes
 
 
-def bears():
-    """Counting bears: a little family of bright bears, six colours, in two rows."""
-    colours = [("red", RED), ("yellow", YELLOW), ("green", GREEN), ("blue", BLUE), ("orange", ORANGE), ("purple", PURPLE)]
-    c = {name: colour for name, colour in colours}
-    c.update({f"{name}_ear": shade(colour, 0.8) for name, colour in colours[:4]})
-    c["eye"] = BLACK
-    boxes = []
-    spots = [(1.2, 9), (4.9, 9.4), (8.6, 9), (12.3, 9.4), (3, 4.2), (10.6, 4.2)]
-    for (name, colour), (x, z) in zip(colours, spots):
-        ear = f"{name}_ear" if f"{name}_ear" in c else name
-        h = 3.0 if z > 6 else 3.6
-        boxes += [
-            ((x, 0, z), (x + 2.6, h, z + 2), name),
-            ((x + 0.2, h, z + 0.1), (x + 2.4, h + 2.2, z + 1.9), name),
-            ((x + 0.1, h + 2, z + 0.7), (x + 0.8, h + 2.7, z + 1.3), ear),
-            ((x + 1.8, h + 2, z + 0.7), (x + 2.5, h + 2.7, z + 1.3), ear),
-            ((x + 0.6, h + 1.2, z - 0.1), (x + 1.0, h + 1.6, z + 0.1), "eye"),
-            ((x + 1.6, h + 1.2, z - 0.1), (x + 2.0, h + 1.6, z + 0.1), "eye"),
-        ]
-    return c, {}, boxes
-
-
 def sorter():
     """A shape sorter: a red box with a circle, a square and a triangle cut in its lid, and the
     shapes beside it."""
@@ -629,14 +607,14 @@ TOYS = {
     "drum": drum, "kite": kite, "top": top, "ring": ring, "cap": cap, "wig": wig, "net": net, "pin": pin,
     "sock": sock, "crib": crib, "car": car, "van": van, "jet": jet, "bus": bus, "ship": ship, "doll": doll,
     "block": block, "train": train, "truck": truck,
-    "abacus": abacus, "dice": dice, "dominoes": dominoes, "bears": bears, "sorter": sorter, "scale": scale,
+    "abacus": abacus, "dice": dice, "dominoes": dominoes, "sorter": sorter, "scale": scale,
 }
 
 NAMES = {"top": "Spinning top", "ring": "Stacking rings", "cap": "Toy cap", "wig": "Dress-up wig", "net": "Butterfly net",
          "pin": "Bowling pin", "sock": "Sock puppet", "crib": "Doll's crib", "car": "Toy car", "van": "Toy van",
          "jet": "Toy jet", "bus": "Toy bus", "ship": "Toy ship", "doll": "Doll", "block": "ABC block",
          "train": "Toy train", "truck": "Toy truck", "drum": "Drum", "kite": "Kite",
-         "abacus": "Abacus", "dice": "Dice", "dominoes": "Dominoes", "bears": "Counting bears", "sorter": "Shape sorter",
+         "abacus": "Abacus", "dice": "Dice", "dominoes": "Dominoes", "sorter": "Shape sorter",
          "scale": "Balance scale"}
 
 # Worn on the head, as the little models round G made (generate_things.py writes those).

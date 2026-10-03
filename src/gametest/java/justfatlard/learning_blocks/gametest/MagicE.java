@@ -114,7 +114,7 @@ public final class MagicE implements FabricClientGameTest {
 			shoot(session, "phonics-outcome-goat");
 
 			session.command("/learn leave");
-			Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
+			Waits.home(session);
 		});
 	}
 

@@ -7,6 +7,8 @@ sides are an empty ten-frame. The top and bottom are the plain tile top.
 
 Numerals are green, the colour of the Numbers subject; dots are red on the paler panel.
 
+The symbol tiles + - = come after them (21 to 23): the sign alone, the same on every side.
+
 Writes textures/block/number_<n>.png and number_<n>_dots.png, models/block/number_<n>.json, the
 number blockstate (by its number) and the item definition (by the item's block state).
 
@@ -27,6 +29,10 @@ NUMERAL = (0x2E, 0x7D, 0x32, 0xFF)
 DOT = (0xC0, 0x39, 0x2B, 0xFF)
 FRAME = (0xB8, 0x8C, 0x4E, 0xFF)
 HIGHEST = 20
+# The symbol tiles, after the numbers: plus, minus and equals (numbers' N4, adding and taking away).
+SYMBOLS = {21: "+", 22: "-", 23: "="}
+LAST = 23
+SYMBOL = (0x9B, 0x3D, 0xB8, 0xFF)
 
 DIGITS = {
     "0": [".###.", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."],
@@ -40,6 +46,26 @@ DIGITS = {
     "8": [".###.", "#...#", "#...#", ".###.", "#...#", "#...#", ".###."],
     "9": [".###.", "#...#", "#...#", ".####", "....#", "...#.", ".##.."],
 }
+
+
+def symbol_texture(n):
+    """A symbol tile: the sign big and bold, in its own colour, on the plain wood; the same on every side."""
+    g = tile(SIZE, f"symbol{n}")
+    mid = SIZE // 2
+    arm, bar = 22, 5
+    sign = SYMBOLS[n]
+    def rect(x0, y0, x1, y1):
+        for y in range(y0, y1):
+            for x in range(x0, x1):
+                g[y][x] = SYMBOL
+    if sign in "+-":
+        rect(mid - arm, mid - bar // 2 - 1, mid + arm, mid + bar // 2 + 2)
+    if sign == "+":
+        rect(mid - bar // 2 - 1, mid - arm, mid + bar // 2 + 2, mid + arm)
+    if sign == "=":
+        rect(mid - arm, mid - 11, mid + arm, mid - 11 + bar + 1)
+        rect(mid - arm, mid + 6, mid + arm, mid + 6 + bar + 1)
+    return g
 
 
 def numeral_texture(n):
@@ -116,15 +142,26 @@ def main():
                 "particle": f"{NS}:block/number_{n}",
             },
         })
+    for n in SYMBOLS:
+        write_png(OUT / f"number_{n}.png", symbol_texture(n))
+        write(ASSETS / f"models/block/number_{n}.json", {
+            "parent": "minecraft:block/cube",
+            "textures": {
+                "north": f"{NS}:block/number_{n}", "south": f"{NS}:block/number_{n}",
+                "east": f"{NS}:block/number_{n}", "west": f"{NS}:block/number_{n}",
+                "up": f"{NS}:block/letter_top", "down": f"{NS}:block/letter_top",
+                "particle": f"{NS}:block/number_{n}",
+            },
+        })
     write(ASSETS / "blockstates/number.json", {
-        "variants": {f"number={n}": {"model": f"{NS}:block/number_{n}"} for n in range(HIGHEST + 1)}
+        "variants": {f"number={n}": {"model": f"{NS}:block/number_{n}"} for n in range(LAST + 1)}
     })
     write(ASSETS / "items/number.json", {
         "model": {
             "type": "minecraft:select",
             "property": "minecraft:block_state",
             "block_state_property": "number",
-            "cases": [{"when": str(n), "model": {"type": "minecraft:model", "model": f"{NS}:block/number_{n}"}} for n in range(HIGHEST + 1)],
+            "cases": [{"when": str(n), "model": {"type": "minecraft:model", "model": f"{NS}:block/number_{n}"}} for n in range(LAST + 1)],
             "fallback": {"type": "minecraft:model", "model": f"{NS}:block/number_1"},
         }
     })
@@ -132,7 +169,7 @@ def main():
     lang = json.loads(lang_path.read_text())
     lang[f"block.{NS}.number"] = "Number Tile"
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + "\n")
-    print(f"Wrote {HIGHEST + 1} number tiles")
+    print(f"Wrote {HIGHEST + 1} number tiles and {len(SYMBOLS)} symbols")
 
 
 if __name__ == "__main__":

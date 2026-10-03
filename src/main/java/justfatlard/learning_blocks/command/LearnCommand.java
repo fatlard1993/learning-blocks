@@ -164,6 +164,7 @@ public final class LearnCommand {
 						.suggests((context, builder) -> {
 							builder.suggest("0");
 							for (String label : Stages.labels()) builder.suggest(label);
+							for (var band : justfatlard.learning_blocks.numbers.NumberCourse.BANDS) builder.suggest(band.code());
 							return builder.buildFuture();
 						})
 						.executes(LearnCommand::setStage))))
@@ -562,7 +563,8 @@ public final class LearnCommand {
 	private static int showStage(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 		ServerPlayer player = EntityArgument.getPlayer(context, "player");
 		context.getSource().sendSuccess(() -> Component.literal(player.getGameProfile().name() + ": "
-			+ Stages.describe(Progress.of(player)) + ". Stages here: 0 (letters), " + String.join(", ", Stages.labels())), false);
+			+ Stages.describe(Progress.of(player)) + "; numbers " + justfatlard.learning_blocks.numbers.NumberCourse.describe(Progress.of(player))
+			+ ". Stages here: 0 (letters), " + String.join(", ", Stages.labels()) + "; numbers N0a to N2b"), false);
 		return 1;
 	}
 
@@ -574,6 +576,14 @@ public final class LearnCommand {
 		ServerPlayer player = EntityArgument.getPlayer(context, "player");
 		String asked = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "stage");
 		Progress progress = Progress.of(player);
+		// Numbers' bands, N0a to N2b: the ones before mastered, it and those after not.
+		var numbersBand = justfatlard.learning_blocks.numbers.NumberCourse.band(asked);
+		if (numbersBand != null) {
+			justfatlard.learning_blocks.numbers.NumberCourse.putAt(player, numbersBand);
+			context.getSource().sendSuccess(() -> Component.literal(player.getGameProfile().name() + "'s numbers are now at "
+				+ justfatlard.learning_blocks.numbers.NumberCourse.describe(progress)), true);
+			return 1;
+		}
 		if (asked.equals("0")) progress.setStage(player, 0, Stages.from(0));
 		else {
 			Stages.Band band = Stages.parse(asked);

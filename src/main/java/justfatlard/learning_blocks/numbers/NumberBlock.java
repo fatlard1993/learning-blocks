@@ -19,7 +19,11 @@ import net.minecraft.world.phys.BlockHitResult;
  */
 public class NumberBlock extends Block {
 	public static final int HIGHEST = 20;
-	public static final IntegerProperty NUMBER = IntegerProperty.create("number", 0, HIGHEST);
+	/** After the numbers, the symbol tiles: plus, minus, equals. */
+	public static final int PLUS = 21;
+	public static final int MINUS = 22;
+	public static final int EQUALS = 23;
+	public static final IntegerProperty NUMBER = IntegerProperty.create("number", 0, EQUALS);
 
 	public NumberBlock(Properties properties) {
 		super(properties);
@@ -32,12 +36,17 @@ public class NumberBlock extends Block {
 	}
 
 	public BlockState showing(int number) {
-		return defaultBlockState().setValue(NUMBER, Math.max(0, Math.min(HIGHEST, number)));
+		return defaultBlockState().setValue(NUMBER, Math.max(0, Math.min(EQUALS, number)));
 	}
 
-	/** What a number says: {@code number/3}. */
+	/** What a number says: {@code number/3}; a symbol, its word: {@code word/plus}. */
 	public static String soundOf(int number) {
-		return "number/" + number;
+		return switch (number) {
+			case PLUS -> "word/plus";
+			case MINUS -> "word/minus";
+			case EQUALS -> "word/equals";
+			default -> "number/" + number;
+		};
 	}
 
 	@Override

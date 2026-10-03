@@ -1,111 +1,63 @@
 package justfatlard.learning_blocks.puzzle;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import justfatlard.learning_blocks.LearningBlocks;
 import justfatlard.learning_blocks.narration.CaptionLine;
 import justfatlard.learning_blocks.narration.Narration;
 import justfatlard.learning_blocks.numbers.NumberBlock;
-import justfatlard.learning_blocks.reward.Progress;
+import justfatlard.learning_blocks.numbers.NumberCourse;
 import justfatlard.learning_blocks.subject.Numbers;
-import justfatlard.learning_blocks.subject.Subject;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextColor;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Display;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
+import net.minecraft.world.entity.Entity;
 
 /**
- * "Which block says three?": the Numbers stub's one kind, as the letters level asks for a letter.
- * The number is said, and its dots are up on the board; on the floor stand three number tiles, the
- * right one and two others, to pick from.
+ * "Which block says... five?", as the letters level asks for a letter: the number said, three
+ * tiles on the floor, distractors from the numbers around it. The right one: the chant, "five!
+ * one, two, three, four, five!", while five things pop out of the button, each glowing as it is
+ * counted. Another: it says its own name, gently, and the number is asked for again.
  */
-public final class NumberRound extends SubjectRound {
-	private final int target;
-	private final Choice answer;
+public final class NumberRound extends NumbersRound {
+	private final int n;
+	private final Counting.What what;
+	private final List<Entity> popped = new ArrayList<>();
 
-	public NumberRound(Room room, int target, List<Integer> others, RandomSource random) {
-		super(room);
-		this.target = target;
-		List<Integer> shown = new ArrayList<>(others);
-		shown.add(target);
-		Collections.shuffle(shown, new java.util.Random(random.nextLong()));
-		Choice right = null;
-		for (int n : shown) {
-			Choice choice = new Choice(String.valueOf(n), LearningBlocks.NUMBER.showing(n), NumberBlock.soundOf(n), Numbers.word(n));
-			choices.add(choice);
-			if (n == target) right = choice;
-		}
-		this.answer = right;
+	public NumberRound(Room room, int n, int lo, int hi, int stage, RandomSource random) {
+		super(room, NumberCourse.Kind.FIND, String.valueOf(n), stage, random);
+		this.n = n;
+		List<Counting.What> things = List.of(Counting.What.APPLE, Counting.What.PIG, Counting.What.CHICKEN, Counting.What.CARROT, Counting.What.SHEEP);
+		this.what = things.get(random.nextInt(things.size()));
+		tiles(n, lo, hi);
+	}
+
+	public int number() {
+		return n;
 	}
 
 	@Override
-	public Subject subject() {
-		return Numbers.INSTANCE;
-	}
-
-	@Override
-	public String kind() {
-		return Numbers.FIND;
-	}
-
-	@Override
-	public String item() {
-		return Numbers.numeral(target);
-	}
-
-	public int target() {
-		return target;
-	}
-
-	@Override
-	protected Choice answer() {
-		return answer;
-	}
-
-	@Override
-	protected void board() {
-		// The number's dots, big, in the middle of the board: what it says, to count.
-		Display.TextDisplay dots = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
-		if (dots == null) return;
-		Vec3 at = Vec3.atCenterOf(layout.rowSpot(0, 1)).add(0, 0.1, 0.45);
-		dots.snapTo(at.x, at.y, at.z, 0, 0);
-		StringBuilder text = new StringBuilder();
-		for (int i = 0; i < target; i++) text.append(i > 0 && i % 5 == 0 ? "\n" : "").append("●");
-		dots.setText(Component.literal(text.toString()).withStyle(style -> style.withColor(TextColor.fromRgb(0xC0392B))));
-		dots.setBackgroundColor(0);
-		dots.setTransformation(new com.mojang.math.Transformation(null, null, new Vector3f(4.0F, 4.0F, 4.0F), null));
-		made(dots);
-		level.addFreshEntity(dots);
-	}
+	protected void board() {}
 
 	@Override
 	public Narration ask(Narration narration) {
 		return line(narration, "phrase/which_block_says", "Which block says")
-			.say(NumberBlock.soundOf(target), "number:" + target, p -> {}, CaptionLine.plain(Numbers.word(target)), Narration.GAP);
+			.say(NumberBlock.soundOf(n), "number:" + n, p -> {}, CaptionLine.plain(Numbers.word(n) + "?"), Narration.GAP);
 	}
 
 	@Override
-	protected boolean levelDone(Progress progress) {
-		return Numbers.INSTANCE.levelDone(progress);
+	protected void tellRight(ServerPlayer player, Choice picked, Narration telling) {
+		if (n == 0) {
+			// Zero: nothing comes out at all, which is the point.
+			telling.say(NumberBlock.soundOf(0), "right:0", p -> wiggle(layout.button()), CaptionLine.plain("zero! nothing at all!"), AnswerNarration.WORD_GAP);
+			return;
+		}
+		List<net.minecraft.world.phys.Vec3> spots = new ArrayList<>();
+		for (int i = 0; i < n; i++) spots.add(Counting.spot(layout, i, n));
+		telling.then("pop", p -> popped.addAll(Counting.dispense(this, p, what, n, spots, 3, null)), Counting.dispenseTicks(n, 3));
+		Counting.chant(telling, n, popped, true);
 	}
 
-	@Override
-	protected String levelKey() {
-		return "numbers:1";
-	}
-
-	@Override
-	protected String nextLevelLine() {
-		return "phrase/next_level_numbers";
-	}
-
-	@Override
-	protected String nextLevelWords() {
-		return "You know one to five! Ready for more numbers!";
+	/** What popped out for the chant, for tests. */
+	public List<Entity> popped() {
+		return List.copyOf(popped);
 	}
 }

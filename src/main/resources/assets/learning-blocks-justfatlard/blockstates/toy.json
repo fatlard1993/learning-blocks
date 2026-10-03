@@ -616,34 +616,6 @@
     "facing=west,hidden=true,kind=dominoes": {
       "model": "learning-blocks-justfatlard:block/hidden"
     },
-    "facing=north,hidden=false,kind=bears": {
-      "model": "learning-blocks-justfatlard:block/toy_bears",
-      "y": 0
-    },
-    "facing=north,hidden=true,kind=bears": {
-      "model": "learning-blocks-justfatlard:block/hidden"
-    },
-    "facing=east,hidden=false,kind=bears": {
-      "model": "learning-blocks-justfatlard:block/toy_bears",
-      "y": 90
-    },
-    "facing=east,hidden=true,kind=bears": {
-      "model": "learning-blocks-justfatlard:block/hidden"
-    },
-    "facing=south,hidden=false,kind=bears": {
-      "model": "learning-blocks-justfatlard:block/toy_bears",
-      "y": 180
-    },
-    "facing=south,hidden=true,kind=bears": {
-      "model": "learning-blocks-justfatlard:block/hidden"
-    },
-    "facing=west,hidden=false,kind=bears": {
-      "model": "learning-blocks-justfatlard:block/toy_bears",
-      "y": 270
-    },
-    "facing=west,hidden=true,kind=bears": {
-      "model": "learning-blocks-justfatlard:block/hidden"
-    },
     "facing=north,hidden=false,kind=sorter": {
       "model": "learning-blocks-justfatlard:block/toy_sorter",
       "y": 0

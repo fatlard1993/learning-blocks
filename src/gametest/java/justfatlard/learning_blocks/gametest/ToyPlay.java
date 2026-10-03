@@ -87,8 +87,10 @@ public final class ToyPlay implements FabricClientGameTest {
 			check(texts(Earned.wordsFor("plush:ladybug")).equals(List.of("bug")), "the ladybug is not earned by bug");
 			check(texts(Earned.wordsFor("plush:owl")).equals(List.of("owl")), "the owl is not earned by owl");
 			check(texts(Earned.wordsFor("toy:car")).equals(List.of("car")), "the car is not earned by car");
-			List<String> unearnable = Earned.links().entrySet().stream().filter(e -> e.getValue().isEmpty()).map(java.util.Map.Entry::getKey).toList();
-			check(unearnable.isEmpty(), "toys no word earns: " + unearnable);
+			// Every toy earnable: by words, or (the counting toys) by mastering numbers.
+			List<String> unearnable = Earned.links().entrySet().stream().filter(e -> e.getValue().isEmpty() && Earned.itemsFor(e.getKey()).isEmpty())
+				.map(java.util.Map.Entry::getKey).toList();
+			check(unearnable.isEmpty(), "toys nothing earns: " + unearnable);
 			StringBuilder table = new StringBuilder();
 			Earned.links().forEach((key, words) -> table.append(key).append(" <- ").append(texts(words)).append("; "));
 			LoggerFactory.getLogger("phonics-gametest").info("[earns] {}", table);
@@ -164,10 +166,11 @@ public final class ToyPlay implements FabricClientGameTest {
 			// Every toy plays and comes back exactly.
 			Toy[] toys = Toy.values();
 			for (int i = 0; i < toys.length; i++) {
-				BlockPos at = base.offset((i % 10) - 5, 0, 2 + (i / 10) * 3);
+				BlockPos at = base.offset((i % 12) - 6, 0, 2 + (i / 12) * 3);
 				BlockState state = Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, toys[i]).setValue(ToyBlock.FACING, Direction.NORTH);
 				level.setBlock(at, state, 3);
-				check(Play.play(level, at, state, Anims.of(toys[i])), toys[i] + " would not play");
+				check(Play.play(level, at, state, Anims.of(toys[i])), toys[i] + " would not play: " + level.getBlockState(at) + " playing " + Play.playing(level, at)
+					+ " at " + at + " time " + level.getGameTime());
 				check(level.getBlockState(at).getValue(Play.HIDDEN), toys[i] + " is not hidden while it plays");
 				check(Play.displayAt(level, at), toys[i] + " has no display playing it");
 				check(!Play.play(level, at, level.getBlockState(at), Anims.of(toys[i])), toys[i] + " played twice at once");
@@ -191,7 +194,7 @@ public final class ToyPlay implements FabricClientGameTest {
 			BlockPos base = origin[0];
 			Toy[] toys = Toy.values();
 			for (int i = 0; i < toys.length; i++) {
-				BlockPos at = base.offset((i % 10) - 5, 0, 2 + (i / 10) * 3);
+				BlockPos at = base.offset((i % 12) - 6, 0, 2 + (i / 12) * 3);
 				BlockState now = level.getBlockState(at);
 				check(now.is(Toys.TOY) && now.getValue(ToyBlock.KIND) == toys[i] && now.getValue(ToyBlock.FACING) == Direction.NORTH
 					&& !now.getValue(Play.HIDDEN), toys[i] + " did not come back exactly: " + now);
@@ -309,7 +312,7 @@ public final class ToyPlay implements FabricClientGameTest {
 			// Every toy, at rest and mid-play: itself, once, and nothing else.
 			for (Toy kind : Toy.values()) {
 				// Each on a square of its own: a square plays once a second at most.
-				BlockPos spot = origin[0].offset(kind.ordinal() % 10 - 5, 0, kind.ordinal() < 10 ? -1 : -2);
+				BlockPos spot = origin[0].offset(kind.ordinal() % 12 - 6, 0, kind.ordinal() < 12 ? -1 : -2);
 				String id = "toy_" + kind.name().toLowerCase(java.util.Locale.ROOT);
 				BlockState state = justfatlard.learning_blocks.toy.Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, kind).setValue(ToyBlock.FACING, Direction.NORTH);
 				level.setBlock(spot, state, 3);
