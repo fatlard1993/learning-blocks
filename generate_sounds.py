@@ -8,6 +8,7 @@ Three kinds of clip, matching the keys Sounds.java plays:
   word/<w>      a whole word, one per phonics_words entry
   phrase/<p>    what the room says: prompts, cheers, laughs; phrase/<p>_v2... are other ways of
                 saying the same thing, for the room to pick between
+  number/<n>    a number's name, zero to twenty
   name/<x>      a consonant's name ("bee" for b); a vowel's name is its long sound, phoneme/<v>_long
   scene/<w>     the line that sets up word w's situation puzzle, from its "scene": {"line": ...}
   blend/<w>/<i> the vowel of word w's tile i, cut from that word's own recording
@@ -252,6 +253,9 @@ for _key, _take in {
 }.items():
 	PHONEMES[_key] = PHONEMES[_key] + [_take]
 
+NUMBER_NAMES = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+	"eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"]
+
 # Spelled the way the voice says them best; the caption is the letter itself.
 NAMES = {
 	"b": "Bee.", "c": "See.", "d": "Dee.", "f": "Eff.", "g": "Gee.", "h": "Aitch.", "j": "Jay.",
@@ -372,6 +376,10 @@ PHRASES = {
 		{"text": "[excited] Ooh! A new toy!", "model": EXPRESSIVE},
 		{"text": "[excited] A new toy for your toybox!", "model": EXPRESSIVE},
 	]},
+	"which_block_says": {"text": "Which block says..."},
+	"what_comes_next": {"text": "[curious] What comes next?", "model": EXPRESSIVE},
+	"next_level_numbers": {"text": "[excited] You know one to five! Ready for more numbers!", "model": EXPRESSIVE},
+	"next_level_logic": {"text": "[excited] You can find what comes next! Ready for trickier ones!", "model": EXPRESSIVE},
 	"subject_reading": {"variants": [{"text": "[cheerful] Reading time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's read!", "model": EXPRESSIVE}]},
 	"subject_numbers": {"variants": [{"text": "[cheerful] Numbers time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's count!", "model": EXPRESSIVE}]},
 	"subject_logic": {"variants": [{"text": "[cheerful] Thinking time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's figure it out!", "model": EXPRESSIVE}]},
@@ -445,9 +453,11 @@ def clips():
 		word = "".join(data["tiles"])
 		yield f"word/{word}", [{**t, "caption": word, "tiles": data["tiles"], "sounds": data.get("sounds") or [None] * len(data["tiles"])} for t in word_takes(word)]
 	# Plushies whose name isn't a puzzle word still say it when squeezed.
-	for word in ("teddy", "ladybug"):
+	for word in ("teddy", "ladybug", "blue", "yellow"):
 		if not (WORDS / f"{word}.json").exists():
 			yield f"word/{word}", [{**t, "caption": word, "tiles": [word], "sounds": ["silent"]} for t in word_takes(word)]
+	for n, said in enumerate(NUMBER_NAMES):
+		yield f"number/{n}", [{"text": f"{said.capitalize()}.", "cut": ["whole"], "caption": said}]
 	for letter, said in NAMES.items():
 		yield f"name/{letter}", [{"text": said, "cut": ["whole"], "caption": letter}]
 	for path in sorted(WORDS.glob("*.json")):

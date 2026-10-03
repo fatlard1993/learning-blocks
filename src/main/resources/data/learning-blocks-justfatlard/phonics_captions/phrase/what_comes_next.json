@@ -1,0 +1,20 @@
+{
+	"duration": 2.0,
+	"words": [
+		{
+			"text": "What",
+			"start": 0.139,
+			"end": 0.16
+		},
+		{
+			"text": "comes",
+			"start": 0.227,
+			"end": 0.56
+		},
+		{
+			"text": "next?",
+			"start": 0.672,
+			"end": 2.0
+		}
+	]
+}
