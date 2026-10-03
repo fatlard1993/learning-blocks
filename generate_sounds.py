@@ -372,6 +372,9 @@ PHRASES = {
 		{"text": "[excited] Ooh! A new toy!", "model": EXPRESSIVE},
 		{"text": "[excited] A new toy for your toybox!", "model": EXPRESSIVE},
 	]},
+	"subject_reading": {"variants": [{"text": "[cheerful] Reading time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's read!", "model": EXPRESSIVE}]},
+	"subject_numbers": {"variants": [{"text": "[cheerful] Numbers time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's count!", "model": EXPRESSIVE}]},
+	"subject_logic": {"variants": [{"text": "[cheerful] Thinking time!", "model": EXPRESSIVE}, {"text": "[cheerful] Let's figure it out!", "model": EXPRESSIVE}]},
 	"reading_time": {"variants": [
 		{"text": "[cheerful] Reading time first!", "model": EXPRESSIVE},
 		{"text": "[cheerful] Hello! Let's do some reading first!", "model": EXPRESSIVE},

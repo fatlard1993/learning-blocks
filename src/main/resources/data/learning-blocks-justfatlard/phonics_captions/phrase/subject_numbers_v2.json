@@ -1,0 +1,15 @@
+{
+	"duration": 1.0,
+	"words": [
+		{
+			"text": "Let's",
+			"start": 0.216,
+			"end": 0.32
+		},
+		{
+			"text": "count!",
+			"start": 0.4,
+			"end": 0.88
+		}
+	]
+}
