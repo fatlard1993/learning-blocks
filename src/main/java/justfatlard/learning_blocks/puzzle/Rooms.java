@@ -60,7 +60,8 @@ public final class Rooms {
 			+ " at=" + player.blockPosition().toShortString();
 		if (room == null) return "no room; " + common;
 		Puzzle puzzle = room.puzzle();
-		String round = room.bob() != null ? "bob:" + room.bob().mode() : room.scene() != null ? "scene:" + room.scene().word().text()
+		String round = room.subjectRound != null ? room.subjectRound.subject().id() + ":" + room.subjectRound.kind() + ":" + room.subjectRound.item()
+			: room.bob() != null ? "bob:" + room.bob().mode() : room.scene() != null ? "scene:" + room.scene().word().text()
 			: puzzle == null ? "none" : puzzle.kind() + ":" + puzzle.target().text();
 		return "round=" + round + " busy=" + room.busy() + " leaving=" + room.leaving(player) + " leavingFor=" + room.leavingFor(player)
 			+ " portalOpen=" + room.portalOpenFor(player) + " readers=" + room.present().size() + " " + common;
@@ -366,6 +367,8 @@ public final class Rooms {
 		if (room == null) return InteractionResult.PASS;
 		// Bob's cards, and reading together the goals to pick from.
 		if (room.bob != null && room.bob.click(serverPlayer, entity)) return InteractionResult.SUCCESS;
+		// Another subject's choices: the one picked is the answer.
+		if (room.subjectRound != null && room.subjectRound.click(serverPlayer, entity)) return InteractionResult.SUCCESS;
 		// A read-it round's pictures: the one picked is the answer.
 		Word picked = room.choiceOf(entity);
 		if (picked != null) {

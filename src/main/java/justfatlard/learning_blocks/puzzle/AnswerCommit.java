@@ -63,7 +63,7 @@ final class AnswerCommit {
 		}
 		room.solved++;
 		Safely.run("Crediting " + player.getGameProfile().name() + " for " + what, credit);
-		Safely.run("Counting today's reading", () -> Progress.of(player).solvedToday(player));
+		Safely.run("Counting today's lessons", () -> Progress.of(player).solvedToday(player, room.currentSubject));
 		if (lessonsBefore > 0) {
 			Safely.run("Counting " + player.getGameProfile().name() + "'s lesson", () -> {
 				Visit visit = Visit.of(player);

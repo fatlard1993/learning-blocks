@@ -94,6 +94,18 @@ public class LearningBlocks implements ModInitializer {
 		.setId(LETTER_ITEM_KEY)
 		.useBlockDescriptionPrefix());
 
+	public static final Identifier NUMBER_ID = id("number");
+
+	/** A wooden number tile, 0 to 20, told apart by its {@code number} state. */
+	public static final justfatlard.learning_blocks.numbers.NumberBlock NUMBER = new justfatlard.learning_blocks.numbers.NumberBlock(BlockBehaviour.Properties.of()
+		.strength(0.2F, 3600000.0F)
+		.sound(SoundType.WOOL)
+		.setId(ResourceKey.create(Registries.BLOCK, NUMBER_ID)));
+
+	public static final BlockItem NUMBER_ITEM = new BlockItem(NUMBER, new Item.Properties()
+		.setId(ResourceKey.create(Registries.ITEM, NUMBER_ID))
+		.useBlockDescriptionPrefix());
+
 	public static final Identifier PLUSH_ID = id("plush");
 
 	/** A plushie: a soft toy, any of the set by its {@code kind}, to keep, place and hear. */
@@ -111,6 +123,8 @@ public class LearningBlocks implements ModInitializer {
 		justfatlard.learning_blocks.plush.Plushies.register();
 		Registry.register(BuiltInRegistries.ITEM, LETTER_ID, LETTER_ITEM);
 		Registry.register(BuiltInRegistries.BLOCK, BOARD_LETTER_ID, BOARD_LETTER);
+		Registry.register(BuiltInRegistries.BLOCK, NUMBER_ID, NUMBER);
+		Registry.register(BuiltInRegistries.ITEM, NUMBER_ID, NUMBER_ITEM);
 
 		// Pandorical content sync: the letter block, its item and every texture, model and sound
 		// under assets/learning-blocks-justfatlard. Interactive, because every letter in a room answers a
@@ -130,6 +144,14 @@ public class LearningBlocks implements ModInitializer {
 			.baseBlock("minecraft:bedrock"));
 		PandoricalApi.content().registerItem(LETTER_ID.toString(), new ItemRegistration()
 			.model(MOD_ID + ":item/letter"));
+		// Number tiles, as the letter tiles; a right-click says the number.
+		PandoricalApi.content().registerBlock(NUMBER_ID.toString(), new BlockRegistration()
+			.baseBlock("minecraft:white_wool")
+			.interactive()
+			.strength(0.2F)
+			.requiresCorrectTool(false));
+		PandoricalApi.content().registerItem(NUMBER_ID.toString(), new ItemRegistration()
+			.model(MOD_ID + ":item/number"));
 		// Plushies: soft, small, and a right-click squeaks.
 		PandoricalApi.content().registerBlock(PLUSH_ID.toString(), new BlockRegistration()
 			.baseBlock("minecraft:white_wool")

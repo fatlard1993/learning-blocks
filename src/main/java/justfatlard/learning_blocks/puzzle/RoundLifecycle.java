@@ -51,6 +51,29 @@ final class RoundLifecycle {
 		boolean forced = target != null || stageSet || asScene || room.forcedTricky != null || room.forcedPlural != null || room.forcedPuzzle != null
 			|| room.forcedPhrase != null || room.forcedCase != null || room.forcedLetter != null || room.forcedReadIt != null || room.forcedBob != null;
 		ServerPlayer player = room.shared() ? room.takeTurn(asked, hadRound && !forced) : asked;
+		// Whose subject this round is: one asked for, Reading for anything of Reading's asked for,
+		// or the mix's pick from this reader's own subjects.
+		justfatlard.learning_blocks.subject.Subject subject = room.forcedSubject;
+		String subjectKind = room.forcedSubjectKind;
+		String subjectTarget = room.forcedSubjectTarget;
+		room.forcedSubject = null;
+		room.forcedSubjectKind = null;
+		room.forcedSubjectTarget = null;
+		boolean readingAsked = forced || room.forcedTeam || room.forcedFixLetter != null;
+		if (subject == null) subject = readingAsked ? justfatlard.learning_blocks.subject.Subjects.READING
+			: justfatlard.learning_blocks.subject.Subjects.pick(player, room.lastSubject.get(player.getUUID()),
+				room.subjectRun.getOrDefault(player.getUUID(), 0), level.getRandom());
+		if (subject != justfatlard.learning_blocks.subject.Subjects.READING) {
+			SubjectRound next = subject.round(player, subjectKind, subjectTarget, level.getRandom());
+			if (next != null) {
+				clearRound();
+				room.round++;
+				noteSubject(player, subject);
+				startSubject(player, next);
+				return;
+			}
+		}
+		noteSubject(player, justfatlard.learning_blocks.subject.Subjects.READING);
 		int stageBefore = room.stage;
 		int bandBefore = room.band;
 		clearRound();
@@ -350,6 +373,51 @@ final class RoundLifecycle {
 		}
 		if (wanted != null) return options.contains(wanted) ? wanted : null;
 		return options.isEmpty() ? null : options.get(level.getRandom().nextInt(options.size()));
+	}
+
+	/** This reader's round is this subject's: the mix's count, the hello if it changed, the board's frame. */
+	private void noteSubject(ServerPlayer player, justfatlard.learning_blocks.subject.Subject subject) {
+		String before = room.lastSubject.put(player.getUUID(), subject.id());
+		room.subjectRun.put(player.getUUID(), subject.id().equals(before) ? room.subjectRun.getOrDefault(player.getUUID(), 0) + 1 : 1);
+		if (before != null && !before.equals(subject.id())) {
+			room.pendingHello = subject.hello();
+			Narrator.note(player, "subject_hello:" + subject.id());
+		}
+		room.currentSubject = subject.id();
+		// A reader with one subject keeps the plain wooden frame, as the room always had.
+		paintFrame(justfatlard.learning_blocks.subject.Subjects.on(player).size() > 1 ? subject.colour() : null);
+	}
+
+	/**
+	 * The board's frame, the top edge across it, in the subject's colour (reading blue, numbers
+	 * green, logic purple), or the plain wood for null.
+	 */
+	private void paintFrame(net.minecraft.world.item.@Nullable DyeColor colour) {
+		if (room.frame == colour) return;
+		room.frame = colour;
+		net.minecraft.world.level.block.state.BlockState trim = colour == null ? Blocks.SPRUCE_PLANKS.defaultBlockState()
+			: Blocks.CONCRETE.pick(colour).defaultBlockState();
+		for (int x = -HALF + 1; x < HALF; x++) level.setBlock(layout.origin().offset(x, 5, -5), trim, FLAGS);
+	}
+
+	/** A round of another subject: laid out, and asked. */
+	private void startSubject(ServerPlayer player, SubjectRound next) {
+		room.subjectRound = next;
+		room.puzzle = next.placeholder();
+		room.letterTarget = null;
+		room.casePrompt = null;
+		room.readIt = false;
+		room.team = false;
+		room.tricky = false;
+		room.busy = false;
+		room.repeats = 0;
+		room.missedThisRound = false;
+		room.touch();
+		Progress.of(player).roundBegan(player);
+		Narrator.note(player, "subject:" + next.subject().id() + ":" + next.kind() + ":" + next.item());
+		next.start(player);
+		if (room.promptHeld) room.heldSince = level.getGameTime();
+		else Narrator.play(player, prompt());
 	}
 
 	/** The first stage Bob comes in: once put is open, and sentences can be read. */
@@ -980,6 +1048,10 @@ final class RoundLifecycle {
 			room.bob.clear();
 			room.bob = null;
 		}
+		if (room.subjectRound != null) {
+			room.subjectRound.clear();
+			room.subjectRound = null;
+		}
 		room.fixLetter = null;
 		room.team = false;
 		room.teamReaders.clear();
@@ -1028,6 +1100,11 @@ final class RoundLifecycle {
 			room.readingTime = false;
 			prompt.say("phrase/reading_time", 2);
 		}
+		// A new subject: its hello first ("Numbers time!").
+		if (room.pendingHello != null) {
+			prompt.say(room.pendingHello, 2);
+			room.pendingHello = null;
+		}
 		prompt.add(room.prizes(room.turn != null ? room.turn : room.owner).prizeLine());
 		// Reading together: whose turn it is, or both together, first.
 		if (room.shared() && room.puzzle != null) {
@@ -1046,6 +1123,7 @@ final class RoundLifecycle {
 		Puzzle puzzle = room.puzzle;
 		if (puzzle == null) return narration;
 		if (room.bob != null) return room.bob.ask(narration);
+		if (room.subjectRound != null) return room.subjectRound.ask(narration);
 		// A word to fix: the board spells something else; the picture says what it should be.
 		if (room.fixLetter != null && room.letterTarget == null) return narration.say("phrase/whats_wrong");
 		if (room.scene != null) return narration.say("scene/" + room.scene.word().text(), 2).say("phrase/what_can_help");

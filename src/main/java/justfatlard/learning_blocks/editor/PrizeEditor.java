@@ -93,6 +93,8 @@ public final class PrizeEditor {
 	private static final int[] LETTER_WORD_EVERY = {0, 2, 3, 4, 5, 6, 8, 10};
 	private static final int[] REVIEW_SHARE = {0, 10, 20, 30, 40, 50};
 	private static final int[] MASTERY = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+	private static final int[] WEIGHTS = {0, 1, 2, 3, 4, 5, 10};
+	private static final List<String> MIXES = List.of("alternate", "blocks", "weights");
 	private static final int[] XP = {0, 1, 2, 3, 5, 10, 15, 20, 25, 30, 50, 75, 100, 150, 200, 300, 500};
 
 	private static final Map<String, String> EVENT_NAMES = Map.of(
@@ -230,6 +232,16 @@ public final class PrizeEditor {
 				rows.add(new Row.Number("Bob's props at most", "puzzles.bob_prop_share", 20, REVIEW_SHARE, "%", null));
 				rows.add(new Row.Toggle("Silly sentences count", "puzzles.silly_counts", false, "Yes", "No",
 					"Whether a silly sentence told to Bob counts as a lesson (never towards mastery)"));
+				rows.add(new Row.Heading("Subjects", "/learn subjects <player> sets one child's"));
+				rows.add(new Row.Toggle("Reading", "subjects.reading", true, "On", "Off", "Letters, words, sentences with Bob"));
+				rows.add(new Row.Toggle("Numbers", "subjects.numbers", true, "On", "Off", "Which block says three? (1 to 5, for now)"));
+				rows.add(new Row.Toggle("Logic", "subjects.logic", true, "On", "Off", "What comes next? (two colours, for now)"));
+				rows.add(new Row.Choice("Mixed", "subjects.mix", MIXES, "alternate",
+					"alternate: one of each in turn; blocks: a few of one, then the next; weights: by chance"));
+				rows.add(new Row.Number("Blocks of", "subjects.block", 3, SCENE_EVERY, " rounds", null));
+				for (String subject : justfatlard.learning_blocks.subject.Subjects.ids()) {
+					rows.add(new Row.Number("Weight: " + subject, "subjects.weights." + subject, 1, WEIGHTS, "", null));
+				}
 				List<String> problems = PrizeConfig.lastProblems();
 				rows.add(new Row.Note(problems.isEmpty() ? "The file read cleanly." : problems.size()
 					+ (problems.size() == 1 ? " entry was" : " entries were") + " skipped; see the log"));
@@ -583,8 +595,13 @@ public final class PrizeEditor {
 					setXp(list, step(XP, xp(list), by));
 					return;
 				}
+				if (path.equals("subjects.mix")) {
+					int at = Math.max(0, MIXES.indexOf(string(tree, path, "alternate")));
+					PrizeFile.set(tree, path, new JsonPrimitive(MIXES.get(Math.floorMod(at + by, MIXES.size()))));
+					return;
+				}
 				int[] ladder = ladderFor(path);
-				int fallback = path.equals("puzzles.scene_every") ? 4 : path.equals("puzzles.mastery_clean") ? 3
+				int fallback = path.startsWith("subjects.weights.") ? 1 : path.equals("subjects.block") ? 3 : path.equals("puzzles.scene_every") ? 4 : path.equals("puzzles.mastery_clean") ? 3
 					: path.equals("puzzles.tell_bob_every") ? 5 : path.equals("puzzles.whats_wrong_every") ? 6
 					: path.equals("puzzles.letter_word_every") || path.equals("puzzles.team_up_every") ? 3 : path.equals("puzzles.read_it_every") ? 5
 					: path.equals("puzzles.review_share") ? 30 : path.equals("puzzles.bob_prop_share") ? 20 : ladder[0];
@@ -717,7 +734,8 @@ public final class PrizeEditor {
 
 	private static int[] ladderFor(String path) {
 		if (path.equals("daily_cap")) return CAP;
-		if (path.equals("puzzles.scene_every")) return SCENE_EVERY;
+		if (path.equals("puzzles.scene_every") || path.equals("subjects.block")) return SCENE_EVERY;
+		if (path.startsWith("subjects.weights.")) return WEIGHTS;
 		if (path.equals("puzzles.letter_word_every") || path.equals("puzzles.team_up_every")) return LETTER_WORD_EVERY;
 		if (path.equals("puzzles.read_it_every") || path.equals("puzzles.tell_bob_every") || path.equals("puzzles.whats_wrong_every")) return SCENE_EVERY;
 		if (path.equals("puzzles.review_share") || path.equals("puzzles.bob_prop_share")) return REVIEW_SHARE;
@@ -733,7 +751,8 @@ public final class PrizeEditor {
 		return path.equals("enabled") || path.endsWith("first_try_only") || path.equals("puzzles.scenes") || path.equals("events.toy_mastered.enabled")
 			|| path.equals("puzzles.letters_first") || path.equals("puzzles.first_sound") || path.equals("puzzles.last_sound")
 			|| path.equals("puzzles.middle_vowel") || path.equals("puzzles.whole_word") || path.equals("puzzles.read_it")
-			|| path.equals("puzzles.team_up") || path.equals("puzzles.tell_bob") || path.equals("puzzles.whats_wrong");
+			|| path.equals("puzzles.team_up") || path.equals("puzzles.tell_bob") || path.equals("puzzles.whats_wrong")
+			|| path.startsWith("subjects.") && !path.equals("subjects.mix");
 	}
 
 	/** The next value along the ladder from this one, which need not be on it; itself at an end. */

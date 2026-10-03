@@ -48,7 +48,11 @@ public final class Schedules {
 	private Schedules() {}
 
 	/** One child's schedule. */
-	public record Entry(String name, boolean enabled, int lessons, Map<DayOfWeek, Integer> weekdays) {
+	public record Entry(String name, boolean enabled, int lessons, Map<DayOfWeek, Integer> weekdays, Map<String, Integer> subjects) {
+		public Entry(String name, boolean enabled, int lessons, Map<DayOfWeek, Integer> weekdays) {
+			this(name, enabled, lessons, weekdays, Map.of());
+		}
+
 		/** How many lessons this day of the week asks for. */
 		int on(DayOfWeek day) {
 			if (!enabled) return 0;
@@ -114,8 +118,15 @@ public final class Schedules {
 						}
 					}
 					if (json.has("together_with")) together.put(UUID.fromString(player.getKey()), UUID.fromString(json.get("together_with").getAsString()));
+					Map<String, Integer> subjects = new LinkedHashMap<>();
+					if (json.has("subjects")) {
+						for (Map.Entry<String, JsonElement> subject : json.getAsJsonObject("subjects").entrySet()) {
+							subjects.put(subject.getKey(), Math.max(0, subject.getValue().getAsInt()));
+						}
+					}
 					entries.put(UUID.fromString(player.getKey()), new Entry(json.has("name") ? json.get("name").getAsString() : "",
-						!json.has("enabled") || json.get("enabled").getAsBoolean(), json.has("lessons") ? json.get("lessons").getAsInt() : 0, weekdays));
+						!json.has("enabled") || json.get("enabled").getAsBoolean(), json.has("lessons") ? json.get("lessons").getAsInt() : 0, weekdays,
+						Map.copyOf(subjects)));
 				} catch (RuntimeException e) {
 					LearningBlocks.LOGGER.warn("[{}] schedules.json: skipping {}: {}", LearningBlocks.MOD_ID, player.getKey(), e.getMessage());
 				}
@@ -140,6 +151,11 @@ public final class Schedules {
 				JsonObject days = new JsonObject();
 				for (Map.Entry<DayOfWeek, Integer> day : schedule.weekdays().entrySet()) days.addProperty(day.getKey().name().toLowerCase(Locale.ROOT), day.getValue());
 				json.add("weekdays", days);
+			}
+			if (!schedule.subjects().isEmpty()) {
+				JsonObject subjects = new JsonObject();
+				for (Map.Entry<String, Integer> subject : schedule.subjects().entrySet()) subjects.addProperty(subject.getKey(), subject.getValue());
+				json.add("subjects", subjects);
 			}
 			UUID with = together.get(entry.getKey());
 			if (with != null) json.addProperty("together_with", with.toString());
@@ -199,14 +215,29 @@ public final class Schedules {
 	public static synchronized void refreshName(UUID player, String name) {
 		Entry old = entries.get(player);
 		if (old == null || old.name().equals(name)) return;
-		entries.put(player, new Entry(name, old.enabled(), old.lessons(), old.weekdays()));
+		entries.put(player, new Entry(name, old.enabled(), old.lessons(), old.weekdays(), old.subjects()));
 		save();
 	}
 
 	/** Lessons a day for this child; 0 turns the schedule off. */
 	public static synchronized void set(UUID player, String name, int lessons) {
 		Entry old = entries.get(player);
-		entries.put(player, new Entry(name, lessons > 0, Math.max(0, lessons), old == null ? new EnumMap<>(DayOfWeek.class) : old.weekdays()));
+		// A plain number is that many of any subject: a split set before is gone.
+		entries.put(player, new Entry(name, lessons > 0, Math.max(0, lessons), old == null ? new EnumMap<>(DayOfWeek.class) : old.weekdays(), Map.of()));
+		save();
+	}
+
+	/**
+	 * Some of each subject a day ({@code reading} 5, {@code numbers} 5), the day's lessons their sum;
+	 * empty for any subject at all. On, if it was off.
+	 */
+	public static synchronized void setSubjects(UUID player, String name, Map<String, Integer> subjects) {
+		Entry old = entries.get(player);
+		Map<String, Integer> kept = new LinkedHashMap<>();
+		for (Map.Entry<String, Integer> subject : subjects.entrySet()) if (subject.getValue() > 0) kept.put(subject.getKey(), subject.getValue());
+		int total = kept.values().stream().mapToInt(Integer::intValue).sum();
+		entries.put(player, new Entry(name, total > 0 || old != null && old.enabled(), kept.isEmpty() ? (old == null ? 0 : old.lessons()) : total,
+			old == null ? new EnumMap<>(DayOfWeek.class) : old.weekdays(), Map.copyOf(kept)));
 		save();
 	}
 
@@ -216,7 +247,7 @@ public final class Schedules {
 		Map<DayOfWeek, Integer> weekdays = new EnumMap<>(DayOfWeek.class);
 		if (old != null) weekdays.putAll(old.weekdays());
 		weekdays.put(day, Math.max(0, lessons));
-		entries.put(player, new Entry(name, true, old == null ? 0 : old.lessons(), weekdays));
+		entries.put(player, new Entry(name, true, old == null ? 0 : old.lessons(), weekdays, old == null ? Map.of() : old.subjects()));
 		save();
 	}
 
@@ -232,7 +263,7 @@ public final class Schedules {
 			weekdays.remove(DayOfWeek.SATURDAY);
 			weekdays.remove(DayOfWeek.SUNDAY);
 		}
-		entries.put(player, new Entry(name, old != null && old.enabled(), old == null ? 0 : old.lessons(), weekdays));
+		entries.put(player, new Entry(name, old != null && old.enabled(), old == null ? 0 : old.lessons(), weekdays, old == null ? Map.of() : old.subjects()));
 		save();
 	}
 
@@ -254,9 +285,23 @@ public final class Schedules {
 		return required(player.getUUID(), Progress.date());
 	}
 
-	/** Lessons still to do today: the day's number, less the rounds already solved today. */
+	/** Lessons still to do today: the day's number, less the rounds already solved today; or, some of each subject, what each still asks. */
 	public static int remaining(ServerPlayer player) {
+		Map<String, Integer> each = perSubjectToday(player);
+		if (!each.isEmpty()) {
+			int left = 0;
+			Progress progress = Progress.of(player);
+			for (Map.Entry<String, Integer> subject : each.entrySet()) left += Math.max(0, subject.getValue() - progress.doneToday(subject.getKey()));
+			return left;
+		}
 		return Math.max(0, requiredToday(player) - Progress.of(player).doneToday());
+	}
+
+	/** What a schedule asking for some of each subject asks today, by subject; empty if it asks for any subject (or nothing) today. */
+	public static Map<String, Integer> perSubjectToday(ServerPlayer player) {
+		Entry entry = of(player.getUUID());
+		if (entry == null || entry.subjects().isEmpty() || requiredToday(player) == 0) return Map.of();
+		return entry.subjects();
 	}
 
 	/** Whether today's schedule asks this child for anything: the only thing that keeps an operator in. */

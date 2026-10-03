@@ -19,5 +19,7 @@ public final class TestDefaults implements ModInitializer {
 		// than that in a few minutes. ExitAndDays turns both on.
 		justfatlard.learning_blocks.reward.Memory.spreadOffForTests(true);
 		Progress.repeatsForTests(true);
+		// Reading only: the tests of Reading ask for its rounds; Subjects turns the others on for itself.
+		justfatlard.learning_blocks.subject.Subjects.onlyForTests(java.util.Set.of("reading"));
 	}
 }

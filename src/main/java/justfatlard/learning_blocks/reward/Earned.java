@@ -42,6 +42,41 @@ public final class Earned {
 		return links;
 	}
 
+	/**
+	 * A plushie or toy earned by mastering items of another subject: {@code toy:block} by
+	 * {@code numbers:numeral:1} to {@code :5}, say. Kept beside the word links; a toy with both needs both.
+	 */
+	private static final Map<String, List<String>> itemLinks = new java.util.concurrent.ConcurrentHashMap<>();
+
+	/** This toy is earned (also) by mastering these items of a subject. */
+	public static void linkItems(String key, List<String> items) {
+		itemLinks.put(key, List.copyOf(items));
+	}
+
+	/** For tests: the item links gone. */
+	public static void clearItemLinksForTests() {
+		itemLinks.clear();
+	}
+
+	public static List<String> itemsFor(String key) {
+		return itemLinks.getOrDefault(key, List.of());
+	}
+
+	/** Earn whatever this item's mastery now earns: every toy linked to it whose items (and words) are all mastered. */
+	public static void checkItem(ServerPlayer player, Progress progress, String item) {
+		PrizeConfig.Event event = PrizeConfig.toyMastered();
+		if (!PrizeConfig.get().enabled || !event.enabled()) return;
+		for (Map.Entry<String, List<String>> link : itemLinks.entrySet()) {
+			if (!link.getValue().contains(item) || earned(progress, link.getKey())) continue;
+			if (!link.getValue().stream().allMatch(each -> justfatlard.learning_blocks.subject.Subjects.mastered(progress, each))) continue;
+			if (!wordsFor(link.getKey()).stream().allMatch(progress::mastered)) continue;
+			progress.rewarded.add(earnedKey(link.getKey()));
+			progress.save(player);
+			LearningBlocks.LOGGER.info("[{}] {} mastered {} and earned {}", LearningBlocks.MOD_ID, player.getGameProfile().name(), link.getValue(), link.getKey());
+			Prizes.toyMastered(player, progress, link.getKey(), event);
+		}
+	}
+
 	public static List<Word> wordsFor(String key) {
 		return links().getOrDefault(key, List.of());
 	}
@@ -66,6 +101,7 @@ public final class Earned {
 			if (words.isEmpty() || earned(progress, link.getKey())) continue;
 			if (read != null && words.stream().noneMatch(word -> word.id().equals(read.id()))) continue;
 			if (!words.stream().allMatch(progress::mastered)) continue;
+			if (!itemsFor(link.getKey()).stream().allMatch(each -> justfatlard.learning_blocks.subject.Subjects.mastered(progress, each))) continue;
 			progress.rewarded.add(earnedKey(link.getKey()));
 			progress.save(player);
 			LearningBlocks.LOGGER.info("[{}] {} mastered {} and earned {}", LearningBlocks.MOD_ID, player.getGameProfile().name(),

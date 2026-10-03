@@ -52,7 +52,7 @@ public final class Review {
 	public static final String TYPE = LearningBlocks.MOD_ID + ":review";
 
 	public enum Tab {
-		LETTERS("Letters"), PAIRS("Two-letter"), VOWELS("Vowels"), TRICKY("Tricky"), TOYBOX("Toybox"), WORDS("My words"), PHRASES("Phrases");
+		LETTERS("Letters"), PAIRS("Two-letter"), VOWELS("Vowels"), TRICKY("Tricky"), TOYBOX("Toybox"), WORDS("My words"), NUMBERS("123"), PHRASES("Phrases");
 
 		final String label;
 
@@ -155,11 +155,20 @@ public final class Review {
 		List<String> unread = new ArrayList<>();
 
 		List<Tab> tabs = new ArrayList<>();
-		for (Tab each : Tab.values()) if (!each.forOperators() || operator) tabs.add(each);
+		boolean numbers = justfatlard.learning_blocks.subject.Subjects.on(viewer, justfatlard.learning_blocks.subject.Numbers.INSTANCE);
+		for (Tab each : Tab.values()) if ((!each.forOperators() || operator) && (each != Tab.NUMBERS || numbers)) tabs.add(each);
 		int tabW = (INNER - 2 * (tabs.size() - 1)) / tabs.size();
 		for (int i = 0; i < tabs.size(); i++) {
 			// The more tabs, the narrower: long labels go short so they fit.
-			String label = tabs.size() >= 6 ? switch (tabs.get(i)) {
+			String label = tabs.size() >= 8 ? switch (tabs.get(i)) {
+				case LETTERS -> "abc";
+				case PAIRS -> "Pairs";
+				case VOWELS -> "aeiou";
+				case TOYBOX -> "Toys";
+				case WORDS -> "Words";
+				case PHRASES -> "Lines";
+				default -> tabs.get(i).label;
+			} : tabs.size() >= 6 ? switch (tabs.get(i)) {
 				case PAIRS -> "Pairs";
 				case WORDS -> "Words";
 				case PHRASES -> "Lines";
@@ -178,6 +187,7 @@ public final class Review {
 			case VOWELS -> vowels(parts);
 			case TRICKY -> tricky(parts, viewer);
 			case TOYBOX -> toybox(parts, viewer);
+			case NUMBERS -> numbers(parts, viewer);
 			case WORDS -> words(viewer, scrolls, parts, subject, subjectName, all, operator, read, unread);
 			case PHRASES -> phrases(scrolls, parts);
 		};
@@ -190,7 +200,7 @@ public final class Review {
 		screen.size(WIDTH, height);
 		screen.panel("dialog", 0, 0, WIDTH, height, Ui.panel());
 		screen.component(Ui.icon("title_icon", PAD, 3, "minecraft:book", 0.75F));
-		String title = tab == Tab.WORDS && !subject.equals(viewer.getUUID()) ? subjectName + "'s words" : tab.label;
+		String title = tab == Tab.WORDS && !subject.equals(viewer.getUUID()) ? subjectName + "'s words" : tab == Tab.NUMBERS ? "Numbers" : tab.label;
 		screen.component(Ui.text("title", PAD + 16, 7, title));
 		for (ComponentBuilder part : parts) screen.component(part);
 		// After the panel, which would otherwise be drawn over them.
@@ -516,6 +526,25 @@ public final class Review {
 		return bottom + 10;
 	}
 
+	/** The number tiles one to twenty, and zero: each with its dots; a click says it. Mastered ones are marked. */
+	private static int numbers(List<ComponentBuilder> parts, ServerPlayer viewer) {
+		justfatlard.learning_blocks.reward.Progress progress = justfatlard.learning_blocks.reward.Progress.of(viewer);
+		int columns = 3;
+		int w = (INNER - 2 * (columns - 1)) / columns;
+		int row = Ui.BUTTON + 2;
+		for (int n = 0; n <= justfatlard.learning_blocks.numbers.NumberBlock.HIGHEST; n++) {
+			int i = n == 0 ? justfatlard.learning_blocks.numbers.NumberBlock.HIGHEST : n - 1;
+			// Dots up to ten, as on the tiles' sides; past that, too many to count on a button.
+			String dots = n >= 1 && n <= 10 ? "  " + "\u25CF".repeat(n) : "";
+			boolean mastered = progress.itemMastered(justfatlard.learning_blocks.subject.Numbers.numeral(n));
+			parts.add(Ui.button("number:" + n, PAD + (i % columns) * (w + 2), TOP + (i / columns) * row, w, Ui.BUTTON,
+				(mastered ? "\u2605 " : "") + n + dots));
+		}
+		int bottom = TOP + (justfatlard.learning_blocks.numbers.NumberBlock.HIGHEST / columns + 1) * row;
+		parts.add(Ui.faint("hint", PAD, bottom, "Click one to hear it. A star is one you know."));
+		return bottom + 10;
+	}
+
 	private static int vowels(List<ComponentBuilder> parts) {
 		int row = 30;
 		parts.add(Ui.faint("short_head", PAD + 34, TOP - 2, "Short"));
@@ -782,6 +811,13 @@ public final class Review {
 		} else if (id.startsWith("letter:") || id.startsWith("vowel:")) {
 			Letter letter = Letter.of(id.substring(id.indexOf(':') + 1));
 			if (letter != null) say(viewer, state, List.of("phoneme/" + letter.grapheme()), letter.grapheme());
+		} else if (id.startsWith("number:")) {
+			try {
+				int n = Integer.parseInt(id.substring("number:".length()));
+				say(viewer, state, List.of(justfatlard.learning_blocks.numbers.NumberBlock.soundOf(n)), justfatlard.learning_blocks.subject.Numbers.word(n));
+			} catch (NumberFormatException ignored) {
+				// Not a number button.
+			}
 		} else if (id.startsWith("short:")) {
 			Letter vowel = Letter.of(id.substring("short:".length()));
 			if (vowel == null) return;

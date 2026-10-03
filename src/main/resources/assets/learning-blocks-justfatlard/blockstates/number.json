@@ -1,0 +1,67 @@
+{
+  "variants": {
+    "number=0": {
+      "model": "learning-blocks-justfatlard:block/number_0"
+    },
+    "number=1": {
+      "model": "learning-blocks-justfatlard:block/number_1"
+    },
+    "number=2": {
+      "model": "learning-blocks-justfatlard:block/number_2"
+    },
+    "number=3": {
+      "model": "learning-blocks-justfatlard:block/number_3"
+    },
+    "number=4": {
+      "model": "learning-blocks-justfatlard:block/number_4"
+    },
+    "number=5": {
+      "model": "learning-blocks-justfatlard:block/number_5"
+    },
+    "number=6": {
+      "model": "learning-blocks-justfatlard:block/number_6"
+    },
+    "number=7": {
+      "model": "learning-blocks-justfatlard:block/number_7"
+    },
+    "number=8": {
+      "model": "learning-blocks-justfatlard:block/number_8"
+    },
+    "number=9": {
+      "model": "learning-blocks-justfatlard:block/number_9"
+    },
+    "number=10": {
+      "model": "learning-blocks-justfatlard:block/number_10"
+    },
+    "number=11": {
+      "model": "learning-blocks-justfatlard:block/number_11"
+    },
+    "number=12": {
+      "model": "learning-blocks-justfatlard:block/number_12"
+    },
+    "number=13": {
+      "model": "learning-blocks-justfatlard:block/number_13"
+    },
+    "number=14": {
+      "model": "learning-blocks-justfatlard:block/number_14"
+    },
+    "number=15": {
+      "model": "learning-blocks-justfatlard:block/number_15"
+    },
+    "number=16": {
+      "model": "learning-blocks-justfatlard:block/number_16"
+    },
+    "number=17": {
+      "model": "learning-blocks-justfatlard:block/number_17"
+    },
+    "number=18": {
+      "model": "learning-blocks-justfatlard:block/number_18"
+    },
+    "number=19": {
+      "model": "learning-blocks-justfatlard:block/number_19"
+    },
+    "number=20": {
+      "model": "learning-blocks-justfatlard:block/number_20"
+    }
+  }
+}

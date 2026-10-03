@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "learning-blocks-justfatlard:block/number_4",
+    "south": "learning-blocks-justfatlard:block/number_4",
+    "east": "learning-blocks-justfatlard:block/number_4_dots",
+    "west": "learning-blocks-justfatlard:block/number_4_dots",
+    "up": "learning-blocks-justfatlard:block/letter_top",
+    "down": "learning-blocks-justfatlard:block/letter_top",
+    "particle": "learning-blocks-justfatlard:block/number_4"
+  }
+}

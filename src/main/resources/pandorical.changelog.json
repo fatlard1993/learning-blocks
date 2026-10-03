@@ -7,7 +7,10 @@
 		"0.2.0": [
 			"Phonics is now Learning Blocks, the first subject of several: Reading.",
 			"Everything carries over: plushies, toys, letter tiles and props in worlds and inventories, each reader's progress, toys and daily schedule, and the server's prizes and schedules settings.",
-			"/learn is the command now; /phonics still works."
+			"/learn is the command now; /phonics still works.",
+			"Subjects: Reading, plus a first step of Numbers (which block says three?) and Logic (what comes next?), taking turns, with a hello and a coloured board edge for each.",
+			"Wooden number tiles, 0 to 20, with dots on the sides.",
+			"/learn subjects turns a child's subjects on and off; a daily schedule can ask for some of each."
 		],
 		"0.1.0": [
 			"A classroom with one puzzle: _ A T, three letters to try, and a button that reads the word out.",

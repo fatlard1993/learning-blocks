@@ -227,10 +227,10 @@ public final class PlushiesAndThings implements FabricClientGameTest {
 			check(ToyItem.kindOf(player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD)) == Toy.CAP, "cap did not put the toy cap on");
 		});
 		session.command("/learn leave");
-		session.waitTicks(40);
+		// Going home waits for the prize line, as long as the voice takes to say it.
+		Waits.until(session, 300, "still in the classroom", () -> !Places.isClassroom(session.player().level()));
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
-			check(!Places.isClassroom(player.level()), "still in the classroom");
 			boolean home = false;
 			for (int i = 0; i < player.getInventory().getContainerSize(); i++) home |= PlushItem.kindOf(player.getInventory().getItem(i)) != null;
 			check(home, "the plushie prize did not come home");

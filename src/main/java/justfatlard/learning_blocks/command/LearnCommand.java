@@ -50,14 +50,30 @@ public final class LearnCommand {
 				.executes(context -> withPlayer(context, viewer -> justfatlard.learning_blocks.review.SamplerScreen.open(viewer) ? null
 					: "The sampler screen needs Pandorical on your game; /learn try <kind> [word] works without it"))
 				.then(Commands.argument("kind", com.mojang.brigadier.arguments.StringArgumentType.word())
-					.suggests((context, builder) -> net.minecraft.commands.SharedSuggestionProvider.suggest(justfatlard.learning_blocks.puzzle.Sampler.kindNames(), builder))
-					.executes(context -> sample(context, null))
+					.suggests((context, builder) -> net.minecraft.commands.SharedSuggestionProvider.suggest(
+						java.util.stream.Stream.concat(justfatlard.learning_blocks.puzzle.Sampler.kindNames().stream(),
+							justfatlard.learning_blocks.subject.Subjects.ids().stream().filter(id -> !id.equals("reading"))).toList(), builder))
+					.executes(context -> sample(context, null, null))
 					.then(Commands.argument("word", com.mojang.brigadier.arguments.StringArgumentType.word())
 						.suggests((context, builder) -> {
-							var kind = justfatlard.learning_blocks.puzzle.Sampler.Kind.of(com.mojang.brigadier.arguments.StringArgumentType.getString(context, "kind"));
+							String first = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "kind");
+							var subject = justfatlard.learning_blocks.subject.Subjects.of(first);
+							if (subject != null && subject != justfatlard.learning_blocks.subject.Subjects.READING) {
+								return net.minecraft.commands.SharedSuggestionProvider.suggest(subject.kinds(), builder);
+							}
+							var kind = justfatlard.learning_blocks.puzzle.Sampler.Kind.of(first);
 							return net.minecraft.commands.SharedSuggestionProvider.suggest(kind == null ? List.of() : justfatlard.learning_blocks.puzzle.Sampler.targets(kind), builder);
 						})
-						.executes(context -> sample(context, com.mojang.brigadier.arguments.StringArgumentType.getString(context, "word"))))))
+						.executes(context -> sample(context, com.mojang.brigadier.arguments.StringArgumentType.getString(context, "word"), null))
+						// Another subject's: /learn try numbers find 3.
+						.then(Commands.argument("target", com.mojang.brigadier.arguments.StringArgumentType.word())
+							.suggests((context, builder) -> {
+								var subject = justfatlard.learning_blocks.subject.Subjects.of(com.mojang.brigadier.arguments.StringArgumentType.getString(context, "kind"));
+								return net.minecraft.commands.SharedSuggestionProvider.suggest(subject == null ? List.of()
+									: subject.targets(com.mojang.brigadier.arguments.StringArgumentType.getString(context, "word")), builder);
+							})
+							.executes(context -> sample(context, com.mojang.brigadier.arguments.StringArgumentType.getString(context, "word"),
+								com.mojang.brigadier.arguments.StringArgumentType.getString(context, "target")))))))
 			.then(Commands.literal("pair")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.then(Commands.argument("player", EntityArgument.player())
@@ -99,6 +115,14 @@ public final class LearnCommand {
 			.then(Commands.literal("release")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.then(Commands.argument("player", EntityArgument.player()).executes(LearnCommand::release)))
+			.then(Commands.literal("subjects")
+				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
+				.then(Commands.argument("player", EntityArgument.player())
+					.executes(context -> subjects(context, null))
+					.then(Commands.argument("settings", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
+						.suggests((context, builder) -> net.minecraft.commands.SharedSuggestionProvider.suggest(
+							justfatlard.learning_blocks.subject.Subjects.ids().stream().flatMap(id -> java.util.stream.Stream.of(id + " on", id + " off", id + " default")).toList(), builder))
+						.executes(context -> subjects(context, com.mojang.brigadier.arguments.StringArgumentType.getString(context, "settings"))))))
 			.then(Commands.literal("daily")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.then(Commands.argument("reader", com.mojang.brigadier.arguments.StringArgumentType.word())
@@ -110,7 +134,12 @@ public final class LearnCommand {
 							java.util.stream.Stream.concat(readerNames(context.getSource()).stream(), java.util.stream.Stream.of("nobody")).toList(), builder))
 						.executes(LearnCommand::dailyWith)))
 					.then(Commands.argument("lessons", IntegerArgumentType.integer(0, 50))
-						.executes(context -> daily(context, null, IntegerArgumentType.getInteger(context, "lessons"))))
+						.executes(context -> daily(context, null, IntegerArgumentType.getInteger(context, "lessons")))
+						// Some of each subject: /learn daily Sam 10 reading 5 numbers 5.
+						.then(Commands.argument("split", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
+							.suggests((context, builder) -> net.minecraft.commands.SharedSuggestionProvider.suggest(
+								justfatlard.learning_blocks.subject.Subjects.ids().stream().map(id -> id + " 5").toList(), builder))
+							.executes(LearnCommand::dailySplit)))
 					.then(Commands.argument("weekday", com.mojang.brigadier.arguments.StringArgumentType.word())
 						.suggests((context, builder) -> net.minecraft.commands.SharedSuggestionProvider.suggest(
 							List.of("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"), builder))
@@ -267,8 +296,17 @@ public final class LearnCommand {
 	}
 
 	/** A practice round of a kind, now, in the caller's classroom. */
-	private static int sample(CommandContext<CommandSourceStack> context, @Nullable String word) {
+	private static int sample(CommandContext<CommandSourceStack> context, @Nullable String word, @Nullable String target) {
 		String name = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "kind");
+		// Another subject: /learn try numbers [kind [target]].
+		var subject = justfatlard.learning_blocks.subject.Subjects.of(name);
+		if (subject != null && subject != justfatlard.learning_blocks.subject.Subjects.READING) {
+			return withPlayer(context, player -> justfatlard.learning_blocks.puzzle.Sampler.runSubject(player, subject, word, target));
+		}
+		if (target != null) {
+			context.getSource().sendFailure(Component.literal("Reading rounds take one word: /learn try " + name + " <word>"));
+			return 0;
+		}
 		var kind = justfatlard.learning_blocks.puzzle.Sampler.Kind.of(name);
 		if (kind == null) {
 			context.getSource().sendFailure(Component.literal("No kind of round called \"" + name + "\". Kinds: "
@@ -384,6 +422,69 @@ public final class LearnCommand {
 			else text.append(". Today asks for ").append(today);
 		}
 		context.getSource().sendSuccess(() -> Component.literal(text.toString()), lessons != null);
+		return 1;
+	}
+
+	/** Which subjects a child has on: shown, or set ("numbers off", "logic on", "reading default"). */
+	private static int subjects(CommandContext<CommandSourceStack> context, @Nullable String settings) throws CommandSyntaxException {
+		ServerPlayer player = EntityArgument.getPlayer(context, "player");
+		Progress progress = Progress.of(player);
+		if (settings != null) {
+			String[] words = settings.trim().split("\\s+");
+			if (words.length % 2 != 0) {
+				context.getSource().sendFailure(Component.literal("Say each subject and on, off or default: reading on numbers off"));
+				return 0;
+			}
+			for (int i = 0; i < words.length; i += 2) {
+				var subject = justfatlard.learning_blocks.subject.Subjects.of(words[i].toLowerCase(java.util.Locale.ROOT));
+				String value = words[i + 1].toLowerCase(java.util.Locale.ROOT);
+				if (subject == null || !List.of("on", "off", "default").contains(value)) {
+					context.getSource().sendFailure(Component.literal("\"" + words[i] + " " + words[i + 1] + "\": subjects are "
+						+ String.join(", ", justfatlard.learning_blocks.subject.Subjects.ids()) + ", each on, off or default"));
+					return 0;
+				}
+				progress.setSubjectOn(player, subject.id(), value.equals("default") ? null : value.equals("on"));
+			}
+		}
+		StringBuilder text = new StringBuilder(player.getGameProfile().name() + "'s subjects: ");
+		List<String> parts = new java.util.ArrayList<>();
+		for (var subject : justfatlard.learning_blocks.subject.Subjects.ALL) {
+			Boolean own = progress.subjectOn(subject.id());
+			boolean on = justfatlard.learning_blocks.subject.Subjects.on(player, subject);
+			parts.add(subject.label() + " " + (on ? "on" : "off") + (own == null ? " (the server's default)" : ""));
+		}
+		text.append(String.join(", ", parts)).append(". Mixed: ").append(justfatlard.learning_blocks.reward.PrizeConfig.subjectMix().id());
+		context.getSource().sendSuccess(() -> Component.literal(text.toString()), settings != null);
+		return 1;
+	}
+
+	/** Some of each subject a day: /learn daily Sam 10 reading 5 numbers 5. */
+	private static int dailySplit(CommandContext<CommandSourceStack> context) {
+		String name = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "reader");
+		var who = reader(context.getSource(), name);
+		if (who == null) {
+			context.getSource().sendFailure(Component.literal("I don't know a player called " + name + " yet; have them join once"));
+			return 0;
+		}
+		String[] words = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "split").trim().split("\\s+");
+		java.util.Map<String, Integer> split = new java.util.LinkedHashMap<>();
+		try {
+			if (words.length % 2 != 0) throw new IllegalArgumentException();
+			for (int i = 0; i < words.length; i += 2) {
+				var subject = justfatlard.learning_blocks.subject.Subjects.of(words[i].toLowerCase(java.util.Locale.ROOT));
+				if (subject == null) throw new IllegalArgumentException();
+				split.put(subject.id(), Math.max(0, Integer.parseInt(words[i + 1])));
+			}
+		} catch (IllegalArgumentException e) {
+			context.getSource().sendFailure(Component.literal("Say each subject and how many: reading 5 numbers 5"));
+			return 0;
+		}
+		int lessons = IntegerArgumentType.getInteger(context, "lessons");
+		int sum = split.values().stream().mapToInt(Integer::intValue).sum();
+		justfatlard.learning_blocks.classroom.Schedules.setSubjects(who.getKey(), who.getValue(), split);
+		String detail = split.entrySet().stream().map(each -> each.getValue() + " " + each.getKey()).collect(java.util.stream.Collectors.joining(" + "));
+		context.getSource().sendSuccess(() -> Component.literal(who.getValue() + ": " + detail + " a day"
+			+ (sum != lessons ? " (" + sum + " in all, not " + lessons + ")" : "")), true);
 		return 1;
 	}
 

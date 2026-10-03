@@ -213,6 +213,36 @@ public final class PrizeConfig {
 	private static volatile int whatsWrongEvery = 6;
 	private static volatile boolean whatsWrong = true;
 	private static volatile boolean sillyCounts = false;
+	private static volatile java.util.Map<String, Boolean> subjectsOn = java.util.Map.of();
+	private static volatile justfatlard.learning_blocks.subject.Subjects.Mix subjectMix = justfatlard.learning_blocks.subject.Subjects.Mix.ALTERNATE;
+	private static volatile int subjectBlock = 3;
+	private static volatile java.util.Map<String, Integer> subjectWeights = java.util.Map.of();
+
+	/** Whether a subject is on by default, for a child nobody has set it for: all of them, unless the file says. */
+	public static boolean subjectOn(String subject) {
+		return subjectsOn.getOrDefault(subject, true);
+	}
+
+	/** How a child's subjects take turns. */
+	public static justfatlard.learning_blocks.subject.Subjects.Mix subjectMix() {
+		return subjectMix;
+	}
+
+	/** In {@code blocks}, how many rounds of one before the next. */
+	public static int subjectBlock() {
+		return subjectBlock;
+	}
+
+	/** In {@code weights}, how often a subject comes, against the others (1 each unless the file says). */
+	public static int subjectWeight(String subject) {
+		return subjectWeights.getOrDefault(subject, 1);
+	}
+
+	/** For tests: the mix and the block size. */
+	public static void useSubjectMix(justfatlard.learning_blocks.subject.Subjects.Mix mix, int block) {
+		subjectMix = mix;
+		subjectBlock = Math.max(1, block);
+	}
 	private static volatile int bobPropShare = 20;
 
 	/** From stage 5, one round in this many is Bob's: telling him what to do, or fixing what he did; 0 for none. */
@@ -341,6 +371,20 @@ public final class PrizeConfig {
 		whatsWrong = bool(puzzlesJson, "whats_wrong", true, problems);
 		whatsWrongEvery = Math.max(0, integer(puzzlesJson, "whats_wrong_every", 6, problems));
 		sillyCounts = bool(puzzlesJson, "silly_counts", false, problems);
+		// Subjects: which are on by default, and how they take turns.
+		JsonObject subjectsJson = object(json, "subjects");
+		java.util.Map<String, Boolean> on = new java.util.LinkedHashMap<>();
+		for (String subject : justfatlard.learning_blocks.subject.Subjects.ids()) on.put(subject, bool(subjectsJson, subject, true, problems));
+		subjectsOn = java.util.Map.copyOf(on);
+		JsonElement mixJson = subjectsJson.get("mix");
+		String mix = mixJson != null && mixJson.isJsonPrimitive() ? mixJson.getAsString() : "alternate";
+		subjectMix = justfatlard.learning_blocks.subject.Subjects.Mix.of(mix);
+		if (!subjectMix.id().equals(mix)) problems.add("subjects.mix: " + mix + " is not alternate, blocks or weights; using alternate");
+		subjectBlock = Math.max(1, integer(subjectsJson, "block", 3, problems));
+		JsonObject weightsJson = object(subjectsJson, "weights");
+		java.util.Map<String, Integer> weights = new java.util.LinkedHashMap<>();
+		for (String subject : justfatlard.learning_blocks.subject.Subjects.ids()) weights.put(subject, Math.max(0, integer(weightsJson, subject, 1, problems)));
+		subjectWeights = java.util.Map.copyOf(weights);
 		bobPropShare = Math.max(0, Math.min(100, integer(puzzlesJson, "bob_prop_share", 20, problems)));
 		return new PrizeConfig(
 			bool(json, "enabled", true, problems),

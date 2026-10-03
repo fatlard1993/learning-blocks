@@ -211,6 +211,45 @@ public final class Sampler {
 		return null;
 	}
 
+	/**
+	 * A practice round of another subject ({@code numbers}, {@code logic}): of this kind and target,
+	 * or its own choice. As {@link #run}: into the classroom first if need be; nothing counted.
+	 */
+	public static @Nullable String runSubject(ServerPlayer player, justfatlard.learning_blocks.subject.Subject subject, @Nullable String kind,
+			@Nullable String target) {
+		if (kind != null && !subject.kinds().contains(kind)) {
+			return "\"" + kind + "\" is not a kind of " + subject.label() + " round. Kinds: " + String.join(", ", subject.kinds());
+		}
+		if (target != null && !subject.targets(kind != null ? kind : subject.kinds().getFirst()).contains(target)) {
+			return "\"" + target + "\" can't be asked. Some that can: " + String.join(", ", subject.targets(kind != null ? kind : subject.kinds().getFirst()));
+		}
+		Room room = Rooms.of(player);
+		if (room == null || !Places.isClassroom(player.level())) {
+			String refused = Travel.enter(player);
+			if (refused != null) return refused;
+			Later.after(player, 60, p -> {
+				String problem = runSubject(p, subject, kind, target);
+				if (problem != null) p.sendSystemMessage(net.minecraft.network.chat.Component.literal(problem));
+			});
+			return null;
+		}
+		if (room.busy() || room.leaving(player)) return "Not just now: the room is busy";
+		room.practice = true;
+		room.practiceStarting = true;
+		for (ServerPlayer one : room.present()) Progress.practice(one, true);
+		try {
+			room.newSubjectRound(player, subject, kind, target);
+		} finally {
+			room.practiceStarting = false;
+		}
+		if (room.subjectRound == null || room.subjectRound.subject() != subject) {
+			room.endPractice();
+			return "That round couldn't be made just now; try another";
+		}
+		Narrator.note(player, "sample:" + subject.id() + ":" + room.subjectRound.kind() + ":" + room.subjectRound.item());
+		return null;
+	}
+
 	private static boolean start(ServerPlayer player, Room room, Kind kind, String target) {
 		Word word = switch (kind) {
 			case LETTERS, CASE -> null;

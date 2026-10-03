@@ -198,6 +198,37 @@ public final class Prizes {
 		progress.save(player);
 	}
 
+	/**
+	 * Another subject's item answered right ({@code numbers:numeral:3}): new the first time ever, and
+	 * solved, the streak and points, as a word is.
+	 */
+	public static void itemSolved(ServerPlayer player, String item, boolean firstTry) {
+		PrizeConfig config = PrizeConfig.get();
+		Progress progress = Progress.of(player);
+		boolean fresh = progress.rewarded.add(item);
+		progress.streak++;
+		progress.save(player);
+		if (!config.enabled) return;
+		payOwed(player);
+		if (fresh) award(player, progress, "new_word", config.newWord);
+		if (firstTry || !config.solvedFirstTryOnly) award(player, progress, "solved", config.solved);
+		if (progress.streak % config.streakLength == 0) award(player, progress, "streak", config.streak);
+		payThresholds(player, progress);
+		progress.save(player);
+	}
+
+	/** A subject's level done ({@code numbers:1}): stage_complete pays, once ever for it. */
+	public static void levelComplete(ServerPlayer player, String level) {
+		PrizeConfig config = PrizeConfig.get();
+		Progress progress = Progress.of(player);
+		String key = "level:" + level;
+		if (progress.rewarded.contains(key)) return;
+		progress.rewarded.add(key);
+		progress.save(player);
+		if (config.enabled && config.stageComplete.enabled()) award(player, progress, "stage_complete", config.stageComplete);
+		progress.save(player);
+	}
+
 	/** Built a word that was not the one asked for: the streak starts over. */
 	public static void missed(ServerPlayer player) {
 		Progress progress = Progress.of(player);

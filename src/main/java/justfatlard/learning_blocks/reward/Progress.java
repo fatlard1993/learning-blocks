@@ -104,7 +104,36 @@ public final class Progress {
 			startsOnLetters() ? 0 : 1, 0, java.util.Map.of(), Memory.fresh(), 0);
 	}
 
-	public static final Codec<Progress> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	/**
+	 * Which subjects this child has on (where a grown-up has said, over the server's defaults), and
+	 * the rounds of each solved today, for a daily schedule that asks for some of each.
+	 */
+	public static final class SubjectState {
+		final java.util.Map<String, Boolean> on;
+		String day;
+		final java.util.Map<String, Integer> done;
+
+		SubjectState(java.util.Map<String, Boolean> on, String day, java.util.Map<String, Integer> done) {
+			this.on = new java.util.TreeMap<>(on);
+			this.day = day;
+			this.done = new java.util.TreeMap<>(done);
+		}
+
+		static SubjectState fresh() {
+			return new SubjectState(java.util.Map.of(), "", java.util.Map.of());
+		}
+
+		static final Codec<SubjectState> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Codec.unboundedMap(Codec.STRING, Codec.BOOL).optionalFieldOf("on", java.util.Map.of()).forGetter(s -> java.util.Map.copyOf(s.on)),
+			Codec.STRING.optionalFieldOf("day", "").forGetter(s -> s.day),
+			Codec.unboundedMap(Codec.STRING, Codec.INT).optionalFieldOf("done", java.util.Map.of()).forGetter(s -> java.util.Map.copyOf(s.done))
+		).apply(instance, SubjectState::new));
+	}
+
+	/** Subjects: what is on for this child, and today's rounds of each. */
+	SubjectState subjects = SubjectState.fresh();
+
+	private static final com.mojang.serialization.MapCodec<Progress> FIELDS = RecordCodecBuilder.mapCodec(instance -> instance.group(
 		Codec.STRING.listOf().optionalFieldOf("words", List.of()).forGetter(p -> new ArrayList<>(p.words)),
 		Codec.INT.optionalFieldOf("streak", 0).forGetter(p -> p.streak),
 		Codec.INT.optionalFieldOf("points", 0).forGetter(p -> p.points),
@@ -126,6 +155,15 @@ public final class Progress {
 	).apply(instance, (words, streak, points, thresholds, milestones, stages, day, paidToday, lastVisit, owed, rewarded, stageFloor,
 		lessonsOwed, letterHits, memory, bandFloor) -> new Progress(words, streak, points, thresholds, milestones, stages, day, paidToday,
 		lastVisit, owed, rewarded, stageFloor, lessonsOwed, letterHits, memory.orElseGet(Memory::legacy), bandFloor)));
+
+	/** Everything: the reading (and shared) fields, and the subjects beside them. */
+	public static final Codec<Progress> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		FIELDS.forGetter(p -> p),
+		SubjectState.CODEC.optionalFieldOf("subjects").forGetter(p -> java.util.Optional.of(p.subjects))
+	).apply(instance, (progress, subjects) -> {
+		progress.subjects = subjects.orElseGet(SubjectState::fresh);
+		return progress;
+	}));
 
 	/** As saved: a record that cannot be read is kept as it was, never replaced. */
 	public static final Codec<Progress> SAVED = justfatlard.learning_blocks.classroom.LenientItems.keeping(CODEC, "A child's reading progress", raw -> {
@@ -555,6 +593,81 @@ public final class Progress {
 	/** Whether this has ever paid as new: a word id, {@code letter:a}, a sentence's key. */
 	public boolean rewardedFor(String key) {
 		return rewarded.contains(key);
+	}
+
+	// --- Any subject's items: keys namespaced by subject, numbers:numeral:5 ---
+
+	public int itemClean(String key) {
+		return memory.clean(key);
+	}
+
+	public boolean itemMastered(String key) {
+		return itemClean(key) >= masteredAt();
+	}
+
+	/** Whether a clean answer of this item would count today: one a day, as for words. */
+	public boolean itemCountsToday(String key) {
+		return memory.countsToday(key, today());
+	}
+
+	public void itemRight(ServerPlayer player, String key, boolean firstTry) {
+		memory.right(key, firstTry, today());
+		save(player);
+	}
+
+	public void itemMissed(ServerPlayer player, String key, String picked) {
+		memory.missed(key, picked, masteredAt());
+		save(player);
+	}
+
+	public boolean itemDue(String key) {
+		return memory.due(key);
+	}
+
+	public void useItemToday(ServerPlayer player, String key, String kind) {
+		memory.usedOn(today()).add(key + "|" + kind);
+		save(player);
+	}
+
+	public boolean itemUsedToday(String key) {
+		String prefix = key + "|";
+		return !repeatsForTests && memory.usedOn(today()).stream().anyMatch(used -> used.startsWith(prefix));
+	}
+
+	/** For tests: this item with exactly this many clean completions. */
+	public void setItemCleanForTests(ServerPlayer player, String key, int clean) {
+		memory.setClean(key, clean);
+		save(player);
+	}
+
+	/** Whether this subject is on for this child: their own setting where a grown-up gave one, else null for the server's default. */
+	public java.lang.@org.jspecify.annotations.Nullable Boolean subjectOn(String subject) {
+		return subjects.on.get(subject);
+	}
+
+	public void setSubjectOn(ServerPlayer player, String subject, java.lang.@org.jspecify.annotations.Nullable Boolean on) {
+		if (on == null) subjects.on.remove(subject);
+		else subjects.on.put(subject, on);
+		save(player);
+	}
+
+	/** A round of this subject solved: counted for today's schedule. */
+	public void solvedToday(ServerPlayer player, String subject) {
+		rollSubjectDay();
+		subjects.done.merge(subject, 1, Integer::sum);
+		solvedToday(player);
+	}
+
+	/** Rounds of this subject solved today. */
+	public int doneToday(String subject) {
+		rollSubjectDay();
+		return subjects.done.getOrDefault(subject, 0);
+	}
+
+	private void rollSubjectDay() {
+		if (subjects.day.equals(today())) return;
+		subjects.day = today();
+		subjects.done.clear();
 	}
 
 	/** A sentence told to Bob, by its goal's key: {@code sentence:put cat in box}. */

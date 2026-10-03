@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:number",
+          "modifier": [
+            {
+              "type": "minecraft:copy_state",
+              "block": "learning-blocks-justfatlard:number",
+              "properties": [ "number" ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "random_sequence": "learning-blocks-justfatlard:blocks/number"
+}

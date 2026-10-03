@@ -30,7 +30,7 @@ final class AnswerNarration {
 	/** A beat for a big word's chunks to slide together in. */
 	private static final int JOIN_BEAT = 10;
 	/** Ticks after the whole word, before it happens. */
-	private static final int WORD_GAP = 6;
+	static final int WORD_GAP = 6;
 	/** A beat for the word to happen in before the room says anything about it. */
 	private static final int OUTCOME_BEAT = 20;
 
@@ -59,6 +59,12 @@ final class AnswerNarration {
 		// Bob's round: the sentence read back, and Bob does it.
 		if (room.bob != null) {
 			room.bob.press(player);
+			return;
+		}
+		// Another subject's round is answered by picking a block; the button asks again.
+		if (room.subjectRound != null) {
+			room.touch();
+			room.replay(player);
 			return;
 		}
 		room.touch();

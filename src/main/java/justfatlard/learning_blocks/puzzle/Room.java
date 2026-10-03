@@ -87,6 +87,44 @@ public final class Room {
 	final AnswerNarration answers;
 
 	@Nullable Puzzle puzzle;
+	/** A round of another subject than Reading, while one is up (see {@link SubjectRound}). */
+	@Nullable SubjectRound subjectRound;
+	/** The subject of the round up now: {@code reading}, {@code numbers}, {@code logic}. */
+	String currentSubject = "reading";
+	/** Each reader's last subject here, and how many rounds of it in a row: for the mix. */
+	final Map<UUID, String> lastSubject = new LinkedHashMap<>();
+	final Map<UUID, Integer> subjectRun = new LinkedHashMap<>();
+	/** A subject's hello, said before the next prompt: the subject just changed. */
+	@Nullable String pendingHello;
+	/** The sampler's or a test's asked-for round of another subject: which, what kind, what. */
+	justfatlard.learning_blocks.subject.@Nullable Subject forcedSubject;
+	@Nullable String forcedSubjectKind;
+	@Nullable String forcedSubjectTarget;
+	/** The board's frame colour as it was last painted. */
+	net.minecraft.world.item.@Nullable DyeColor frame;
+
+	/** The round of another subject up now, or null. */
+	public @Nullable SubjectRound subjectRound() {
+		return subjectRound;
+	}
+
+	/** The board frame's colour as painted, null for the plain wood. */
+	public net.minecraft.world.item.@Nullable DyeColor frameColour() {
+		return frame;
+	}
+
+	/** The subject of the round up now. */
+	public String currentSubject() {
+		return currentSubject;
+	}
+
+	/** A round of this subject, of this kind and target if given, now: for the sampler and tests. */
+	public void newSubjectRound(ServerPlayer player, justfatlard.learning_blocks.subject.Subject subject, @Nullable String kind, @Nullable String target) {
+		forcedSubject = subject;
+		forcedSubjectKind = kind;
+		forcedSubjectTarget = target;
+		rounds.newRound(player, null, false, false);
+	}
 	/** The scene being played this round, if this round is one. */
 	@Nullable SceneRun scene;
 	/** In the letters level, the letter this round asks for; null in a word round. */
@@ -227,6 +265,7 @@ public final class Room {
 	/** Everything that does not change between rounds, on cleared ground. */
 	void build() {
 		layout.build(level);
+		frame = null;
 	}
 
 	/** Whether the round's word row or loose tiles use this square. */
@@ -882,6 +921,10 @@ public final class Room {
 			Safely.run("Counting time in the classroom", () -> justfatlard.learning_blocks.reward.Progress.of(player).timeSpent(player, seconds));
 		}
 		rounds.clearChoicesOnClose();
+		if (subjectRound != null) {
+			subjectRound.clear();
+			subjectRound = null;
+		}
 		if (bob != null) {
 			bob.clear();
 			bob = null;

@@ -144,6 +144,10 @@ public final class ProgressView {
 		};
 
 		line.accept(Stages.describe(progress));
+		// The other subjects this reader has on: where they are in each.
+		for (justfatlard.learning_blocks.subject.Subject subject : justfatlard.learning_blocks.subject.Subjects.on(reader)) {
+			if (subject != justfatlard.learning_blocks.subject.Subjects.READING) subject.summary(progress).forEach(line);
+		}
 		int[] week = week(memory);
 		line.accept("This week: " + (week[0] + 59) / 60 + " minutes, " + week[1] + " rounds");
 		int required = justfatlard.learning_blocks.classroom.Schedules.requiredToday(reader);
@@ -152,6 +156,11 @@ public final class ProgressView {
 			line.accept("Today: " + progress.doneToday() + " of " + required + " lessons done (" + schedule.lessons() + " a day"
 				+ (justfatlard.learning_blocks.classroom.Schedules.weekendsOff(reader.getUUID()) ? ", weekends off" : "") + ")");
 		} else line.accept("Today: " + progress.doneToday() + " rounds solved; no daily schedule");
+		java.util.Map<String, Integer> each = justfatlard.learning_blocks.classroom.Schedules.perSubjectToday(reader);
+		if (!each.isEmpty()) {
+			line.accept("Of each: " + each.entrySet().stream().map(subject -> subject.getKey() + " " + progress.doneToday(subject.getKey()) + " of " + subject.getValue())
+				.collect(java.util.stream.Collectors.joining(", ")));
+		}
 		StringBuilder days = new StringBuilder("Solved:");
 		java.time.LocalDate today = Progress.date();
 		for (int back = 6; back >= 0; back--) {
@@ -304,6 +313,19 @@ public final class ProgressView {
 		JsonObject root = new JsonObject();
 		root.addProperty("player", reader.getGameProfile().name());
 		root.addProperty("stage", Stages.describe(progress));
+		JsonObject subjectsJson = new JsonObject();
+		for (justfatlard.learning_blocks.subject.Subject subject : justfatlard.learning_blocks.subject.Subjects.ALL) {
+			JsonObject one = new JsonObject();
+			one.addProperty("on", justfatlard.learning_blocks.subject.Subjects.on(reader, subject));
+			one.addProperty("summary", String.join("; ", subject.summary(progress)));
+			JsonObject items = new JsonObject();
+			if (subject != justfatlard.learning_blocks.subject.Subjects.READING) {
+				for (String item : subject.items()) items.addProperty(item, subject.mastered(progress, item));
+				one.add("mastered", items);
+			}
+			subjectsJson.add(subject.id(), one);
+		}
+		root.add("subjects", subjectsJson);
 		root.addProperty("rounds", memory.rounds());
 		int[] week = week(memory);
 		JsonObject weekJson = new JsonObject();

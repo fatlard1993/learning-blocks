@@ -137,6 +137,9 @@ public final class ToyPlay implements FabricClientGameTest {
 		shoot(session, "phonics-toybox-hints");
 		session.context().setScreen(() -> null);
 		session.command("/learn leave");
+		// Going home waits for the prize line, as long as the voice takes to say it.
+		Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
+		// And settled there: the chunks about them loaded for entities.
 		session.waitTicks(40);
 
 		// Play in the world, on a floor of our own.

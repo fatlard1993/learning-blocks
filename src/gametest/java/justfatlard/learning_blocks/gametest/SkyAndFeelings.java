@@ -91,7 +91,8 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 		scene(session);
 		bob(session);
 		session.command("/learn leave");
-		session.waitTicks(40);
+		// Going home waits for the prize line, as long as the voice takes to say it.
+		Waits.until(session, 300, "never got home", () -> !justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level()));
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			check(Sky.timeOf(player) == Sky.Time.DAY.ticks && Sky.weatherOf(player) == Sky.Weather.CLEAR, "the way out kept the classroom's sky");

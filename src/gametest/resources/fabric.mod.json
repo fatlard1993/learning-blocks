@@ -60,7 +60,8 @@
       "justfatlard.learning_blocks.gametest.ToyPlay",
       "justfatlard.learning_blocks.gametest.SkyAndFeelings",
       "justfatlard.learning_blocks.gametest.Unstuck",
-      "justfatlard.learning_blocks.gametest.Migration"
+      "justfatlard.learning_blocks.gametest.Migration",
+      "justfatlard.learning_blocks.gametest.SubjectsTest"
     ]
   },
   "depends": {

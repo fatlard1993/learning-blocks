@@ -305,6 +305,12 @@ public final class PrizeFile {
 			sentences, from the action menu) counts as a lesson; never towards mastery.
 			bob_prop_share: out of 100, at most how often Bob's goal is one with only props in it (a
 			mug on a desk) rather than a plushie or a toy; never two of those in a row."""),
+		Map.entry("subjects", """
+			Subjects: reading, numbers and logic, each on (true) or off by default for a child nobody
+			has set them for (/learn subjects sets one child's). mix: how a child's subjects take
+			turns: alternate (one round of each in turn, skipping any with nothing to ask), blocks
+			(block rounds of one, then the next) or weights (each by chance, as often as its weight
+			against the others). A daily schedule asking for some of each comes first."""),
 		Map.entry("points", """
 			Points add up from the events above that give them. Each threshold pays once, the
 			first time the total reaches it. Off by default."""));
@@ -332,7 +338,9 @@ public final class PrizeFile {
 		  ] },
 		  "puzzles": { "scenes": true, "scene_every": 4, "letters_first": true, "mastery_clean": 3, "letter_word_every": 3, "read_it": true, "read_it_every": 5, "review_share": 30,
 		    "first_sound": true, "last_sound": true, "middle_vowel": true, "whole_word": true, "team_up": true, "team_up_every": 3,
-		    "tell_bob": true, "tell_bob_every": 5, "whats_wrong": true, "whats_wrong_every": 6, "silly_counts": false, "bob_prop_share": 20 }
+		    "tell_bob": true, "tell_bob_every": 5, "whats_wrong": true, "whats_wrong_every": 6, "silly_counts": false, "bob_prop_share": 20 },
+		  "subjects": { "reading": true, "numbers": true, "logic": true, "mix": "alternate", "block": 3,
+		    "weights": { "reading": 1, "numbers": 1, "logic": 1 } }
 		}
 		""";
 
