@@ -1,10 +1,10 @@
 {
-	"duration": 0.335,
+	"duration": 0.65,
 	"words": [
 		{
 			"text": "hat",
 			"start": 0.0,
-			"end": 0.335
+			"end": 0.65
 		}
 	]
 }

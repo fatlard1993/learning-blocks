@@ -1,5 +1,5 @@
 {
-	"duration": 1.28,
+	"duration": 1.36,
 	"words": [
 		{
 			"text": "Tell",
@@ -23,8 +23,8 @@
 		},
 		{
 			"text": "do!",
-			"start": 0.987,
-			"end": 1.28
+			"start": 1.013,
+			"end": 1.36
 		}
 	]
 }

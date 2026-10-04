@@ -1,10 +1,10 @@
 {
-	"duration": 0.371,
+	"duration": 0.65,
 	"words": [
 		{
 			"text": "bob",
 			"start": 0.0,
-			"end": 0.371
+			"end": 0.65
 		}
 	]
 }

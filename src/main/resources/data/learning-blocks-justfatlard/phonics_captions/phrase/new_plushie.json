@@ -1,5 +1,5 @@
 {
-	"duration": 2.16,
+	"duration": 2.36,
 	"words": [
 		{
 			"text": "Ooh!",
@@ -23,13 +23,13 @@
 		},
 		{
 			"text": "new",
-			"start": 1.16,
-			"end": 1.28
+			"start": 1.18,
+			"end": 1.36
 		},
 		{
 			"text": "plushie!",
-			"start": 1.36,
-			"end": 2.16
+			"start": 1.427,
+			"end": 2.24
 		}
 	]
 }

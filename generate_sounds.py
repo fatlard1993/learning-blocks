@@ -76,6 +76,8 @@ STOP_TAIL = 0.015
 FADE_OUT = 0.02
 TAIL = 0.12
 WORD_TAIL = 0.08
+# A word cut from inside a sentence keeps more of its ending: cut at the aligned end, its last sound is lost.
+CARRIER_TAIL = 0.22
 
 
 IPA = {"sh": "ʃ", "th": "θ", "ll": "l", "ff": "f", "ss": "s", "zz": "z", "a": "æ", "e": "ɛ", "i": "ɪ", "o": "ɑ", "u": "ʌ", "f": "f", "z": "z", "s": "s", "m": "m", "n": "n", "l": "l", "r": "ɹ", "v": "v"}
@@ -149,11 +151,11 @@ def word_takes(word):
 	if word in CHUNK_OF:
 		text = f"The word is {CHUNK_OF[word]}."
 		i = text.index(word)
-		return [{"text": text, "cut": ["span", i, i + len(word)]}]
+		return [{"text": text, "cut": ["span", i, i + len(word), CARRIER_TAIL]}]
 	if word in SAID_IN:
-		return [within(SAID_IN[word], word)]
+		return [{**within(SAID_IN[word], word), "cut": within(SAID_IN[word], word)["cut"][:3] + [CARRIER_TAIL]}]
 	return [
-		within(f"The word is {word}.", word),
+		{**within(f"The word is {word}.", word), "cut": within(f"The word is {word}.", word)["cut"][:3] + [CARRIER_TAIL]},
 		{"text": f"{word}.", "cut": ["whole"]},
 		{"text": f"{word}.", "cut": ["whole"], "model": EXPRESSIVE},
 	]
