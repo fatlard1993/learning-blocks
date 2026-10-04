@@ -499,8 +499,37 @@ def blends(word_spec, tiles, sounds):
 		yield i, {**word_spec, "cut": ["span", at, at + len(tile)], "stretch": BLEND_STRETCH, "caption": tile}
 
 
+# Lines that only came out right after asking differently, picked by ear; each is added as the clip's
+# last take and chosen in sound-takes.json.
+BY_EAR = {
+	'phrase/another_one_v5': {"text": "[excited] Ooh, next one!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/mastered_v2': {"text": "[cheerful] Wow, you know that one now!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/not_quite': {"text": "[gently] Hmm, not quite!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/try_again': {"text": "[encouraging] Try again!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/what_can_help_v2': {"text": "[curious] Which word can help?", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/what_can_help_v3': {"text": "[playful] Ooh, what could fix it?", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/what_does_it_say_v3': {"text": "[curious] Ooh, what word is it?", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/what_does_it_say_v4': {"text": "[cheerful] Read it, then find it!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'scene/cot': {"text": "[yawns] He's so sleepy!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'scene/hop': {"text": "[curious] Hmm, how can we get over?", "model": EXPRESSIVE, "cut": ["whole"]},
+	'scene/hot': {"text": "[shivers] Brr! He's so cold!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'scene/snow': {"text": "[excited] He wants to build a snowman!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'scene/tree': {"text": "[worried] Oh no, the parrot has nowhere to sit!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'word/bow': {"text": "<phoneme alphabet=\"ipa\" ph=\"boʊ\">bow</phoneme>.", "model": PRONOUNCING, "cut": ["whole"]},
+	'word/cats': {"text": "cats.", "model": EXPRESSIVE, "cut": ["whole"]},
+	'word/pie': {"text": "[cheerful] Pie!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'word/was': {"text": "[cheerful] Was!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'word/wish': {"text": "[cheerful] Wish!", "model": EXPRESSIVE, "cut": ["whole"]},
+}
+
+
 def clips():
 	"""Every clip by key, with its takes."""
+	for name, takes in base_clips():
+		yield name, takes + ([{**takes[0], **BY_EAR[name]}] if name in BY_EAR else [])
+
+
+def base_clips():
 	for grapheme, takes in PHONEMES.items():
 		yield f"phoneme/{grapheme}", [{**t, "caption": grapheme.split("_")[0]} for t in takes]
 	for path in sorted(WORDS.glob("*.json")):
