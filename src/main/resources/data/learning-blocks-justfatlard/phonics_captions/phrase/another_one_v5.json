@@ -1,15 +1,20 @@
 {
-	"duration": 0.836,
+	"duration": 1.24,
 	"words": [
 		{
-			"text": "Next",
-			"start": 0.0,
-			"end": 0.279
+			"text": "Ooh,",
+			"start": 0.072,
+			"end": 0.24
+		},
+		{
+			"text": "next",
+			"start": 0.336,
+			"end": 0.72
 		},
 		{
 			"text": "one!",
-			"start": 0.325,
-			"end": 0.836
+			"start": 0.8,
+			"end": 1.12
 		}
 	]
 }

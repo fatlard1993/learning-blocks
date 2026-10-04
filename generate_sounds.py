@@ -490,8 +490,11 @@ BLEND_STRETCH = 1.5
 
 
 def blends(word_spec, tiles, sounds):
-	"""The word's vowel tiles as blend clips, cut from the same recording as the word."""
-	start = word_spec["text"].index("".join(tiles))
+	"""The word's vowel tiles as blend clips, cut from the same recording as the word. A word asked
+	for by its sounds has no letters to cut by, so it has none and the game uses the plain sound."""
+	if "<phoneme" in word_spec["text"]:
+		return
+	start = word_spec["text"].lower().index("".join(tiles))
 	for i, tile in enumerate(tiles):
 		at, start = start, start + len(tile)
 		if sounds[i] == "silent" or tile == "qu" or not any(v in tile for v in "aeiou"):

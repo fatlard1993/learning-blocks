@@ -1,20 +1,20 @@
 {
-	"duration": 1.207,
+	"duration": 2.64,
 	"words": [
 		{
 			"text": "He's",
-			"start": 0.0,
-			"end": 0.221
+			"start": 1.12,
+			"end": 1.36
 		},
 		{
 			"text": "so",
-			"start": 0.244,
-			"end": 0.348
+			"start": 1.467,
+			"end": 1.68
 		},
 		{
 			"text": "sleepy!",
-			"start": 0.406,
-			"end": 1.207
+			"start": 1.806,
+			"end": 2.64
 		}
 	]
 }

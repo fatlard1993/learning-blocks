@@ -1,25 +1,25 @@
 {
-	"duration": 1.254,
+	"duration": 1.56,
 	"words": [
 		{
 			"text": "Which",
-			"start": 0.0,
-			"end": 0.244
+			"start": 0.253,
+			"end": 0.32
 		},
 		{
 			"text": "word",
-			"start": 0.279,
-			"end": 0.464
+			"start": 0.4,
+			"end": 0.72
 		},
 		{
 			"text": "can",
-			"start": 0.511,
-			"end": 0.627
+			"start": 0.76,
+			"end": 0.88
 		},
 		{
 			"text": "help?",
-			"start": 0.673,
-			"end": 1.254
+			"start": 0.976,
+			"end": 1.44
 		}
 	]
 }

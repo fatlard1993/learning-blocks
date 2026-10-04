@@ -1,15 +1,15 @@
 {
-	"duration": 0.975,
+	"duration": 1.92,
 	"words": [
 		{
 			"text": "Try",
-			"start": 0.0,
-			"end": 0.244
+			"start": 0.21,
+			"end": 0.24
 		},
 		{
 			"text": "again!",
-			"start": 0.302,
-			"end": 0.975
+			"start": 0.333,
+			"end": 1.92
 		}
 	]
 }

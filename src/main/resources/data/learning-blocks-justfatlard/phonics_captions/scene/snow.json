@@ -1,35 +1,35 @@
 {
-	"duration": 1.579,
+	"duration": 2.32,
 	"words": [
 		{
 			"text": "He",
-			"start": 0.0,
-			"end": 0.139
+			"start": 0.139,
+			"end": 0.16
 		},
 		{
 			"text": "wants",
-			"start": 0.174,
-			"end": 0.36
+			"start": 0.227,
+			"end": 0.56
 		},
 		{
 			"text": "to",
-			"start": 0.395,
-			"end": 0.453
+			"start": 0.587,
+			"end": 0.64
 		},
 		{
 			"text": "build",
-			"start": 0.488,
-			"end": 0.65
+			"start": 0.707,
+			"end": 1.04
 		},
 		{
 			"text": "a",
-			"start": 0.697,
-			"end": 0.72
+			"start": 1.08,
+			"end": 1.12
 		},
 		{
 			"text": "snowman!",
-			"start": 0.766,
-			"end": 1.579
+			"start": 1.248,
+			"end": 2.32
 		}
 	]
 }

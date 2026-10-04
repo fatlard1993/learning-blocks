@@ -1,35 +1,45 @@
 {
-	"duration": 1.579,
+	"duration": 2.88,
 	"words": [
 		{
-			"text": "The",
-			"start": 0.0,
-			"end": 0.139
+			"text": "Oh",
+			"start": 0.147,
+			"end": 0.16
+		},
+		{
+			"text": "no,",
+			"start": 0.373,
+			"end": 1.2
+		},
+		{
+			"text": "the",
+			"start": 1.24,
+			"end": 1.36
 		},
 		{
 			"text": "parrot",
-			"start": 0.186,
-			"end": 0.441
+			"start": 1.42,
+			"end": 1.76
 		},
 		{
 			"text": "has",
-			"start": 0.476,
-			"end": 0.569
+			"start": 1.8,
+			"end": 1.92
 		},
 		{
 			"text": "nowhere",
-			"start": 0.627,
-			"end": 0.848
+			"start": 1.96,
+			"end": 2.24
 		},
 		{
 			"text": "to",
-			"start": 0.871,
-			"end": 0.917
+			"start": 2.267,
+			"end": 2.32
 		},
 		{
 			"text": "sit!",
-			"start": 0.975,
-			"end": 1.579
+			"start": 2.44,
+			"end": 2.88
 		}
 	]
 }
