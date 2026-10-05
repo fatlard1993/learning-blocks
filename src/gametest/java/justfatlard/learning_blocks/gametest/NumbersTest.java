@@ -79,7 +79,27 @@ public final class NumbersTest implements FabricClientGameTest {
 
 		// A quick look: the dots up, then down.
 		LookRound[] look = new LookRound[1];
-		play(session, "look", "4", LookRound.class, false, null, round -> look[0] = round);
+		session.onServer(server -> {
+			start(session.player(), "look", "4");
+			look[0] = (LookRound) Rooms.of(session.player()).subjectRound();
+		});
+		long[] times = new long[2];
+		Waits.until(session, 300, "the dots never came up", () -> {
+			times[0] = session.player().level().getGameTime();
+			return look[0].showing();
+		});
+		session.waitTicks(4);
+		shoot(session, "learning-numbers-look-4");
+		// Up for about two seconds, then gone: by the game's clock.
+		Waits.until(session, 200, "the dots never went", () -> {
+			times[1] = session.player().level().getGameTime();
+			return !look[0].showing();
+		});
+		long up = times[1] - times[0];
+		check(up >= 36 && up <= 46, "the dots were up for " + up + " ticks, not about 40");
+		Waits.until(session, 300, "the look never settled", () -> !Rooms.of(session.player()).busy());
+		session.onServer(server -> look[0].pickForTests(session.player(), look[0].rightForTests()));
+		waitGone(session, look[0]);
 		session.onServer(server -> check(Progress.of(session.player()).itemClean(NumberCourse.Kind.LOOK.item("4")) == 1, "a quick look right first try is not one clean"));
 
 		play(session, "name", "6", NameRound.class, true, null, null);
@@ -143,7 +163,12 @@ public final class NumbersTest implements FabricClientGameTest {
 
 		play(session, "pens", "same", PensRound.class, true, round -> session.onServer(server -> check(round.left() == round.right(), "the same pens are not the same")), null);
 		check(session, "clip:phrase/the_same", "\"They're the same!\" was not said");
-		play(session, "pens", "more", PensRound.class, true, null, null);
+		play(session, "pens", "more", PensRound.class, true, null, round -> {
+			// Exactly the pens' creatures in the room: nothing left over from the round before.
+			ServerPlayer player = session.player();
+			int mobs = player.level().getEntitiesOfClass(net.minecraft.world.entity.Mob.class, player.getBoundingBox().inflate(12)).size();
+			check(mobs == round.left() + round.right(), "the pens have " + mobs + " creatures, not " + round.left() + " + " + round.right());
+		});
 		play(session, "towers", "taller", TowersRound.class, true, null, null);
 		play(session, "towers", "diff", TowersRound.class, false, round -> {
 			Waits.until(session, 300, "the blocks never came", () -> round.added().size() == Math.abs(round.left() - round.right()) || gone(session, round));

@@ -21,7 +21,8 @@ import net.minecraft.world.phys.Vec3;
  * one, each glowing as it is counted, until they match.
  */
 public final class TowersRound extends NumbersRound {
-	private static final float BLOCK = 0.8F;
+	/** Small blocks, and at most four: both towers stay in view from where a child stands. */
+	private static final float BLOCK = 0.45F;
 	private final int left;
 	private final int right;
 	private final List<Entity> leftBlocks = new ArrayList<>();
@@ -33,9 +34,9 @@ public final class TowersRound extends NumbersRound {
 
 	public TowersRound(Room room, String question, int stage, RandomSource random) {
 		super(room, NumberCourse.Kind.TOWERS, question, stage, random);
-		int a = 1 + random.nextInt(6);
+		int a = 1 + random.nextInt(4);
 		int b = a;
-		while (b == a) b = 1 + random.nextInt(6);
+		while (b == a) b = 1 + random.nextInt(4);
 		this.left = a;
 		this.right = b;
 		this.towersPicked = !question.equals("diff");
@@ -52,7 +53,7 @@ public final class TowersRound extends NumbersRound {
 	}
 
 	private BlockPos foot(boolean isLeft) {
-		return layout.origin().offset(isLeft ? -3 : 3, 0, -2);
+		return layout.origin().offset(isLeft ? -3 : 3, 0, -3);
 	}
 
 	@Override

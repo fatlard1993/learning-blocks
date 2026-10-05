@@ -71,5 +71,10 @@
   "item.learning-blocks-justfatlard.toy_dice": "Dice",
   "item.learning-blocks-justfatlard.toy_dominoes": "Dominoes",
   "item.learning-blocks-justfatlard.toy_sorter": "Shape sorter",
-  "item.learning-blocks-justfatlard.toy_scale": "Balance scale"
+  "item.learning-blocks-justfatlard.toy_scale": "Balance scale",
+  "item.learning-blocks-justfatlard.toy_puzzle": "Puzzle pieces",
+  "item.learning-blocks-justfatlard.toy_cups": "Stacking cups",
+  "item.learning-blocks-justfatlard.toy_maze": "Bead maze",
+  "item.learning-blocks-justfatlard.toy_cube": "Puzzle cube",
+  "item.learning-blocks-justfatlard.toy_robot": "Toy robot"
 }

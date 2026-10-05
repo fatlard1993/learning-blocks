@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * "Which pen has more?" (or fewer): two fenced pens of creatures, left and right, and an equals
+ * "Which pen has more?" (or fewer): two pens (a rug border) of creatures, left and right, and an equals
  * tile between them for "they're the same". Click a pen, or the tile. Right: that pen's creatures
  * glow, "more!". Wrong: both pens are counted aloud, and it is asked again.
  */
@@ -32,9 +32,10 @@ public final class PensRound extends NumbersRound {
 
 	public PensRound(Room room, String question, int stage, RandomSource random) {
 		super(room, NumberCourse.Kind.PENS, question, stage, random);
-		int a = 1 + random.nextInt(6);
+		// Few enough to compare by eye: one to four a pen.
+		int a = 1 + random.nextInt(4);
 		int b = a;
-		if (!question.equals("same")) while (b == a) b = 1 + random.nextInt(6);
+		if (!question.equals("same")) while (b == a) b = 1 + random.nextInt(4);
 		this.left = a;
 		this.right = b;
 		this.what = Counting.What.CREATURES.get(random.nextInt(Counting.What.CREATURES.size()));
@@ -93,8 +94,8 @@ public final class PensRound extends NumbersRound {
 		// A pen, three across and two deep inside.
 		for (int dx = -2; dx <= 2; dx++) {
 			for (int dz = -2; dz <= 1; dz++) {
-				// A low wall of slabs, so the creatures inside can be seen and counted over it.
-				if (Math.abs(dx) == 2 || dz == -2 || dz == 1) set(spot.offset(dx, 0, dz), Blocks.SPRUCE_SLAB.defaultBlockState());
+				// A flat rug of a border, so the creatures inside are in full view.
+				if (Math.abs(dx) == 2 || dz == -2 || dz == 1) set(spot.offset(dx, 0, dz), Blocks.CARPET.brown().defaultBlockState());
 			}
 		}
 	}
@@ -111,8 +112,9 @@ public final class PensRound extends NumbersRound {
 	private void fill(ServerPlayer player, boolean isLeft, int n, List<Entity> into) {
 		BlockPos centre = penCentre(isLeft);
 		List<Vec3> spots = new ArrayList<>();
-		for (int i = 0; i < n; i++) spots.add(Vec3.atBottomCenterOf(centre).add((i % 3 - 1) * 0.95, 0, -0.9 + (i / 3) * 0.85));
-		into.addAll(Counting.dispense(this, player, what, n, spots, 3, null, 0.5F));
+		// Two by two, well apart.
+		for (int i = 0; i < n; i++) spots.add(Vec3.atBottomCenterOf(centre).add((i % 2 - 0.5) * 1.3, 0, -1.0 + (i / 2) * 0.9));
+		into.addAll(Counting.dispense(this, player, what, n, spots, 3, null, 0.6F));
 	}
 
 	@Override

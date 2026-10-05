@@ -171,6 +171,20 @@
           "type": "minecraft:model",
           "model": "learning-blocks-justfatlard:block/number_23"
         }
+      },
+      {
+        "when": "24",
+        "model": {
+          "type": "minecraft:model",
+          "model": "learning-blocks-justfatlard:block/number_24"
+        }
+      },
+      {
+        "when": "25",
+        "model": {
+          "type": "minecraft:model",
+          "model": "learning-blocks-justfatlard:block/number_25"
+        }
       }
     ],
     "fallback": {

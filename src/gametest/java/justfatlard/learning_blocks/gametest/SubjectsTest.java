@@ -60,6 +60,7 @@ public final class SubjectsTest implements FabricClientGameTest {
 				PrizeConfig.useSubjectMix(Subjects.Mix.ALTERNATE, 3);
 				Earned.clearItemLinksForTests();
 				Numbers.linkToys();
+				Logic.linkToys();
 			}
 		});
 	}
@@ -123,6 +124,7 @@ public final class SubjectsTest implements FabricClientGameTest {
 			check(Schedules.of(id[0]).subjects().isEmpty(), "a plain /learn daily did not clear the split");
 		});
 
+		String[] patternItem = new String[1];
 		// --- The classroom: reading, then numbers, then logic (2 numbers and 1 logic already counted today, above) ---
 		session.command("/learn");
 		session.waitTicks(40);
@@ -133,6 +135,8 @@ public final class SubjectsTest implements FabricClientGameTest {
 				"the first round is not reading: " + (room == null ? "no room" : room.currentSubject()));
 			check(room.frameColour() == DyeColor.BLUE, "reading's frame is not blue: " + room.frameColour());
 			Travel.setLessons(player, 5);
+			// Logic at its patterns, so its round here is a what-comes-next, answered with one pick.
+			justfatlard.learning_blocks.logic.LogicCourse.putAt(player, justfatlard.learning_blocks.logic.LogicCourse.band("L1a"));
 			Hands.solve(player, room);
 			press(player, room);
 		});
@@ -192,8 +196,9 @@ public final class SubjectsTest implements FabricClientGameTest {
 			check(room.frameColour() == DyeColor.PURPLE, "logic's frame is not purple: " + room.frameColour());
 			check(Narrator.log(player).contains("subject_hello:logic"), "no hello on switching to logic");
 			PatternRound round = (PatternRound) room.subjectRound();
-			check(round.rightForTests().block().getBlock() == net.minecraft.world.level.block.Blocks.WOOL.pick(round.next()),
+			check(round.kind().equals("next") && (round.plushies() || round.rightForTests().block().getBlock() == net.minecraft.world.level.block.Blocks.WOOL.pick(round.next())),
 				"the pattern's right answer is not the next colour");
+			patternItem[0] = round.item();
 			round.pickForTests(player, round.rightForTests());
 		});
 		Waits.until(session, 900, "reading never came back after logic", () -> {
@@ -205,7 +210,7 @@ public final class SubjectsTest implements FabricClientGameTest {
 			Room room = Rooms.of(player);
 			check(Travel.lessons(player) == 2 && Progress.of(player).doneToday("logic") == 2, "the logic round did not count: "
 				+ Travel.lessons(player) + ", " + Progress.of(player).doneToday("logic"));
-			check(Progress.of(player).itemClean(Logic.AB) == 1, "the pattern, right first try, is not one clean: " + Progress.of(player).itemClean(Logic.AB));
+			check(Progress.of(player).itemClean(patternItem[0]) == 1, "the pattern, right first try, is not one clean: " + Progress.of(player).itemClean(patternItem[0]));
 			check(room.frameColour() == DyeColor.BLUE, "back to reading, the frame is not blue");
 
 			// Numbers end to end: every numeral of N0 mastered but 3, one short; a toy waits on all of them.
@@ -260,7 +265,7 @@ public final class SubjectsTest implements FabricClientGameTest {
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			before[0] = Progress.savedForTests(player);
-			server.getCommands().performPrefixedCommand(server.createCommandSourceStack().withEntity(player), "learn try logic");
+			server.getCommands().performPrefixedCommand(server.createCommandSourceStack().withEntity(player), "learn try logic next ab");
 			Room room = Rooms.of(player);
 			check(room.practice() && room.subjectRound() instanceof PatternRound, "/learn try logic did not make a pattern round");
 			PatternRound round = (PatternRound) room.subjectRound();

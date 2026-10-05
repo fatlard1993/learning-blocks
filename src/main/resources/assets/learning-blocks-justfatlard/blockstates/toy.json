@@ -671,6 +671,146 @@
     },
     "facing=west,hidden=true,kind=scale": {
       "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=puzzle": {
+      "model": "learning-blocks-justfatlard:block/toy_puzzle",
+      "y": 0
+    },
+    "facing=north,hidden=true,kind=puzzle": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=puzzle": {
+      "model": "learning-blocks-justfatlard:block/toy_puzzle",
+      "y": 90
+    },
+    "facing=east,hidden=true,kind=puzzle": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=puzzle": {
+      "model": "learning-blocks-justfatlard:block/toy_puzzle",
+      "y": 180
+    },
+    "facing=south,hidden=true,kind=puzzle": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=puzzle": {
+      "model": "learning-blocks-justfatlard:block/toy_puzzle",
+      "y": 270
+    },
+    "facing=west,hidden=true,kind=puzzle": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=cups": {
+      "model": "learning-blocks-justfatlard:block/toy_cups",
+      "y": 0
+    },
+    "facing=north,hidden=true,kind=cups": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=cups": {
+      "model": "learning-blocks-justfatlard:block/toy_cups",
+      "y": 90
+    },
+    "facing=east,hidden=true,kind=cups": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=cups": {
+      "model": "learning-blocks-justfatlard:block/toy_cups",
+      "y": 180
+    },
+    "facing=south,hidden=true,kind=cups": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=cups": {
+      "model": "learning-blocks-justfatlard:block/toy_cups",
+      "y": 270
+    },
+    "facing=west,hidden=true,kind=cups": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=maze": {
+      "model": "learning-blocks-justfatlard:block/toy_maze",
+      "y": 0
+    },
+    "facing=north,hidden=true,kind=maze": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=maze": {
+      "model": "learning-blocks-justfatlard:block/toy_maze",
+      "y": 90
+    },
+    "facing=east,hidden=true,kind=maze": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=maze": {
+      "model": "learning-blocks-justfatlard:block/toy_maze",
+      "y": 180
+    },
+    "facing=south,hidden=true,kind=maze": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=maze": {
+      "model": "learning-blocks-justfatlard:block/toy_maze",
+      "y": 270
+    },
+    "facing=west,hidden=true,kind=maze": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=cube": {
+      "model": "learning-blocks-justfatlard:block/toy_cube",
+      "y": 0
+    },
+    "facing=north,hidden=true,kind=cube": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=cube": {
+      "model": "learning-blocks-justfatlard:block/toy_cube",
+      "y": 90
+    },
+    "facing=east,hidden=true,kind=cube": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=cube": {
+      "model": "learning-blocks-justfatlard:block/toy_cube",
+      "y": 180
+    },
+    "facing=south,hidden=true,kind=cube": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=cube": {
+      "model": "learning-blocks-justfatlard:block/toy_cube",
+      "y": 270
+    },
+    "facing=west,hidden=true,kind=cube": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=north,hidden=false,kind=robot": {
+      "model": "learning-blocks-justfatlard:block/toy_robot",
+      "y": 0
+    },
+    "facing=north,hidden=true,kind=robot": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=east,hidden=false,kind=robot": {
+      "model": "learning-blocks-justfatlard:block/toy_robot",
+      "y": 90
+    },
+    "facing=east,hidden=true,kind=robot": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=south,hidden=false,kind=robot": {
+      "model": "learning-blocks-justfatlard:block/toy_robot",
+      "y": 180
+    },
+    "facing=south,hidden=true,kind=robot": {
+      "model": "learning-blocks-justfatlard:block/hidden"
+    },
+    "facing=west,hidden=false,kind=robot": {
+      "model": "learning-blocks-justfatlard:block/toy_robot",
+      "y": 270
+    },
+    "facing=west,hidden=true,kind=robot": {
+      "model": "learning-blocks-justfatlard:block/hidden"
     }
   }
 }

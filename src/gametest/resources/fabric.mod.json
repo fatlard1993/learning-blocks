@@ -63,7 +63,9 @@
       "justfatlard.learning_blocks.gametest.Migration",
       "justfatlard.learning_blocks.gametest.SubjectsTest",
       "justfatlard.learning_blocks.gametest.NumbersTest",
-      "justfatlard.learning_blocks.gametest.NumbersCourseTest"
+      "justfatlard.learning_blocks.gametest.NumbersCourseTest",
+      "justfatlard.learning_blocks.gametest.LogicTest",
+      "justfatlard.learning_blocks.gametest.LogicCourseTest"
     ]
   },
   "depends": {

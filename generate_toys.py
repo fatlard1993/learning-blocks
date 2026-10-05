@@ -603,11 +603,108 @@ def scale():
     ]
     return c, {}, boxes
 
+
+# --- The thinking toys (round N): for Logic, earned by mastering logic --------------------------
+
+def puzzle():
+    """Jigsaw pieces: two lying flat, fitted together (a knob in a notch), and one standing behind."""
+    c = {"red": RED, "green": GREEN, "yellow": YELLOW, "edge": shade(RED, 0.8), "gedge": shade(GREEN, 0.8)}
+    boxes = [
+        # The red piece and its knob, into the green piece's notch.
+        ((1.5, 0, 2), (7, 1.2, 7.5), "red"), ((7, 0, 4), (8.6, 1.2, 5.6), "red"),
+        ((7, 0, 2), (12.5, 1.2, 4), "green"), ((7, 0, 5.6), (12.5, 1.2, 7.5), "green"), ((8.6, 0, 4), (12.5, 1.2, 5.6), "green"),
+        # A yellow one standing up behind, its knob on top.
+        ((4, 0, 9.5), (10.5, 6, 10.7), "yellow"), ((6.4, 6, 9.5), (8.1, 7.6, 10.7), "yellow"),
+    ]
+    return c, {}, boxes
+
+
+def cups():
+    """Stacking cups: four upside down in a tower, biggest at the bottom, and a blue one beside, the
+    right way up and open."""
+    c = {"red": RED, "orange": ORANGE, "yellow": YELLOW, "green": GREEN, "blue": BLUE, "inside": shade(BLUE, 0.6)}
+    boxes = []
+    y = 0.0
+    for size, colour in zip([7.0, 5.8, 4.6, 3.4], ["red", "orange", "yellow", "green"]):
+        lo = 6.0 - size / 2
+        hi = 6.0 + size / 2
+        boxes.append(((lo, y, lo + 1), (hi, y + 2.4, hi + 1), colour))
+        boxes.append(((lo - 0.3, y, lo + 0.7), (hi + 0.3, y + 0.5, hi + 1.3), colour))
+        y += 2.4
+    # The open one: four walls and a floor.
+    x0, x1, z0, z1, h, t = 10.8, 15.2, 1, 5.4, 3.2, 0.5
+    boxes += [
+        ((x0, 0, z0), (x1, 0.5, z1), "inside"),
+        ((x0, 0, z0), (x1, h, z0 + t), "blue"), ((x0, 0, z1 - t), (x1, h, z1), "blue"),
+        ((x0, 0, z0), (x0 + t, h, z1), "blue"), ((x1 - t, 0, z0), (x1, h, z1), "blue"),
+    ]
+    return c, {}, boxes
+
+
+def maze():
+    """A bead maze: a wooden base and three bright wires looping over it, beads on each."""
+    c = {"wood": WOOD, "red": RED, "blue": BLUE, "green": GREEN, "yellow": YELLOW, "orange": ORANGE, "purple": PURPLE}
+    boxes = [((1.5, 0, 4), (14.5, 1.6, 12), "wood")]
+    wires = [(2.5, 13.5, 11.0, 6.0, "red"), (4.2, 11.8, 8.4, 8.0, "blue"), (5.9, 10.1, 5.8, 10.0, "green")]
+    w = 0.5
+    for x0, x1, top, z, colour in wires:
+        boxes += [
+            ((x0, 1.6, z), (x0 + w, top, z + w), colour),
+            ((x1 - w, 1.6, z), (x1, top, z + w), colour),
+            ((x0, top - w, z), (x1, top, z + w), colour),
+        ]
+    beads = [(5, 11.0 - 0.25, 6.25, "yellow"), (6.4, 11.0 - 0.25, 6.25, "purple"), (13.75, 6.0, 6.25, "orange"),
+             (7.5, 8.4 - 0.25, 8.25, "yellow"), (4.45, 4.5, 8.25, "red"), (8.0, 5.8 - 0.25, 10.25, "orange"), (9.0, 5.8 - 0.25, 10.25, "purple")]
+    for x, y, z, colour in beads:
+        boxes.append(((x - 0.7, y - 0.7, z - 0.7), (x + 0.7, y + 0.7, z + 0.7), colour))
+    return c, {}, boxes
+
+
+def cube():
+    """A puzzle cube, mixed up: black, with three by three coloured squares on every side."""
+    c = {"black": BLACK}
+    stickers = [RED, BLUE, YELLOW, GREEN, ORANGE, CREAM]
+    rng = random.Random("cube")
+    faces = {}
+    for name in ("a", "b", "c"):
+        f = Face(8, 8, BLACK)
+        cell = f.w / 3
+        for row in range(3):
+            for col in range(3):
+                f.rect(col * cell + 1, row * cell + 1, (col + 1) * cell - 1, (row + 1) * cell - 1, rng.choice(stickers))
+        faces[name] = f
+    boxes = [((4, 0, 4), (12, 8, 12), "black", {"north": "@a", "south": "@b", "east": "@c", "west": "@b", "up": "@c", "down": "@a"})]
+    return c, faces, boxes
+
+
+def robot():
+    """A toy robot: square body and head, a face of lights, an antenna with a red ball, and arms."""
+    c = {"body": BLUE, "head": SILVER, "limb": shade(SILVER, 0.8), "red": RED, "dark": BLACK}
+    face = Face(6, 4, SILVER)
+    face.rect(4, 4, 9, 9, YELLOW)
+    face.rect(15, 4, 20, 9, YELLOW)
+    face.rect(6, 12, 18, 14, BLACK)
+    chest = Face(8, 6, BLUE)
+    chest.rect(6, 5, 26, 19, shade(BLUE, 0.75))
+    chest.disc(11, 12, 2.5, RED)
+    chest.disc(18, 12, 2.5, YELLOW)
+    boxes = [
+        ((5, 0, 7), (7, 3.5, 9), "limb"), ((9, 0, 7), (11, 3.5, 9), "limb"),
+        ((4.4, 0, 6.4), (7.4, 0.8, 9.4), "dark"), ((8.6, 0, 6.4), (11.6, 0.8, 9.4), "dark"),
+        ((4, 3.5, 6), (12, 9.5, 10), "body", {"north": "@chest"}),
+        ((2.4, 5, 7.2), (4, 9, 8.8), "limb"), ((12, 5, 7.2), (13.6, 9, 8.8), "limb"),
+        ((2.2, 4, 7), (4.2, 5.2, 9), "red"), ((11.8, 4, 7), (13.8, 5.2, 9), "red"),
+        ((5, 9.5, 6.5), (11, 13.5, 9.5), "head", {"north": "@face"}),
+        ((7.6, 13.5, 7.6), (8.4, 15, 8.4), "limb"), ((7.1, 15, 7.1), (8.9, 16, 8.9), "red"),
+    ]
+    return c, {"face": face, "chest": chest}, boxes
+
 TOYS = {
     "drum": drum, "kite": kite, "top": top, "ring": ring, "cap": cap, "wig": wig, "net": net, "pin": pin,
     "sock": sock, "crib": crib, "car": car, "van": van, "jet": jet, "bus": bus, "ship": ship, "doll": doll,
     "block": block, "train": train, "truck": truck,
     "abacus": abacus, "dice": dice, "dominoes": dominoes, "sorter": sorter, "scale": scale,
+    "puzzle": puzzle, "cups": cups, "maze": maze, "cube": cube, "robot": robot,
 }
 
 NAMES = {"top": "Spinning top", "ring": "Stacking rings", "cap": "Toy cap", "wig": "Dress-up wig", "net": "Butterfly net",
@@ -615,7 +712,8 @@ NAMES = {"top": "Spinning top", "ring": "Stacking rings", "cap": "Toy cap", "wig
          "jet": "Toy jet", "bus": "Toy bus", "ship": "Toy ship", "doll": "Doll", "block": "ABC block",
          "train": "Toy train", "truck": "Toy truck", "drum": "Drum", "kite": "Kite",
          "abacus": "Abacus", "dice": "Dice", "dominoes": "Dominoes", "sorter": "Shape sorter",
-         "scale": "Balance scale"}
+         "scale": "Balance scale", "puzzle": "Puzzle pieces", "cups": "Stacking cups", "maze": "Bead maze", "cube": "Puzzle cube",
+         "robot": "Toy robot"}
 
 # Worn on the head, as the little models round G made (generate_things.py writes those).
 WORN = {"cap", "wig"}

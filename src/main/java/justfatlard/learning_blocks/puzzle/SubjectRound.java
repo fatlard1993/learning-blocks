@@ -225,12 +225,18 @@ public abstract class SubjectRound {
 	boolean click(ServerPlayer player, Entity entity) {
 		Choice picked = hits.get(entity.getUUID());
 		if (picked == null) return false;
-		if (!room.mayPress(player)) {
-			room.notYourTurn(player, room.turn);
+		java.util.UUID whose = whoseTurn();
+		if (whose != null ? !whose.equals(player.getUUID()) : !room.mayPress(player)) {
+			room.notYourTurn(player, whose != null ? whose : room.turn);
 			return true;
 		}
 		pick(player, picked);
 		return true;
+	}
+
+	/** Reading together, whose pick it is when a kind decides that itself (a team-up's halves); null for the room's turn. */
+	protected java.util.@Nullable UUID whoseTurn() {
+		return null;
 	}
 
 	/** The button, in this round: the round's own, or the question again. */

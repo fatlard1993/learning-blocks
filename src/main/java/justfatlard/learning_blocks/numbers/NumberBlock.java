@@ -23,7 +23,10 @@ public class NumberBlock extends Block {
 	public static final int PLUS = 21;
 	public static final int MINUS = 22;
 	public static final int EQUALS = 23;
-	public static final IntegerProperty NUMBER = IntegerProperty.create("number", 0, EQUALS);
+	/** Logic's answers: a tick (yes, the same) and a cross (no, different). */
+	public static final int YES = 24;
+	public static final int NO = 25;
+	public static final IntegerProperty NUMBER = IntegerProperty.create("number", 0, NO);
 
 	public NumberBlock(Properties properties) {
 		super(properties);
@@ -36,7 +39,7 @@ public class NumberBlock extends Block {
 	}
 
 	public BlockState showing(int number) {
-		return defaultBlockState().setValue(NUMBER, Math.max(0, Math.min(EQUALS, number)));
+		return defaultBlockState().setValue(NUMBER, Math.max(0, Math.min(NO, number)));
 	}
 
 	/** What a number says: {@code number/3}; a symbol, its word: {@code word/plus}. */
@@ -45,6 +48,8 @@ public class NumberBlock extends Block {
 			case PLUS -> "word/plus";
 			case MINUS -> "word/minus";
 			case EQUALS -> "word/equals";
+			case YES -> "word/same";
+			case NO -> "word/different";
 			default -> "number/" + number;
 		};
 	}

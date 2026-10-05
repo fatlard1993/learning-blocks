@@ -165,6 +165,7 @@ public final class LearnCommand {
 							builder.suggest("0");
 							for (String label : Stages.labels()) builder.suggest(label);
 							for (var band : justfatlard.learning_blocks.numbers.NumberCourse.BANDS) builder.suggest(band.code());
+							for (var band : justfatlard.learning_blocks.logic.LogicCourse.BANDS) builder.suggest(band.code());
 							return builder.buildFuture();
 						})
 						.executes(LearnCommand::setStage))))
@@ -564,7 +565,8 @@ public final class LearnCommand {
 		ServerPlayer player = EntityArgument.getPlayer(context, "player");
 		context.getSource().sendSuccess(() -> Component.literal(player.getGameProfile().name() + ": "
 			+ Stages.describe(Progress.of(player)) + "; numbers " + justfatlard.learning_blocks.numbers.NumberCourse.describe(Progress.of(player))
-			+ ". Stages here: 0 (letters), " + String.join(", ", Stages.labels()) + "; numbers N0a to N2b"), false);
+			+ "; logic " + justfatlard.learning_blocks.logic.LogicCourse.describe(Progress.of(player))
+			+ ". Stages here: 0 (letters), " + String.join(", ", Stages.labels()) + "; numbers N0a to N2b; logic L0a to L3b"), false);
 		return 1;
 	}
 
@@ -578,6 +580,14 @@ public final class LearnCommand {
 		Progress progress = Progress.of(player);
 		// Numbers' bands, N0a to N2b: the ones before mastered, it and those after not.
 		var numbersBand = justfatlard.learning_blocks.numbers.NumberCourse.band(asked);
+		// Logic's bands, L0a to L3b, the same way.
+		var logicBand = justfatlard.learning_blocks.logic.LogicCourse.band(asked);
+		if (logicBand != null) {
+			justfatlard.learning_blocks.logic.LogicCourse.putAt(player, logicBand);
+			context.getSource().sendSuccess(() -> Component.literal(player.getGameProfile().name() + "'s logic is now at "
+				+ justfatlard.learning_blocks.logic.LogicCourse.describe(progress)), true);
+			return 1;
+		}
 		if (numbersBand != null) {
 			justfatlard.learning_blocks.numbers.NumberCourse.putAt(player, numbersBand);
 			context.getSource().sendSuccess(() -> Component.literal(player.getGameProfile().name() + "'s numbers are now at "

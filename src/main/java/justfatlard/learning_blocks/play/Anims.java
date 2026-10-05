@@ -121,6 +121,28 @@ public final class Anims {
 		Anim scale = Anim.of();
 		for (int i = 0; i < 4; i++) scale.key(3 + i * 6, 0, 0, 0, 0, 0, (i % 2 == 0 ? 8 : -8) * (4 - i) / 4.0F);
 		TOYS.put(Toy.SCALE, scale.key(27, 0, 0, 0, 0, 0, 0).sound(27, note(SoundEvents.NOTE_BLOCK_BELL), 1.5F).rest(30));
+		// The thinking toys. Puzzle pieces: a little jump, a click as they fit, and settle.
+		TOYS.put(Toy.PUZZLE, Anim.of().key(3, 0, 0.2F, 0).key(6, 0, 0, 0).sound(6, SoundEvents.WOOD_PLACE, 1.4F).squash(7, 1.06F, 0.92F)
+			.key(10, 0, 0, 0).sound(10, note(SoundEvents.NOTE_BLOCK_CHIME), 1.5F).rest(14));
+		// Stacking cups: the tower sways and bounces with a clatter of cups, low to high.
+		Anim cups = Anim.of();
+		for (int i = 0; i < 4; i++) cups.sound(i * 4, SoundEvents.WOOD_HIT, 0.9F + i * 0.2F).key(i * 4 + 2, 0, 0.1F, 0, 0, 0, i % 2 == 0 ? 6 : -6);
+		TOYS.put(Toy.CUPS, cups.key(18, 0, 0, 0, 0, 0, 0).rest(20));
+		// Bead maze: it turns a little one way and back, beads clicking along.
+		Anim maze = Anim.of().key(4, 0, 0, 0, 20, 0, 0).key(12, 0, 0, 0, -20, 0, 0).key(18, 0, 0, 0, 0, 0, 0);
+		for (int i = 0; i < 6; i++) maze.sound(2 + i * 3, SoundEvents.WOOD_HIT, 1.6F + (i % 3) * 0.1F);
+		TOYS.put(Toy.MAZE, maze.rest(20));
+		// Puzzle cube: a twist, a twist back, a full turn, solved with a ding.
+		TOYS.put(Toy.CUBE, Anim.of().key(4, 0, 0, 0, 90, 0, 0).sound(4, SoundEvents.WOOD_HIT, 1.3F).key(8, 0, 0, 0, 0, 0, 0)
+			.sound(8, SoundEvents.WOOD_HIT, 1.2F).key(14, 0, 0.15F, 0, 360, 0, 0).sound(14, note(SoundEvents.NOTE_BLOCK_BELL), 1.6F)
+			.key(17, 0, 0, 0, 360, 0, 0).rest(20));
+		// Toy robot: beeps, a stiff little march on the spot, and a turn.
+		Anim robot = Anim.of();
+		for (int i = 0; i < 4; i++) {
+			robot.sound(i * 5, note(SoundEvents.NOTE_BLOCK_BIT), 1.2F + (i % 2) * 0.4F).key(i * 5 + 2, 0, 0.08F, 0, 0, 0, i % 2 == 0 ? 5 : -5)
+				.key(i * 5 + 4, 0, 0, 0);
+		}
+		TOYS.put(Toy.ROBOT, robot.key(24, 0, 0, 0, 180, 0, 0).key(30, 0, 0, 0, 360, 0, 0).sound(30, note(SoundEvents.NOTE_BLOCK_BIT), 1.8F).rest(32));
 		// kite: it lifts off its reel and flies up and back on its string, the sail fluttering and
 		// the tail waving under it, and settles back onto the reel.
 		Anim kite = Anim.of().pieces("kite").sound(0, SoundEvents.PHANTOM_FLAP, 1.6F).sound(16, SoundEvents.PHANTOM_FLAP, 1.8F)

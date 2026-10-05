@@ -384,6 +384,86 @@
           "name": "learning-blocks-justfatlard:toy_scale"
         }
       ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "learning-blocks-justfatlard:toy",
+        "state": {
+          "kind": "puzzle"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:toy_puzzle"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "learning-blocks-justfatlard:toy",
+        "state": {
+          "kind": "cups"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:toy_cups"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "learning-blocks-justfatlard:toy",
+        "state": {
+          "kind": "maze"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:toy_maze"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "learning-blocks-justfatlard:toy",
+        "state": {
+          "kind": "cube"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:toy_cube"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "learning-blocks-justfatlard:toy",
+        "state": {
+          "kind": "robot"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "learning-blocks-justfatlard:toy_robot"
+        }
+      ]
     }
   ],
   "random_sequence": "learning-blocks-justfatlard:blocks/toy"

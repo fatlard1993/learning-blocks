@@ -50,7 +50,7 @@ public final class Numbers implements Subject {
 
 	private static final String[] WORDS = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
 		"eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty",
-		"plus", "minus", "equals"};
+		"plus", "minus", "equals", "same", "different"};
 
 	/** Each child's numbers rounds so far this session, and their last item: for the mix and no repeats. */
 	private final Map<UUID, Integer> rounds = new HashMap<>();

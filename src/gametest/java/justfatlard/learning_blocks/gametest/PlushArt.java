@@ -204,38 +204,43 @@ public final class PlushArt implements FabricClientGameTest {
 		shoot(session, "phonics-plush-close-icons");
 		session.context().setScreen(() -> null);
 
-		// The counting toys (Numbers): each close, three-quarter on; then all of them as items.
-		Toy[] counting = {Toy.ABACUS, Toy.DICE, Toy.DOMINOES, Toy.SORTER, Toy.SCALE};
-		session.onServer(server -> {
-			ServerPlayer player = session.player();
-			ServerLevel level = (ServerLevel) player.level();
-			BlockPos base = origin[0].offset(0, 0, 17);
-			for (int x = -6; x <= 6; x++) for (int z = -2; z <= 2; z++) for (int y = 0; y <= 2; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 3);
-			for (int i = 0; i < counting.length; i++) {
-				level.setBlock(base.offset(6 - i * 2, 0, 0), Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, counting[i]).setValue(ToyBlock.FACING, Direction.NORTH), 3);
-			}
-			player.getInventory().clearContent();
-			for (int i = 0; i < counting.length; i++) player.getInventory().setItem(9 + i, Toys.stack(counting[i]));
-		});
-		for (int i = 0; i < counting.length; i++) {
-			int at = i;
+		// The counting toys (Numbers) and the thinking toys (Logic): each close, three-quarter on;
+		// then each set as items.
+		Toy[][] sets = {{Toy.ABACUS, Toy.DICE, Toy.DOMINOES, Toy.SORTER, Toy.SCALE}, {Toy.PUZZLE, Toy.CUPS, Toy.MAZE, Toy.CUBE, Toy.ROBOT}};
+		String[] setNames = {"counting", "thinking"};
+		for (int set = 0; set < sets.length; set++) {
+			Toy[] shown = sets[set];
 			session.onServer(server -> {
 				ServerPlayer player = session.player();
-				Vec3 toy = Vec3.atBottomCenterOf(origin[0].offset(6 - at * 2, 0, 17));
-				// In front and a little to the toy's right, looking down at it: a spectator, so the eye can be below head height.
-				player.setGameMode(net.minecraft.world.level.GameType.SPECTATOR);
-				Vec3 eye = toy.add(-0.55, 0.62, -0.95);
-				player.teleportTo((ServerLevel) player.level(), eye.x, eye.y - player.getEyeHeight(), eye.z, java.util.Set.of(), -31.0F, 28.0F, true);
+				ServerLevel level = (ServerLevel) player.level();
+				BlockPos base = origin[0].offset(0, 0, 17);
+				for (int x = -6; x <= 6; x++) for (int z = -2; z <= 2; z++) for (int y = 0; y <= 2; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 3);
+				for (int i = 0; i < shown.length; i++) {
+					level.setBlock(base.offset(6 - i * 2, 0, 0), Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, shown[i]).setValue(ToyBlock.FACING, Direction.NORTH), 3);
+				}
+				player.getInventory().clearContent();
+				for (int i = 0; i < shown.length; i++) player.getInventory().setItem(9 + i, Toys.stack(shown[i]));
 			});
+			for (int i = 0; i < shown.length; i++) {
+				int at = i;
+				session.onServer(server -> {
+					ServerPlayer player = session.player();
+					Vec3 toy = Vec3.atBottomCenterOf(origin[0].offset(6 - at * 2, 0, 17));
+					// In front and a little to the toy's right, looking down at it: a spectator, so the eye can be below head height.
+					player.setGameMode(net.minecraft.world.level.GameType.SPECTATOR);
+					Vec3 eye = toy.add(-0.55, 0.62, -0.95);
+					player.teleportTo((ServerLevel) player.level(), eye.x, eye.y - player.getEyeHeight(), eye.z, java.util.Set.of(), -31.0F, 28.0F, true);
+				});
+				session.waitTicks(20);
+				shoot(session, "learning-toy-" + shown[i].getSerializedName());
+			}
+			session.onServer(server -> session.player().setGameMode(net.minecraft.world.level.GameType.SURVIVAL));
+			session.waitTicks(5);
+			session.context().setScreen(() -> new InventoryScreen(net.minecraft.client.Minecraft.getInstance().player));
 			session.waitTicks(20);
-			shoot(session, "learning-toy-" + counting[i].getSerializedName());
+			shoot(session, "learning-toys-" + setNames[set] + "-icons");
+			session.context().setScreen(() -> null);
 		}
-		session.onServer(server -> session.player().setGameMode(net.minecraft.world.level.GameType.SURVIVAL));
-		session.waitTicks(5);
-		session.context().setScreen(() -> new InventoryScreen(net.minecraft.client.Minecraft.getInstance().player));
-		session.waitTicks(20);
-		shoot(session, "learning-toys-counting-icons");
-		session.context().setScreen(() -> null);
 	}
 
 	private static void look(ServerPlayer player, BlockPos at, float yaw, float pitch) {

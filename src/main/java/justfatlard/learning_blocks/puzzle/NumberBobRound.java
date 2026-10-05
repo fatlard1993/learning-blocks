@@ -123,7 +123,7 @@ public final class NumberBobRound extends NumbersRound {
 
 	private void showSentence(@Nullable Integer card) {
 		if (sentence != null) sentence.discard();
-		sentence = Counting.boardText(this, String.join(" ", words(card)), INK, 3.0F, 0.6, 0.4);
+		sentence = Counting.boardText(this, String.join(" ", words(card)), INK, 3.0F, 0.6, -0.5);
 		sentence.setBackgroundColor(0xFFF2E8C9);
 	}
 

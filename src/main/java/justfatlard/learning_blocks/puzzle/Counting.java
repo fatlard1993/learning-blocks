@@ -246,7 +246,8 @@ final class Counting {
 	static Display.BlockDisplay boardDots(SubjectRound round, int n, float size) {
 		Display.BlockDisplay display = EntityTypes.BLOCK_DISPLAY.create(round.level, EntitySpawnReason.TRIGGERED);
 		display.setBlockState(justfatlard.learning_blocks.LearningBlocks.NUMBER.showing(n));
-		Vec3 at = Vec3.atCenterOf(round.layout.origin().offset(0, RoomLayout.WORD_Y, -4)).add(0, -0.3, 0.2);
+		// Low on the board, under the caption, in full view.
+		Vec3 at = Vec3.atBottomCenterOf(round.layout.origin().offset(0, 1, -4)).add(0, -0.2, 0.2);
 		display.snapTo(at.x, at.y, at.z, 0, 0);
 		// Turned a quarter so its east side, the dots, faces the room; centred on its spot.
 		org.joml.Quaternionf turn = new org.joml.Quaternionf().rotateY((float) (Math.PI / 2));

@@ -153,7 +153,7 @@ public final class ToyPlay implements FabricClientGameTest {
 			BlockPos base = player.blockPosition().offset(0, 0, 3);
 			origin[0] = base;
 			for (int x = -6; x <= 6; x++) {
-				for (int z = -2; z <= 8; z++) {
+				for (int z = -3; z <= 8; z++) {
 					level.setBlock(base.offset(x, -1, z), Blocks.CONCRETE.white().defaultBlockState(), 3);
 					for (int y = 0; y <= 4; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 3);
 				}
@@ -312,7 +312,7 @@ public final class ToyPlay implements FabricClientGameTest {
 			// Every toy, at rest and mid-play: itself, once, and nothing else.
 			for (Toy kind : Toy.values()) {
 				// Each on a square of its own: a square plays once a second at most.
-				BlockPos spot = origin[0].offset(kind.ordinal() % 12 - 6, 0, kind.ordinal() < 12 ? -1 : -2);
+				BlockPos spot = origin[0].offset(kind.ordinal() % 12 - 6, 0, -1 - kind.ordinal() / 12);
 				String id = "toy_" + kind.name().toLowerCase(java.util.Locale.ROOT);
 				BlockState state = justfatlard.learning_blocks.toy.Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, kind).setValue(ToyBlock.FACING, Direction.NORTH);
 				level.setBlock(spot, state, 3);

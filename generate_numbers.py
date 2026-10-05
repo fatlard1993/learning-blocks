@@ -30,8 +30,11 @@ DOT = (0xC0, 0x39, 0x2B, 0xFF)
 FRAME = (0xB8, 0x8C, 0x4E, 0xFF)
 HIGHEST = 20
 # The symbol tiles, after the numbers: plus, minus and equals (numbers' N4, adding and taking away).
-SYMBOLS = {21: "+", 22: "-", 23: "="}
-LAST = 23
+SYMBOLS = {21: "+", 22: "-", 23: "=", 24: "yes", 25: "no"}
+LAST = 25
+# Logic's same-or-different answers: a green tick and a red cross.
+TICK = (0x3C, 0xA0, 0x3C, 0xFF)
+CROSS = (0xD0, 0x3A, 0x30, 0xFF)
 SYMBOL = (0x9B, 0x3D, 0xB8, 0xFF)
 
 DIGITS = {
@@ -65,6 +68,25 @@ def symbol_texture(n):
     if sign == "=":
         rect(mid - arm, mid - 11, mid + arm, mid - 11 + bar + 1)
         rect(mid - arm, mid + 6, mid + arm, mid + 6 + bar + 1)
+    if sign in ("yes", "no"):
+        colour = TICK if sign == "yes" else CROSS
+        def dot(x, y):
+            for dy in range(-3, 4):
+                for dx in range(-3, 4):
+                    if dx * dx + dy * dy <= 10 and 0 <= x + dx < SIZE and 0 <= y + dy < SIZE:
+                        g[int(y + dy)][int(x + dx)] = colour
+        steps = 60
+        if sign == "yes":
+            # A tick: down to the corner, then a long stroke up.
+            for i in range(steps + 1):
+                t = i / steps
+                dot(14 + t * 12, 32 + t * 14)
+                dot(26 + t * 24, 46 - t * 30)
+        else:
+            for i in range(steps + 1):
+                t = i / steps
+                dot(16 + t * 32, 16 + t * 32)
+                dot(48 - t * 32, 16 + t * 32)
     return g
 
 

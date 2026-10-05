@@ -125,8 +125,9 @@ public class LearningBlocks implements ModInitializer {
 		Registry.register(BuiltInRegistries.BLOCK, BOARD_LETTER_ID, BOARD_LETTER);
 		Registry.register(BuiltInRegistries.BLOCK, NUMBER_ID, NUMBER);
 		Registry.register(BuiltInRegistries.ITEM, NUMBER_ID, NUMBER_ITEM);
-		// The counting toys, each earned by mastering some numbers.
+		// The counting and thinking toys, each earned by mastering some numbers or logic.
 		justfatlard.learning_blocks.subject.Numbers.linkToys();
+		justfatlard.learning_blocks.subject.Logic.linkToys();
 
 		// Pandorical content sync: the letter block, its item and every texture, model and sound
 		// under assets/learning-blocks-justfatlard. Interactive, because every letter in a room answers a
