@@ -1,0 +1,40 @@
+{
+	"duration": 2.72,
+	"words": [
+		{
+			"text": "A",
+			"start": 0.072,
+			"end": 0.08
+		},
+		{
+			"text": "friend",
+			"start": 0.126,
+			"end": 0.4
+		},
+		{
+			"text": "is",
+			"start": 0.453,
+			"end": 0.56
+		},
+		{
+			"text": "here!",
+			"start": 0.656,
+			"end": 1.12
+		},
+		{
+			"text": "Let's",
+			"start": 1.26,
+			"end": 1.76
+		},
+		{
+			"text": "learn",
+			"start": 1.813,
+			"end": 2.08
+		},
+		{
+			"text": "together!",
+			"start": 2.151,
+			"end": 2.72
+		}
+	]
+}

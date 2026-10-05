@@ -445,12 +445,12 @@ PHRASES = {
 	]},
 	"done_for_today": {"variants": [
 		{"text": "[excited] All done for today! Off you go and play!", "model": EXPRESSIVE},
-		{"text": "[happy] Great reading today! Have fun!", "model": EXPRESSIVE},
+		{"text": "[happy] Great work today! Have fun!", "model": EXPRESSIVE},
 	]},
 	"mastered": {"variants": [
 		{"text": "[excited] You've got it!", "model": EXPRESSIVE},
 		{"text": "[happy] You know that one now!", "model": EXPRESSIVE},
-		{"text": "[excited] Super star reader!", "model": EXPRESSIVE},
+		{"text": "[excited] Super star!", "model": EXPRESSIVE},
 	]},
 	"what_does_it_say": {"variants": [
 		{"text": "What does it say?"},
@@ -477,7 +477,16 @@ PHRASES = {
 	]},
 	"door_open": {"text": "[excited] All done! The door is open!", "model": EXPRESSIVE},
 	**{f"more_to_go_{n}": {"text": f"{word} more to go!"} for n, word in enumerate(
-		["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"], start=1)},
+		[n.capitalize() for n in NUMBER_NAMES[1:21]], start=1)},
+	"press_the_button": {"variants": [{"text": "[cheerful] Press the button!", "model": EXPRESSIVE},
+		{"text": "[cheerful] Now press the button!", "model": EXPRESSIVE}]},
+	"already_here": {"text": "[cheerful] You're already in the classroom!", "model": EXPRESSIVE},
+	"bob_comes_later": {"text": "[cheerful] Bob will come and play soon! Keep learning!", "model": EXPRESSIVE},
+	"wants_to_learn_with_you": {"text": "[excited] Somebody wants to learn with you!", "model": EXPRESSIVE},
+	"friend_joined": {"text": "[excited] A friend is here! Let's learn together!", "model": EXPRESSIVE},
+	"learning_time": {"variants": [{"text": "[cheerful] Learning time first!", "model": EXPRESSIVE},
+		{"text": "[cheerful] Hello! Let's do some learning first!", "model": EXPRESSIVE},
+		{"text": "[cheerful] Welcome back! Learning time!", "model": EXPRESSIVE}]},
 	"prizes_come_home": {"text": "[warmly] Your prizes come home with you!", "model": EXPRESSIVE},
 }
 

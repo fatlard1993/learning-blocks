@@ -1,0 +1,25 @@
+{
+	"duration": 1.207,
+	"words": [
+		{
+			"text": "Twenty",
+			"start": 0.0,
+			"end": 0.302
+		},
+		{
+			"text": "more",
+			"start": 0.348,
+			"end": 0.511
+		},
+		{
+			"text": "to",
+			"start": 0.534,
+			"end": 0.58
+		},
+		{
+			"text": "go!",
+			"start": 0.627,
+			"end": 1.207
+		}
+	]
+}

@@ -1,0 +1,20 @@
+{
+	"duration": 1.48,
+	"words": [
+		{
+			"text": "Press",
+			"start": 0.347,
+			"end": 0.4
+		},
+		{
+			"text": "the",
+			"start": 0.46,
+			"end": 0.64
+		},
+		{
+			"text": "button!",
+			"start": 0.72,
+			"end": 1.36
+		}
+	]
+}

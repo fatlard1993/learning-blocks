@@ -1,20 +1,15 @@
 {
-	"duration": 1.64,
+	"duration": 1.32,
 	"words": [
 		{
 			"text": "Super",
-			"start": 0.333,
-			"end": 0.4
+			"start": 0.227,
+			"end": 0.56
 		},
 		{
-			"text": "star",
-			"start": 0.48,
-			"end": 0.8
-		},
-		{
-			"text": "reader!",
-			"start": 0.88,
-			"end": 1.52
+			"text": "star!",
+			"start": 0.672,
+			"end": 1.2
 		}
 	]
 }

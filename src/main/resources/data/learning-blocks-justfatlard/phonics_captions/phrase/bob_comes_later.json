@@ -1,0 +1,45 @@
+{
+	"duration": 2.72,
+	"words": [
+		{
+			"text": "Bob",
+			"start": 0.216,
+			"end": 0.24
+		},
+		{
+			"text": "will",
+			"start": 0.288,
+			"end": 0.48
+		},
+		{
+			"text": "come",
+			"start": 0.512,
+			"end": 0.64
+		},
+		{
+			"text": "and",
+			"start": 0.66,
+			"end": 0.72
+		},
+		{
+			"text": "play",
+			"start": 0.768,
+			"end": 0.96
+		},
+		{
+			"text": "soon!",
+			"start": 1.056,
+			"end": 1.72
+		},
+		{
+			"text": "Keep",
+			"start": 1.776,
+			"end": 2.0
+		},
+		{
+			"text": "learning!",
+			"start": 2.053,
+			"end": 2.72
+		}
+	]
+}
