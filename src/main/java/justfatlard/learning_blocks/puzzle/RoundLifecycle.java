@@ -63,7 +63,8 @@ final class RoundLifecycle {
 		if (subject == null) subject = readingAsked ? justfatlard.learning_blocks.subject.Subjects.READING
 			: justfatlard.learning_blocks.subject.Subjects.pick(player, room.lastSubject.get(player.getUUID()),
 				room.subjectRun.getOrDefault(player.getUUID(), 0), level.getRandom());
-		if (subject != justfatlard.learning_blocks.subject.Subjects.READING) {
+		// A subject round stands on a stand-in Reading puzzle, which needs a word to stand on: none loaded, none made.
+		if (subject != justfatlard.learning_blocks.subject.Subjects.READING && !Words.all().isEmpty()) {
 			SubjectRound next = subject.round(player, subjectKind, subjectTarget, level.getRandom());
 			if (next != null) {
 				clearRound();
@@ -1098,7 +1099,11 @@ final class RoundLifecycle {
 		Narration prompt = new Narration();
 		if (room.readingTime) {
 			room.readingTime = false;
-			prompt.say("phrase/reading_time", 2);
+			// "Reading time first!" only for a child who has nothing but Reading on.
+			ServerPlayer reader = room.turnPlayer();
+			boolean readingOnly = reader != null && justfatlard.learning_blocks.subject.Subjects.on(reader).stream()
+				.allMatch(subject -> subject == justfatlard.learning_blocks.subject.Subjects.READING);
+			prompt.say(readingOnly ? "phrase/reading_time" : "phrase/learning_time", 2);
 		}
 		// A new subject: its hello first ("Numbers time!").
 		if (room.pendingHello != null) {

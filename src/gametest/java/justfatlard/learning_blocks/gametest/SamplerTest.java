@@ -42,7 +42,7 @@ public final class SamplerTest implements FabricClientGameTest {
 			try {
 				run(session);
 			} catch (Throwable failed) {
-				LoggerFactory.getLogger("phonics-gametest").error("SamplerTest failed", failed);
+				LoggerFactory.getLogger("learning-blocks-gametest").error("SamplerTest failed", failed);
 				throw failed;
 			}
 		});

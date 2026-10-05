@@ -59,17 +59,6 @@ public final class PrizeSessions {
 		.copyOnDeath()
 		.buildAndRegister(LearningBlocks.id("editing_prizes"));
 
-	/** The same, as saved before the rename; moved to the new one as the player joins. */
-	private static final AttachmentType<Editing> OLD_ATTACHMENT = AttachmentRegistry.<Editing>builder()
-		.persistent(Editing.CODEC)
-		.copyOnDeath()
-		.buildAndRegister(justfatlard.learning_blocks.migrate.OldNames.old("editing_prizes"));
-
-	public static void migrate(ServerPlayer player) {
-		justfatlard.learning_blocks.migrate.OldNames.move(player, OLD_ATTACHMENT, ATTACHMENT, Editing.CODEC, player.level().registryAccess(),
-			player.getGameProfile().name());
-	}
-
 	/** Loads the class, which is what registers the attachment; it must happen at init. */
 	public static void init() {}
 
@@ -94,15 +83,23 @@ public final class PrizeSessions {
 			return "The prizes file could not be read: " + e.getMessage();
 		}
 
+		// Anything held on the cursor or in a crafting grid back in the pack first, so it is kept with it.
+		player.closeContainer();
 		// Written before anything is taken, as the classroom's visit is.
 		player.setAttached(ATTACHMENT, new Editing(prizes, tab, Visit.pack(player)));
 		player.getInventory().clearContent();
+		Visit.clearHands(player);
 		List<Visit.Slot> laid = new ArrayList<>();
 		int slot = 0;
 		for (ItemStack stack : items(list, server)) laid.add(new Visit.Slot(slot++, stack));
 		Visit.lay(player, laid);
 		player.containerMenu.broadcastChanges();
 
+		int cannot = unmakeable(list, server).size();
+		if (cannot > 0) {
+			player.sendSystemMessage(line(cannot + (cannot == 1 ? " entry names an item" : " entries name items")
+				+ " this server can't make (a mod gone?); kept in the file as they are."));
+		}
 		player.sendSystemMessage(line("Editing the prizes for " + PrizeEditor.describe(prizes)
 			+ ". Hold every item that should be given, from the creative menu or from chests; where it sits"
 			+ " doesn't matter. Names and enchantments are kept. ")
@@ -115,6 +112,7 @@ public final class PrizeSessions {
 		Editing editing = of(player);
 		if (editing == null) return "You aren't editing any prizes";
 		MinecraftServer server = player.level().getServer();
+		player.closeContainer();
 		List<ItemStack> held = new ArrayList<>();
 		for (Visit.Slot slot : Visit.pack(player)) held.add(slot.stack());
 		List<String> problems = PrizeEditor.change(server, tree -> {
@@ -122,6 +120,8 @@ public final class PrizeSessions {
 			JsonArray kept = new JsonArray();
 			for (JsonObject entry : entries(held, server)) kept.add(entry);
 			for (JsonElement old : list) if (!laidOut(old)) kept.add(old);
+			// Entries this server can't make were never in the pack to be kept or dropped: as they were.
+			for (JsonElement old : unmakeable(list, server)) kept.add(old);
 			PrizeFile.set(tree, editing.prizes(), kept);
 		});
 		restore(player, editing);
@@ -141,7 +141,9 @@ public final class PrizeSessions {
 
 	/** The pack exactly as it was put aside, and the session over. */
 	private static void restore(ServerPlayer player, Editing editing) {
+		player.closeContainer();
 		player.getInventory().clearContent();
+		Visit.clearHands(player);
 		Visit.lay(player, editing.stash());
 		player.containerMenu.broadcastChanges();
 		player.removeAttached(ATTACHMENT);
@@ -154,6 +156,21 @@ public final class PrizeSessions {
 	}
 
 	// --- Items and their entries ---
+
+	/** The item entries this server can't make (a removed mod's item): kept in the file as they are, never laid out or dropped. */
+	static List<JsonElement> unmakeable(JsonArray list, MinecraftServer server) {
+		List<JsonElement> out = new ArrayList<>();
+		for (JsonElement element : list) {
+			if (laidOut(element) && items(singleton(element), server).isEmpty()) out.add(element);
+		}
+		return out;
+	}
+
+	private static JsonArray singleton(JsonElement element) {
+		JsonArray one = new JsonArray();
+		one.add(element);
+		return one;
+	}
 
 	/** The item entries of a prize list, as stacks; entries this server cannot make are left out. */
 	static List<ItemStack> items(JsonArray list, MinecraftServer server) {

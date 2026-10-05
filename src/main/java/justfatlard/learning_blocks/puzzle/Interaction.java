@@ -52,8 +52,8 @@ final class Interaction {
 			if (Travel.kept(player)) {
 				// Locked: lessons first. It says how many.
 				int left = Travel.lessons(player);
-				if (hand == InteractionHand.MAIN_HAND && !room.busy && !room.leaving && left > 0 && left <= 10) {
-					Narrator.play(player, new Narration().say("phrase/more_to_go_" + left));
+				if (hand == InteractionHand.MAIN_HAND && !room.busy && !room.leaving && justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null) {
+					Narrator.play(player, new Narration().say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left)));
 				}
 				return InteractionResult.SUCCESS;
 			}

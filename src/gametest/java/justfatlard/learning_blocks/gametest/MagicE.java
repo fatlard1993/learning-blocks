@@ -29,8 +29,8 @@ import net.minecraft.world.phys.Vec3;
  * word, and a cake appears. Boat: a vowel-team round, _oat, with the oa tile in the row and b, g
  * and c on the floor. A word needing a mod that is not here is left out (the test pack's zob, and
  * poop and cone without their mods), and a word preferring a missing mod's thing falls back to
- * vanilla (the test pack's zub, bean). Full run: {@code phonics-magic-e-blend.png},
- * {@code phonics-vowel-team-round.png}, {@code phonics-outcome-cake.png}, {@code phonics-outcome-goat.png}.
+ * vanilla (the test pack's zub, bean). Full run: {@code learning-magic-e-blend.png},
+ * {@code learning-vowel-team-round.png}, {@code learning-outcome-cake.png}, {@code learning-outcome-goat.png}.
  */
 public final class MagicE implements FabricClientGameTest {
 
@@ -42,7 +42,7 @@ public final class MagicE implements FabricClientGameTest {
 
 			// The mods' words: left out without the mod, or back to vanilla.
 			session.onServer(server -> {
-				check(Words.all().stream().noneMatch(w -> w.id().toString().equals("phonics-gametest:zob")), "a word needing a missing mod was loaded");
+				check(Words.all().stream().noneMatch(w -> w.id().toString().equals("learning-blocks-gametest:zob")), "a word needing a missing mod was loaded");
 				check(Words.all().stream().anyMatch(w -> w.text().equals("poop")) == FabricLoader.getInstance().isModLoaded("poopsmith"),
 					"poop is loaded exactly when poopsmith is");
 				check(Words.all().stream().anyMatch(w -> w.text().equals("cone")) == FabricLoader.getInstance().isModLoaded("lets-cook-justfatlard"),
@@ -67,7 +67,7 @@ public final class MagicE implements FabricClientGameTest {
 			});
 			Waits.until(session, 400, "the magic e never lit", () -> Narrator.log(session.player()).contains("magic_e:1"));
 			session.waitTicks(4);
-			shoot(session, "phonics-magic-e-blend");
+			shoot(session, "learning-magic-e-blend");
 			Waits.until(session, 600, "cake was never read out", () -> {
 				List<String> log = Narrator.log(session.player());
 				return log.lastIndexOf("outcome") > log.lastIndexOf("light:0");
@@ -90,7 +90,7 @@ public final class MagicE implements FabricClientGameTest {
 				check(room.placed().stream().anyMatch(pos -> session.player().level().getBlockState(pos).is(Blocks.CAKE)
 					|| !session.player().level().getBlockState(pos).isAir()), "cake put nothing down: " + room.placed());
 			});
-			shoot(session, "phonics-outcome-cake");
+			shoot(session, "learning-outcome-cake");
 
 			// Boat: a vowel-team round.
 			session.onServer(server -> {
@@ -104,14 +104,14 @@ public final class MagicE implements FabricClientGameTest {
 				check(player.level().getBlockState(oa).toString().contains("letter=oa"), "the board does not show oa: " + player.level().getBlockState(oa));
 			});
 			session.waitTicks(10);
-			shoot(session, "phonics-vowel-team-round");
+			shoot(session, "learning-vowel-team-round");
 
 			// A new creature: a baby goat.
 			session.onServer(server -> Rooms.runOutcome(session.player(), word("goat")));
 			session.waitTicks(30);
 			session.onServer(server -> check(Rooms.of(session.player()).creatures().stream()
 				.anyMatch(e -> e.getType() == net.minecraft.world.entity.EntityTypes.GOAT), "goat brought no goat"));
-			shoot(session, "phonics-outcome-goat");
+			shoot(session, "learning-outcome-goat");
 
 			session.command("/learn leave");
 			Waits.home(session);

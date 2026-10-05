@@ -75,15 +75,17 @@ public final class LettersLevel implements FabricClientGameTest {
 				"the prompt is not which-letter then the sound: " + log);
 			check(!log.contains("clip:phrase/make_the_word"), "a letters round asked to make a word");
 		});
-		shoot(session, "phonics-letters-round");
+		shoot(session, "learning-letters-round");
 
 		// Right, first try: the chant, the keyword happens, and the letter counts once.
 		Letter[] target = new Letter[1];
+		long[] sends = new long[1];
 		int[] sent = new int[1];
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			Room room = Rooms.of(player);
 			target[0] = room.letterTarget();
+			sends[0] = room.sends();
 			sent[0] = room.dispensed().size();
 			Hands.solve(player, room);
 			press(player, room);
@@ -100,7 +102,7 @@ public final class LettersLevel implements FabricClientGameTest {
 			check(clips.equals(List.of("clip:phoneme/" + g, "clip:phoneme/" + g, "clip:word/" + keyword.text())),
 				"the chant was not " + g + ", " + g + ", " + keyword.text() + ": " + clips);
 			check(log.indexOf("outcome") < log.lastIndexOf("clip:phrase/well_done"), "the keyword did not happen before well done");
-			check(Rooms.of(player).dispensed().size() > sent[0] || sent[0] >= 32, "the keyword's outcome did not come out of the button");
+			check(Rooms.of(player).sends() > sends[0], "the keyword's outcome did not come out of the button");
 			check(Progress.of(player).letterHits(g) == 1, "a first-try match did not count: " + Progress.of(player).letterHits(g));
 		});
 
@@ -216,7 +218,7 @@ public final class LettersLevel implements FabricClientGameTest {
 			Review.open(player, Review.Tab.LETTERS, null, false);
 		});
 		session.waitTicks(10);
-		shoot(session, "phonics-review-letters-known");
+		shoot(session, "learning-review-letters-known");
 		session.onServer(server -> Review.press(session.player(), "close"));
 
 		// Every letter known but z: the last match finishes the level, and the next round is words.

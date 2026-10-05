@@ -62,10 +62,10 @@ import org.slf4j.LoggerFactory;
  * gestures and is gone with its time; a bubble shows and clears; every gesture puts its doer back
  * exactly; a scene's sad kitten is glad when solved; Bob nods when told; every toy drawn in parts
  * plays in pieces and comes back exactly; and Bob's goals keep props to their share. Full run:
- * {@code phonics-sky-night.png}, {@code phonics-sky-rain.png}, {@code phonics-sky-snow.png},
- * {@code phonics-sky-storm.png}, {@code phonics-feel-mad.png}, {@code phonics-feel-sad.png} and
- * {@code phonics-feel-glad.png}, {@code phonics-gestures.png}, {@code phonics-bob-nod.png},
- * {@code phonics-truck-tip.png}, {@code phonics-toys-parts.png}.
+ * {@code learning-sky-night.png}, {@code learning-sky-rain.png}, {@code learning-sky-snow.png},
+ * {@code learning-sky-storm.png}, {@code learning-feel-mad.png}, {@code learning-feel-sad.png} and
+ * {@code learning-feel-glad.png}, {@code learning-gestures.png}, {@code learning-bob-nod.png},
+ * {@code learning-truck-tip.png}, {@code learning-toys-parts.png}.
  */
 public final class SkyAndFeelings implements FabricClientGameTest {
 
@@ -75,7 +75,7 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 			try {
 				run(session);
 			} catch (Throwable failed) {
-				LoggerFactory.getLogger("phonics-gametest").error("SkyAndFeelings failed", failed);
+				LoggerFactory.getLogger("learning-blocks-gametest").error("SkyAndFeelings failed", failed);
 				throw failed;
 			}
 		});
@@ -122,7 +122,7 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 			look(player, -88);
 		});
 		session.waitTicks(40);
-		shoot(session, "phonics-sky-night");
+		shoot(session, "learning-sky-night");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			Sky.glide(player, Sky.Time.DAY.ticks, 40);
@@ -133,10 +133,10 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 			look(player, -10);
 		});
 		session.waitTicks(60);
-		shoot(session, "phonics-sky-rain");
+		shoot(session, "learning-sky-rain");
 		session.onServer(server -> Sky.setWeather(session.player(), Sky.Weather.SNOW));
 		session.waitTicks(60);
-		shoot(session, "phonics-sky-snow");
+		shoot(session, "learning-sky-snow");
 		session.onServer(server -> {
 			Sky.setTime(session.player(), Sky.Time.DUSK.ticks);
 			Sky.setWeather(session.player(), Sky.Weather.STORM);
@@ -150,7 +150,7 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 				"a storm's flash made a real bolt");
 		});
 		session.waitTicks(2);
-		shoot(session, "phonics-sky-storm");
+		shoot(session, "learning-sky-storm");
 		// The lights out, and on again.
 		session.onServer(server -> Sky.dark(session.player(), 10));
 		session.waitTicks(2);
@@ -188,7 +188,7 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 			check(Feelings.of(mad) == Feelings.Face.MAD, "mad's villager is not mad: " + Feelings.of(mad));
 			check(Gestures.busy(mad), "mad's villager is not stomping");
 		});
-		shoot(session, "phonics-feel-mad");
+		shoot(session, "learning-feel-mad");
 		session.waitTicks(100);
 		session.onServer(server -> {
 			Room room = Rooms.of(session.player());
@@ -235,7 +235,7 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 			look(session.player(), 15);
 		});
 		session.waitTicks(10);
-		shoot(session, "phonics-gestures");
+		shoot(session, "learning-gestures");
 		session.waitTicks(60);
 		session.onServer(server -> {
 			for (int i = 0; i < doers.size(); i++) {
@@ -263,7 +263,7 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 			lookAt(player, run[0].character());
 		});
 		Waits.until(session, 300, "hug's line was never said", () -> !Narrator.isPlaying(session.player()));
-		shoot(session, "phonics-feel-sad");
+		shoot(session, "learning-feel-sad");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			Room room = Rooms.of(player);
@@ -273,7 +273,7 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 		});
 		Waits.until(session, 600, "hug's scene was never solved", () -> run[0].solved() && Feelings.of(run[0].character()) == Feelings.Face.GLAD);
 		session.waitTicks(24);
-		shoot(session, "phonics-feel-glad");
+		shoot(session, "learning-feel-glad");
 		Waits.until(session, 900, "hug's solve never said that helped", () -> Narrator.log(session.player()).contains("clip:phrase/that_helped"));
 	}
 
@@ -307,7 +307,7 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 			session.player().teleportTo((ServerLevel) session.player().level(), from.x, from.y, from.z, Set.of(), yaw, pitch, true);
 		});
 		session.waitTicks(4);
-		shoot(session, "phonics-bob-nod");
+		shoot(session, "learning-bob-nod");
 		Waits.until(session, 900, "Bob's round never finished", () -> !Rooms.of(session.player()).busy());
 	}
 
@@ -334,7 +334,7 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 					last = goal;
 				}
 				check(propCount <= picks * (share + 5) / 100, "props were " + propCount + " of " + picks + " at a share of " + share);
-				LoggerFactory.getLogger("phonics-gametest").info("Bob's prop goals at a share of {}: {} of {}", share, propCount, picks);
+				LoggerFactory.getLogger("learning-blocks-gametest").info("Bob's prop goals at a share of {}: {} of {}", share, propCount, picks);
 			}
 			PrizeConfig.useBobPropShare(20);
 		});
@@ -375,7 +375,7 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 			player.teleportTo(level, from.x, from.y, from.z, Set.of(), yaw, pitch, true);
 		});
 		session.waitTicks(20);
-		shoot(session, "phonics-truck-rest");
+		shoot(session, "learning-truck-rest");
 		Vec3[] truckView = new Vec3[1];
 		float[] truckTurn = new float[2];
 		session.onServer(server -> {
@@ -387,7 +387,7 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 			player.teleportTo((ServerLevel) player.level(), from.x, from.y, from.z, Set.of(), 0, 24, true);
 		});
 		session.waitTicks(10);
-		shoot(session, "phonics-toys-rest");
+		shoot(session, "learning-toys-rest");
 		session.onServer(server -> session.player().teleportTo((ServerLevel) session.player().level(), truckView[0].x, truckView[0].y, truckView[0].z,
 			Set.of(), truckTurn[0], truckTurn[1], true));
 		session.waitTicks(5);
@@ -405,23 +405,23 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 			}
 		});
 		session.waitTicks(13);
-		shoot(session, "phonics-truck-tip");
+		shoot(session, "learning-truck-tip");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			Vec3 from = Vec3.atBottomCenterOf(origin[0]).add(0, 0, -1.5);
 			player.teleportTo((ServerLevel) player.level(), from.x, from.y, from.z, Set.of(), 0, 24, true);
 		});
 		session.waitTicks(6);
-		shoot(session, "phonics-toys-parts");
+		shoot(session, "learning-toys-parts");
 		closeUp(session, origin[0], -3.5);
 		session.waitTicks(4);
-		shoot(session, "phonics-toys-close-left");
+		shoot(session, "learning-toys-close-left");
 		closeUp(session, origin[0], 4.5);
 		session.waitTicks(4);
-		shoot(session, "phonics-toys-close-right");
+		shoot(session, "learning-toys-close-right");
 		closeUp(session, origin[0], -3.5);
 		session.waitTicks(16);
-		shoot(session, "phonics-toys-close-left-2");
+		shoot(session, "learning-toys-close-left-2");
 		session.waitTicks(80);
 		session.onServer(server -> {
 			ServerLevel level = (ServerLevel) session.player().level();
@@ -452,16 +452,16 @@ public final class SkyAndFeelings implements FabricClientGameTest {
 				player.teleportTo(level, from.x, from.y, from.z, Set.of(), yaw, pitch, true);
 			});
 			session.waitTicks(3);
-			shoot(session, "phonics-part-" + toy.name().toLowerCase(java.util.Locale.ROOT) + "-rest");
+			shoot(session, "learning-part-" + toy.name().toLowerCase(java.util.Locale.ROOT) + "-rest");
 			session.onServer(server -> {
 				ServerLevel level = (ServerLevel) session.player().level();
 				check(Play.play(level, at, level.getBlockState(at), Anims.of(toy)), toy + " would not play again");
 			});
 			int third = Math.max(4, Anims.of(toy).length() / 3);
 			session.waitTicks(third);
-			shoot(session, "phonics-part-" + toy.name().toLowerCase(java.util.Locale.ROOT));
+			shoot(session, "learning-part-" + toy.name().toLowerCase(java.util.Locale.ROOT));
 			session.waitTicks(3);
-			shoot(session, "phonics-part-" + toy.name().toLowerCase(java.util.Locale.ROOT) + "-b");
+			shoot(session, "learning-part-" + toy.name().toLowerCase(java.util.Locale.ROOT) + "-b");
 			session.waitTicks(Anims.of(toy).length());
 		}
 	}

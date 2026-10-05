@@ -48,9 +48,9 @@ import org.slf4j.LoggerFactory;
  * anything at all, and Bob does it, counting for nothing. A word to fix: cot on the board under a
  * cat, the o swapped for an a. Reading together: one reader picks the goal from two, the other
  * tells Bob, and both are credited. The progress screen has a Sentences section. Full run:
- * {@code phonics-bob-goal.png}, {@code phonics-bob-row.png}, {@code phonics-bob-box-on-cat.png}, {@code phonics-bob-cat-in-box.png},
- * {@code phonics-bob-cat-rides-pig.png}, {@code phonics-bob-hat-on-dog.png},
- * {@code phonics-bob-whats-wrong.png}, {@code phonics-bob-cat-on-lid.png}, {@code phonics-fix-cot.png}, {@code phonics-bob-pick.png}.
+ * {@code learning-bob-goal.png}, {@code learning-bob-row.png}, {@code learning-bob-box-on-cat.png}, {@code learning-bob-cat-in-box.png},
+ * {@code learning-bob-cat-rides-pig.png}, {@code learning-bob-hat-on-dog.png},
+ * {@code learning-bob-whats-wrong.png}, {@code learning-bob-cat-on-lid.png}, {@code learning-fix-cot.png}, {@code learning-bob-pick.png}.
  */
 public final class TellBob implements FabricClientGameTest {
 
@@ -60,7 +60,7 @@ public final class TellBob implements FabricClientGameTest {
 			try {
 				run(session);
 			} catch (Throwable failed) {
-				LoggerFactory.getLogger("phonics-gametest").error("TellBob failed", failed);
+				LoggerFactory.getLogger("learning-blocks-gametest").error("TellBob failed", failed);
 				throw failed;
 			}
 		});
@@ -108,7 +108,7 @@ public final class TellBob implements FabricClientGameTest {
 			check(bob.bob() != null && bob.onStage("cat") != null && bob.onStage("box") != null, "Bob, the cat or the box is not on the stage");
 		});
 		Waits.until(session, 300, "Tell Bob was never asked", () -> Narrator.log(session.player()).contains("tell_bob") && !Narrator.isPlaying(session.player()));
-		shoot(session, "phonics-bob-goal");
+		shoot(session, "learning-bob-goal");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			BobRound bob = Rooms.of(player).bob();
@@ -118,7 +118,7 @@ public final class TellBob implements FabricClientGameTest {
 			lookAt(player, Rooms.of(player), Vec3.atCenterOf(Rooms.of(player).origin().offset(0, 3, -4)));
 		});
 		session.waitTicks(15);
-		shoot(session, "phonics-bob-row");
+		shoot(session, "learning-bob-row");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			look(player, Rooms.of(player));
@@ -134,7 +134,7 @@ public final class TellBob implements FabricClientGameTest {
 			Entity boxShown = bob.onStage("box");
 			check(boxShown.getY() > cat.getY() + 0.4, "the box is not up on the cat: box at " + boxShown.position() + ", cat at " + cat.position());
 		});
-		shoot(session, "phonics-bob-box-on-cat");
+		shoot(session, "learning-bob-box-on-cat");
 		Waits.until(session, 400, "not quite was never said, or the cards never came home", () -> {
 			BobRound bob = Rooms.of(session.player()).bob();
 			return since(session.player()).contains("clip:phrase/not_quite") && !Rooms.of(session.player()).busy() && bob.rowWords().getFirst().isEmpty();
@@ -150,7 +150,7 @@ public final class TellBob implements FabricClientGameTest {
 			press(player, Rooms.of(player));
 		});
 		Waits.until(session, 600, "Bob never did put cat in box", () -> since(session.player()).contains("clip:phrase/bob_did_it"));
-		shoot(session, "phonics-bob-cat-in-box");
+		shoot(session, "learning-bob-cat-in-box");
 		Waits.until(session, 600, "put cat in box was never cheered", () -> since(session.player()).contains("clip:phrase/bob_hooray"));
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
@@ -180,7 +180,7 @@ public final class TellBob implements FabricClientGameTest {
 			Entity pig = bob.onStage("pig");
 			check(cat != null && pig != null && cat.getVehicle() == pig, "the cat is not riding the pig: " + bob.acted());
 		});
-		shoot(session, "phonics-bob-cat-rides-pig");
+		shoot(session, "learning-bob-cat-rides-pig");
 		Waits.until(session, 300, "the silly sentence never finished", () -> !Rooms.of(session.player()).busy());
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
@@ -199,7 +199,7 @@ public final class TellBob implements FabricClientGameTest {
 			check(bob.onStage("hat").getY() > bob.onStage("dog").getY() + 0.4, "the hat is not up on the dog's head");
 			check(bob.acted().where("cat") != null, "the cat stopped riding: the stage should keep what was done");
 		});
-		shoot(session, "phonics-bob-hat-on-dog");
+		shoot(session, "learning-bob-hat-on-dog");
 		Waits.until(session, 300, "the silly sentence never finished", () -> !Rooms.of(session.player()).busy());
 		session.onServer(server -> check(Progress.of(session.player()).memory().item(Progress.sentenceKey("put hat on dog")) == null,
 			"a silly sentence counted towards mastery"));
@@ -216,7 +216,7 @@ public final class TellBob implements FabricClientGameTest {
 			check(bob.floorWords().contains("in"), "the in card is not on the floor: " + bob.floorWords());
 		});
 		Waits.until(session, 400, "what's wrong was never asked", () -> Narrator.log(session.player()).contains("clip:phrase/whats_wrong") && !Narrator.isPlaying(session.player()));
-		shoot(session, "phonics-bob-whats-wrong");
+		shoot(session, "learning-bob-whats-wrong");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			BobRound bob = Rooms.of(player).bob();
@@ -249,7 +249,7 @@ public final class TellBob implements FabricClientGameTest {
 			BobScene.Place cat = bob.acted().where("cat");
 			check(cat != null && cat.rel() == BobScene.Rel.ON && cat.parent().equals("lid"), "the cat is not on the lid: " + bob.acted());
 		});
-		shoot(session, "phonics-bob-cat-on-lid");
+		shoot(session, "learning-bob-cat-on-lid");
 		Waits.until(session, 600, "the lid-first round never settled", () -> !Rooms.of(session.player()).busy() && since(session.player()).contains("clip:phrase/not_quite"));
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
@@ -270,7 +270,7 @@ public final class TellBob implements FabricClientGameTest {
 			check(room.puzzle().target().text().equals("cat"), "the word to fix is not cat");
 		});
 		Waits.until(session, 400, "what's wrong was never asked for cot", () -> since(session.player()).contains("clip:phrase/whats_wrong") && !Narrator.isPlaying(session.player()));
-		shoot(session, "phonics-fix-cot");
+		shoot(session, "learning-fix-cot");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			Room room = Rooms.of(player);
@@ -322,7 +322,7 @@ public final class TellBob implements FabricClientGameTest {
 			check(bob.picking(), "Max picked his own goal");
 		});
 		Waits.until(session, 300, "the pick was never asked", () -> Narrator.log(session.player()).contains("pick_for_bob") && !Narrator.isPlaying(session.player()));
-		shoot(session, "phonics-bob-pick");
+		shoot(session, "learning-bob-pick");
 		session.onServer(server -> {
 			ServerPlayer max = session.player();
 			BobRound bob = Rooms.of(max).bob();

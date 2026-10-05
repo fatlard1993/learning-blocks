@@ -40,7 +40,7 @@ public final class SoundOverrides implements FabricClientGameTest {
 
 			Word[] wake = new Word[1];
 			session.onServer(server -> {
-				wake[0] = Words.all().stream().filter(word -> word.id().toString().equals("phonics-gametest:wake")).findFirst()
+				wake[0] = Words.all().stream().filter(word -> word.id().toString().equals("learning-blocks-gametest:wake")).findFirst()
 					.orElseThrow(() -> new AssertionError("the test word wake did not load"));
 				Word word = wake[0];
 				check("phoneme/w".equals(word.soundOf(0)), "w's sound in wake is " + word.soundOf(0));

@@ -21,6 +21,8 @@ public final class Later {
 	private record Job(UUID player, long due, Consumer<ServerPlayer> what) {}
 
 	private static final List<Job> jobs = new ArrayList<>();
+	/** This tick's due jobs, still to run: a job cancelled by one run before it never runs. */
+	private static final List<Job> due = new ArrayList<>();
 	private static long now;
 
 	public static void after(ServerPlayer player, int ticks, Consumer<ServerPlayer> what) {
@@ -35,12 +37,13 @@ public final class Later {
 	/** The same by id: for a player already gone, whose jobs must not wait for a new login. */
 	public static void cancel(UUID id) {
 		jobs.removeIf(job -> job.player().equals(id));
+		due.removeIf(job -> job.player().equals(id));
 	}
 
 	public static void tick(MinecraftServer server) {
 		now++;
 		if (jobs.isEmpty()) return;
-		List<Job> due = new ArrayList<>();
+		due.clear();
 		for (Iterator<Job> it = jobs.iterator(); it.hasNext(); ) {
 			Job job = it.next();
 			if (job.due() <= now) {
@@ -48,7 +51,8 @@ public final class Later {
 				it.remove();
 			}
 		}
-		for (Job job : due) {
+		while (!due.isEmpty()) {
+			Job job = due.removeFirst();
 			ServerPlayer player = server.getPlayerList().getPlayer(job.player());
 			// One job failing is that job gone, never the rest of the tick's or the server.
 			if (player != null && !player.isRemoved()) Safely.run("A job for " + player.getGameProfile().name(), () -> job.what().accept(player));
@@ -57,6 +61,7 @@ public final class Later {
 
 	public static void clear() {
 		jobs.clear();
+		due.clear();
 		now = 0;
 	}
 }

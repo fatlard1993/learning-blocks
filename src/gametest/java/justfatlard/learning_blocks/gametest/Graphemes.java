@@ -25,8 +25,8 @@ import net.minecraft.world.phys.Vec3;
  * Round D's tiles and stages. The igh tile is one tile of three letters: light is l, igh, t, and
  * sounded out it says igh once (cut from light itself, or the standard igh), never i, g or h. An
  * r-controlled round, star, with the ar tile. Then three new outcomes: a crown, a wool tent, a raft.
- * Full run: {@code phonics-igh-tile.png}, {@code phonics-r-controlled-round.png},
- * {@code phonics-outcome-{crown,tent,raft}.png}, {@code phonics-review-two-letter.png}.
+ * Full run: {@code learning-igh-tile.png}, {@code learning-r-controlled-round.png},
+ * {@code learning-outcome-{crown,tent,raft}.png}, {@code learning-review-two-letter.png}.
  */
 public final class Graphemes implements FabricClientGameTest {
 
@@ -50,7 +50,7 @@ public final class Graphemes implements FabricClientGameTest {
 				Hands.solve(player, room);
 			});
 			session.waitTicks(10);
-			shoot(session, "phonics-igh-tile");
+			shoot(session, "learning-igh-tile");
 			session.onServer(server -> press(session.player(), Rooms.of(session.player())));
 			Waits.until(session, 600, "light was never read out", () -> {
 				List<String> log = Narrator.log(session.player());
@@ -74,7 +74,7 @@ public final class Graphemes implements FabricClientGameTest {
 				look(player, room);
 			});
 			session.waitTicks(20);
-			shoot(session, "phonics-r-controlled-round");
+			shoot(session, "learning-r-controlled-round");
 
 			// Three new outcomes.
 			for (String text : List.of("crown", "tent", "raft")) {
@@ -95,13 +95,13 @@ public final class Graphemes implements FabricClientGameTest {
 					}
 				});
 				if (text.equals("crown")) session.context().runOnClient(client -> client.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_FRONT));
-				shoot(session, "phonics-outcome-" + text);
+				shoot(session, "learning-outcome-" + text);
 				if (text.equals("crown")) session.context().runOnClient(client -> client.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON));
 			}
 			// Every tile on the Two-letter screen, fitting.
 			session.onServer(server -> justfatlard.learning_blocks.review.Review.open(session.player(), justfatlard.learning_blocks.review.Review.Tab.PAIRS, null, false));
 			session.waitTicks(10);
-			shoot(session, "phonics-review-two-letter");
+			shoot(session, "learning-review-two-letter");
 			session.onServer(server -> justfatlard.learning_blocks.review.Review.press(session.player(), "close"));
 			session.command("/learn leave");
 			Waits.home(session);

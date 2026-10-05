@@ -54,7 +54,7 @@ public final class ReviewScreens implements FabricClientGameTest {
 				check(lastPlayed().equals("phoneme/sh"), "the sh tile did not say phoneme/sh: " + lastPlayed());
 				Review.press(player, "tab:LETTERS");
 			});
-			shoot(session, "phonics-review-letters");
+			shoot(session, "learning-review-letters");
 
 			// Vowels, by its tab: short then the word, and long.
 			session.onServer(server -> {
@@ -67,7 +67,7 @@ public final class ReviewScreens implements FabricClientGameTest {
 				check(lastPlayed().equals("phoneme/e"), "e's short button did not say phoneme/e: " + lastPlayed());
 			});
 			Waits.until(session, 100, "the short e's word, its keyword egg, never followed", () -> lastPlayed().equals("word/egg"));
-			shoot(session, "phonics-review-vowels");
+			shoot(session, "learning-review-vowels");
 
 			// My words, with nothing read: empty, and kind about it.
 			session.onServer(server -> {
@@ -76,7 +76,7 @@ public final class ReviewScreens implements FabricClientGameTest {
 				check(Review.openTab(player) == Review.Tab.WORDS, "the my words tab did not open");
 				check(Review.readShown(player).isEmpty() && Review.unreadShown(player).isEmpty(), "a fresh player's words are not empty");
 			});
-			shoot(session, "phonics-review-words-empty");
+			shoot(session, "learning-review-words-empty");
 
 			// Not an operator: no phrases, no every-word view, no one else's words.
 			session.onServer(server -> {
@@ -104,7 +104,7 @@ public final class ReviewScreens implements FabricClientGameTest {
 				Review.press(player, "word:learning-blocks-justfatlard:fan");
 				check(lastPlayed().equals("word/cat"), "an unread word could be played by a child: " + lastPlayed());
 			});
-			shoot(session, "phonics-review-words");
+			shoot(session, "learning-review-words");
 
 			session.onServer(server -> {
 				ServerPlayer player = session.player();
@@ -126,7 +126,7 @@ public final class ReviewScreens implements FabricClientGameTest {
 				Review.press(player, "word:learning-blocks-justfatlard:fan");
 				check(lastPlayed().equals("word/fan"), "an operator could not hear an unread word: " + lastPlayed());
 			});
-			shoot(session, "phonics-review-words-all");
+			shoot(session, "learning-review-words-all");
 
 			session.onServer(server -> {
 				ServerPlayer player = session.player();
@@ -136,7 +136,7 @@ public final class ReviewScreens implements FabricClientGameTest {
 				Review.press(player, "phrase:phrase/next_level");
 				check(lastPlayed().equals("phrase/next_level"), "the next_level row did not play it: " + lastPlayed());
 			});
-			shoot(session, "phonics-review-phrases");
+			shoot(session, "learning-review-phrases");
 
 			session.onServer(server -> {
 				ServerPlayer player = session.player();

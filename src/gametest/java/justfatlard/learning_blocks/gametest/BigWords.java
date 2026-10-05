@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
  * then the chunks slide together and catfish is said. The whole word, both chunks to build, keeps
  * the column. hedge|hog has its dge on one tile; cupcake, eight columns with the gap, stays clear of
  * the button with its picture over it. A big word read-it round; the sampler's chunk kind. Full run:
- * {@code phonics-big-chunk.png}, {@code phonics-big-joined.png}, {@code phonics-big-whole.png},
- * {@code phonics-big-hedgehog.png}, {@code phonics-big-cupcake.png}, {@code phonics-big-read-it.png}.
+ * {@code learning-big-chunk.png}, {@code learning-big-joined.png}, {@code learning-big-whole.png},
+ * {@code learning-big-hedgehog.png}, {@code learning-big-cupcake.png}, {@code learning-big-read-it.png}.
  */
 public final class BigWords implements FabricClientGameTest {
 
@@ -43,7 +43,7 @@ public final class BigWords implements FabricClientGameTest {
 			try {
 				run(session);
 			} catch (Throwable failed) {
-				LoggerFactory.getLogger("phonics-gametest").error("BigWords failed", failed);
+				LoggerFactory.getLogger("learning-blocks-gametest").error("BigWords failed", failed);
 				throw failed;
 			}
 		});
@@ -84,7 +84,7 @@ public final class BigWords implements FabricClientGameTest {
 			check(puzzle.shelf().containsAll(List.of(Letter.F, Letter.I, Letter.SH)), "the floor lacks fish's tiles: " + puzzle.shelf());
 		});
 		session.waitTicks(30);
-		shoot(session, "phonics-big-chunk");
+		shoot(session, "learning-big-chunk");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			Room room = Rooms.of(player);
@@ -106,7 +106,7 @@ public final class BigWords implements FabricClientGameTest {
 			List<BlockPos> row = rowOf(Rooms.of(session.player()));
 			for (int i = 1; i < row.size(); i++) check(row.get(i).getX() - row.get(i - 1).getX() == 1, "the chunks did not slide together: " + row);
 		});
-		shoot(session, "phonics-big-joined");
+		shoot(session, "learning-big-joined");
 		Waits.until(session, 600, "the catfish round never moved on", () -> !Rooms.of(session.player()).busy());
 
 		// The whole word, both chunks to build: the column is still there, as a hint.
@@ -119,7 +119,7 @@ public final class BigWords implements FabricClientGameTest {
 			check(row.get(3).getX() - row.get(2).getX() == 2, "the whole word lost its chunk column");
 		});
 		session.waitTicks(30);
-		shoot(session, "phonics-big-whole");
+		shoot(session, "learning-big-whole");
 
 		// Hedge|hog: hedge to build, its dge one tile.
 		session.onServer(server -> {
@@ -128,7 +128,7 @@ public final class BigWords implements FabricClientGameTest {
 			check(Rooms.of(player).puzzle().shelf().contains(Letter.DGE), "no dge tile on the floor");
 		});
 		session.waitTicks(30);
-		shoot(session, "phonics-big-hedgehog");
+		shoot(session, "learning-big-hedgehog");
 
 		// Cupcake: eight columns, clear of the button, the picture over the word.
 		session.onServer(server -> {
@@ -143,7 +143,7 @@ public final class BigWords implements FabricClientGameTest {
 			check(hit != null && hit.getY() > row.getFirst().getY() + 0.5, "cupcake's picture is not over the word");
 		});
 		session.waitTicks(30);
-		shoot(session, "phonics-big-cupcake");
+		shoot(session, "learning-big-cupcake");
 
 		// A read-it round with a big word.
 		session.onServer(server -> {
@@ -154,7 +154,7 @@ public final class BigWords implements FabricClientGameTest {
 			check(Rooms.of(player).choices().size() >= 2, "a big-word read-it has " + Rooms.of(player).choices().size() + " pictures");
 		});
 		session.waitTicks(30);
-		shoot(session, "phonics-big-read-it");
+		shoot(session, "learning-big-read-it");
 		session.command("/learn leave");
 		Waits.home(session);
 	}

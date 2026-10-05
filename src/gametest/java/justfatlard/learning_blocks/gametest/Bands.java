@@ -26,10 +26,10 @@ import org.slf4j.LoggerFactory;
  * and its rounds ask only those while the tiles on the floor still come from all of stage 1;
  * mastering a band opens the next with "You're ready for new words!" and pays stage_complete;
  * {@code /learn stage 1b} puts a reader at a band; the parent view heads its words by band.
- * The band table is logged. Full run: {@code phonics-bands-progress.png}.
+ * The band table is logged. Full run: {@code learning-bands-progress.png}.
  */
 public final class Bands implements FabricClientGameTest {
-	private static final Logger LOGGER = LoggerFactory.getLogger("phonics-gametest");
+	private static final Logger LOGGER = LoggerFactory.getLogger("learning-blocks-gametest");
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
@@ -119,7 +119,7 @@ public final class Bands implements FabricClientGameTest {
 				"the parent view does not head words by band: " + shown);
 		});
 		session.waitTicks(10);
-		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("phonics-bands-progress").disableCounterPrefix());
+		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("learning-bands-progress").disableCounterPrefix());
 		session.command("/learn leave");
 		Waits.home(session);
 	}

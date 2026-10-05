@@ -229,7 +229,8 @@ public final class PrizeFile {
 	}
 
 	private static final String HEADER = """
-		Learning Blocks prizes: what reading earns, handed over at home when a child leaves the classroom.
+		Learning Blocks prizes: what learning earns, handed over at home when a child leaves the classroom.
+		The rest of the mod's server settings are here too: puzzles (kinds of round) and subjects.
 
 		Nothing here goes into the classroom's own inventory. Everything earned waits with the
 		things put aside at the door and is handed back after them; whatever does not fit is
@@ -260,15 +261,20 @@ public final class PrizeFile {
 		Map.entry("enabled", "Everything below, on or off at once."),
 		Map.entry("daily_cap", """
 			At most this many payouts per child per real day, counting every event and threshold
-			that pays. 0 for no cap. A payout over the cap is not lost: it is owed, and paid on a
+			that pays (20 by default, so a long day of streaks can't pay without end). 0 for no cap. A payout over the cap is not lost: it is owed, and paid on a
 			later day, oldest first, within that day's cap."""),
 		Map.entry("events.new_word", """
-			The first time a child ever reads a word. Pays once per word, ever, so guessing every
-			letter in turn earns nothing more."""),
-		Map.entry("events.solved", "Any word read. first_try_only: only when no other word was built this round first."),
-		Map.entry("events.streak", "Every \"length\" words read in a row. Building a different word resets the count."),
-		Map.entry("events.stage_complete", "Every word of a stage band (1a, 1b...) mastered. Pays once per band."),
-		Map.entry("events.milestone", "Totals of different words ever read. Each pays once."),
+			Learned something new: the first time a child ever gets a thing right in any subject (a
+			word, a letter, a numeral, a pattern). Pays once for each thing, ever, so guessing every
+			answer in turn earns nothing more."""),
+		Map.entry("events.solved", "Got one right, in any subject. first_try_only: only when nothing wrong was tried this round first."),
+		Map.entry("events.streak", "Every \"length\" right in a row, in any subject. A wrong answer starts the count over."),
+		Map.entry("events.stage_complete", """
+			A part of the course finished: every word of a Reading band (1a, 1b...) mastered, the
+			letters level, or a Numbers or Logic stage (N0, L0...). Pays once for each."""),
+		Map.entry("events.milestone", """
+			Totals of things learned in every subject: words read, and Numbers' and Logic's things
+			got right. ("words" is the key's name; it counts them all.) Each pays once."""),
 		Map.entry("events.toy_mastered", """
 			A plushie or toy earned by mastering every word that brings it (owl by owl, the teddy by
 			hug, the car by car): the toy itself, once, ever, and these prizes as well. On by default:
@@ -318,7 +324,7 @@ public final class PrizeFile {
 	private static final String DEFAULT_VALUES = """
 		{
 		  "enabled": true,
-		  "daily_cap": 0,
+		  "daily_cap": 20,
 		  "events": {
 		    "new_word": { "enabled": true, "points": 0, "prizes": [ { "item": "minecraft:cookie", "count": 1 } ] },
 		    "solved": { "enabled": false, "first_try_only": true, "points": 1, "prizes": [] },

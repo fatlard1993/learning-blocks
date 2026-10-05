@@ -38,7 +38,7 @@ public final class Lessons implements FabricClientGameTest {
 			ready(context, world);
 
 			// An ordinary visit: the wooden door, open.
-			world.getServer().runOnServer(server -> asPlayer(world, "phonics"));
+			world.getServer().runOnServer(server -> asPlayer(world, "learn"));
 			context.waitTicks(40);
 			world.getServer().runOnServer(server -> {
 				ServerPlayer player = world.getConnection().getServerPlayer();

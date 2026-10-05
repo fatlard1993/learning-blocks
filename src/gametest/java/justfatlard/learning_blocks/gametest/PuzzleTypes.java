@@ -67,8 +67,8 @@ public final class PuzzleTypes implements FabricClientGameTest {
 				check(Puzzle.forTarget(word("web"), Words.all(), random).kind() == Puzzle.Kind.LAST, "web is not a last-sound round (we_)");
 			});
 
-			round(session, "map", Puzzle.Kind.LAST, 2, "phonics-round-last-sound");
-			round(session, "cut", Puzzle.Kind.MIDDLE, 1, "phonics-round-middle-vowel");
+			round(session, "map", Puzzle.Kind.LAST, 2, "learning-round-last-sound");
+			round(session, "cut", Puzzle.Kind.MIDDLE, 1, "learning-round-middle-vowel");
 
 			// The settings: only last sound on, and a natural round is one; only first sound, and it is that.
 			session.onServer(server -> {

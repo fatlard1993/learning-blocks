@@ -32,7 +32,7 @@ import net.minecraft.world.phys.Vec3;
  * Only words with a clear picture are read-it rounds or choices (sat is not). A missed word and
  * sound get a gentle star on My words and the Letters tab. The progress screen shows the mix-up, and
  * the export writes it as JSON. Full run:
- * {@code phonics-read-it-round.png}, {@code phonics-progress-screen.png}, {@code phonics-practise-stars.png}.
+ * {@code learning-read-it-round.png}, {@code learning-progress-screen.png}, {@code learning-practise-stars.png}.
  */
 public final class ReadIt implements FabricClientGameTest {
 
@@ -76,7 +76,7 @@ public final class ReadIt implements FabricClientGameTest {
 			check(!round.contains("clip:word/cat") && !round.contains("light:0") && !round.contains("clip:phrase/make_the_word"),
 				"the word was said before the child acted: " + round);
 		});
-		shoot(session, "phonics-read-it-round");
+		shoot(session, "learning-read-it-round");
 
 		// Wrong: the picked picture says its word, and the round stays.
 		session.onServer(server -> click(session.player(), wrong[0]));
@@ -141,10 +141,10 @@ public final class ReadIt implements FabricClientGameTest {
 			check(ProgressView.lastShown(player).contains(line), "the progress screen does not show '" + line + "': " + ProgressView.lastShown(player));
 		});
 		session.waitTicks(10);
-		shoot(session, "phonics-progress-screen");
+		shoot(session, "learning-progress-screen");
 		session.onServer(server -> justfatlard.learning_blocks.review.Review.open(session.player(), justfatlard.learning_blocks.review.Review.Tab.WORDS, null, false));
 		session.waitTicks(10);
-		shoot(session, "phonics-practise-stars");
+		shoot(session, "learning-practise-stars");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			Path file = ProgressView.export(player);

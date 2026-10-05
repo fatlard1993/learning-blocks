@@ -25,7 +25,7 @@ import net.minecraft.world.phys.Vec3;
 /**
  * TEN built when the room asked for HEN: the button throws snowballs at the child, real snowball
  * entities flying at them, ten of them, and not one snowball ends up in the pack or on the floor.
- * The child is not hurt. Full run: {@code phonics-wrong-ten.png}, mid-throw.
+ * The child is not hurt. Full run: {@code learning-wrong-ten.png}, mid-throw.
  */
 public final class TenWrong implements FabricClientGameTest {
 
@@ -69,7 +69,7 @@ public final class TenWrong implements FabricClientGameTest {
 				// Photographed a few throws in, with several in the air.
 				if (session.full() && seen.size() >= 3 && !shot[0]) {
 					shot[0] = true;
-					session.context().takeScreenshot(TestScreenshotOptions.of("phonics-wrong-ten").disableCounterPrefix());
+					session.context().takeScreenshot(TestScreenshotOptions.of("learning-wrong-ten").disableCounterPrefix());
 				}
 			}
 			check(seen.size() == 10, "expected ten snowballs thrown, saw " + seen.size());

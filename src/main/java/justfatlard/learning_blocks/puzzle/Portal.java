@@ -224,8 +224,8 @@ final class Portal {
 			bumpedAt.put(id, now);
 			int left = Travel.lessons(player);
 			Narrator.note(player, "portal:bump:" + left);
-			if (left > 0 && left <= 10 && !room.busy && !Narrator.isPlaying(player)) {
-				Narrator.play(player, new Narration().say("phrase/more_to_go_" + left));
+			if (justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null && !room.busy && !Narrator.isPlaying(player)) {
+				Narrator.play(player, new Narration().say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left)));
 			}
 		}
 	}

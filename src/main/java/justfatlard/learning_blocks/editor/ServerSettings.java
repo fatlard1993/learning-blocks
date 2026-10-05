@@ -8,7 +8,7 @@ import justfatlard.learning_blocks.LearningBlocks;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
- * The prize settings that are settings-shaped - on or off, a number, one of three - on Phonics'
+ * The prize settings that are settings-shaped - on or off, a number, one of three - on Learning Blocks'
  * page of Pandorical's settings screen, under its server heading, for operators.
  *
  * <p>Backed by the prizes file itself, through the same change the editor makes, so there is still
@@ -21,10 +21,10 @@ public final class ServerSettings {
 	public static void register() {
 		SettingsApi.Group group = PandoricalApi.settings().serverGroup(LearningBlocks.MOD_ID, "Learning Blocks");
 		group.toggle("prizes_enabled", "Prizes", true)
-			.describe("Everything reading pays. The rest is in /learn prizes")
+			.describe("Everything learning pays. The rest is in /learn prizes")
 			.backedBy(player -> PrizeEditor.readBool("enabled", true), (player, on) -> write(player, "enabled", new JsonPrimitive(on)));
 		group.number("prizes_daily_cap", "Payouts a day (0 for no cap)", 0, 200, 1, 0)
-			.backedBy(player -> PrizeEditor.readInt("daily_cap", 0), (player, cap) -> write(player, "daily_cap", new JsonPrimitive(cap)));
+			.backedBy(player -> PrizeEditor.readInt("daily_cap", 20), (player, cap) -> write(player, "daily_cap", new JsonPrimitive(cap)));
 		group.toggle("prizes_points", "Points", false)
 			.backedBy(player -> PrizeEditor.readBool("points.enabled", false), (player, on) -> write(player, "points.enabled", new JsonPrimitive(on)));
 	}

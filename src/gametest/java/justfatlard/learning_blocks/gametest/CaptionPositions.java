@@ -63,7 +63,7 @@ public final class CaptionPositions implements FabricClientGameTest {
 			});
 			session.waitTicks(30);
 			if (session.full()) {
-				session.context().takeScreenshot(TestScreenshotOptions.of("phonics-caption-next-level").disableCounterPrefix());
+				session.context().takeScreenshot(TestScreenshotOptions.of("learning-caption-next-level").disableCounterPrefix());
 			}
 			session.onServer(server -> {
 				CaptionSettings.set(session.player(), true, "large", "bottom");
@@ -71,7 +71,7 @@ public final class CaptionPositions implements FabricClientGameTest {
 			});
 			session.waitTicks(30);
 			if (session.full()) {
-				session.context().takeScreenshot(TestScreenshotOptions.of("phonics-caption-next-level-bottom").disableCounterPrefix());
+				session.context().takeScreenshot(TestScreenshotOptions.of("learning-caption-next-level-bottom").disableCounterPrefix());
 			}
 			for (String position : new String[] {"bottom", "raised", "top"}) {
 				session.onServer(server -> {
@@ -80,7 +80,7 @@ public final class CaptionPositions implements FabricClientGameTest {
 				});
 				session.waitTicks(16);
 				if (session.full()) {
-					session.context().takeScreenshot(TestScreenshotOptions.of("phonics-caption-" + position).disableCounterPrefix());
+					session.context().takeScreenshot(TestScreenshotOptions.of("learning-caption-" + position).disableCounterPrefix());
 				}
 			}
 			session.onServer(server -> {

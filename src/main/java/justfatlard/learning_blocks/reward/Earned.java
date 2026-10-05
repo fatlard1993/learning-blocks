@@ -108,5 +108,17 @@ public final class Earned {
 				words.stream().map(Word::text).toList(), link.getKey());
 			Prizes.toyMastered(player, progress, link.getKey(), event);
 		}
+		// On the way in, the toys earned by other subjects too: put at a band, or mastered while toys were off.
+		if (read == null) {
+			for (Map.Entry<String, List<String>> link : itemLinks.entrySet()) {
+				if (earned(progress, link.getKey()) || !links().getOrDefault(link.getKey(), List.of()).isEmpty()) continue;
+				if (!link.getValue().stream().allMatch(each -> justfatlard.learning_blocks.subject.Subjects.mastered(progress, each))) continue;
+				progress.rewarded.add(earnedKey(link.getKey()));
+				progress.save(player);
+				LearningBlocks.LOGGER.info("[{}] {} had mastered {} and earned {}", LearningBlocks.MOD_ID, player.getGameProfile().name(),
+					link.getValue(), link.getKey());
+				Prizes.toyMastered(player, progress, link.getKey(), event);
+			}
+		}
 	}
 }

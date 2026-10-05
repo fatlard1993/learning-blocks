@@ -19,7 +19,7 @@ import org.jspecify.annotations.Nullable;
  * What each clip says and when, loaded from data packs: the timing the karaoke captions follow,
  * and the length a narration waits before the next clip.
  *
- * <p>One file per clip, beside it by key: {@code data/<ns>/phonics_captions/phoneme/c.json} for
+ * <p>One file per clip, beside it by key: {@code data/<ns>/learning_captions/phoneme/c.json} for
  * {@code phoneme/c}. {@code generate_sounds.py} writes them from the same speech timestamps it cuts
  * the audio by, so the two cannot disagree:
  *
@@ -48,7 +48,7 @@ public final class Captions implements SimpleSynchronousResourceReloadListener {
 		).apply(instance, Caption::new));
 	}
 
-	private static final String DIRECTORY = "phonics_captions";
+	private static final String DIRECTORY = "learning_captions";
 	private static final String SUFFIX = ".json";
 
 	/** Keyed as sounds are, {@code phrase/well_done}; replaced wholesale on reload. */

@@ -41,20 +41,6 @@ public final class CaptionSettings {
 			.describe("Top keeps the line off the board and the letters on the floor").shownWhen(shown, true);
 	}
 
-	/**
-	 * Each player's caption choices, as saved under the old name before the rename, copied to the
-	 * new one (Pandorical keeps them by mod id and key); the old ones are left as they were.
-	 */
-	public static void migrate(ServerPlayer player) {
-		var saved = justfatlard.pandorical.settings.PlayerSettings.get(player.level().getServer());
-		for (String key : java.util.List.of("captions", "caption_size", "caption_position")) {
-			String old = saved.get(player.getUUID(), justfatlard.learning_blocks.migrate.OldNames.OLD + ":" + key);
-			if (old != null && saved.get(player.getUUID(), LearningBlocks.MOD_ID + ":" + key) == null) {
-				saved.put(player.getUUID(), LearningBlocks.MOD_ID + ":" + key, old);
-			}
-		}
-	}
-
 	static boolean shown(ServerPlayer player) {
 		return shown == null || shown.get(player);
 	}

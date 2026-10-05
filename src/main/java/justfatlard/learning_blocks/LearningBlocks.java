@@ -55,7 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Learning Blocks: learning games for young children, in a classroom dimension of their own; Reading (phonics) first.
+ * Learning Blocks: learning games for young children, in a classroom dimension of their own: Reading, Numbers and Logic.
  *
  * <p>Everything is wired here, in the order it has to happen: the letter block before Pandorical is
  * told about it, the attachments before any player can load, the events last.
@@ -170,23 +170,21 @@ public class LearningBlocks implements ModInitializer {
 		ServerEntityLevelChangeEvents.AFTER_PLAYER_CHANGE_LEVEL.register((player, from, to) -> {
 			if (justfatlard.learning_blocks.classroom.Places.isClassroom(from)) justfatlard.learning_blocks.classroom.Sky.forget(player);
 		});
-		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
-			server.execute(() -> justfatlard.learning_blocks.classroom.Sky.forget(handler.player)));
-		justfatlard.learning_blocks.migrate.OldNames.aliasRegistries();
-		justfatlard.learning_blocks.migrate.OldNames.copyConfig();
+		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> server.execute(() -> {
+			if (!Rooms.relogged(handler.player)) justfatlard.learning_blocks.classroom.Sky.forget(handler.player);
+		}));
 		PandoricalApi.content().registerModAssets(MOD_ID);
 		Sounds.init();
 
 		// The way in, as a button on the server's own action menu, so nobody has to type.
 		PandoricalApi.actionMenus().suggestButton(
 			ActionMenuApi.Button.runs("minecraft:book", "Learning Blocks", "learn"));
-		PandoricalApi.commandHelp().describe("/learn", "Go to your Learning Blocks classroom (/phonics works too).");
+		PandoricalApi.commandHelp().describe("/learn", "Go to your Learning Blocks classroom.");
 		// Hearing the letters and your words again, from anywhere: safe for any child to press.
 		PandoricalApi.actionMenus().suggestButton(
 			ActionMenuApi.Button.runs("minecraft:note_block", "Letter sounds", "learn sounds"));
 		PandoricalApi.actionMenus().suggestButton(
 			ActionMenuApi.Button.runs("minecraft:written_book", "My words", "learn words"));
-		// A second way out of the classroom, always there: refused, with the count, while lessons keep a child in.
 		PandoricalApi.actionMenus().suggestButton(
 			ActionMenuApi.Button.runs("minecraft:villager_spawn_egg", "Silly sentences", "learn silly"));
 		PandoricalApi.actionMenus().suggestButton(
@@ -199,7 +197,7 @@ public class LearningBlocks implements ModInitializer {
 		PandoricalApi.commandHelp().describe("/learn phrases", "Hear every recorded phrase, with its caption and length.");
 		// Operators only: Brigadier leaves the command out of the list anybody else's client is sent,
 		// so the mods screen offers it, and its Add button, to operators alone.
-		PandoricalApi.commandHelp().describe("/learn prizes", "Change what reading earns: events, items, loot.");
+		PandoricalApi.commandHelp().describe("/learn prizes", "Change what learning earns: events, items, loot; and which subjects and rounds.");
 		PandoricalApi.commandHelp().describe("/learn send <player> [lessons]",
 			"Send a child to the classroom; with lessons, the door stays shut until they are done.");
 		PandoricalApi.commandHelp().describe("/learn lessons <player>", "How many lessons a child has left.");
@@ -224,11 +222,10 @@ public class LearningBlocks implements ModInitializer {
 		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new Words());
 		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new Captions());
 
+		justfatlard.learning_blocks.classroom.JoinRequests.listen();
 		CommandRegistrationCallback.EVENT.register((dispatcher, registries, environment) ->
 			LearnCommand.register(dispatcher));
 
-		// Saved under the old name: moved before anything reads it.
-		ServerPlayerEvents.JOIN.register(justfatlard.learning_blocks.migrate.OldNames::migratePlayer);
 		ServerPlayerEvents.JOIN.register(Travel::loggedIn);
 		ServerPlayerEvents.JOIN.register(PrizeSessions::loggedIn);
 		ServerPlayerEvents.AFTER_RESPAWN.register((old, fresh, alive) -> Travel.respawned(fresh));
@@ -240,12 +237,15 @@ public class LearningBlocks implements ModInitializer {
 			// The room they had as they went: a forget queued behind a quick re-login leaves the new one be.
 			justfatlard.learning_blocks.puzzle.Room had = Rooms.of(handler.player);
 			Runnable forget = () -> {
+				// Already back (a quick re-login): everything belongs to the new session now.
+				if (Rooms.relogged(handler.player)) return;
 				Rooms.forget(handler.player, had);
 				justfatlard.learning_blocks.sound.Sounds.forget(handler.player.getUUID());
 				PrizeEditor.forget(handler.player.getUUID());
 				Review.forget(handler.player.getUUID());
 				justfatlard.learning_blocks.review.ProgressView.forget(handler.player.getUUID());
 				justfatlard.learning_blocks.classroom.Schedules.forget(handler.player.getUUID());
+				justfatlard.learning_blocks.classroom.JoinRequests.forget(server, handler.player.getUUID());
 			};
 			if (server.isSameThread()) forget.run();
 			else server.execute(forget);
@@ -259,11 +259,11 @@ public class LearningBlocks implements ModInitializer {
 			justfatlard.learning_blocks.Safely.run("Daily schedules", () -> justfatlard.learning_blocks.classroom.Schedules.tick(server));
 		});
 		// Prizes name items and loot tables, which only exist once the server's registries do.
-		ServerLifecycleEvents.SERVER_STARTED.register(Plots::migrate);
 		ServerLifecycleEvents.SERVER_STARTED.register(PrizeConfig::load);
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> justfatlard.learning_blocks.classroom.Schedules.load());
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
 			Later.clear();
+			justfatlard.learning_blocks.classroom.JoinRequests.clear();
 			justfatlard.learning_blocks.reward.Progress.forgetPractice();
 			Narrator.clear();
 			Rooms.clear();

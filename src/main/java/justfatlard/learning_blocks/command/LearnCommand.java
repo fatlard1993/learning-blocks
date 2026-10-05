@@ -34,7 +34,6 @@ public final class LearnCommand {
 
 	/** The main command; and its old name, kept as another way in to every subcommand. */
 	public static final String NAME = "learn";
-	public static final String OLD_NAME = "phonics";
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		com.mojang.brigadier.tree.LiteralCommandNode<CommandSourceStack> learn = dispatcher.register(Commands.literal(NAME)
@@ -104,7 +103,7 @@ public final class LearnCommand {
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.then(Commands.argument("player", EntityArgument.player())
 					.executes(context -> send(context, null))
-					.then(Commands.argument("lessons", IntegerArgumentType.integer(1, 999))
+					.then(Commands.argument("lessons", IntegerArgumentType.integer(1, justfatlard.learning_blocks.classroom.Travel.MOST_LESSONS))
 						.executes(context -> send(context, IntegerArgumentType.getInteger(context, "lessons"))))))
 			.then(Commands.literal("lessons")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
@@ -112,6 +111,23 @@ public final class LearnCommand {
 			.then(Commands.literal("home")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.then(Commands.argument("player", EntityArgument.player()).executes(LearnCommand::home)))
+			// Plots of players long gone, given back to be handed out again.
+			.then(Commands.literal("plots")
+				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
+				.then(Commands.literal("prune").then(Commands.argument("days", IntegerArgumentType.integer(1, 3650)).executes(context -> {
+					int days = IntegerArgumentType.getInteger(context, "days");
+					int retired = justfatlard.learning_blocks.classroom.Plots.prune(context.getSource().getServer(), days);
+					context.getSource().sendSuccess(() -> Component.literal("Gave back " + retired + (retired == 1 ? " plot" : " plots")
+						+ " of players not seen in " + days + " days"), true);
+					return 1;
+				}))))
+			// A lost plushie or toy back: only one the child has earned.
+			.then(Commands.literal("give")
+				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
+				.then(Commands.argument("player", EntityArgument.player())
+					.then(Commands.argument("thing", com.mojang.brigadier.arguments.StringArgumentType.word())
+						.suggests((context, builder) -> net.minecraft.commands.SharedSuggestionProvider.suggest(earnedThings(EntityArgument.getPlayer(context, "player")), builder))
+						.executes(LearnCommand::give))))
 			.then(Commands.literal("release")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.then(Commands.argument("player", EntityArgument.player()).executes(LearnCommand::release)))
@@ -133,7 +149,7 @@ public final class LearnCommand {
 						.suggests((context, builder) -> net.minecraft.commands.SharedSuggestionProvider.suggest(
 							java.util.stream.Stream.concat(readerNames(context.getSource()).stream(), java.util.stream.Stream.of("nobody")).toList(), builder))
 						.executes(LearnCommand::dailyWith)))
-					.then(Commands.argument("lessons", IntegerArgumentType.integer(0, 50))
+					.then(Commands.argument("lessons", IntegerArgumentType.integer(0, justfatlard.learning_blocks.classroom.Travel.MOST_LESSONS))
 						.executes(context -> daily(context, null, IntegerArgumentType.getInteger(context, "lessons")))
 						// Some of each subject: /learn daily Sam 10 reading 5 numbers 5.
 						.then(Commands.argument("split", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
@@ -143,7 +159,7 @@ public final class LearnCommand {
 					.then(Commands.argument("weekday", com.mojang.brigadier.arguments.StringArgumentType.word())
 						.suggests((context, builder) -> net.minecraft.commands.SharedSuggestionProvider.suggest(
 							List.of("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"), builder))
-						.then(Commands.argument("count", IntegerArgumentType.integer(0, 50))
+						.then(Commands.argument("count", IntegerArgumentType.integer(0, justfatlard.learning_blocks.classroom.Travel.MOST_LESSONS))
 							.executes(context -> daily(context, com.mojang.brigadier.arguments.StringArgumentType.getString(context, "weekday"),
 								IntegerArgumentType.getInteger(context, "count")))))))
 			.then(Commands.literal("progress")
@@ -178,8 +194,6 @@ public final class LearnCommand {
 				}))
 				.then(Commands.literal("done").executes(context -> withPlayer(context, PrizeSessions::done)))
 				.then(Commands.literal("cancel").executes(context -> withPlayer(context, PrizeSessions::cancel)))));
-		// /phonics, as it was: bare it goes in, and with anything after it, it is /learn.
-		dispatcher.register(Commands.literal(OLD_NAME).executes(LearnCommand::enter).redirect(learn));
 	}
 
 	/** Everyone a daily schedule can be about: who is online, and who already has one. */
@@ -243,33 +257,51 @@ public final class LearnCommand {
 		}
 	}
 
-	/** Who would like to read with whom: by the one asked, the asker, and until when. */
-	private static final java.util.Map<java.util.UUID, java.util.Map<java.util.UUID, Long>> asked = new java.util.HashMap<>();
-	/** A minute to say yes. */
-	private static final long ASK_FOR = 20 * 60;
+	/** Every plushie and toy this child has earned or been given, as {@code owl}, {@code car}: what /learn give may give back. */
+	private static List<String> earnedThings(ServerPlayer player) {
+		Progress progress = Progress.of(player);
+		List<String> out = new java.util.ArrayList<>();
+		for (var plush : justfatlard.learning_blocks.plush.Plush.values()) {
+			if (progress.plushies().getOrDefault(plush, 0) > 0 || justfatlard.learning_blocks.reward.Earned.earned(progress, "plush:" + plush.word())) out.add(plush.word());
+		}
+		for (var toy : justfatlard.learning_blocks.toy.Toy.values()) {
+			if (progress.toys().getOrDefault(toy, 0) > 0 || justfatlard.learning_blocks.reward.Earned.earned(progress, "toy:" + toy.word())) out.add(toy.word());
+		}
+		return out;
+	}
 
-	/** "Can I read with you?": the other reader gets a yes and a no to click. */
+	/** One the child has earned, given again: into their pack at home, or with their prizes if they're in the classroom. */
+	private static int give(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+		ServerPlayer player = EntityArgument.getPlayer(context, "player");
+		String thing = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "thing").toLowerCase(java.util.Locale.ROOT);
+		if (!earnedThings(player).contains(thing)) {
+			context.getSource().sendFailure(Component.literal(player.getGameProfile().name() + " hasn't earned a " + thing + "; they can have: "
+				+ String.join(", ", earnedThings(player))));
+			return 0;
+		}
+		var plush = justfatlard.learning_blocks.plush.Plush.of(thing);
+		net.minecraft.world.item.ItemStack stack = plush != null ? justfatlard.learning_blocks.plush.Plushies.stack(plush)
+			: justfatlard.learning_blocks.toy.Toys.stack(justfatlard.learning_blocks.toy.Toy.of(thing));
+		justfatlard.learning_blocks.classroom.Visit visit = justfatlard.learning_blocks.classroom.Visit.of(player);
+		if (visit != null) {
+			justfatlard.learning_blocks.classroom.Visit.set(player, visit.withPrizes(List.of(stack), 0));
+			justfatlard.learning_blocks.puzzle.Rooms.prizeAdded(player, List.of(stack), 0);
+		} else if (!player.getInventory().add(stack)) player.spawnAtLocation((net.minecraft.server.level.ServerLevel) player.level(), stack);
+		context.getSource().sendSuccess(() -> Component.literal("Gave " + player.getGameProfile().name() + " their " + thing
+			+ (visit != null ? "; it comes home with their prizes" : "")), true);
+		return 1;
+	}
+
+	/** "Can I learn with you?": put to the other child as a question with Accept and Deny. */
 	private static int join(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 		ServerPlayer guest = context.getSource().getPlayerOrException();
 		ServerPlayer host = EntityArgument.getPlayer(context, "player");
-		var room = justfatlard.learning_blocks.puzzle.Rooms.of(host);
-		String refused = host == guest ? "That's you!"
-			: room == null ? host.getGameProfile().name() + " isn't reading just now"
-			: justfatlard.learning_blocks.puzzle.Rooms.of(guest) == room ? "You're already reading together"
-			: room.members().size() >= 3 ? host.getGameProfile().name() + "'s classroom is full" : null;
+		String refused = justfatlard.learning_blocks.classroom.JoinRequests.ask(guest, host);
 		if (refused != null) {
 			context.getSource().sendFailure(Component.literal(refused));
 			return 0;
 		}
-		asked.computeIfAbsent(host.getUUID(), id -> new java.util.HashMap<>()).put(guest.getUUID(), host.level().getGameTime() + ASK_FOR);
-		String who = guest.getGameProfile().name();
-		host.sendSystemMessage(Component.literal(who + " would like to read with you. ")
-			.append(Component.literal("[Yes]").withStyle(style -> style.withColor(0x2FB344).withBold(true)
-				.withClickEvent(new net.minecraft.network.chat.ClickEvent.RunCommand("/learn accept " + who))))
-			.append(Component.literal(" "))
-			.append(Component.literal("[No]").withStyle(style -> style.withColor(0xC0392B).withBold(true)
-				.withClickEvent(new net.minecraft.network.chat.ClickEvent.RunCommand("/learn decline " + who)))));
-		context.getSource().sendSuccess(() -> Component.literal("Asked " + host.getGameProfile().name() + "; waiting for a yes"), false);
+		context.getSource().sendSuccess(() -> Component.literal("Asked " + host.getGameProfile().name() + "; waiting for an answer"), false);
 		return 1;
 	}
 
@@ -277,23 +309,11 @@ public final class LearnCommand {
 	private static int answer(CommandContext<CommandSourceStack> context, boolean yes) throws CommandSyntaxException {
 		ServerPlayer host = context.getSource().getPlayerOrException();
 		ServerPlayer guest = EntityArgument.getPlayer(context, "player");
-		var waiting = asked.get(host.getUUID());
-		Long until = waiting == null ? null : waiting.remove(guest.getUUID());
-		if (until == null || host.level().getGameTime() > until) {
-			context.getSource().sendFailure(Component.literal(guest.getGameProfile().name() + " hasn't asked to read with you just now"));
-			return 0;
-		}
-		if (!yes) {
-			guest.sendSystemMessage(Component.literal(host.getGameProfile().name() + " said not just now"));
-			return 1;
-		}
-		var room = justfatlard.learning_blocks.puzzle.Rooms.of(host);
-		String refused = room == null ? "you're not reading just now" : Travel.readWith(guest, room);
+		String refused = justfatlard.learning_blocks.classroom.JoinRequests.answer(host, guest.getUUID(), yes);
 		if (refused != null) {
 			context.getSource().sendFailure(Component.literal(refused));
 			return 0;
 		}
-		guest.sendSystemMessage(Component.literal("Reading with " + host.getGameProfile().name() + "!"));
 		return 1;
 	}
 
@@ -456,6 +476,15 @@ public final class LearnCommand {
 			parts.add(subject.label() + " " + (on ? "on" : "off") + (own == null ? " (the server's default)" : ""));
 		}
 		text.append(String.join(", ", parts)).append(". Mixed: ").append(justfatlard.learning_blocks.reward.PrizeConfig.subjectMix().id());
+		if (justfatlard.learning_blocks.subject.Subjects.on(player).isEmpty()) {
+			text.append(". With every subject off, ").append(player.getGameProfile().name())
+				.append(" still gets Reading; to pause them, /learn daily ").append(player.getGameProfile().name()).append(" off");
+		}
+		List<String> clash = justfatlard.learning_blocks.classroom.Schedules.askedButOff(player);
+		if (!clash.isEmpty()) {
+			text.append(". Their daily schedule asks for ").append(String.join(" and ", clash))
+				.append(", which is off: those lessons aren't asked for until it's on again");
+		}
 		context.getSource().sendSuccess(() -> Component.literal(text.toString()), settings != null);
 		return 1;
 	}
@@ -483,10 +512,18 @@ public final class LearnCommand {
 		}
 		int lessons = IntegerArgumentType.getInteger(context, "lessons");
 		int sum = split.values().stream().mapToInt(Integer::intValue).sum();
+		if (sum > justfatlard.learning_blocks.classroom.Travel.MOST_LESSONS) {
+			context.getSource().sendFailure(Component.literal("At most " + justfatlard.learning_blocks.classroom.Travel.MOST_LESSONS + " lessons a day in all"));
+			return 0;
+		}
 		justfatlard.learning_blocks.classroom.Schedules.setSubjects(who.getKey(), who.getValue(), split);
 		String detail = split.entrySet().stream().map(each -> each.getValue() + " " + each.getKey()).collect(java.util.stream.Collectors.joining(" + "));
+		// A subject asked for that the child has off: those lessons can't be done, so say so.
+		ServerPlayer online = context.getSource().getServer().getPlayerList().getPlayer(who.getKey());
+		List<String> off = online == null ? List.of() : justfatlard.learning_blocks.classroom.Schedules.askedButOff(online);
 		context.getSource().sendSuccess(() -> Component.literal(who.getValue() + ": " + detail + " a day"
-			+ (sum != lessons ? " (" + sum + " in all, not " + lessons + ")" : "")), true);
+			+ (sum != lessons ? " (" + sum + " in all, not " + lessons + ")" : "")
+			+ (off.isEmpty() ? "" : ". " + String.join(" and ", off) + " is off for them, so those aren't asked for until it's on (/learn subjects)")), true);
 		return 1;
 	}
 
@@ -644,6 +681,10 @@ public final class LearnCommand {
 			context.getSource().sendFailure(Component.literal("Only a player can go to the classroom"));
 			return 0;
 		}
+		if (justfatlard.learning_blocks.classroom.Places.isClassroom(player.level())) {
+			justfatlard.learning_blocks.puzzle.Rooms.sayQuietly(player, "phrase/already_here");
+			return 1;
+		}
 		String refused = Travel.enter(player);
 		if (refused != null) {
 			context.getSource().sendFailure(Component.literal(refused));
@@ -670,8 +711,8 @@ public final class LearnCommand {
 		if (player != null && Travel.kept(player)) {
 			int left = Travel.lessons(player);
 			// Said too, for a child who can't read it yet.
-			if (left <= 10 && justfatlard.learning_blocks.puzzle.Rooms.of(player) != null && !justfatlard.learning_blocks.narration.Narrator.isPlaying(player)) {
-				justfatlard.learning_blocks.narration.Narrator.play(player, new justfatlard.learning_blocks.narration.Narration().say("phrase/more_to_go_" + left));
+			if (justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null && justfatlard.learning_blocks.puzzle.Rooms.of(player) != null && !justfatlard.learning_blocks.narration.Narrator.isPlaying(player)) {
+				justfatlard.learning_blocks.narration.Narrator.play(player, new justfatlard.learning_blocks.narration.Narration().say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left)));
 			}
 			context.getSource().sendFailure(Component.literal("Not yet: " + left + (left == 1 ? " lesson" : " lessons") + " to go"));
 			return 0;

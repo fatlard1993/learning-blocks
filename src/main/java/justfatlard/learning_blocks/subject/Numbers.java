@@ -45,8 +45,6 @@ import org.jspecify.annotations.Nullable;
  */
 public final class Numbers implements Subject {
 	public static final Numbers INSTANCE = new Numbers();
-	/** The kind the stub had, by its old name: which block says it. */
-	public static final String FIND = Kind.FIND.id;
 
 	private static final String[] WORDS = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
 		"eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty",

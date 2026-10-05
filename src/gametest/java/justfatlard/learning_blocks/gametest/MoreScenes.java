@@ -68,7 +68,7 @@ public final class MoreScenes implements FabricClientGameTest {
 					look(player);
 				});
 				Waits.until(session, 300, text + "'s line was never said", () -> !Narrator.isPlaying(session.player()));
-				shoot(session, "phonics-scene-" + text + "-before");
+				shoot(session, "learning-scene-" + text + "-before");
 				session.onServer(server -> {
 					ServerPlayer player = session.player();
 					Room room = Rooms.of(player);
@@ -97,7 +97,7 @@ public final class MoreScenes implements FabricClientGameTest {
 					}
 					check(player.getHealth() >= player.getMaxHealth(), text + " hurt the child");
 				});
-				shoot(session, "phonics-scene-" + text + "-after");
+				shoot(session, "learning-scene-" + text + "-after");
 				session.onServer(server -> Rooms.startRound(session.player(), word("cat")));
 				session.waitTicks(2);
 				session.onServer(server -> {

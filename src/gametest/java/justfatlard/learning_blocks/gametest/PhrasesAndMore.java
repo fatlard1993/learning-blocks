@@ -36,10 +36,10 @@ import net.minecraft.world.phys.Vec3;
  * Round E: two-word phrases (big pig: one big pig; six cod: six of them), a tricky word (the room
  * says it, the child finds its card, and nothing is sounded out), big and little letters both ways
  * round (and the letters level not done until every pair is mastered, unless done before capitals),
- * and a plural (cats: three cats; dogs said with a /z/). Full run: {@code phonics-phrase-round.png},
- * {@code phonics-phrase-big-pig.png}, {@code phonics-tricky-round.png}, {@code phonics-case-big.png},
- * {@code phonics-case-little.png}, {@code phonics-plural-round.png}, {@code phonics-plural-cats.png},
- * {@code phonics-review-tricky.png}, {@code phonics-review-capitals.png}.
+ * and a plural (cats: three cats; dogs said with a /z/). Full run: {@code learning-phrase-round.png},
+ * {@code learning-phrase-big-pig.png}, {@code learning-tricky-round.png}, {@code learning-case-big.png},
+ * {@code learning-case-little.png}, {@code learning-plural-round.png}, {@code learning-plural-cats.png},
+ * {@code learning-review-tricky.png}, {@code learning-review-capitals.png}.
  */
 public final class PhrasesAndMore implements FabricClientGameTest {
 
@@ -50,7 +50,7 @@ public final class PhrasesAndMore implements FabricClientGameTest {
 				run(session);
 			} catch (Throwable failed) {
 				// Said here as well: a world that will not close after a failure would otherwise swallow it.
-				org.slf4j.LoggerFactory.getLogger("phonics-gametest").error("PhrasesAndMore failed", failed);
+				org.slf4j.LoggerFactory.getLogger("learning-blocks-gametest").error("PhrasesAndMore failed", failed);
 				throw failed;
 			}
 		});
@@ -69,11 +69,11 @@ public final class PhrasesAndMore implements FabricClientGameTest {
 			look(player, room);
 		});
 		session.waitTicks(20);
-		shoot(session, "phonics-phrase-round");
+		shoot(session, "learning-phrase-round");
 		solve(session);
 		Waits.until(session, 600, "big pig never happened", () -> Narrator.log(session.player()).contains("phrase:big_pig"));
 		session.waitTicks(30);
-		shoot(session, "phonics-phrase-big-pig");
+		shoot(session, "learning-phrase-big-pig");
 		waitNext(session);
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
@@ -107,7 +107,7 @@ public final class PhrasesAndMore implements FabricClientGameTest {
 		});
 		Waits.until(session, 300, "the tricky word was never said", () -> Narrator.log(session.player()).contains("clip:word/the")
 			&& !Narrator.isPlaying(session.player()));
-		shoot(session, "phonics-tricky-round");
+		shoot(session, "learning-tricky-round");
 		session.onServer(server -> click(session.player(), wrong[0]));
 		Waits.until(session, 300, "the wrong card never said its word", () -> {
 			List<String> log = Narrator.log(session.player());
@@ -129,7 +129,7 @@ public final class PhrasesAndMore implements FabricClientGameTest {
 			check(Review.trickyShown(session.player()).contains("the"), "the Tricky tab does not show the");
 		});
 		session.waitTicks(10);
-		shoot(session, "phonics-review-tricky");
+		shoot(session, "learning-review-tricky");
 		session.onServer(server -> Review.press(session.player(), "close"));
 
 		// Big and little, both ways.
@@ -145,7 +145,7 @@ public final class PhrasesAndMore implements FabricClientGameTest {
 			look(player, room);
 		});
 		session.waitTicks(20);
-		shoot(session, "phonics-case-big");
+		shoot(session, "learning-case-big");
 		solveAndWaitCase(session);
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
@@ -165,7 +165,7 @@ public final class PhrasesAndMore implements FabricClientGameTest {
 			press(player, room);
 		});
 		session.waitTicks(20);
-		shoot(session, "phonics-case-little");
+		shoot(session, "learning-case-little");
 		Waits.until(session, 300, "the wrong small letter never went home", () -> !Rooms.of(session.player()).busy()
 			&& Rooms.of(session.player()).inGap() == null);
 		solveAndWaitCase(session);
@@ -184,7 +184,7 @@ public final class PhrasesAndMore implements FabricClientGameTest {
 			Review.press(player, "caps");
 		});
 		session.waitTicks(10);
-		shoot(session, "phonics-review-capitals");
+		shoot(session, "learning-review-capitals");
 		session.onServer(server -> {
 			Review.press(session.player(), "caps");
 			Review.press(session.player(), "close");
@@ -216,7 +216,7 @@ public final class PhrasesAndMore implements FabricClientGameTest {
 			look(player, room);
 		});
 		session.waitTicks(20);
-		shoot(session, "phonics-plural-round");
+		shoot(session, "learning-plural-round");
 		solve(session);
 		Waits.until(session, 600, "cats never came", () ->
 			Rooms.of(session.player()).creatures().stream().filter(e -> e.getType() == EntityTypes.CAT).count() >= 3);
@@ -225,7 +225,7 @@ public final class PhrasesAndMore implements FabricClientGameTest {
 			long cats = Rooms.of(session.player()).creatures().stream().filter(e -> e.getType() == EntityTypes.CAT).count();
 			check(cats >= 3, "cats brought " + cats + " cats");
 		});
-		shoot(session, "phonics-plural-cats");
+		shoot(session, "learning-plural-cats");
 		session.command("/learn leave");
 		Waits.home(session);
 	}

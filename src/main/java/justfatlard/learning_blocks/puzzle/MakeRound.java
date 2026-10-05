@@ -65,6 +65,11 @@ public final class MakeRound extends NumbersRound {
 			CaptionLine.plain(picked.said()), 4);
 	}
 
+	@Override
+	protected boolean waitingForButton() {
+		return chosen != null;
+	}
+
 	/** The tile in the gap just now, for tests. */
 	public @Nullable Choice chosen() {
 		return chosen;

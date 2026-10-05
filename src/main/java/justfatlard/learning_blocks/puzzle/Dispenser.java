@@ -226,7 +226,16 @@ public final class Dispenser implements Stage {
 		return List.copyOf(dispensed);
 	}
 
+	/** Every send ever, counted: the log above keeps only the last few. */
+	private long sends;
+
+	/** How many things the button has ever sent out, for a test to see a new one. */
+	public long sends() {
+		return sends;
+	}
+
 	void sent(String what, Vec3 from) {
+		sends++;
 		dispensed.add(new Dispensed(what, from));
 		while (dispensed.size() > 32) dispensed.removeFirst();
 	}

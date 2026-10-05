@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * from the lower reader's band, each gap its own reader's, each crediting their own tile and both
  * the word; the portal locked for one and open for the other, one leaving and the other carrying
  * on, the first coming back into the same room; a disconnect. Full run:
- * {@code phonics-together-turn.png}, {@code phonics-together-team.png}.
+ * {@code learning-together-turn.png}, {@code learning-together-team.png}.
  */
 public final class Together implements FabricClientGameTest {
 
@@ -56,7 +56,7 @@ public final class Together implements FabricClientGameTest {
 				try {
 					run(session);
 				} catch (Throwable failed) {
-					LoggerFactory.getLogger("phonics-gametest").error("Together failed", failed);
+					LoggerFactory.getLogger("learning-blocks-gametest").error("Together failed", failed);
 					throw failed;
 				}
 			});
@@ -115,7 +115,7 @@ public final class Together implements FabricClientGameTest {
 		});
 		session.waitTicks(30);
 		session.onServer(server -> check(Rooms.of(session.player()).marked().contains(ava[0].getUUID()), "no marker over Ava on her turn"));
-		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("phonics-together-turn").disableCounterPrefix());
+		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("learning-together-turn").disableCounterPrefix());
 
 		// Max, not on his turn: he can knock a tile loose and carry it, but not put it in her gap, nor press.
 		session.onServer(server -> {
@@ -165,7 +165,7 @@ public final class Together implements FabricClientGameTest {
 			look(max, room);
 		});
 		session.waitTicks(30);
-		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("phonics-together-team").disableCounterPrefix());
+		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("learning-together-team").disableCounterPrefix());
 		session.onServer(server -> {
 			ServerPlayer max = session.player();
 			FakePlayer fake = ava[0];

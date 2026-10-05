@@ -76,7 +76,12 @@ public final class Rooms {
 		// Someone still reading in the room on this plot (a guest whose host went home and came back): in with them.
 		Room there = at(level, origin);
 		if (there != null && there != rooms.get(player.getUUID()) && !there.present().isEmpty() && !there.leaving()) {
-			join(player, there);
+			// It's their own plot: in they come, even to a room already full of their guests.
+			if (!join(player, there)) {
+				close(player);
+				rooms.put(player.getUUID(), there);
+				there.addMember(player);
+			}
 			return there;
 		}
 		close(player);
@@ -84,6 +89,11 @@ public final class Rooms {
 		room.build();
 		rooms.put(player.getUUID(), room);
 		return room;
+	}
+
+	/** Whether a room is open at this spot just now: a plot in use can't be given away. */
+	public static boolean standing(ServerLevel level, BlockPos origin) {
+		return at(level, origin) != null;
 	}
 
 	/** The room standing at this spot, if there is one. */
@@ -268,7 +278,11 @@ public final class Rooms {
 	public static @Nullable String silly(ServerPlayer player) {
 		justfatlard.learning_blocks.reward.Progress progress = justfatlard.learning_blocks.reward.Progress.of(player);
 		int stage = Stages.current(progress);
-		if (stage >= 0 && stage < RoundLifecycle.BOB_FROM) return "Bob comes to the classroom at stage " + RoundLifecycle.BOB_FROM;
+		if (stage >= 0 && stage < RoundLifecycle.BOB_FROM) {
+			// Said, not written: the child pressing this button can't read the reason yet.
+			sayQuietly(player, "phrase/bob_comes_later");
+			return null;
+		}
 		if (of(player) == null || !Places.isClassroom(player.level())) {
 			String refused = justfatlard.learning_blocks.classroom.Travel.enter(player);
 			if (refused != null) return refused;
@@ -276,6 +290,20 @@ public final class Rooms {
 			return null;
 		}
 		return startSilly(player) ? null : "Not just now: the room is busy";
+	}
+
+	private static final java.util.Set<justfatlard.learning_blocks.narration.Narration> QUIET =
+		java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
+
+	/** A line said to a child, never across a round's telling; it may cut off another such line. */
+	public static void sayQuietly(ServerPlayer player, String clip) {
+		Room room = of(player);
+		if (room != null && (room.busy || room.leaving)) return;
+		var playing = Narrator.playing(player);
+		if (playing != null && !QUIET.contains(playing)) return;
+		var line = new justfatlard.learning_blocks.narration.Narration().say(clip);
+		QUIET.add(line);
+		Narrator.play(player, line);
 	}
 
 	/** Bob's silly sentences, now: from the action menu. Not while a word is being read out. */
@@ -479,11 +507,24 @@ public final class Rooms {
 	 * went: a forget that runs after they have logged back in never closes the fresh room.
 	 */
 	public static void forget(ServerPlayer player, @org.jspecify.annotations.Nullable Room had) {
+		if (relogged(player)) return;
 		Narrator.forget(player);
 		justfatlard.learning_blocks.Later.cancel(player.getUUID());
 		Room now = rooms.get(player.getUUID());
 		if (now == null || now != had) return;
 		close(player);
+	}
+
+	/**
+	 * Whether this player object is an old session's: the same player is online again as a new one
+	 * (a disconnect handled after a quick re-login). Its forgets must leave the new session's
+	 * narration, timers and room alone.
+	 */
+	public static boolean relogged(ServerPlayer player) {
+		var server = player.level().getServer();
+		if (server == null) return false;
+		ServerPlayer current = server.getPlayerList().getPlayer(player.getUUID());
+		return current != null && current != player;
 	}
 
 	public static void clear() {

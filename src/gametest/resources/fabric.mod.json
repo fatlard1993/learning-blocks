@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "phonics-gametest",
+  "id": "learning-blocks-gametest",
   "version": "1.0.0",
-  "name": "Phonics tests",
-  "description": "Loads the mod, joins a world, and checks a trip to the classroom gives back everything it put aside.",
+  "name": "Learning Blocks tests",
+  "description": "The client gametests: each joins a world and plays a part of the mod through the same paths a child or an operator takes.",
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
@@ -60,12 +60,12 @@
       "justfatlard.learning_blocks.gametest.ToyPlay",
       "justfatlard.learning_blocks.gametest.SkyAndFeelings",
       "justfatlard.learning_blocks.gametest.Unstuck",
-      "justfatlard.learning_blocks.gametest.Migration",
       "justfatlard.learning_blocks.gametest.SubjectsTest",
       "justfatlard.learning_blocks.gametest.NumbersTest",
       "justfatlard.learning_blocks.gametest.NumbersCourseTest",
       "justfatlard.learning_blocks.gametest.LogicTest",
-      "justfatlard.learning_blocks.gametest.LogicCourseTest"
+      "justfatlard.learning_blocks.gametest.LogicCourseTest",
+      "justfatlard.learning_blocks.gametest.Tending"
     ]
   },
   "depends": {

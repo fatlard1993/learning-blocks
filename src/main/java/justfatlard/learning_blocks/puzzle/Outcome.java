@@ -233,6 +233,7 @@ public sealed interface Outcome {
 			justfatlard.learning_blocks.classroom.Sky.Time to = named(time);
 			if (to == null) return;
 			if (flicker) {
+				room.puffFromButton("sky");
 				justfatlard.learning_blocks.classroom.Sky.flicker(player, to.ticks);
 				return;
 			}
@@ -363,12 +364,12 @@ public sealed interface Outcome {
 
 		@Override
 		public void run(ServerPlayer player, Stage room) {
+			room.puffFromButton("dark");
 			if (flicker) {
 				justfatlard.learning_blocks.classroom.Sky.dark(player, 4);
 				justfatlard.learning_blocks.Later.after(player, 9, p -> justfatlard.learning_blocks.classroom.Sky.dark(p, 4));
 				return;
 			}
-			room.puffFromButton("dark");
 			justfatlard.learning_blocks.classroom.Sky.dark(player, lasts);
 		}
 	}

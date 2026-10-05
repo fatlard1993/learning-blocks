@@ -83,6 +83,11 @@ public final class Narrator {
 		return running.containsKey(player.getUUID());
 	}
 
+	public static Narration playing(ServerPlayer player) {
+		Running run = running.get(player.getUUID());
+		return run == null ? null : run.narration;
+	}
+
 	/** Stop this player's narration, if any, running its {@code onStop}. The caption is left to fade. */
 	public static void stop(ServerPlayer player) {
 		Running run = running.remove(player.getUUID());

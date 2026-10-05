@@ -94,25 +94,42 @@ public final class Prizes {
 		if (!config.enabled) return;
 		payOwed(player);
 
-		if (fresh) award(player, progress, "new_word", config.newWord);
-		if (firstTry || !config.solvedFirstTryOnly) award(player, progress, "solved", config.solved);
-		if (progress.streak % config.streakLength == 0) award(player, progress, "streak", config.streak);
+		credit(player, progress, config, fresh, firstTry);
 		// Not only on a fresh word: a stage payout that failed (a full cap is not failing) is tried again.
 		// Per band, 1a, 1b: more often than per stage, which is the point.
 		justfatlard.learning_blocks.puzzle.Stages.Band band = justfatlard.learning_blocks.puzzle.Stages.bandOf(word);
 		if (config.stageComplete.enabled() && band != null && !paid(progress, band) && justfatlard.learning_blocks.puzzle.Stages.complete(progress, band)) {
 			if (award(player, progress, "stage_complete", config.stageComplete)) progress.stagesPaid.add(band.code());
 		}
+		Earned.check(player, progress, word);
+		payThresholds(player, progress);
+		progress.save(player);
+	}
+
+	/**
+	 * What any right answer pays, whatever the subject: learned something new, got one right, so
+	 * many in a row; and, for something new, the milestones it reaches.
+	 */
+	private static void credit(ServerPlayer player, Progress progress, PrizeConfig config, boolean fresh, boolean firstTry) {
+		if (fresh) award(player, progress, "new_word", config.newWord);
+		if (firstTry || !config.solvedFirstTryOnly) award(player, progress, "solved", config.solved);
+		if (progress.streak % config.streakLength == 0) award(player, progress, "streak", config.streak);
 		if (fresh && config.milestonesEnabled) {
+			int learned = learned(progress);
 			for (PrizeConfig.Mark mark : config.milestones) {
-				if (progress.rewarded.size() >= mark.at() && !progress.milestonesPaid.contains(mark.at())) {
+				if (learned >= mark.at() && !progress.milestonesPaid.contains(mark.at())) {
 					if (pay(player, progress, "milestone " + mark.at(), mark.prizes())) progress.milestonesPaid.add(mark.at());
 				}
 			}
 		}
-		Earned.check(player, progress, word);
-		payThresholds(player, progress);
-		progress.save(player);
+	}
+
+	/**
+	 * What milestones count: things learned in every subject, which is words read and Numbers' and
+	 * Logic's items got right. Letters, big-and-little pairs and Bob's sentences are not counted.
+	 */
+	public static int learned(Progress progress) {
+		return progress.words.size() + (int) progress.rewarded.stream().filter(key -> key.startsWith("numbers:") || key.startsWith("logic:")).count();
 	}
 
 	/**
@@ -147,9 +164,7 @@ public final class Prizes {
 		if (!config.enabled) return;
 		payOwed(player);
 
-		if (fresh) award(player, progress, "new_word", config.newWord);
-		if (firstTry || !config.solvedFirstTryOnly) award(player, progress, "solved", config.solved);
-		if (progress.streak % config.streakLength == 0) award(player, progress, "streak", config.streak);
+		credit(player, progress, config, fresh, firstTry);
 		if (config.stageComplete.enabled() && !progress.stagesPaid.contains(0) && justfatlard.learning_blocks.puzzle.Letters.complete(progress)) {
 			if (award(player, progress, "stage_complete", config.stageComplete)) progress.stagesPaid.add(0);
 		}
@@ -169,9 +184,7 @@ public final class Prizes {
 		progress.save(player);
 		if (!config.enabled) return;
 		payOwed(player);
-		if (fresh) award(player, progress, "new_word", config.newWord);
-		if (firstTry || !config.solvedFirstTryOnly) award(player, progress, "solved", config.solved);
-		if (progress.streak % config.streakLength == 0) award(player, progress, "streak", config.streak);
+		credit(player, progress, config, fresh, firstTry);
 		if (config.stageComplete.enabled() && !progress.stagesPaid.contains(0) && justfatlard.learning_blocks.puzzle.Letters.complete(progress)) {
 			if (award(player, progress, "stage_complete", config.stageComplete)) progress.stagesPaid.add(0);
 		}
@@ -191,9 +204,7 @@ public final class Prizes {
 		progress.save(player);
 		if (!config.enabled) return;
 		payOwed(player);
-		if (fresh) award(player, progress, "new_word", config.newWord);
-		if (firstTry || !config.solvedFirstTryOnly) award(player, progress, "solved", config.solved);
-		if (progress.streak % config.streakLength == 0) award(player, progress, "streak", config.streak);
+		credit(player, progress, config, fresh, firstTry);
 		payThresholds(player, progress);
 		progress.save(player);
 	}
@@ -210,9 +221,7 @@ public final class Prizes {
 		progress.save(player);
 		if (!config.enabled) return;
 		payOwed(player);
-		if (fresh) award(player, progress, "new_word", config.newWord);
-		if (firstTry || !config.solvedFirstTryOnly) award(player, progress, "solved", config.solved);
-		if (progress.streak % config.streakLength == 0) award(player, progress, "streak", config.streak);
+		credit(player, progress, config, fresh, firstTry);
 		payThresholds(player, progress);
 		progress.save(player);
 	}

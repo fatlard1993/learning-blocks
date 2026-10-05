@@ -1,7 +1,5 @@
 package justfatlard.learning_blocks.toy;
 
-import justfatlard.learning_blocks.narration.Narration;
-import justfatlard.learning_blocks.narration.Narrator;
 import justfatlard.learning_blocks.sound.Sounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -106,6 +104,7 @@ public class ToyBlock extends Block {
 		level.playSound(null, pos, toy.sound.event, SoundSource.BLOCKS, 0.8F, toy.sound.pitch);
 		level.sendParticles(ParticleTypes.HEART, pos.getX() + 0.5, pos.getY() + 0.9, pos.getZ() + 0.5, 2, 0.2, 0.1, 0.2, 0.0);
 		String word = "word/" + toy.word();
-		if (Sounds.isRecorded(word)) Narrator.play(player, new Narration().say(word));
+		// Never across a round's telling: a squeeze mid-answer would cut it off.
+		if (Sounds.isRecorded(word)) justfatlard.learning_blocks.puzzle.Rooms.sayQuietly(player, word);
 	}
 }

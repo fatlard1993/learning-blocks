@@ -62,9 +62,9 @@ import org.slf4j.LoggerFactory;
  * the crib and back out; the owl rides the car through its loop; the cap goes on the owl; breaking
  * a loaded toy drops both; contents are saved as an entity and load back the same. Bob's goals are
  * made from the things; a preposition round, owl in box or on it, is read and picked. Full run:
- * {@code phonics-play-car-*.png} (a contact sheet's frames), {@code phonics-play-squish-*.png},
- * {@code phonics-play-doll-crib.png}, {@code phonics-play-cap-owl.png}, {@code phonics-prep-round.png},
- * {@code phonics-toybox-hints.png}.
+ * {@code learning-play-car-*.png} (a contact sheet's frames), {@code learning-play-squish-*.png},
+ * {@code learning-play-doll-crib.png}, {@code learning-play-cap-owl.png}, {@code learning-prep-round.png},
+ * {@code learning-toybox-hints.png}.
  */
 public final class ToyPlay implements FabricClientGameTest {
 
@@ -74,7 +74,7 @@ public final class ToyPlay implements FabricClientGameTest {
 			try {
 				run(session);
 			} catch (Throwable failed) {
-				LoggerFactory.getLogger("phonics-gametest").error("ToyPlay failed", failed);
+				LoggerFactory.getLogger("learning-blocks-gametest").error("ToyPlay failed", failed);
 				throw failed;
 			}
 		});
@@ -93,7 +93,7 @@ public final class ToyPlay implements FabricClientGameTest {
 			check(unearnable.isEmpty(), "toys nothing earns: " + unearnable);
 			StringBuilder table = new StringBuilder();
 			Earned.links().forEach((key, words) -> table.append(key).append(" <- ").append(texts(words)).append("; "));
-			LoggerFactory.getLogger("phonics-gametest").info("[earns] {}", table);
+			LoggerFactory.getLogger("learning-blocks-gametest").info("[earns] {}", table);
 			// New prize files: toys by mastery, no random toybox prize.
 			JsonObject defaults = PrizeFile.defaults();
 			JsonObject events = defaults.getAsJsonObject("events");
@@ -136,7 +136,7 @@ public final class ToyPlay implements FabricClientGameTest {
 			check(Review.toyboxHints(player).contains("plush:teddy=hug"), "the Toybox does not say hug earns the teddy: " + Review.toyboxHints(player));
 		});
 		session.waitTicks(20);
-		shoot(session, "phonics-toybox-hints");
+		shoot(session, "learning-toybox-hints");
 		session.context().setScreen(() -> null);
 		session.command("/learn leave");
 		// Going home waits for the prize line, as long as the voice takes to say it.
@@ -183,7 +183,7 @@ public final class ToyPlay implements FabricClientGameTest {
 		});
 		for (int frame = 0; frame < 4; frame++) {
 			session.waitTicks(5);
-			shoot(session, "phonics-play-all-" + frame);
+			shoot(session, "learning-play-all-" + frame);
 		}
 		// Past the end of the longest play (the rings, off and back on, take over three seconds).
 		int longest = 0;
@@ -237,7 +237,7 @@ public final class ToyPlay implements FabricClientGameTest {
 		});
 		for (int frame = 0; frame < 6; frame++) {
 			session.waitTicks(5);
-			shoot(session, "phonics-play-car-" + frame);
+			shoot(session, "learning-play-car-" + frame);
 		}
 		session.waitTicks(20);
 		session.onServer(server -> {
@@ -269,7 +269,7 @@ public final class ToyPlay implements FabricClientGameTest {
 		});
 		for (int frame = 0; frame < 4; frame++) {
 			session.waitTicks(3);
-			shoot(session, "phonics-play-squish-" + frame);
+			shoot(session, "learning-play-squish-" + frame);
 		}
 		session.waitTicks(20);
 
@@ -289,10 +289,10 @@ public final class ToyPlay implements FabricClientGameTest {
 			look(player, crib.offset(0, 0, -2), 0, 40);
 		});
 		session.waitTicks(20);
-		shoot(session, "phonics-play-doll-crib");
+		shoot(session, "learning-play-doll-crib");
 		session.onServer(server -> look(session.player(), origin[0].offset(3, 0, 6), 0, 35));
 		session.waitTicks(20);
-		shoot(session, "phonics-play-cap-owl");
+		shoot(session, "learning-play-cap-owl");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			ServerLevel level = (ServerLevel) player.level();
@@ -339,7 +339,7 @@ public final class ToyPlay implements FabricClientGameTest {
 		});
 		Waits.until(session, 300, "the preposition round was never asked", () -> Narrator.log(session.player()).contains("clip:phrase/what_does_it_say")
 			&& !Narrator.isPlaying(session.player()));
-		shoot(session, "phonics-prep-round");
+		shoot(session, "learning-prep-round");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			BobRound bob = Rooms.of(player).bob();

@@ -9,6 +9,7 @@ import justfatlard.learning_blocks.Later;
 import justfatlard.learning_blocks.LearningBlocks;
 import justfatlard.learning_blocks.Safely;
 import justfatlard.learning_blocks.classroom.Travel;
+import justfatlard.learning_blocks.narration.Narration;
 import justfatlard.learning_blocks.narration.Narrator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -59,8 +60,12 @@ public final class Room {
 
 	/** Ticks of doing nothing before the room asks again. */
 	private static final int IDLE = 20 * 20;
-	/** How many times a round it asks again. */
+	/** How many times it asks again soon after the child stops; then only now and then. */
 	private static final int MAX_REPEATS = 2;
+	/** After the asking-again runs out, a quiet nudge this often while the child is still away. */
+	static final int NUDGE = 20 * 60 * 3;
+	/** Busy longer than any answer's telling takes: the round is stuck, and starts over. */
+	static final int BUSY_AT_MOST = 20 * 60 * 2;
 	/** How often the room checks the tile it is asking for still exists somewhere. */
 	private static final int TILE_CHECK = 40;
 	/** Ticks between replays of the prompt from the picture: about a second and a half. */
@@ -189,7 +194,10 @@ public final class Room {
 	/** The vowels whose magic-e line has been said this visit. */
 	final java.util.Set<String> magicSaid = new java.util.HashSet<>();
 	private long lastActive;
+	private long lastPrompted;
 	int repeats;
+	/** When the room went busy, or {@link Long#MIN_VALUE} while it isn't. */
+	private long busySince = Long.MIN_VALUE;
 	/** Whether a word other than the target was built this round: a solve after that is not first try. */
 	boolean missedThisRound;
 	/** The stage this round was picked from, or -1 for everything. */
@@ -375,7 +383,7 @@ public final class Room {
 
 	// --- Reading together ---
 
-	/** Everyone reading in this room, the owner first; at most {@link #MOST_READERS}. */
+	/** Everyone reading in this room, the owner first; at most {@link #MOST_READERS}, and a plot's owner coming back on top of that. */
 	final List<UUID> members = new ArrayList<>();
 	static final int MOST_READERS = 3;
 	/** Whose turn it is, in a shared room; null alone. */
@@ -539,7 +547,12 @@ public final class Room {
 	/** Where a reader is set down: side by side, the owner in the middle. */
 	public Vec3 spawnFor(UUID player) {
 		int at = place(player);
-		return layout.spawn().add(at == 0 ? 0 : at == 1 ? -1.5 : 1.5, 0, 0);
+		return layout.spawn().add(switch (at) {
+			case 0 -> 0;
+			case 1 -> -1.5;
+			case 2 -> 1.5;
+			default -> -3.0;
+		}, 0, 0);
 	}
 
 	/** This reader's prize chest; a new reader's is made as they come in. */
@@ -861,11 +874,52 @@ public final class Room {
 		}
 		for (PrizeShowcase chest : showcases.values()) chest.tick();
 		if (puzzle != null && !busy && level.getGameTime() % TILE_CHECK == 0) interaction.keepSolvable(player);
-		if (puzzle == null || busy || Narrator.isPlaying(player) || repeats >= MAX_REPEATS) return;
-		if (level.getGameTime() - lastActive < IDLE) return;
+		if (unstick(player)) return;
+		if (puzzle == null || busy || Narrator.isPlaying(player)) return;
+		long now = level.getGameTime();
+		if (now - Math.max(lastActive, lastPrompted) < (repeats < MAX_REPEATS ? IDLE : NUDGE)) return;
 		repeats++;
-		touch();
-		Narrator.play(player, rounds.prompt());
+		lastPrompted = now;
+		Narrator.play(player, idlePrompt());
+	}
+
+	/**
+	 * What the room says to a child who has gone quiet: the question again, or, when the answer is
+	 * already in place and only the button is left, "Press the button!".
+	 */
+	private Narration idlePrompt() {
+		boolean placed = subjectRound != null ? subjectRound.waitingForButton()
+			: bob == null && scene == null && !readIt && !gaps().isEmpty() && gaps().stream().allMatch(gap -> inGap(gap) != null);
+		if (placed) return new Narration().say("phrase/press_the_button");
+		return rounds.prompt();
+	}
+
+	/**
+	 * A round that can't go on: busy far longer than any telling takes, or a subject round with
+	 * nothing left to pick. It starts over with a new round, so no child (kept for lessons or not)
+	 * is left in a room that can't be answered. True if it did.
+	 */
+	private boolean unstick(ServerPlayer player) {
+		long now = level.getGameTime();
+		if (!busy) busySince = Long.MIN_VALUE;
+		else if (busySince == Long.MIN_VALUE) busySince = now;
+		boolean hung = busy && now - busySince >= BUSY_AT_MOST;
+		boolean dead = !busy && subjectRound != null && !subjectRound.answerable();
+		if (!hung && !dead) return false;
+		Travel.lastStuck = "STUCK: " + player.getGameProfile().name() + "'s round " + (hung ? "has been busy for " + (now - busySince) + " ticks"
+			: "has nothing left to pick") + "; a new round starts. Room state: " + Rooms.stateForLog(player);
+		LearningBlocks.LOGGER.error("[{}] {}", LearningBlocks.MOD_ID, Travel.lastStuck);
+		Narrator.stop(player);
+		busy = false;
+		busySince = Long.MIN_VALUE;
+		rounds.newRound(player, null, false, false);
+		return true;
+	}
+
+	/** For tests: busy since this long ago, as a narration that never finished would leave it. */
+	public void hangForTests(int ticksAgo) {
+		busy = true;
+		busySince = level.getGameTime() - ticksAgo;
 	}
 
 	/** Each reader's own part of the tick: their way out, and their lessons. */
@@ -906,8 +960,10 @@ public final class Room {
 		noPuzzleSince = -1;
 	}
 
+	/** The child did something: the waiting starts over, and the room may ask again soon if they stop. */
 	void touch() {
 		lastActive = level.getGameTime();
+		repeats = 0;
 	}
 
 	/** Closing: everything the room made goes, and nothing waits on it or speaks for it any more. */
@@ -1074,6 +1130,10 @@ public final class Room {
 	}
 
 	/** What the button has sent out lately, oldest first: for tests. */
+	public long sends() {
+		return dispenser.sends();
+	}
+
 	public List<Dispenser.Dispensed> dispensed() {
 		return dispenser.dispensed();
 	}

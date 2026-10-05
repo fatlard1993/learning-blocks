@@ -253,7 +253,7 @@ final class AnswerNarration {
 			if (newWord) blend.say("phrase/new_word");
 			blend.add(room.prizes(player.getUUID()).prizeLine());
 			int left = lessonsBefore - 1;
-			if (lessonsBefore > 0 && left > 0 && left <= 10) blend.say("phrase/more_to_go_" + left);
+			if (lessonsBefore > 0 && justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null) blend.say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left));
 			if (lessonsBefore == 1) blend.say(doorLine(player)).then("door_open", p -> room.refreshDoor(p, true), 10);
 			blend.say("phrase/another_one").then("next_round", room::newRound, 0);
 		} else {
@@ -365,7 +365,7 @@ final class AnswerNarration {
 		if (newWord) blend.say("phrase/new_word");
 		blend.add(room.prizes(player.getUUID()).prizeLine());
 		int left = lessonsBefore - 1;
-		if (lessonsBefore > 0 && left > 0 && left <= 10) blend.say("phrase/more_to_go_" + left);
+		if (lessonsBefore > 0 && justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null) blend.say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left));
 		if (lessonsBefore == 1) {
 			blend.say(doorLine(player)).then("door_open", p -> room.refreshDoor(p, true), 10);
 		}
@@ -420,7 +420,7 @@ final class AnswerNarration {
 			if (letterMastered) chant.then("mastered", this::sparkle, 2).say("phrase/mastered");
 			chant.add(room.prizes(player.getUUID()).prizeLine());
 			int left = lessonsBefore - 1;
-			if (lessonsBefore > 0 && left > 0 && left <= 10) chant.say("phrase/more_to_go_" + left);
+			if (lessonsBefore > 0 && justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null) chant.say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left));
 			if (lessonsBefore == 1) chant.say(doorLine(player)).then("door_open", p -> room.refreshDoor(p, true), 10);
 			if (!lastOfLevel) chant.say("phrase/another_one");
 			chant.then("next_round", room::newRound, 0);
@@ -515,7 +515,7 @@ final class AnswerNarration {
 			if (mastered) chant.then("mastered", this::sparkle, 2).say("phrase/mastered");
 			chant.add(room.prizes(player.getUUID()).prizeLine());
 			int left = lessonsBefore - 1;
-			if (lessonsBefore > 0 && left > 0 && left <= 10) chant.say("phrase/more_to_go_" + left);
+			if (lessonsBefore > 0 && justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null) chant.say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left));
 			if (lessonsBefore == 1) chant.say(doorLine(player)).then("door_open", p -> room.refreshDoor(p, true), 10);
 			if (!lastOfLevel) chant.say("phrase/another_one");
 			chant.then("next_round", room::newRound, 0);

@@ -83,7 +83,7 @@ public final class Play {
 	public static volatile @Nullable String lastStarted;
 
 	public static void register() {
-		net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(Play::tick);
+		net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(server -> justfatlard.learning_blocks.Safely.run("Toys playing", () -> tick(server)));
 		net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPING.register(server -> stopAll());
 	}
 
@@ -179,6 +179,11 @@ public final class Play {
 	}
 
 	private static void tick(MinecraftServer server) {
+		// Only the last second matters for "played just now": older entries go, so the map can't grow.
+		if (server.getTickCount() % 200 == 0 && !lastPlayed.isEmpty()) {
+			long now = server.overworld().getGameTime();
+			lastPlayed.values().removeIf(at -> now - at > EVERY || at > now);
+		}
 		for (Iterator<Running> it = running.iterator(); it.hasNext(); ) {
 			Running run = it.next();
 			int at = (int) (run.level().getGameTime() - run.started());
@@ -275,6 +280,7 @@ public final class Play {
 	}
 
 	private static void stopAll() {
+		lastPlayed.clear();
 		for (Running run : running) {
 			if (run.copy() == null) continue;
 			discard(run);
@@ -451,13 +457,5 @@ public final class Play {
 	/** For tests: whether a display is still playing this block. */
 	public static boolean displayAt(ServerLevel level, BlockPos pos) {
 		return !level.getEntities((Entity) null, new AABB(pos).inflate(0.5), entity -> entity.entityTags().contains(PLAYING)).isEmpty();
-	}
-
-	/** Every thing played with, said, by the one who played: its word and its little noise, as before. */
-	public static void sayWord(ServerPlayer player, String word) {
-		String clip = "word/" + word;
-		if (justfatlard.learning_blocks.sound.Sounds.isRecorded(clip)) {
-			justfatlard.learning_blocks.narration.Narrator.play(player, new justfatlard.learning_blocks.narration.Narration().say(clip));
-		}
 	}
 }

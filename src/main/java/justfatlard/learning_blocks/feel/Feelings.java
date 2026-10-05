@@ -59,7 +59,7 @@ public final class Feelings {
 	private static final Map<UUID, Shown> shown = new HashMap<>();
 
 	public static void register() {
-		net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(Feelings::tick);
+		net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(server -> justfatlard.learning_blocks.Safely.run("Feelings", () -> tick(server)));
 		net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPING.register(server -> clearAll());
 		net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
 			if (entity.entityTags().contains(TAG) && !shown.containsKey(entity.getUUID())) entity.discard();

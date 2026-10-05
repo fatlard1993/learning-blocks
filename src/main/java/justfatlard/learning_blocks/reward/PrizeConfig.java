@@ -13,7 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import org.jspecify.annotations.Nullable;
 
 /**
- * What reading earns, from {@code config/learning-blocks/prizes.json}.
+ * What learning earns, from {@code config/learning-blocks/prizes.json}.
  *
  * <p>A server's, not a world's, like PvP Dimensions' presets: written with every setting and a
  * comment beside it the first time the server starts, read at every start, and read again by
@@ -388,7 +388,7 @@ public final class PrizeConfig {
 		bobPropShare = Math.max(0, Math.min(100, integer(puzzlesJson, "bob_prop_share", 20, problems)));
 		return new PrizeConfig(
 			bool(json, "enabled", true, problems),
-			Math.max(0, integer(json, "daily_cap", 0, problems)),
+			Math.max(0, integer(json, "daily_cap", 20, problems)),
 			event(events, "new_word", server, problems),
 			event(events, "solved", server, problems),
 			bool(solvedJson, "first_try_only", true, problems),

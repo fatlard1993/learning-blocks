@@ -125,7 +125,7 @@ public final class EveryWord implements FabricClientGameTest {
 					check(Rooms.of(session.player()).puzzle().shelf().size() >= 4, "the -at round does not have four tiles or more");
 				});
 				session.waitTicks(10);
-				shoot(session, "phonics-four-tiles");
+				shoot(session, "learning-four-tiles");
 			}
 
 			List<BlockPos> before = new ArrayList<>();
@@ -177,10 +177,10 @@ public final class EveryWord implements FabricClientGameTest {
 					});
 					session.waitTicks(2);
 				}
-				int[] sentBefore = new int[1];
+				long[] sentBefore = new long[1];
 				session.onServer(server -> {
 					Room room = Rooms.of(session.player());
-					sentBefore[0] = room.dispensed().size();
+					sentBefore[0] = room.sends();
 					// Room in the pack for what it gives: every word that gives something has filled it by now.
 					var pack = session.player().getInventory();
 					int free = 0;
@@ -189,17 +189,19 @@ public final class EveryWord implements FabricClientGameTest {
 					Rooms.runOutcome(session.player(), word);
 					// It comes out of the button: whatever went first started at the button's face.
 					List<justfatlard.learning_blocks.puzzle.Dispenser.Dispensed> sent = room.dispensed();
-					check(sent.size() > sentBefore[0] || sentBefore[0] >= 32, word.id() + " did not come out of the button");
-					justfatlard.learning_blocks.puzzle.Dispenser.Dispensed first = sent.get(Math.min(sentBefore[0], sent.size() - 1));
+					long fresh = room.sends() - sentBefore[0];
+					check(fresh > 0, word.id() + " did not come out of the button");
+					// The first of this word's sends: as many back from the newest as it sent.
+					justfatlard.learning_blocks.puzzle.Dispenser.Dispensed first = sent.get((int) Math.max(0, sent.size() - fresh));
 					check(first.from().distanceTo(room.mouth()) <= 1.5,
 						word.id() + "'s " + first.what() + " started " + first.from().distanceTo(room.mouth()) + " from the button");
 				});
 				if (session.full() && FLIGHT.contains(text)) {
 					session.waitTicks(5);
-					shoot(session, "phonics-flight-" + text);
+					shoot(session, "learning-flight-" + text);
 				}
 				session.waitTicks(text.equals("fun") ? 30 : 40);
-				if (pictured) shoot(session, "phonics-outcome-" + text);
+				if (pictured) shoot(session, "learning-outcome-" + text);
 				// And ends where it always did.
 				session.onServer(server -> landed(session.player(), word));
 				if (pictured && text.equals("big")) {
@@ -244,14 +246,14 @@ public final class EveryWord implements FabricClientGameTest {
 					ServerPlayer player = session.player();
 					Room room = Rooms.of(player);
 					was[0] = Leftovers.of(player, room);
-					int sent = room.dispensed().size();
+					long sent = room.sends();
 					Rooms.runWrongOutcome(player, word);
-					check(room.dispensed().size() > sent || sent >= 32,
+					check(room.sends() > sent,
 						word.id() + "'s wrong outcome did not come out of the button");
 				});
 				if (wrongPictured) {
 					session.waitTicks(text.equals("log") ? 22 : 16);
-					shoot(session, "phonics-wrong-" + text);
+					shoot(session, "learning-wrong-" + text);
 					session.context().runOnClient(client -> client.options.setCameraType(CameraType.FIRST_PERSON));
 					session.waitTicks(text.equals("log") ? 68 : 74);
 				} else {

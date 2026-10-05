@@ -2,7 +2,7 @@
 """
 Write what every thing in the classroom can do with every other: its affordances.
 
-One file a thing, data/learning-blocks-justfatlard/phonics_relations/<word>.json, read by Relations.java.
+One file a thing, data/learning-blocks-justfatlard/learning_relations/<word>.json, read by Relations.java.
 The same table serves Bob (put the cat in the box), Bob's goals (made from it), the preposition
 read-it rounds, and toy play in the world (the doll into the crib, the owl into the car).
 
@@ -22,7 +22,7 @@ import pathlib
 HERE = pathlib.Path(__file__).parent
 NS = "learning-blocks-justfatlard"
 ASSETS = HERE / "src/main/resources/assets" / NS
-OUT = HERE / "src/main/resources/data" / NS / "phonics_relations"
+OUT = HERE / "src/main/resources/data" / NS / "learning_relations"
 
 
 def model_height(model):

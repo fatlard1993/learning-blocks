@@ -33,10 +33,10 @@ import net.minecraft.world.phys.Vec3;
 /**
  * The plushies and the toys, for looking at: every plushie placed in rows on a plain
  * floor, from the front and the side, and as items; every toy placed, with the props, and every toy as an item; the cap and the
- * wig worn. Full run: {@code phonics-plush-placed.png}, {@code phonics-plush-side.png},
- * {@code phonics-plush-icons.png}, {@code phonics-toys-placed.png}, {@code phonics-props-placed.png}, {@code phonics-toys-icons.png},
- * {@code phonics-toys-worn.png}, {@code phonics-toys-wig.png}; then the letter tiles,
- * {@code phonics-tiles-placed.png} and {@code phonics-tiles-side.png}.
+ * wig worn. Full run: {@code learning-plush-placed.png}, {@code learning-plush-side.png},
+ * {@code learning-plush-icons.png}, {@code learning-toys-placed.png}, {@code learning-props-placed.png}, {@code learning-toys-icons.png},
+ * {@code learning-toys-worn.png}, {@code learning-toys-wig.png}; then the letter tiles,
+ * {@code learning-tiles-placed.png} and {@code learning-tiles-side.png}.
  */
 public final class PlushArt implements FabricClientGameTest {
 
@@ -68,13 +68,13 @@ public final class PlushArt implements FabricClientGameTest {
 			look(player, base.offset(0, 0, -1), 0.0F, 32.0F);
 		});
 		session.waitTicks(60);
-		shoot(session, "phonics-plush-placed");
+		shoot(session, "learning-plush-placed");
 		session.onServer(server -> look(session.player(), origin[0].offset(5, 0, 1), 40.0F, 30.0F));
 		session.waitTicks(30);
-		shoot(session, "phonics-plush-side");
+		shoot(session, "learning-plush-side");
 		session.context().setScreen(() -> new InventoryScreen(net.minecraft.client.Minecraft.getInstance().player));
 		session.waitTicks(20);
-		shoot(session, "phonics-plush-icons");
+		shoot(session, "learning-plush-icons");
 		session.context().setScreen(() -> null);
 
 		// The big-word plushies, round H's, in a row of their own near the camera.
@@ -91,13 +91,13 @@ public final class PlushArt implements FabricClientGameTest {
 			look(player, base.offset(0, 0, -2), 0.0F, 38.0F);
 		});
 		session.waitTicks(30);
-		shoot(session, "phonics-plush-big");
+		shoot(session, "learning-plush-big");
 		session.onServer(server -> look(session.player(), origin[0].offset(-3, 0, -1), -35.0F, 35.0F));
 		session.waitTicks(20);
-		shoot(session, "phonics-plush-big-side");
+		shoot(session, "learning-plush-big-side");
 		session.context().setScreen(() -> new InventoryScreen(net.minecraft.client.Minecraft.getInstance().player));
 		session.waitTicks(20);
-		shoot(session, "phonics-plush-big-icons");
+		shoot(session, "learning-plush-big-icons");
 		session.context().setScreen(() -> null);
 		session.onServer(server -> {
 			ServerLevel level = (ServerLevel) session.player().level();
@@ -124,22 +124,22 @@ public final class PlushArt implements FabricClientGameTest {
 			look(player, base.offset(0, 0, -1), 0.0F, 30.0F);
 		});
 		session.waitTicks(40);
-		shoot(session, "phonics-toys-placed");
+		shoot(session, "learning-toys-placed");
 		session.onServer(server -> look(session.player(), origin[0].offset(0, 1, 13), 0.0F, 25.0F));
 		session.waitTicks(20);
-		shoot(session, "phonics-props-placed");
+		shoot(session, "learning-props-placed");
 		session.context().setScreen(() -> new InventoryScreen(net.minecraft.client.Minecraft.getInstance().player));
 		session.waitTicks(20);
-		shoot(session, "phonics-toys-icons");
+		shoot(session, "learning-toys-icons");
 		session.context().setScreen(() -> null);
 		// Worn: the cap, seen from the front.
 		session.onServer(server -> session.player().setItemSlot(EquipmentSlot.HEAD, Toys.stack(Toy.CAP)));
 		session.context().runOnClient(client -> client.options.setCameraType(CameraType.THIRD_PERSON_FRONT));
 		session.waitTicks(20);
-		shoot(session, "phonics-toys-worn");
+		shoot(session, "learning-toys-worn");
 		session.onServer(server -> session.player().setItemSlot(EquipmentSlot.HEAD, Toys.stack(Toy.WIG)));
 		session.waitTicks(10);
-		shoot(session, "phonics-toys-wig");
+		shoot(session, "learning-toys-wig");
 		session.context().runOnClient(client -> client.options.setCameraType(CameraType.FIRST_PERSON));
 		session.onServer(server -> session.player().setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY));
 
@@ -162,10 +162,10 @@ public final class PlushArt implements FabricClientGameTest {
 			look(player, base.offset(0, 0, -2), 0.0F, 22.0F);
 		});
 		session.waitTicks(30);
-		shoot(session, "phonics-tiles-placed");
+		shoot(session, "learning-tiles-placed");
 		session.onServer(server -> look(session.player(), origin[0].offset(-4, 0, 20), -35.0F, 22.0F));
 		session.waitTicks(20);
-		shoot(session, "phonics-tiles-side");
+		shoot(session, "learning-tiles-side");
 
 		// Close: the ant (two button eyes), the puffin (its tall flat beak), the yak and the hedgehog,
 		// front and side, and as items.
@@ -183,7 +183,7 @@ public final class PlushArt implements FabricClientGameTest {
 			look(player, base.offset(0, 0, -2), 0.0F, 32.0F);
 		});
 		session.waitTicks(30);
-		shoot(session, "phonics-plush-close-front");
+		shoot(session, "learning-plush-close-front");
 		// Side on: the puffin from its left, the ant from its right.
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
@@ -191,17 +191,17 @@ public final class PlushArt implements FabricClientGameTest {
 			player.teleportTo((ServerLevel) player.level(), at.x, at.y, at.z, java.util.Set.of(), -90.0F, 42.0F, true);
 		});
 		session.waitTicks(20);
-		shoot(session, "phonics-plush-close-side");
+		shoot(session, "learning-plush-close-side");
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			Vec3 at = Vec3.atBottomCenterOf(origin[0].offset(-4, 0, 17)).add(1.5, 0, 0);
 			player.teleportTo((ServerLevel) player.level(), at.x, at.y, at.z, java.util.Set.of(), 90.0F, 42.0F, true);
 		});
 		session.waitTicks(20);
-		shoot(session, "phonics-plush-close-side-ant");
+		shoot(session, "learning-plush-close-side-ant");
 		session.context().setScreen(() -> new InventoryScreen(net.minecraft.client.Minecraft.getInstance().player));
 		session.waitTicks(20);
-		shoot(session, "phonics-plush-close-icons");
+		shoot(session, "learning-plush-close-icons");
 		session.context().setScreen(() -> null);
 
 		// The counting toys (Numbers) and the thinking toys (Logic): each close, three-quarter on;

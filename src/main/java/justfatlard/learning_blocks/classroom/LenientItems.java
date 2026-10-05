@@ -30,7 +30,7 @@ public final class LenientItems {
 	private LenientItems() {}
 
 	/** Where a stand-in keeps the item it stands for, as it was saved. */
-	public static final String RAW = "phonics_missing_item";
+	public static final String RAW = "learning_missing_item";
 
 	public static final Codec<ItemStack> CODEC = new Codec<>() {
 		@Override
@@ -68,6 +68,25 @@ public final class LenientItems {
 		if (data == null || !stack.is(Items.PAPER)) return null;
 		CompoundTag tag = data.copyTag();
 		return tag.contains(RAW) ? tag.get(RAW) : null;
+	}
+
+	/**
+	 * A list where one entry that will not read (a potion effect from a mod since removed) is left
+	 * out with a warning, rather than taking the whole record with it.
+	 */
+	public static <A> Codec<java.util.List<A>> dropping(Codec<A> element, String what) {
+		return Codec.list(Codec.PASSTHROUGH).xmap(entries -> {
+			java.util.List<A> read = new java.util.ArrayList<>();
+			for (Dynamic<?> entry : entries) {
+				element.parse(entry).ifSuccess(read::add).ifError(error -> LearningBlocks.LOGGER.warn("[{}] {} could not be read and is left out ({}): {}",
+					LearningBlocks.MOD_ID, what, error.message(), entry.getValue()));
+			}
+			return read;
+		}, values -> {
+			java.util.List<Dynamic<?>> out = new java.util.ArrayList<>();
+			for (A value : values) element.encodeStart(NbtOps.INSTANCE, value).ifSuccess(tag -> out.add(new Dynamic<>(NbtOps.INSTANCE, tag)));
+			return out;
+		});
 	}
 
 	/**

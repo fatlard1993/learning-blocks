@@ -63,7 +63,7 @@ public final class Pictures implements FabricClientGameTest {
 					if (!client.gui.hud.isHidden()) client.gui.hud.toggle();
 				});
 				session.waitTicks(2);
-				session.context().takeScreenshot(TestScreenshotOptions.of("phonics-pictures").disableCounterPrefix());
+				session.context().takeScreenshot(TestScreenshotOptions.of("learning-pictures").disableCounterPrefix());
 				session.context().runOnClient(client -> {
 					if (client.gui.hud.isHidden()) client.gui.hud.toggle();
 				});

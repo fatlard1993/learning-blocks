@@ -57,7 +57,7 @@ public final class NumberBobRound extends NumbersRound {
 		}
 	}
 
-	private static final int INK = 0x1E2A5A;
+	private static final int INK = BobProps.INK;
 	private final Job job;
 	/** How many the goal has (Tell Bob, What's wrong), or how many the small box has (More). */
 	private final int goal;
@@ -110,9 +110,7 @@ public final class NumberBobRound extends NumbersRound {
 
 	private BlockState placeBlock() {
 		if (job == Job.CATS) return Blocks.BED.red().defaultBlockState().setValue(BlockStateProperties.BED_PART, BedPart.HEAD);
-		var thing = Relations.thing("box");
-		BlockState box = thing == null ? null : BobStage.blockOf(thing);
-		return box == null ? Blocks.BARREL.defaultBlockState() : box;
+		return BobProps.box();
 	}
 
 	/** The words on the board, with this card in the gap ("_" for none). */
@@ -124,7 +122,7 @@ public final class NumberBobRound extends NumbersRound {
 	private void showSentence(@Nullable Integer card) {
 		if (sentence != null) sentence.discard();
 		sentence = Counting.boardText(this, String.join(" ", words(card)), INK, 3.0F, 0.6, -0.5);
-		sentence.setBackgroundColor(0xFFF2E8C9);
+		sentence.setBackgroundColor(BobProps.CARD);
 	}
 
 	@Override
@@ -136,10 +134,8 @@ public final class NumberBobRound extends NumbersRound {
 	/** The goal, small and framed on the board's left: the box (or bed) and how many go with it. */
 	private void goalPicture() {
 		Vec3 at = Vec3.atBottomCenterOf(layout.origin().offset(-4, RoomLayout.WORD_Y, -4)).add(0.3, -0.2, 0.2);
-		Display.BlockDisplay frame = Counting.block(level, Blocks.CONCRETE.white().defaultBlockState(), 1.0F);
-		frame.setTransformation(new Transformation(new Vector3f(-0.9F, -0.1F, -0.3F), null, new Vector3f(1.8F, 1.6F, 0.05F), null));
-		frame.snapTo(at.x, at.y, at.z, 0, 0);
-		add(frame);
+		Display.BlockDisplay frame = BobProps.goalFrame(level, at);
+		if (frame != null) add(frame);
 		Display.BlockDisplay base = Counting.block(level, placeBlock(), 0.45F);
 		base.snapTo(at.x, at.y + 0.1, at.z, 0, 0);
 		add(base);
@@ -175,21 +171,11 @@ public final class NumberBobRound extends NumbersRound {
 	}
 
 	private void spawnBob() {
-		Villager villager = EntityTypes.VILLAGER.create(level, EntitySpawnReason.MOB_SUMMONED);
+		Villager villager = BobProps.bob(level, Vec3.atBottomCenterOf(layout.origin().offset(-4, 0, -2)), 0);
 		if (villager == null) return;
-		Vec3 at = Vec3.atBottomCenterOf(layout.origin().offset(-4, 0, -2));
-		villager.snapTo(at.x, at.y, at.z, 0, 0);
-		villager.setYHeadRot(0);
-		villager.setYBodyRot(0);
-		villager.setNoAi(true);
-		villager.setSilent(true);
-		villager.setPermanentlyInvulnerable(true);
-		villager.setPersistenceRequired();
-		villager.setCustomName(Component.literal("Bob"));
-		villager.setCustomNameVisible(true);
 		add(villager);
 		bob = villager;
-		justfatlard.learning_blocks.feel.Gestures.run(villager, justfatlard.learning_blocks.feel.Gestures.Gesture.WAVE);
+		BobProps.wave(villager);
 	}
 
 	/** Where the i-th thing goes: in the box, three across and three deep, then a layer up; past nine, spilling out onto the floor. */

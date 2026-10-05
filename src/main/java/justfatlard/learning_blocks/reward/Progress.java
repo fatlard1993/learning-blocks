@@ -177,17 +177,6 @@ public final class Progress {
 		.copyOnDeath()
 		.buildAndRegister(LearningBlocks.id("progress"));
 
-	/** The same, as saved before the rename; moved to the new one as the player joins. */
-	private static final AttachmentType<Progress> OLD_ATTACHMENT = AttachmentRegistry.<Progress>builder()
-		.persistent(SAVED)
-		.copyOnDeath()
-		.buildAndRegister(justfatlard.learning_blocks.migrate.OldNames.old("progress"));
-
-	public static void migrate(ServerPlayer player) {
-		justfatlard.learning_blocks.migrate.OldNames.move(player, OLD_ATTACHMENT, ATTACHMENT, SAVED, player.level().registryAccess(),
-			player.getGameProfile().name());
-	}
-
 	/** Loads the class, which is what registers the attachment; it must happen at init. */
 	public static void init() {}
 

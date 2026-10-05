@@ -20,7 +20,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import org.jspecify.annotations.Nullable;
 
 /**
- * One word a child can read, as it is written in {@code data/<namespace>/phonics_words/<word>.json}:
+ * One word a child can read, as it is written in {@code data/<namespace>/learning_words/<word>.json}:
  *
  * <pre>{@code
  * { "tiles": ["c", "a", "t"], "stage": 1, "outcome": { "type": "spawn_entity", "entity": "minecraft:cat" } }

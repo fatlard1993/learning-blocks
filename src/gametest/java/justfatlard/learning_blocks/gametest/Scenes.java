@@ -124,7 +124,7 @@ public final class Scenes implements FabricClientGameTest {
 					check(!text.equals("bin") || run[0].litterCount() > 0, "bin's floor is not messy");
 				});
 				Waits.until(session, 200, text + "'s line was never said", () -> !Narrator.isPlaying(session.player()));
-				shoot(session, "phonics-scene-" + text + "-before");
+				shoot(session, "learning-scene-" + text + "-before");
 				session.onServer(server -> {
 					ServerPlayer player = session.player();
 					Room room = Rooms.of(player);
@@ -145,7 +145,7 @@ public final class Scenes implements FabricClientGameTest {
 					check(run[0].litterCount() == 0, text + "'s litter is still about");
 					check(session.player().getHealth() >= session.player().getMaxHealth(), text + " hurt the child");
 				});
-				shoot(session, "phonics-scene-" + text + "-after");
+				shoot(session, "learning-scene-" + text + "-after");
 				// The next round: nothing of this scene is left.
 				session.onServer(server -> Rooms.startRound(session.player(),
 					Words.all().stream().filter(w -> w.text().equals("cat")).findFirst().orElseThrow()));

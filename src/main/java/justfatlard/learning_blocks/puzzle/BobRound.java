@@ -433,25 +433,14 @@ public final class BobRound {
 	}
 
 	private void spawnBob() {
-		Villager villager = EntityTypes.VILLAGER.create(level, EntitySpawnReason.MOB_SUMMONED);
-		if (villager == null) return;
 		Vec3 at = bobSpot();
 		Vec3 toward = layout.spawn().subtract(at);
-		float yaw = (float) Math.toDegrees(Math.atan2(-toward.x, toward.z));
-		villager.snapTo(at.x, at.y, at.z, yaw, 0.0F);
-		villager.setYHeadRot(yaw);
-		villager.setYBodyRot(yaw);
-		villager.setNoAi(true);
-		villager.setSilent(true);
-		villager.setPermanentlyInvulnerable(true);
-		villager.setPersistenceRequired();
-		villager.setCustomName(Component.literal("Bob"));
-		villager.setCustomNameVisible(true);
+		Villager villager = BobProps.bob(level, at, (float) Math.toDegrees(Math.atan2(-toward.x, toward.z)));
+		if (villager == null) return;
 		villager.addTag(BobStage.TAG);
 		level.addFreshEntity(villager);
 		bob = villager;
-		// Hello!
-		justfatlard.learning_blocks.feel.Gestures.run(villager, justfatlard.learning_blocks.feel.Gestures.Gesture.WAVE);
+		BobProps.wave(villager);
 	}
 
 	/** A goal, framed, small: what Bob is to make. Reading together, a click box over each to pick it by. */

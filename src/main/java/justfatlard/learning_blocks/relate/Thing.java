@@ -8,7 +8,7 @@ import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 
 /**
- * One thing the classroom knows, as {@code phonics_relations/<word>.json} describes it: what it is,
+ * One thing the classroom knows, as {@code learning_relations/<word>.json} describes it: what it is,
  * how it is shown and held, how tall it is, its tags, and what it holds - its affordances.
  */
 public record Thing(String word, Is is, @Nullable Identifier entity, @Nullable Identifier block, Map<String, String> properties,

@@ -8,7 +8,7 @@ import java.util.TreeSet;
 import justfatlard.learning_blocks.reward.Progress;
 
 /**
- * Where a child is in the course: one stage per short vowel, in the order phonics is usually taught
+ * Where a child is in the course: one stage per short vowel, in the order reading is usually taught
  * - 1 short a, 2 short i, 3 short o, 4 short u, 5 short e - though the numbers are only what the
  * word files say, so a data pack can add stages or move words between them.
  *

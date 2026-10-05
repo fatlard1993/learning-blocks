@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * the click. In a day no word is asked twice while the band has others, and then the room fills in
  * (another kind of round first); a second clean completion the same day doesn't count towards mastery
  * and the next day's does, for letters too. Offline names resolve through the server's profile cache.
- * Full run: {@code phonics-portal-locked.png}, {@code phonics-portal-open.png}.
+ * Full run: {@code learning-portal-locked.png}, {@code learning-portal-open.png}.
  */
 public final class ExitAndDays implements FabricClientGameTest {
 	private static final LocalDate DAY = LocalDate.of(2026, 10, 7);
@@ -58,7 +58,7 @@ public final class ExitAndDays implements FabricClientGameTest {
 				try {
 					run(session, today);
 				} catch (Throwable failed) {
-					LoggerFactory.getLogger("phonics-gametest").error("ExitAndDays failed", failed);
+					LoggerFactory.getLogger("learning-blocks-gametest").error("ExitAndDays failed", failed);
 					throw failed;
 				}
 			});
@@ -92,7 +92,7 @@ public final class ExitAndDays implements FabricClientGameTest {
 		});
 		lookAtPortal(session);
 		session.waitTicks(30);
-		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("phonics-portal-open").disableCounterPrefix());
+		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("learning-portal-open").disableCounterPrefix());
 		// Backed into it, facing the board, or standing in it facing in without walking: not leaving.
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
@@ -127,7 +127,7 @@ public final class ExitAndDays implements FabricClientGameTest {
 		Waits.until(session, 100, "bumping the locked portal said nothing", () -> since(session.player()).contains("portal:bump:2"));
 		lookAtPortal(session);
 		session.waitTicks(20);
-		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("phonics-portal-locked").disableCounterPrefix());
+		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("learning-portal-locked").disableCounterPrefix());
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			check(Places.isClassroom(player.level()), "a locked portal let them through");
@@ -214,12 +214,12 @@ public final class ExitAndDays implements FabricClientGameTest {
 
 		// Offline names: the server's profile cache.
 		session.onServer(server -> {
-			UUID max = UUID.fromString("00000000-0000-0000-0000-00000000b3e7");
+			UUID testKid = UUID.fromString("00000000-0000-0000-0000-00000000b3e7");
 			UUID sam = UUID.fromString("00000000-0000-0000-0000-0000000005a7");
-			server.services().nameToIdCache().add(new NameAndId(max, "TestKidA"));
+			server.services().nameToIdCache().add(new NameAndId(testKid, "TestKidA"));
 			server.services().nameToIdCache().add(new NameAndId(sam, "Sam2019"));
 			console(server, "learn daily TestKidA 3");
-			Schedules.Entry entry = Schedules.of(max);
+			Schedules.Entry entry = Schedules.of(testKid);
 			check(entry != null && entry.name().equals("TestKidA") && entry.lessons() == 3, "an offline cached name was not scheduled: " + entry);
 			console(server, "learn daily " + sam + " 2");
 			check(Schedules.of(sam) != null && Schedules.of(sam).name().equals("Sam2019"), "set by UUID, the real name was not kept: " + Schedules.of(sam));
@@ -229,7 +229,7 @@ public final class ExitAndDays implements FabricClientGameTest {
 				"a name nobody has was scheduled under a made-up id");
 			console(server, "learn daily TestKidA off");
 			console(server, "learn daily Sam2019 off");
-			check(!Schedules.of(max).enabled() && !Schedules.of(sam).enabled(), "the schedules did not turn off by name");
+			check(!Schedules.of(testKid).enabled() && !Schedules.of(sam).enabled(), "the schedules did not turn off by name");
 			ServerPlayer player = session.player();
 			Schedules.set(player.getUUID(), "SomeOldName", 0);
 			Schedules.refreshName(player.getUUID(), player.getGameProfile().name());

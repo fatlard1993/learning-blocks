@@ -12,7 +12,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * The letters level, stage 0: hear a sound, find its letter. Letters come in the usual synthetic
- * phonics groups, a group at a time; a letter is known once it has been matched first try a few
+ * letter groups, a group at a time; a letter is known once it has been matched first try a few
  * times, and a group all known opens the next. Every group known and the child is on to words.
  *
  * <p>Each letter has a keyword, the word the alphabet chant ends on: "mmm, mmm, map!". Where a

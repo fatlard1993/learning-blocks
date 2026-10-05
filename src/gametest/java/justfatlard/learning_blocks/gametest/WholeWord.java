@@ -65,7 +65,7 @@ public final class WholeWord implements FabricClientGameTest {
 				press(player, room);
 			});
 			session.waitTicks(12);
-			shoot(session, "phonics-digraph-tile");
+			shoot(session, "learning-digraph-tile");
 			Waits.until(session, 600, "ship was never read out", () -> Progress.of(session.player()).words().contains("learning-blocks-justfatlard:ship")
 				&& told(session));
 			session.onServer(server -> {
@@ -98,7 +98,7 @@ public final class WholeWord implements FabricClientGameTest {
 					&& log.subList(partial, log.size()).stream().noneMatch(step -> step.startsWith("light:")), "a part-built row was not refused: " + log);
 			});
 			session.waitTicks(10);
-			shoot(session, "phonics-whole-word-round");
+			shoot(session, "learning-whole-word-round");
 			Waits.until(session, 100, "the hmm never ended", () -> !Narrator.isPlaying(session.player()));
 
 			// A build that spells nothing: b, a decoy, ll; home it all goes.

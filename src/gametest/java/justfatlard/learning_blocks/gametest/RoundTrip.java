@@ -175,7 +175,7 @@ public final class RoundTrip implements FabricClientGameTest {
 	private static void shoot(Smoke.Session session, String name) {
 		if (!session.full()) return;
 		session.waitTicks(20);
-		session.context().takeScreenshot(TestScreenshotOptions.of("phonics-" + name).disableCounterPrefix());
+		session.context().takeScreenshot(TestScreenshotOptions.of("learning-" + name).disableCounterPrefix());
 	}
 
 	/** A right-click on a block, through the same event a real one goes through. */

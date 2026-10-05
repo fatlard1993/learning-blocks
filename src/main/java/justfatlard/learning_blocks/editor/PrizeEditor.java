@@ -98,15 +98,15 @@ public final class PrizeEditor {
 	private static final int[] XP = {0, 1, 2, 3, 5, 10, 15, 20, 25, 30, 50, 75, 100, 150, 200, 300, 500};
 
 	private static final Map<String, String> EVENT_NAMES = Map.of(
-		"new_word", "New word", "solved", "Word read", "streak", "Streak",
-		"stage_complete", "Stage complete", "milestone", "Milestones", "toy_mastered", "Toy mastered", "daily_visit", "Daily visit");
+		"new_word", "Learned something new", "solved", "Got one right", "streak", "In a row",
+		"stage_complete", "Part of the course done", "milestone", "Milestones", "toy_mastered", "Toy earned", "daily_visit", "Daily visit");
 
 	private static final Map<String, String> EVENT_HELP = Map.of(
-		"new_word", "The first time a child ever reads a word; once per word",
-		"solved", "Any word read",
-		"streak", "Every so many words read in a row",
-		"stage_complete", "Every word of a stage band (1a, 1b...) mastered",
-		"toy_mastered", "A plushie or toy, earned by mastering every word that brings it",
+		"new_word", "The first time a child gets a thing right, in any subject; once each",
+		"solved", "Any right answer, in any subject",
+		"streak", "Every so many right in a row",
+		"stage_complete", "A Reading band (1a, 1b...), the letters, or a Numbers or Logic stage, all mastered",
+		"toy_mastered", "A plushie or toy, earned by mastering what brings it (words, numbers, thinking)",
 		"daily_visit", "The first visit of each real day");
 
 	public static void register(ScreenApi screens) {
@@ -203,7 +203,7 @@ public final class PrizeEditor {
 		switch (tab) {
 			case GENERAL -> {
 				rows.add(new Row.Toggle("Prizes", "enabled", true, "On", "Off", "Every prize below, on or off at once"));
-				rows.add(new Row.Number("Daily cap", "daily_cap", 0, CAP, " a day", null));
+				rows.add(new Row.Number("Daily cap", "daily_cap", 20, CAP, " a day", null));
 				rows.add(new Row.Toggle("Points", "points.enabled", false, "On", "Off", "Points from events, and thresholds they pay at"));
 				rows.add(new Row.Heading("Puzzles", "How rounds are asked"));
 				rows.add(new Row.Toggle("Situations", "puzzles.scenes", true, "On", "Off",
@@ -234,8 +234,8 @@ public final class PrizeEditor {
 					"Whether a silly sentence told to Bob counts as a lesson (never towards mastery)"));
 				rows.add(new Row.Heading("Subjects", "/learn subjects <player> sets one child's"));
 				rows.add(new Row.Toggle("Reading", "subjects.reading", true, "On", "Off", "Letters, words, sentences with Bob"));
-				rows.add(new Row.Toggle("Numbers", "subjects.numbers", true, "On", "Off", "Which block says three? (1 to 5, for now)"));
-				rows.add(new Row.Toggle("Logic", "subjects.logic", true, "On", "Off", "What comes next? (two colours, for now)"));
+				rows.add(new Row.Toggle("Numbers", "subjects.numbers", true, "On", "Off", "Numbers 0 to 10, counting with real things, comparing"));
+				rows.add(new Row.Toggle("Logic", "subjects.logic", true, "On", "Off", "Sorting, patterns, odd one out, putting things in order"));
 				rows.add(new Row.Choice("Mixed", "subjects.mix", MIXES, "alternate",
 					"alternate: one of each in turn; blocks: a few of one, then the next; weights: by chance"));
 				rows.add(new Row.Number("Blocks of", "subjects.block", 3, SCENE_EVERY, " rounds", null));
@@ -252,7 +252,7 @@ public final class PrizeEditor {
 				for (ServerPlayer online : server.getPlayerList().getPlayers()) {
 					if (listed++ >= 12) break;
 					int left = justfatlard.learning_blocks.classroom.Travel.lessons(online) + Progress.of(online).lessonsOwed();
-					rows.add(new Row.Action("progress:" + online.getGameProfile().name(), online.getGameProfile().name(),
+					rows.add(new Row.Action("progress:" + online.getUUID(), online.getGameProfile().name(),
 						Stages.describe(Progress.of(online)) + (left > 0 ? ", " + left + " lessons left" : "") + ". Click for their progress"));
 					rows.add(new Row.Daily(online.getUUID(), online.getGameProfile().name()));
 				}
@@ -273,7 +273,7 @@ public final class PrizeEditor {
 				}
 			}
 			case MILESTONES -> {
-				rows.add(new Row.Toggle("Milestones", "events.milestone.enabled", false, "On", "Off", "Totals of different words ever read"));
+				rows.add(new Row.Toggle("Milestones", "events.milestone.enabled", false, "On", "Off", "Totals of things learned, in every subject"));
 				marks(rows, tree, "events.milestone.every", "words", WORDS, " words");
 				rows.add(new Row.Action("add:events.milestone.every", "Add a milestone", "Another total of words to pay at"));
 			}
@@ -545,7 +545,12 @@ public final class PrizeEditor {
 				}
 			}
 			case "progress" -> {
-				ServerPlayer reader = server.getPlayerList().getPlayerByName(path);
+				ServerPlayer reader;
+				try {
+					reader = server.getPlayerList().getPlayer(java.util.UUID.fromString(path));
+				} catch (IllegalArgumentException e) {
+					reader = null;
+				}
 				if (reader != null) justfatlard.learning_blocks.review.ProgressView.open(player, reader);
 				return;
 			}
@@ -601,7 +606,7 @@ public final class PrizeEditor {
 					return;
 				}
 				int[] ladder = ladderFor(path);
-				int fallback = path.startsWith("subjects.weights.") ? 1 : path.equals("subjects.block") ? 3 : path.equals("puzzles.scene_every") ? 4 : path.equals("puzzles.mastery_clean") ? 3
+				int fallback = path.equals("daily_cap") ? 20 : path.startsWith("subjects.weights.") ? 1 : path.equals("subjects.block") ? 3 : path.equals("puzzles.scene_every") ? 4 : path.equals("puzzles.mastery_clean") ? 3
 					: path.equals("puzzles.tell_bob_every") ? 5 : path.equals("puzzles.whats_wrong_every") ? 6
 					: path.equals("puzzles.letter_word_every") || path.equals("puzzles.team_up_every") ? 3 : path.equals("puzzles.read_it_every") ? 5
 					: path.equals("puzzles.review_share") ? 30 : path.equals("puzzles.bob_prop_share") ? 20 : ladder[0];

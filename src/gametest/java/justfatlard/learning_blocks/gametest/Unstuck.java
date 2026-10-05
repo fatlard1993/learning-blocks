@@ -90,7 +90,7 @@ public final class Unstuck implements FabricClientGameTest {
 			check(line != null && line.contains("tried to leave 3 times") && line.contains("leaving=") && line.contains("narration=")
 				&& line.contains("round=") && line.contains("portalOpen="), "the stuck line has no room state: " + line);
 			check(Visit.of(session.player()) == null, "stuck and sent home, but the visit is still open");
-			LoggerFactory.getLogger("phonics-gametest").info("stuck line: {}", line);
+			LoggerFactory.getLogger("learning-blocks-gametest").info("stuck line: {}", line);
 		});
 
 		// Kept for lessons: tries to leave are refused, and nobody is forced out.

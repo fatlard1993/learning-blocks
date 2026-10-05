@@ -98,6 +98,9 @@ public final class Travel {
 		}
 
 		if (player.isPassenger()) player.stopRiding();
+		// A crafting table, an anvil or a furnace left open would give its grid back into the
+		// classroom's empty pack, to be cleared on the way out: closed first, it goes home in the stash.
+		player.closeContainer();
 
 		Visit.set(player, Visit.snapshot(player));
 
@@ -334,15 +337,6 @@ public final class Travel {
 		if (player.isDeadOrDying()) return;
 		Visit visit = Visit.of(player);
 		boolean inside = Places.isClassroom(player.level());
-		// Saved inside the classroom before the rename: that place is gone, and the game has put
-		// them in the overworld where it was. Home first (where they came in from, or spawn).
-		boolean oldClassroom = justfatlard.learning_blocks.migrate.OldNames.takeSavedInOldClassroom(player);
-		if (oldClassroom) {
-			player.teleport(visit != null ? home(player.level().getServer(), visit.home()) : spawnTrip(player.level().getServer()));
-			LearningBlocks.LOGGER.info("[{}] {} was saved inside the old classroom; taken {}", LearningBlocks.MOD_ID,
-				player.getGameProfile().name(), visit != null ? "home, with their things" : "to spawn");
-			inside = false;
-		}
 		if (visit != null && inside) {
 			player.setGameMode(GameType.SURVIVAL);
 			Room room = Rooms.open(player, player.level(), Plots.origin(player));
@@ -367,7 +361,15 @@ public final class Travel {
 
 	// --- Lessons ---
 
-	/** Lessons still to do before this child's door opens; 0 for an ordinary visit. */
+	/** The most lessons a child is kept for at once: every count up to it can be said aloud. */
+	public static final int MOST_LESSONS = 20;
+
+	/** "Fourteen more to go!", for a count that can be said; null for none left. */
+	public static @Nullable String moreToGo(int left) {
+		return left > 0 && left <= MOST_LESSONS ? "phrase/more_to_go_" + left : null;
+	}
+
+	/** Lessons still to do before this child's portal opens; 0 for an ordinary visit. */
 	public static int lessons(ServerPlayer player) {
 		Visit visit = Visit.of(player);
 		return visit == null ? 0 : visit.lessons();
@@ -382,7 +384,7 @@ public final class Travel {
 	public static void setLessons(ServerPlayer player, int remaining) {
 		Visit visit = Visit.of(player);
 		if (visit == null) return;
-		Visit.set(player, visit.withLessons(remaining));
+		Visit.set(player, visit.withLessons(Math.min(MOST_LESSONS, remaining)));
 		Rooms.lessonsChanged(player);
 	}
 

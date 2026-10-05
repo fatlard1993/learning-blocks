@@ -34,9 +34,6 @@ import org.jspecify.annotations.Nullable;
  */
 public final class Logic implements Subject {
 	public static final Logic INSTANCE = new Logic();
-	/** What comes next, and its first item: the kind and item the stub had. */
-	public static final String NEXT = Kind.NEXT.id;
-	public static final String AB = Kind.NEXT.item("ab");
 
 	private final Map<UUID, Integer> rounds = new HashMap<>();
 	private final Map<UUID, String> last = new HashMap<>();

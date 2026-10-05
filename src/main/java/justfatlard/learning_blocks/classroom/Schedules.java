@@ -92,6 +92,8 @@ public final class Schedules {
 	public static synchronized void load() {
 		entries.clear();
 		together.clear();
+		unreadable = false;
+		skipped.clear();
 		zone = ZoneId.systemDefault();
 		enforceOnRollover = false;
 		Path file = file();
@@ -128,15 +130,26 @@ public final class Schedules {
 						!json.has("enabled") || json.get("enabled").getAsBoolean(), json.has("lessons") ? json.get("lessons").getAsInt() : 0, weekdays,
 						Map.copyOf(subjects)));
 				} catch (RuntimeException e) {
-					LearningBlocks.LOGGER.warn("[{}] schedules.json: skipping {}: {}", LearningBlocks.MOD_ID, player.getKey(), e.getMessage());
+					LearningBlocks.LOGGER.warn("[{}] schedules.json: skipping {}: {}; kept in the file as it is", LearningBlocks.MOD_ID, player.getKey(), e.getMessage());
+					skipped.put(player.getKey(), player.getValue());
 				}
 			}
 		} catch (IOException | RuntimeException e) {
-			LearningBlocks.LOGGER.error("[{}] Could not read {}; no daily schedules until it reads", LearningBlocks.MOD_ID, file, e);
+			unreadable = true;
+			LearningBlocks.LOGGER.error("[{}] Could not read {}; no daily schedules until it reads, and it is left as it is", LearningBlocks.MOD_ID, file, e);
 		}
 	}
 
+	/** The file would not read: nothing is written over it until it does (a fix, then /learn reload or a restart). */
+	private static boolean unreadable;
+	/** Entries that would not read, written back exactly as they were. */
+	private static final Map<String, JsonElement> skipped = new LinkedHashMap<>();
+
 	private static synchronized void save() {
+		if (unreadable) {
+			LearningBlocks.LOGGER.error("[{}] {} would not read; not writing over it", LearningBlocks.MOD_ID, file());
+			return;
+		}
 		JsonObject root = new JsonObject();
 		root.addProperty("timezone", zone.getId());
 		root.addProperty("enforce_on_rollover", enforceOnRollover);
@@ -161,6 +174,7 @@ public final class Schedules {
 			if (with != null) json.addProperty("together_with", with.toString());
 			players.add(entry.getKey().toString(), json);
 		}
+		for (Map.Entry<String, JsonElement> kept : skipped.entrySet()) if (!players.has(kept.getKey())) players.add(kept.getKey(), kept.getValue());
 		root.add("players", players);
 		try {
 			Files.createDirectories(file().getParent());
@@ -282,7 +296,7 @@ public final class Schedules {
 	}
 
 	public static int requiredToday(ServerPlayer player) {
-		return required(player.getUUID(), Progress.date());
+		return Math.min(Travel.MOST_LESSONS, required(player.getUUID(), Progress.date()));
 	}
 
 	/** Lessons still to do today: the day's number, less the rounds already solved today; or, some of each subject, what each still asks. */
@@ -301,7 +315,26 @@ public final class Schedules {
 	public static Map<String, Integer> perSubjectToday(ServerPlayer player) {
 		Entry entry = of(player.getUUID());
 		if (entry == null || entry.subjects().isEmpty() || requiredToday(player) == 0) return Map.of();
-		return entry.subjects();
+		// Only the subjects this child has on: one turned off can't be done, so it isn't asked for.
+		// With none of them on, the day is any subject's lessons, as a plain number would be.
+		Map<String, Integer> on = new LinkedHashMap<>();
+		for (Map.Entry<String, Integer> subject : entry.subjects().entrySet()) {
+			var which = justfatlard.learning_blocks.subject.Subjects.of(subject.getKey());
+			if (which != null && justfatlard.learning_blocks.subject.Subjects.on(player, which)) on.put(subject.getKey(), subject.getValue());
+		}
+		return on;
+	}
+
+	/** The subjects a schedule asks for that this child has off, for a grown-up's warning. */
+	public static java.util.List<String> askedButOff(ServerPlayer player) {
+		Entry entry = of(player.getUUID());
+		if (entry == null) return java.util.List.of();
+		java.util.List<String> off = new java.util.ArrayList<>();
+		for (String id : entry.subjects().keySet()) {
+			var which = justfatlard.learning_blocks.subject.Subjects.of(id);
+			if (which != null && !justfatlard.learning_blocks.subject.Subjects.on(player, which)) off.add(id);
+		}
+		return off;
 	}
 
 	/** Whether today's schedule asks this child for anything: the only thing that keeps an operator in. */

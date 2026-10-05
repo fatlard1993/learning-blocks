@@ -72,7 +72,7 @@ public final class Gestures {
 	public static volatile @Nullable String lastStarted;
 
 	public static void register() {
-		net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(Gestures::tick);
+		net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(server -> justfatlard.learning_blocks.Safely.run("Gestures", () -> tick(server)));
 		net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
 			for (Running run : running) finish(run);
 			running.clear();

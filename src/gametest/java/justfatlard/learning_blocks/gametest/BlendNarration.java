@@ -89,7 +89,7 @@ public final class BlendNarration implements FabricClientGameTest {
 				check(lit(session.player(), gap.east()), "the tile being said is not lit");
 				check(!lit(session.player(), gap), "the tile already said is still lit");
 			});
-			shoot(session, "phonics-mid-blend");
+			shoot(session, "learning-mid-blend");
 
 			// The caption after the word has happened: "You did it!" or the word itself.
 			Waits.until(session, 400, "the word never happened",
@@ -97,7 +97,7 @@ public final class BlendNarration implements FabricClientGameTest {
 			Waits.until(session, 200, "the room never said well done",
 				() -> Narrator.log(session.player()).contains("clip:phrase/well_done"));
 			session.waitTicks(22);
-			shoot(session, "phonics-caption");
+			shoot(session, "learning-caption");
 
 			session.onServer(server -> {
 				List<String> log = Narrator.log(session.player());

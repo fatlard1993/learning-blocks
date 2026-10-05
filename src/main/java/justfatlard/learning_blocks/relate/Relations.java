@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
  * Where one thing goes relative to another: the one engine behind Bob's literal sentences, his
  * goals, the preposition rounds, and a child's toy play in the world.
  *
- * <p>Things and their affordances are data ({@code phonics_relations/<word>.json}, written by
+ * <p>Things and their affordances are data ({@code learning_relations/<word>.json}, written by
  * {@code generate_relations.py}). {@link #resolve} reads a sentence's "put X in/on/under Y" as
  * literally as Bob does: in something that holds things, it goes in (onto its lid if the lid is
  * on); in or on a creature, onto its head, or riding it if it is a creature too; in or on a
@@ -42,7 +42,7 @@ public final class Relations implements SimpleSynchronousResourceReloadListener 
 
 	public record Placement(String child, Rel rel, String parent) {}
 
-	private static final String DIRECTORY = "phonics_relations";
+	private static final String DIRECTORY = "learning_relations";
 	private static volatile Map<String, Thing> things = Map.of();
 
 	public static @Nullable Thing thing(String word) {

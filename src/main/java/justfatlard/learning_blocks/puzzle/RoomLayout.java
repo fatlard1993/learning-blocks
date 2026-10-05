@@ -55,6 +55,7 @@ record RoomLayout(BlockPos origin) {
 		return switch (index) {
 			case 0 -> origin.offset(2, 0, 4);
 			case 1 -> origin.offset(-2, 0, 4);
+			case 3 -> origin.offset(-4, 0, 4);
 			default -> origin.offset(4, 0, 4);
 		};
 	}

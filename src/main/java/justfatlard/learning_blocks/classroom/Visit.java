@@ -127,7 +127,7 @@ public record Visit(Home home, List<Slot> kit, Experience experience, String gam
 		Slot.CODEC.listOf().fieldOf("kit").forGetter(Visit::kit),
 		Experience.CODEC.fieldOf("experience").forGetter(Visit::experience),
 		Codec.STRING.fieldOf("game_mode").forGetter(Visit::gameMode),
-		MobEffectInstance.CODEC.listOf().fieldOf("effects").forGetter(Visit::effects),
+		LenientItems.dropping(MobEffectInstance.CODEC, "An effect put aside at the door").fieldOf("effects").forGetter(Visit::effects),
 		// Absent on visits begun before prizes existed, which have none waiting.
 		LenientItems.CODEC.listOf().optionalFieldOf("prizes", List.of()).forGetter(Visit::prizes),
 		Codec.INT.optionalFieldOf("prize_xp", 0).forGetter(Visit::prizeXp),
@@ -140,17 +140,6 @@ public record Visit(Home home, List<Slot> kit, Experience experience, String gam
 		.persistent(CODEC)
 		.copyOnDeath()
 		.buildAndRegister(LearningBlocks.id("visit"));
-
-	/** The same, as saved before the rename; moved to the new one as the player joins. */
-	private static final AttachmentType<Visit> OLD_ATTACHMENT = AttachmentRegistry.<Visit>builder()
-		.persistent(CODEC)
-		.copyOnDeath()
-		.buildAndRegister(justfatlard.learning_blocks.migrate.OldNames.old("visit"));
-
-	public static void migrate(ServerPlayer player) {
-		justfatlard.learning_blocks.migrate.OldNames.move(player, OLD_ATTACHMENT, ATTACHMENT, CODEC, player.level().registryAccess(),
-			player.getGameProfile().name());
-	}
 
 	/** Loads the class, which is what registers the attachment; it must happen at init. */
 	public static void init() {}

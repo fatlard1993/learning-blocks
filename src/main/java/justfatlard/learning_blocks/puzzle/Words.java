@@ -19,7 +19,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
  * Every word there is to read, loaded from data packs.
  *
  * <p>A word is data rather than code so that adding one is a file and no build: {@code
- * data/<namespace>/phonics_words/<word>.json}, any namespace, so another mod or a server's own data
+ * data/<namespace>/learning_words/<word>.json}, any namespace, so another mod or a server's own data
  * pack can teach new words, and replace the ones shipped here by writing a file at the same path.
  * The shipped words are the first users of exactly that route, not a special case beside it.
  *
@@ -31,7 +31,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
  */
 public final class Words implements SimpleSynchronousResourceReloadListener {
 
-	private static final String DIRECTORY = "phonics_words";
+	private static final String DIRECTORY = "learning_words";
 	private static final String SUFFIX = ".json";
 
 	/** Replaced wholesale on reload, so a read never sees a half-built list. */
@@ -257,7 +257,7 @@ public final class Words implements SimpleSynchronousResourceReloadListener {
 		for (var entry : object.entrySet()) if (!entry.getKey().equals("properties")) scan(entry.getValue(), found);
 	}
 
-	/** Turns {@code ns:phonics_words/cat.json} back into {@code ns:cat}. */
+	/** Turns {@code ns:learning_words/cat.json} back into {@code ns:cat}. */
 	private static Identifier wordOf(Identifier file) {
 		String path = file.getPath();
 		int start = DIRECTORY.length() + 1;

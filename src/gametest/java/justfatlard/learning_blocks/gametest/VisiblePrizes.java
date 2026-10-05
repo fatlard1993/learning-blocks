@@ -55,10 +55,10 @@ public final class VisiblePrizes implements FabricClientGameTest {
 					"the chest did not pop up for the first prize");
 			});
 			session.waitTicks(20);
-			if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("phonics-prize-flight").disableCounterPrefix());
+			if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("learning-prize-flight").disableCounterPrefix());
 			Waits.until(session, 200, "the prize never landed in the chest", () -> !Rooms.of(session.player()).prizeFlights().isEmpty());
 			session.waitTicks(20);
-			if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("phonics-prize-haul").disableCounterPrefix());
+			if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("learning-prize-haul").disableCounterPrefix());
 			session.onServer(server -> {
 				ServerPlayer player = session.player();
 				Room room = Rooms.of(player);

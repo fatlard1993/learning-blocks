@@ -33,8 +33,8 @@ public final class EditorRoundTrip implements FabricClientGameTest {
 				Ops.resetFile(server);
 
 				PrizeEditor.press(player, "next:daily_cap");
-				check(json(server).get("daily_cap").getAsInt() == 1, "the file's daily cap did not step from no cap to 1");
-				check(PrizeConfig.get().dailyCap == 1, "the config did not reload to the file's cap");
+				check(json(server).get("daily_cap").getAsInt() == 25, "the file's daily cap did not step from its default 20 to 25");
+				check(PrizeConfig.get().dailyCap == 25, "the config did not reload to the file's cap");
 
 				PrizeEditor.press(player, "t:events.solved.enabled");
 				check(PrizeConfig.get().solved.enabled(), "turning Word read on did not reach the config");
@@ -66,7 +66,7 @@ public final class EditorRoundTrip implements FabricClientGameTest {
 				check(text.contains("// Everything below, on or off at once."), "saving from the menu lost the file's comments");
 
 				// A hand edit, then a reload: the config and the tree the screen reads both follow.
-				write(text.replace("\"daily_cap\": 1", "\"daily_cap\": 7"));
+				write(text.replace("\"daily_cap\": 25", "\"daily_cap\": 7"));
 				PrizeConfig.load(server);
 				check(PrizeConfig.get().dailyCap == 7, "a hand edit did not reload");
 				check(PrizeEditor.readInt("daily_cap", -1) == 7, "the editor does not see the hand edit");
@@ -76,12 +76,12 @@ public final class EditorRoundTrip implements FabricClientGameTest {
 				for (String tab : new String[] {"GENERAL", "EVENTS", "MILESTONES", "THRESHOLDS"}) {
 					session.onServer(server -> PrizeEditor.press(session.player(), "tab:" + tab));
 					session.waitTicks(10);
-					session.context().takeScreenshot(TestScreenshotOptions.of("phonics-editor-" + tab.toLowerCase(java.util.Locale.ROOT))
+					session.context().takeScreenshot(TestScreenshotOptions.of("learning-editor-" + tab.toLowerCase(java.util.Locale.ROOT))
 						.disableCounterPrefix());
 				}
 				session.onServer(server -> PrizeEditor.press(session.player(), "lootadd:events.new_word.prizes"));
 				session.waitTicks(10);
-				session.context().takeScreenshot(TestScreenshotOptions.of("phonics-editor-loot-picker").disableCounterPrefix());
+				session.context().takeScreenshot(TestScreenshotOptions.of("learning-editor-loot-picker").disableCounterPrefix());
 				session.onServer(server -> PrizeEditor.press(session.player(), "loot_cancel"));
 				session.onServer(server -> PrizeEditor.press(session.player(), "close"));
 			}

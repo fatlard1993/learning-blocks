@@ -34,7 +34,7 @@ import org.jspecify.annotations.Nullable;
  * word, coloured by how well it is known (not tried yet, learning, shaky, solid); the sounds they mix
  * up most; their time and rounds this week; and their lessons. {@code /learn progress <player>}, or a
  * reader's name on the prize editor's General tab. {@code export} writes the same as JSON to
- * {@code config/learning-blocks/reports/<player>.json}, for looking at outside the game.
+ * {@code config/learning-blocks/reports/<uuid>-<name>.json}, for looking at outside the game.
  */
 public final class ProgressView {
 	private ProgressView() {}
@@ -388,8 +388,11 @@ public final class ProgressView {
 		JsonArray lessons = new JsonArray();
 		memory.lessons().forEach(lessons::add);
 		root.add("lessons", lessons);
-		Path file = FabricLoader.getInstance().getConfigDir().resolve("learning-blocks").resolve("reports")
-			.resolve(reader.getGameProfile().name() + ".json");
+		// Named by their id, with the name made safe for a file name: a name may hold anything.
+		Path reports = FabricLoader.getInstance().getConfigDir().resolve("learning-blocks").resolve("reports").toAbsolutePath().normalize();
+		String safe = reader.getGameProfile().name().replaceAll("[^A-Za-z0-9_]", "_");
+		Path file = reports.resolve(reader.getUUID() + "-" + safe + ".json").normalize();
+		if (!file.startsWith(reports)) return null;
 		try {
 			Files.createDirectories(file.getParent());
 			Files.writeString(file, new GsonBuilder().setPrettyPrinting().create().toJson(root) + "\n");

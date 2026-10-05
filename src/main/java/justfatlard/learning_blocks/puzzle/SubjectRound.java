@@ -239,6 +239,25 @@ public abstract class SubjectRound {
 		return null;
 	}
 
+	/** Whether the answer is in place and only the button is left (a tile in Make's gap). */
+	protected boolean waitingForButton() {
+		return false;
+	}
+
+	/** Whether anything is left to pick: a choice's box still there. */
+	boolean answerable() {
+		for (UUID id : hits.keySet()) if (level.getEntity(id) != null) return true;
+		return false;
+	}
+
+	/** For tests: every choice's box gone, as a chunk unloading or another mod might take them. */
+	public void loseChoicesForTests() {
+		for (UUID id : hits.keySet()) {
+			Entity box = level.getEntity(id);
+			if (box != null) box.discard();
+		}
+	}
+
 	/** The button, in this round: the round's own, or the question again. */
 	void pressed(ServerPlayer player) {
 		if (room.busy || room.leaving) return;

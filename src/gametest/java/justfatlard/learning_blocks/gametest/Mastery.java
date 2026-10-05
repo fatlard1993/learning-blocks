@@ -35,7 +35,7 @@ import net.minecraft.world.phys.Vec3;
  * new stage's line. A mastered word leaves the ordinary picks (and the same word is never asked twice
  * running) but comes back as review. Letters use the same count. An old letter_known_after becomes
  * mastery_clean. A reader from before gates keeps their stage. My words shows pips and the mastered
- * border. Full run: {@code phonics-mastery-pips.png}.
+ * border. Full run: {@code learning-mastery-pips.png}.
  */
 public final class Mastery implements FabricClientGameTest {
 
@@ -153,7 +153,7 @@ public final class Mastery implements FabricClientGameTest {
 			check(Review.masteredShown(player).contains(word("cat").id().toString()), "My words does not show cat as mastered: " + Review.masteredShown(player));
 		});
 		session.waitTicks(10);
-		shoot(session, "phonics-mastery-pips");
+		shoot(session, "learning-mastery-pips");
 		session.onServer(server -> Review.press(session.player(), "close"));
 
 		// A reader from before gates: stages 1 to 3 read (not mastered) keeps them at stage 4.

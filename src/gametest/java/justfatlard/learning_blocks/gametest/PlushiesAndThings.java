@@ -50,9 +50,9 @@ import org.slf4j.LoggerFactory;
  * themselves; random_new plushie and toy prizes give one not yet owned, and a toybox prize a new
  * one of either; the Toybox tab counts both shelves; a plushie prize comes home; the new words'
  * pictures and outcomes (a toy pops out, the cap goes on); and a picture card on the board. Full
- * run: {@code phonics-plushies-tab.png}, {@code phonics-card-moon.png},
- * {@code phonics-outcome-owl-plush.png}, {@code phonics-outcome-jar.png},
- * {@code phonics-outcome-hug.png}, {@code phonics-outcome-cap.png}, {@code phonics-outcome-top.png}.
+ * run: {@code learning-plushies-tab.png}, {@code learning-card-moon.png},
+ * {@code learning-outcome-owl-plush.png}, {@code learning-outcome-jar.png},
+ * {@code learning-outcome-hug.png}, {@code learning-outcome-cap.png}, {@code learning-outcome-top.png}.
  */
 public final class PlushiesAndThings implements FabricClientGameTest {
 
@@ -62,7 +62,7 @@ public final class PlushiesAndThings implements FabricClientGameTest {
 			try {
 				run(session);
 			} catch (Throwable failed) {
-				LoggerFactory.getLogger("phonics-gametest").error("PlushiesAndThings failed", failed);
+				LoggerFactory.getLogger("learning-blocks-gametest").error("PlushiesAndThings failed", failed);
 				throw failed;
 			}
 		});
@@ -192,7 +192,7 @@ public final class PlushiesAndThings implements FabricClientGameTest {
 			Visit.set(player, Visit.of(player).withPrizes(List.of(items.getFirst().copy()), 0));
 		});
 		session.waitTicks(20);
-		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("phonics-plushies-tab").disableCounterPrefix());
+		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("learning-plushies-tab").disableCounterPrefix());
 		session.onServer(server -> Review.press(session.player(), "close"));
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
@@ -209,13 +209,13 @@ public final class PlushiesAndThings implements FabricClientGameTest {
 			check("moon".equals(Rooms.of(player).pictureCard()), "the moon card is not on the board: " + Rooms.of(player).pictureCard());
 		});
 		session.waitTicks(30);
-		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("phonics-card-moon").disableCounterPrefix());
+		if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("learning-card-moon").disableCounterPrefix());
 
 		// New outcomes.
 		for (String text : List.of("owl", "jar", "hug", "cap", "top")) {
 			session.onServer(server -> Rooms.runOutcome(session.player(), word(text)));
 			session.waitTicks(40);
-			if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("phonics-outcome-" + text + (text.equals("owl") ? "-plush" : ""))
+			if (session.full()) session.context().takeScreenshot(TestScreenshotOptions.of("learning-outcome-" + text + (text.equals("owl") ? "-plush" : ""))
 				.disableCounterPrefix());
 		}
 		session.onServer(server -> {

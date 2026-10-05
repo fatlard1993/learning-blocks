@@ -35,28 +35,18 @@ public final class Plots {
 		.persistent(Codec.unboundedMap(Codec.STRING, Codec.INT))
 		.buildAndRegister(LearningBlocks.id("plots"));
 
-	// The same three, as saved before the rename: moved to the new ones as a player joins, and
-	// (the overworld's) as the server starts.
-	private static final AttachmentType<Integer> OLD_PLOT = AttachmentRegistry.<Integer>builder()
-		.persistent(Codec.INT).copyOnDeath().buildAndRegister(justfatlard.learning_blocks.migrate.OldNames.old("plot"));
-	private static final AttachmentType<Integer> OLD_NEXT = AttachmentRegistry.<Integer>builder()
-		.persistent(Codec.INT).buildAndRegister(justfatlard.learning_blocks.migrate.OldNames.old("next_plot"));
-	private static final AttachmentType<java.util.Map<String, Integer>> OLD_ASSIGNED = AttachmentRegistry.<java.util.Map<String, Integer>>builder()
-		.persistent(Codec.unboundedMap(Codec.STRING, Codec.INT)).buildAndRegister(justfatlard.learning_blocks.migrate.OldNames.old("plots"));
+	/** When each player last came in, as a day number: for retiring the plots of those long gone. */
+	private static final AttachmentType<java.util.Map<String, Long>> SEEN = AttachmentRegistry.<java.util.Map<String, Long>>builder()
+		.persistent(Codec.unboundedMap(Codec.STRING, Codec.LONG))
+		.buildAndRegister(LearningBlocks.id("plots_seen"));
+
+	/** Plots given back by retiring, handed out again before new ones. */
+	private static final AttachmentType<java.util.List<Integer>> FREE = AttachmentRegistry.<java.util.List<Integer>>builder()
+		.persistent(Codec.INT.listOf())
+		.buildAndRegister(LearningBlocks.id("plots_free"));
 
 	/** Loads the class, which is what registers the attachments; it must happen at init. */
 	public static void init() {}
-
-	public static void migrate(ServerPlayer player) {
-		justfatlard.learning_blocks.migrate.OldNames.move(player, OLD_PLOT, PLOT, Codec.INT, player.level().registryAccess(), player.getGameProfile().name());
-	}
-
-	public static void migrate(net.minecraft.server.MinecraftServer server) {
-		var overworld = server.overworld();
-		justfatlard.learning_blocks.migrate.OldNames.move(overworld, OLD_NEXT, NEXT, Codec.INT, server.registryAccess(), "the overworld");
-		justfatlard.learning_blocks.migrate.OldNames.move(overworld, OLD_ASSIGNED, ASSIGNED, Codec.unboundedMap(Codec.STRING, Codec.INT),
-			server.registryAccess(), "the overworld");
-	}
 
 	/**
 	 * This player's plot, handed out the first time it is asked for. The next plot is past every
@@ -68,19 +58,65 @@ public final class Plots {
 		String id = player.getUUID().toString();
 		Integer known = assigned.get(id);
 		Integer own = player.getAttached(PLOT);
+		seen(overworld, id);
 		if (known != null) {
 			if (!known.equals(own)) player.setAttached(PLOT, known);
 			return known;
 		}
 		int next = overworld.getAttachedOrElse(NEXT, 0);
 		for (int plot : assigned.values()) next = Math.max(next, plot + 1);
-		// Handed out before the overworld kept them all: it is theirs, and recorded now.
-		int plot = own != null && !assigned.containsValue(own) ? own : next;
+		java.util.List<Integer> free = new java.util.ArrayList<>(overworld.getAttachedOrElse(FREE, java.util.List.of()));
+		free.removeIf(assigned::containsValue);
+		// Their own plot from before, if nobody has it now; else one given back; else a new one.
+		int plot = own != null && !assigned.containsValue(own) ? own : !free.isEmpty() ? free.removeFirst() : next;
+		free.remove((Integer) plot);
+		overworld.setAttached(FREE, java.util.List.copyOf(free));
 		assigned.put(id, plot);
 		overworld.setAttached(ASSIGNED, java.util.Map.copyOf(assigned));
 		overworld.setAttached(NEXT, Math.max(next, plot + 1));
 		player.setAttached(PLOT, plot);
 		return plot;
+	}
+
+	private static void seen(ServerLevel overworld, String id) {
+		java.util.Map<String, Long> seen = new java.util.HashMap<>(overworld.getAttachedOrElse(SEEN, java.util.Map.of()));
+		long today = justfatlard.learning_blocks.reward.Progress.date().toEpochDay();
+		if (Long.valueOf(today).equals(seen.get(id))) return;
+		seen.put(id, today);
+		overworld.setAttached(SEEN, java.util.Map.copyOf(seen));
+	}
+
+	/**
+	 * Plots of everyone not seen in this many days given back, to be handed out again: the
+	 * classroom is rebuilt fresh for whoever gets one next. Someone who comes back gets a plot
+	 * again (their old one, if it is still free). How many were retired.
+	 */
+	public static int prune(net.minecraft.server.MinecraftServer server, int days) {
+		ServerLevel overworld = server.overworld();
+		java.util.Map<String, Integer> assigned = new java.util.HashMap<>(overworld.getAttachedOrElse(ASSIGNED, java.util.Map.of()));
+		java.util.Map<String, Long> seen = new java.util.HashMap<>(overworld.getAttachedOrElse(SEEN, java.util.Map.of()));
+		java.util.List<Integer> free = new java.util.ArrayList<>(overworld.getAttachedOrElse(FREE, java.util.List.of()));
+		long today = justfatlard.learning_blocks.reward.Progress.date().toEpochDay();
+		int retired = 0;
+		for (String id : java.util.List.copyOf(assigned.keySet())) {
+			Long last = seen.get(id);
+			// Never seen since this was kept: counted from now, not retired at once.
+			if (last == null) {
+				seen.put(id, today);
+				continue;
+			}
+			if (today - last < days) continue;
+			if (server.getPlayerList().getPlayer(java.util.UUID.fromString(id)) != null) continue;
+			ServerLevel classroom = server.getLevel(Places.CLASSROOM);
+			if (classroom != null && justfatlard.learning_blocks.puzzle.Rooms.standing(classroom, Places.origin(assigned.get(id)))) continue;
+			free.add(assigned.remove(id));
+			seen.remove(id);
+			retired++;
+		}
+		overworld.setAttached(ASSIGNED, java.util.Map.copyOf(assigned));
+		overworld.setAttached(SEEN, java.util.Map.copyOf(seen));
+		overworld.setAttached(FREE, java.util.List.copyOf(free));
+		return retired;
 	}
 
 	public static BlockPos origin(ServerPlayer player) {

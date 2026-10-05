@@ -64,7 +64,7 @@ public final class Hardening implements FabricClientGameTest {
 				}
 				player.getInventory().clearContent();
 				player.getInventory().setItem(4, new ItemStack(Items.EMERALD, 3));
-				asPlayer(world, "phonics");
+				asPlayer(world, "learn");
 			});
 			context.waitTicks(40);
 			// Taken out by something that is not the door.
@@ -84,7 +84,7 @@ public final class Hardening implements FabricClientGameTest {
 				ServerPlayer player = player(world);
 				check(Visit.of(player) == null, "a teleport out left the visit open");
 				check(player.getInventory().getItem(4).is(Items.EMERALD), "a teleport out did not hand the emeralds back");
-				asPlayer(world, "phonics");
+				asPlayer(world, "learn");
 			});
 			context.waitTicks(40);
 
