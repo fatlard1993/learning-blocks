@@ -212,10 +212,15 @@ public final class Rooms {
 
 	@ForTests
 	public static boolean startTeamRound(ServerPlayer player) {
+		return startTeamRound(player, null);
+	}
+
+	/** A team-up round, of this word if one is given. True if it is one. */
+	public static boolean startTeamRound(ServerPlayer player, @Nullable Word word) {
 		Room room = of(player);
 		if (room == null) return false;
 		Narrator.stop(player);
-		room.newTeamRound(player);
+		room.ask(player, RoundRequest.NONE.withTeam(true).withTeamWord(word));
 		return room.team();
 	}
 
@@ -338,8 +343,7 @@ public final class Rooms {
 		Room room = of(player);
 		if (room == null || Puzzle.buildableChunks(target).stream().noneMatch(range -> range[0] == start)) return false;
 		Narrator.stop(player);
-		room.forcedPuzzle = Puzzle.chunk(target, start, player.getRandom(), Puzzle.singles(), Words.all());
-		room.newRound(player);
+		room.ask(player, RoundRequest.NONE.withPuzzle(Puzzle.chunk(target, start, player.getRandom(), Puzzle.singles(), Words.all())));
 		return room.puzzle() != null && room.puzzle().kind() == Puzzle.Kind.CHUNK && room.puzzle().target().id().equals(target.id());
 	}
 

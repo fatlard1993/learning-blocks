@@ -40,38 +40,22 @@ final class RoundLifecycle {
 		this.layout = layout;
 	}
 
-	void newRound(ServerPlayer asked, @Nullable Word target, boolean stageSet, boolean asScene) {
+	/** What this round was asked to be, while it is being made. */
+	private RoundRequest req = RoundRequest.NONE;
+
+	void newRound(ServerPlayer asked, RoundRequest request) {
 		if (room.leaving) return;
+		req = request;
+		Word target = request.target();
+		boolean stageSet = request.stageSet();
+		boolean asScene = request.asScene();
 		// The round after a practice round is an ordinary one, with everybody's own progress.
 		if (room.practice && !room.practiceStarting) room.endPractice();
 		boolean hadRound = room.puzzle != null;
 		// Reading together: the round is the next reader's, picked from their own place in the course.
-		boolean forced = target != null || stageSet || asScene || room.forcedTricky != null || room.forcedPlural != null || room.forcedPuzzle != null
-			|| room.forcedPhrase != null || room.forcedCase != null || room.forcedLetter != null || room.forcedReadIt != null || room.forcedBob != null;
+		boolean forced = req.particular();
 		ServerPlayer player = room.shared() ? room.takeTurn(asked, hadRound && !forced) : asked;
-		// Whose subject this round is: one asked for, Reading for anything of Reading's asked for,
-		// or the mix's pick from this reader's own subjects.
-		justfatlard.learning_blocks.subject.Subject subject = room.forcedSubject;
-		String subjectKind = room.forcedSubjectKind;
-		String subjectTarget = room.forcedSubjectTarget;
-		room.forcedSubject = null;
-		room.forcedSubjectKind = null;
-		room.forcedSubjectTarget = null;
-		boolean readingAsked = forced || room.forcedTeam || room.forcedFixLetter != null;
-		if (subject == null) subject = readingAsked ? justfatlard.learning_blocks.subject.Subjects.READING
-			: justfatlard.learning_blocks.subject.Subjects.pick(player, room.lastSubject.get(player.getUUID()),
-				room.subjectRun.getOrDefault(player.getUUID(), 0), level.getRandom());
-		// A subject round stands on a stand-in Reading puzzle, which needs a word to stand on: none loaded, none made.
-		if (subject != justfatlard.learning_blocks.subject.Subjects.READING && !Words.all().isEmpty()) {
-			SubjectRound next = subject.round(player, subjectKind, subjectTarget, level.getRandom());
-			if (next != null) {
-				clearRound();
-				room.round++;
-				noteSubject(player, subject);
-				startSubject(player, next);
-				return;
-			}
-		}
+		if (otherSubject(player)) return;
 		noteSubject(player, justfatlard.learning_blocks.subject.Subjects.READING);
 		int stageBefore = room.stage;
 		Stages.BandCode bandBefore = room.band;
@@ -94,12 +78,10 @@ final class RoundLifecycle {
 		if (freshStage) resetForStage(player);
 		BobRound.Mode bobMode = bobDue(target, freshStage, stage);
 		if (bobMode != null) {
-			BobRound bob = BobRound.make(room, level, layout, bobMode, player, room.forcedGoal, room.forcedMistake);
-			if (bob == null && bobMode != BobRound.Mode.GOAL && bobMode != BobRound.Mode.SILLY && room.forcedGoal == null) {
+			BobRound bob = BobRound.make(room, level, layout, bobMode, player, req.goal(), req.mistake());
+			if (bob == null && bobMode != BobRound.Mode.GOAL && bobMode != BobRound.Mode.SILLY && req.goal() == null) {
 				bob = BobRound.make(room, level, layout, BobRound.Mode.GOAL, player, null, null);
 			}
-			room.forcedGoal = null;
-			room.forcedMistake = null;
 			if (bob != null) {
 				startBob(player, progress, bob);
 				return;
@@ -108,15 +90,14 @@ final class RoundLifecycle {
 		if (target == null && !freshStage) room.sinceBob++;
 		// The letters level asks for a letter, not a word; now and then, once the first letters are
 		// known, a word made of nothing but letters the child knows.
-		boolean wordDue = room.forcedLetter == null && Letters.wordDue(progress, room.sinceEarlyWord);
-		boolean sampling = room.forcedTeam || room.forcedPuzzle != null;
+		boolean wordDue = req.letter() == null && Letters.wordDue(progress, room.sinceEarlyWord);
+		boolean sampling = req.team() || req.puzzle() != null;
 		Puzzle early = target == null && stage == 0 && wordDue && !sampling
 			? Letters.earlyWord(progress, level.getRandom(), Words.all(), room.lastEarlyWord) : null;
-		boolean letterAskedFor = room.forcedLetter != null;
-		Letter letter = early == null && target == null && !sampling && (stage == 0 || room.forcedLetter != null)
-			? room.forcedLetter != null ? room.forcedLetter : Letters.pickTarget(progress, level.getRandom(), room.lastLetter)
+		boolean letterAskedFor = req.letter() != null;
+		Letter letter = early == null && target == null && !sampling && (stage == 0 || req.letter() != null)
+			? req.letter() != null ? req.letter() : Letters.pickTarget(progress, level.getRandom(), room.lastLetter)
 			: null;
-		room.forcedLetter = null;
 		CaseAsk caseAsk = caseDue(progress, target == null && early == null, letter != null && stage == 0 && !letterAskedFor,
 			stage != 0 && !freshStage && !sampling);
 		Letter caseBase = caseAsk == null ? null : caseAsk.base();
@@ -129,22 +110,19 @@ final class RoundLifecycle {
 			room.lastEarlyWord = early.target();
 			Narrator.note(player, "early_word:" + early.target().text());
 		} else if (letter != null) room.sinceEarlyWord++;
-		Puzzle.Kind kind = room.forcedKind;
-		room.forcedKind = null;
+		Puzzle.Kind kind = req.kind();
 		// A word they know asked as a little problem instead; never a new stage's first round.
 		Word sceneWord = asScene && target != null && target.usableScene().isPresent() ? target
-			: target == null && !freshStage && letter == null && early == null && !room.forcedTeam && room.forcedPuzzle == null ? pickScene(progress) : null;
+			: target == null && !freshStage && letter == null && early == null && !req.team() && req.puzzle() == null ? pickScene(progress) : null;
 		if (target == null && sceneWord != null) target = sceneWord;
 		// A word already read, shown whole and not said, its picture to be picked: a read-it round.
-		Word forcedReadIt = room.forcedReadIt;
-		room.forcedReadIt = null;
-		Puzzle readIt = forcedReadIt != null ? readIt(progress, forcedReadIt)
-			: target == null && sceneWord == null && letter == null && early == null && !freshStage && !room.forcedTeam && room.forcedPuzzle == null
+		Puzzle readIt = req.readIt() != null ? readIt(progress, req.readIt())
+			: target == null && sceneWord == null && letter == null && early == null && !freshStage && !req.team() && req.puzzle() == null
 				? pickReadIt(progress) : null;
-		if (target == null && readIt == null && letter == null && early == null && sceneWord == null && !room.forcedTeam && room.forcedPuzzle == null) {
+		if (target == null && readIt == null && letter == null && early == null && sceneWord == null && !req.team() && req.puzzle() == null) {
 			target = reviewDue(player, progress);
 		}
-		boolean free = target == null && sceneWord == null && letter == null && early == null && !freshStage && !room.forcedTeam && room.forcedPuzzle == null;
+		boolean free = target == null && sceneWord == null && letter == null && early == null && !freshStage && !req.team() && req.puzzle() == null;
 		Puzzle special = specialDue(progress, stage, free && readIt == null);
 		boolean isTricky = special != null && special.target().tricky();
 		boolean isPlural = special != null && special.kind() == Puzzle.Kind.PLURAL;
@@ -176,9 +154,8 @@ final class RoundLifecycle {
 			: target != null && kind != null ? Puzzle.forTarget(target, Words.all(), level.getRandom(), kind)
 			: target != null ? Puzzle.forTarget(target, Words.all(), level.getRandom())
 			: null;
-		if (room.forcedPuzzle != null) {
-			if (next == null) next = room.forcedPuzzle;
-			room.forcedPuzzle = null;
+		if (req.puzzle() != null) {
+			if (next == null) next = req.puzzle();
 		}
 		if (next == null && target == null && letter == null && early == null && room.shared()) next = teamUpDue(player);
 		if (next == null && target == null && letter == null && early == null) {
@@ -213,6 +190,31 @@ final class RoundLifecycle {
 		progress.useToday(player, next.target(), lessonKind(next, sceneWord));
 		if (room.team) for (ServerPlayer other : room.present()) if (other != player) Progress.of(other).useToday(other, next.target(), "team");
 
+		layOut(player, next, sceneWord, freshStage);
+	}
+
+	/**
+	 * Whose subject this round is: one asked for, Reading for anything of Reading's asked for, or the
+	 * mix's pick from this reader's own subjects. True if it was another subject's, and it started.
+	 */
+	private boolean otherSubject(ServerPlayer player) {
+		justfatlard.learning_blocks.subject.Subject subject = req.subject();
+		if (subject == null) subject = req.readingAsked() ? justfatlard.learning_blocks.subject.Subjects.READING
+			: justfatlard.learning_blocks.subject.Subjects.pick(player, room.lastSubject.get(player.getUUID()),
+				room.subjectRun.getOrDefault(player.getUUID(), 0), level.getRandom());
+		// A subject round stands on a stand-in Reading puzzle, which needs a word to stand on: none loaded, none made.
+		if (subject == justfatlard.learning_blocks.subject.Subjects.READING || Words.all().isEmpty()) return false;
+		SubjectRound next = subject.round(player, req.subjectKind(), req.subjectTarget(), level.getRandom());
+		if (next == null) return false;
+		clearRound();
+		room.round++;
+		noteSubject(player, subject);
+		startSubject(player, next);
+		return true;
+	}
+
+	/** A word round on the board and the floor, its picture or its situation, and asked. */
+	private void layOut(ServerPlayer player, Puzzle next, @Nullable Word sceneWord, boolean freshStage) {
 		List<Letter> letters = room.tricky ? lettersOf(Words.shown(next.target())) : next.target().letters();
 		if (letters == null) return;
 		int n = letters.size();
@@ -346,11 +348,10 @@ final class RoundLifecycle {
 
 	/** Bob's turn, asked for or due: one round in tell_bob_every, from his stage. */
 	private BobRound.@Nullable Mode bobDue(@Nullable Word target, boolean freshStage, int stage) {
-		BobRound.Mode asked = room.forcedBob;
-		room.forcedBob = null;
+		BobRound.Mode asked = req.bob();
 		if (asked != null) return asked;
-		boolean othersAsked = room.forcedTricky != null || room.forcedPlural != null || room.forcedPuzzle != null || room.forcedPhrase != null
-			|| room.forcedCase != null || room.forcedLetter != null || room.forcedReadIt != null || room.forcedTeam || room.forcedFixLetter != null;
+		boolean othersAsked = req.tricky() != null || req.plural() != null || req.puzzle() != null || req.phraseAdjective() != null
+			|| req.caseLetter() != null || req.letter() != null || req.readIt() != null || req.team() || req.fixLetter() != null;
 		if (target != null || freshStage || othersAsked || !Stages.reached(stage, Stages.BOB_FROM) || !PrizeConfig.get().extrasOn()) return null;
 		int every = PrizeConfig.tellBobEvery();
 		if (every <= 0 || room.sinceBob < every - 1) return null;
@@ -370,9 +371,8 @@ final class RoundLifecycle {
 	 * mastered (most rounds, once the group's sounds all are); after it, as occasional review.
 	 */
 	private @Nullable CaseAsk caseDue(Progress progress, boolean open, boolean inLettersLevel, boolean reviewMayCome) {
-		Letter asked = room.forcedCase;
-		room.forcedCase = null;
-		if (asked != null) return new CaseAsk(asked, room.forcedCaseUp);
+		Letter asked = req.caseLetter();
+		if (asked != null) return new CaseAsk(asked, req.caseUp());
 		if (!open) return null;
 		if (inLettersLevel) {
 			Letter due = Letters.pickCase(progress, level.getRandom(), room.lastLetter, false);
@@ -398,9 +398,9 @@ final class RoundLifecycle {
 	/** A tricky word, a plural or a two-word phrase, asked for or due, each from its own stage. */
 	private @Nullable Puzzle specialDue(Progress progress, int stage, boolean free) {
 		Puzzle special = null;
-		if (room.forcedTricky != null) special = trickyPuzzle(room.forcedTricky);
-		else if (room.forcedPlural != null) special = pluralPuzzle(room.forcedPlural);
-		else if (room.forcedPhrase != null) special = phrasePuzzle(room.forcedPhrase[0], room.forcedPhrase[1]);
+		if (req.tricky() != null) special = trickyPuzzle(req.tricky());
+		else if (req.plural() != null) special = pluralPuzzle(req.plural());
+		else if (req.phraseAdjective() != null) special = phrasePuzzle(req.phraseAdjective(), req.phraseNoun());
 		else if (free && PrizeConfig.get().extrasOn()) {
 			if (Stages.reached(stage, Stages.TRICKY_FROM) && room.sinceTricky >= TRICKY_EVERY - 1) special = pickTricky(progress);
 			if (special == null && Stages.reached(stage, Stages.PLURAL_FROM) && room.sincePlural >= PLURAL_EVERY - 1) special = pickPlural(progress);
@@ -409,18 +409,14 @@ final class RoundLifecycle {
 				if (pair != null) special = phrasePuzzle(pair[0], pair[1]);
 			}
 		}
-		room.forcedTricky = null;
-		room.forcedPlural = null;
-		room.forcedPhrase = null;
 		return special;
 	}
 
 	/** Reading together: a team-up, asked for or due, both building one word, a gap each. */
 	private @Nullable Puzzle teamUpDue(ServerPlayer player) {
 		int every = PrizeConfig.teamUpEvery();
-		boolean due = room.forcedTeam || every > 0 && room.sinceTeam >= every - 1;
+		boolean due = req.team() || every > 0 && room.sinceTeam >= every - 1;
 		Puzzle team = due ? teamPuzzle() : null;
-		room.forcedTeam = false;
 		if (team == null) {
 			room.sinceTeam++;
 			return null;
@@ -436,8 +432,7 @@ final class RoundLifecycle {
 	 * other than the picture (cot under a cat), and the child swaps it for the right one.
 	 */
 	private @Nullable Letter fixDue(ServerPlayer player, @Nullable Puzzle plainWord, boolean mayCome) {
-		Letter asked = room.forcedFixLetter;
-		room.forcedFixLetter = null;
+		Letter asked = req.fixLetter();
 		if (plainWord == null) return null;
 		int every = PrizeConfig.whatsWrongEvery();
 		boolean due = asked != null || mayCome && PrizeConfig.get().extrasOn() && every > 0 && room.sinceFix >= every - 1;
@@ -504,10 +499,9 @@ final class RoundLifecycle {
 		}
 		java.util.Collections.shuffle(from, new java.util.Random(level.getRandom().nextLong()));
 		from.sort(java.util.Comparator.comparingInt(progress::clean));
-		if (room.forcedTeamWord != null) {
+		if (req.teamWord() != null) {
 			from.clear();
-			from.add(room.forcedTeamWord);
-			room.forcedTeamWord = null;
+			from.add(req.teamWord());
 		}
 		for (Word word : from) {
 			Puzzle team = teamPuzzle(word);

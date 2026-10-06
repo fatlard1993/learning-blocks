@@ -95,10 +95,6 @@ public final class Room {
 	final Map<UUID, Integer> subjectRun = new LinkedHashMap<>();
 	/** A subject's hello, said before the next prompt: the subject just changed. */
 	@Nullable String pendingHello;
-	/** The sampler's or a test's asked-for round of another subject: which, what kind, what. */
-	justfatlard.learning_blocks.subject.@Nullable Subject forcedSubject;
-	@Nullable String forcedSubjectKind;
-	@Nullable String forcedSubjectTarget;
 	net.minecraft.world.item.@Nullable DyeColor frame;
 
 	public @Nullable SubjectRound subjectRound() {
@@ -114,16 +110,11 @@ public final class Room {
 	}
 
 	public void newSubjectRound(ServerPlayer player, justfatlard.learning_blocks.subject.Subject subject, @Nullable String kind, @Nullable String target) {
-		forcedSubject = subject;
-		forcedSubjectKind = kind;
-		forcedSubjectTarget = target;
-		rounds.newRound(player, null, false, false);
+		ask(player, RoundRequest.NONE.withSubject(subject).withSubjectKind(kind).withSubjectTarget(target));
 	}
 	@Nullable SceneRun scene;
 	@Nullable Letter letterTarget;
 	@Nullable Letter lastLetter;
-	@Nullable Letter forcedLetter;
-	Puzzle.@Nullable Kind forcedKind;
 	/** Letters rounds since the last word round in the letters level, and that word. */
 	int sinceEarlyWord;
 	@Nullable Word lastEarlyWord;
@@ -136,14 +127,9 @@ public final class Room {
 	int sinceTricky;
 	int sincePlural;
 	int sincePhrase;
-	@Nullable Word forcedTricky;
-	@Nullable Word forcedPlural;
-	Word @Nullable [] forcedPhrase;
 
 	/** A big-and-little round: the letter on the board; null in any other round. And a test's asked-for one. */
 	@Nullable Letter casePrompt;
-	@Nullable Letter forcedCase;
-	boolean forcedCaseUp;
 
 	/** Sent in by the daily schedule: "Learning time first!" before the next prompt. */
 	boolean learningTime;
@@ -152,7 +138,6 @@ public final class Room {
 	/** A read-it round: the word shown whole, and its picture to pick; and what each click box stands for. */
 	boolean readIt;
 	int sinceReadIt;
-	@Nullable Word forcedReadIt;
 	final Map<UUID, Word> choices = new LinkedHashMap<>();
 	final Map<String, UUID> choiceDisplays = new LinkedHashMap<>();
 	final List<BlockPos> choiceStands = new ArrayList<>();
@@ -371,9 +356,6 @@ public final class Room {
 	 */
 	boolean practice;
 	boolean practiceStarting;
-	/** A sampler's ready-made round, used as is; and a sampler's team-up word. */
-	@Nullable Puzzle forcedPuzzle;
-	@Nullable Word forcedTeamWord;
 
 	void endPractice() {
 		if (!practice) return;
@@ -389,13 +371,6 @@ public final class Room {
 	}
 	/** A team-up's two readers, the lower first; and a test's asked-for team-up. */
 	final List<UUID> teamReaders = new ArrayList<>();
-	boolean forcedTeam;
-
-	@ForTests
-	void newTeamRound(ServerPlayer player) {
-		forcedTeam = true;
-		rounds.newRound(player, null, false, false);
-	}
 
 	/** The little marker over each reader whose round it is, in their colour, by player. */
 	private final Map<UUID, UUID> markerShown = new LinkedHashMap<>();
@@ -651,35 +626,36 @@ public final class Room {
 	}
 
 
+	/** A round asked for: {@link RoundRequest#NONE} for the room's own pick. */
+	void ask(ServerPlayer player, RoundRequest request) {
+		rounds.newRound(player, request);
+	}
+
 	void newRound(ServerPlayer player) {
 		newRound(player, null);
 	}
 
 	/** A round from this child's stage, a word they have not read first; or for exactly this target. */
 	void newRound(ServerPlayer player, @Nullable Word target) {
-		rounds.newRound(player, target, false, false);
+		ask(player, RoundRequest.NONE.withTarget(target));
 	}
 
 	@ForTests
 	void newRound(ServerPlayer player, Word target, Puzzle.Kind kind) {
-		forcedKind = kind;
-		rounds.newRound(player, target, false, false);
+		ask(player, RoundRequest.NONE.withTarget(target).withKind(kind));
 	}
 
 	@ForTests
 	void newTricky(ServerPlayer player, Word word) {
-		forcedTricky = word;
-		rounds.newRound(player, null, false, false);
+		ask(player, RoundRequest.NONE.withTricky(word));
 	}
 
 	void newPlural(ServerPlayer player, Word plural) {
-		forcedPlural = plural;
-		rounds.newRound(player, null, false, false);
+		ask(player, RoundRequest.NONE.withPlural(plural));
 	}
 
 	void newPhrase(ServerPlayer player, Word adjective, Word noun) {
-		forcedPhrase = new Word[] {adjective, noun};
-		rounds.newRound(player, null, false, false);
+		ask(player, RoundRequest.NONE.withPhraseAdjective(adjective).withPhraseNoun(noun));
 	}
 
 	@ForTests
@@ -694,9 +670,7 @@ public final class Room {
 	/** A big-and-little round for this letter, finding the capital ({@code up}) or the small one. */
 	@ForTests
 	void newCaseRound(ServerPlayer player, Letter letter, boolean up) {
-		forcedCase = letter.lower();
-		forcedCaseUp = up;
-		rounds.newRound(player, null, false, false);
+		ask(player, RoundRequest.NONE.withCaseLetter(letter.lower()).withCaseUp(up));
 	}
 
 	@ForTests
@@ -706,15 +680,13 @@ public final class Room {
 
 	@ForTests
 	void newLetterRound(ServerPlayer player, Letter letter) {
-		forcedLetter = letter;
-		rounds.newRound(player, null, false, false);
+		ask(player, RoundRequest.NONE.withLetter(letter));
 	}
 
 	/** A read-it round for exactly this word, if it has a look-alike to pick instead. */
 	@ForTests
 	void newReadIt(ServerPlayer player, Word target) {
-		forcedReadIt = target;
-		rounds.newRound(player, null, false, false);
+		ask(player, RoundRequest.NONE.withReadIt(target));
 	}
 
 	public boolean readIt() {
@@ -729,20 +701,13 @@ public final class Room {
 	/** Rounds since the last of Bob's, and how many of his this visit: every third a what's-wrong. */
 	int sinceBob;
 	int bobRounds;
-	BobRound.@Nullable Mode forcedBob;
-	justfatlard.learning_blocks.bob.@Nullable Goal forcedGoal;
-	justfatlard.learning_blocks.bob.Goals.@Nullable Mistake forcedMistake;
 	/** A word to fix: the wrong letter in its gap, or null; rounds since the last; a test's asked-for wrong letter. */
 	@Nullable Letter fixLetter;
 	int sinceFix;
-	@Nullable Letter forcedFixLetter;
 
 	void newBob(ServerPlayer player, BobRound.Mode mode, justfatlard.learning_blocks.bob.@Nullable Goal goal,
 			justfatlard.learning_blocks.bob.Goals.@Nullable Mistake mistake) {
-		forcedBob = mode;
-		forcedGoal = goal;
-		forcedMistake = mistake;
-		rounds.newRound(player, null, false, false);
+		ask(player, RoundRequest.NONE.withBob(mode).withGoal(goal).withMistake(mistake));
 	}
 
 	@ForTests
@@ -756,9 +721,7 @@ public final class Room {
 	}
 
 	void newFix(ServerPlayer player, Word target, Puzzle.Kind kind, Letter wrong) {
-		forcedFixLetter = wrong;
-		forcedKind = kind;
-		rounds.newRound(player, target, false, false);
+		ask(player, RoundRequest.NONE.withTarget(target).withKind(kind).withFixLetter(wrong));
 	}
 
 	/** The word each click box on the floor stands for, in a read-it round. */
@@ -773,7 +736,7 @@ public final class Room {
 
 	/** A scene round for exactly this word, which must have a scene. */
 	void newScene(ServerPlayer player, Word target) {
-		rounds.newRound(player, target, false, true);
+		ask(player, RoundRequest.NONE.withTarget(target).withAsScene(true));
 	}
 
 	/**
@@ -781,7 +744,7 @@ public final class Room {
 	 * stage's first round.
 	 */
 	public void stageSet(ServerPlayer player) {
-		rounds.newRound(player, null, true, false);
+		ask(player, RoundRequest.NONE.withStageSet(true));
 	}
 
 	/** Hold the first round's prompt until the child's client has loaded; see {@link #clientLoaded}. */
@@ -891,7 +854,7 @@ public final class Room {
 		Narrator.stop(player);
 		busy = false;
 		busySince = Long.MIN_VALUE;
-		rounds.newRound(player, null, false, false);
+		ask(player, RoundRequest.NONE);
 		return true;
 	}
 

@@ -268,8 +268,7 @@ public final class Sampler {
 				Puzzle round = word == null ? null : Puzzle.forTarget(word, Words.all(), player.getRandom(), Puzzle.Kind.FIRST);
 				if (round == null) yield false;
 				Narrator.stop(player);
-				room.forcedPuzzle = round;
-				room.newRound(player);
+				room.ask(player, RoundRequest.NONE.withPuzzle(round));
 				Narrator.note(player, "early_word:" + word.text());
 				yield room.puzzle() == round;
 			}
@@ -290,8 +289,7 @@ public final class Sampler {
 			case PREP -> Rooms.startBob(player, BobRound.Mode.PREP, justfatlard.learning_blocks.bob.Goals.byId(target), null);
 			case TEAMUP -> {
 				if (word == null) yield false;
-				room.forcedTeamWord = word;
-				yield Rooms.startTeamRound(player);
+				yield Rooms.startTeamRound(player, word);
 			}
 		};
 	}
