@@ -243,9 +243,14 @@ public final class Together implements FabricClientGameTest {
 			check(Rooms.of(max) != null && Rooms.of(max) == Rooms.of(ava[0]), "coming back, Max was not in the room with Ava");
 			// Ava disconnects: handled as anyone's logout, and Max reads on alone.
 			FakePlayer fake = ava[0];
-			Rooms.forget(fake);
+			// Through the server's own disconnect handler, as a real logout goes.
+			net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.invoker().onPlayDisconnect(fake.connection, server);
 			online(server, fake, false);
 			Visit.set(fake, null);
+		});
+		session.waitTicks(5);
+		session.onServer(server -> {
+			ServerPlayer max = session.player();
 			Room room = Rooms.of(max);
 			check(room != null && !room.shared() && room.members().equals(List.of(max.getUUID())), "Ava's logout left the room shared");
 		});
@@ -263,7 +268,7 @@ public final class Together implements FabricClientGameTest {
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "learn unpair " + named[0]);
 			check(Rooms.of(fake) != null && Rooms.of(fake) != Rooms.of(max) && !Rooms.of(max).shared(), "/learn unpair did not split them");
 			check(Rooms.of(fake).origin().equals(justfatlard.learning_blocks.classroom.Plots.origin(fake)), "Ava's own room is not on her plot");
-			Rooms.forget(fake);
+			net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.invoker().onPlayDisconnect(fake.connection, server);
 			online(server, fake, false);
 			Visit.set(fake, null);
 		});

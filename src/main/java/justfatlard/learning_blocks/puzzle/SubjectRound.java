@@ -279,12 +279,17 @@ public abstract class SubjectRound {
 
 	private boolean clickChoice(ServerPlayer player, Choice picked, Vec3 at) {
 		java.util.UUID whose = whoseTurn();
-		if (whose != null ? !whose.equals(player.getUUID()) : !room.mayPress(player)) {
+		if (whose != null ? !whose.equals(player.getUUID()) : !teamUp() && !room.mayPress(player)) {
 			room.notYourTurn(player, whose != null ? whose : room.turn, at);
 			return true;
 		}
 		pick(player, picked);
 		return true;
+	}
+
+	/** Whether this round is a team-up: right, it counts for every reader in the room. */
+	protected boolean teamUp() {
+		return false;
 	}
 
 	/** Reading together, whose pick it is when a kind decides that itself (a team-up's halves); null for the room's turn. */
@@ -369,6 +374,21 @@ public abstract class SubjectRound {
 				Prizes.itemSolved(player, item, firstTry);
 				Earned.checkItem(player, Progress.of(player), item);
 			}, lessonsBefore);
+			// A team-up is everyone's: it counts for each reader here, as a Reading team-up does.
+			if (teamUp() && room.shared()) {
+				for (ServerPlayer other : room.present()) {
+					if (other == player) continue;
+					int otherBefore = AnswerCommit.lessonsBefore(other);
+					room.answers.commit().right(other, subject().id() + " " + picked.id() + " together", () -> {
+						Progress.of(other).itemRight(other, item, firstTry);
+						Prizes.itemSolved(other, item, firstTry);
+						Earned.checkItem(other, Progress.of(other), item);
+					}, otherBefore);
+					if (otherBefore == 1) room.refreshPortal(other, true);
+					telling.add(room.prizes(other.getUUID()).prizeLineFor(other));
+				}
+				telling.say("phrase/great_teamwork", 2);
+			}
 			boolean nowDone = !room.practice && !wasDone && levelDone(Progress.of(player));
 			if (nowDone) Safely.run("A level of " + subject().id() + " done", () -> Prizes.levelComplete(player, levelKey()));
 			happened[0] = true;

@@ -109,6 +109,7 @@ public final class Logic implements Subject {
 			} else {
 				kind = band.main();
 			}
+			kind = freshKind(progress, kind, band);
 		}
 		if (target != null && !LogicCourse.targets(kind).contains(target)) return null;
 		String chosen = target != null ? target : pickTarget(player, progress, kind, band, random);
@@ -117,6 +118,23 @@ public final class Logic implements Subject {
 		last.put(player.getUUID(), made.item());
 		if (!room.practice()) progress.useItemToday(player, made.item(), kind.id);
 		return made;
+	}
+
+	/**
+	 * No lesson twice in a day while the band has another: a kind whose every target was asked today
+	 * gives way to one of the band's other kinds that still has one.
+	 */
+	private static Kind freshKind(Progress progress, Kind kind, Band band) {
+		if (!allUsed(progress, kind, band)) return kind;
+		List<Kind> others = new ArrayList<>();
+		others.add(band.main());
+		others.addAll(band.extras());
+		for (Kind other : others) if (other != kind && !allUsed(progress, other, band)) return other;
+		return kind;
+	}
+
+	private static boolean allUsed(Progress progress, Kind kind, Band band) {
+		return candidates(kind, band).stream().allMatch(t -> progress.itemUsedToday(kind.item(t)));
 	}
 
 	private static @Nullable Band review(Progress progress, Band band, RandomSource random) {

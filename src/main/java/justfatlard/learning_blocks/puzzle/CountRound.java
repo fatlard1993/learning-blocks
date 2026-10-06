@@ -27,6 +27,12 @@ public final class CountRound extends NumbersRound {
 	private final int first;
 	private final List<Entity> things = new ArrayList<>();
 
+	/** Two kinds to count, one each: anyone may answer, and it counts for both. */
+	@Override
+	protected boolean teamUp() {
+		return first < n;
+	}
+
 	public CountRound(Room room, int n, boolean team, int lo, int hi, int stage, RandomSource random) {
 		super(room, team ? NumberCourse.Kind.TEAM : NumberCourse.Kind.COUNT, String.valueOf(n), stage, random);
 		this.n = n;

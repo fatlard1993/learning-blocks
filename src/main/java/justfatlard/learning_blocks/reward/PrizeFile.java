@@ -129,6 +129,11 @@ public final class PrizeFile {
 	}
 
 
+	/** The file as first written, comments and all. */
+	public static String defaultText() {
+		return text(defaults());
+	}
+
 	static String text(JsonObject tree) {
 		StringBuilder out = new StringBuilder();
 		for (String line : HEADER.split("\n")) out.append("// ").append(line).append('\n');

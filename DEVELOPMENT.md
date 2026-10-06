@@ -20,7 +20,7 @@ ALSOFT_DRIVERS=null xvfb-run -a ./gradlew --no-daemon runClientGameTest -Ptest.l
 
 Launches a client off-screen and silent (`ALSOFT_DRIVERS=null` gives OpenAL its null device, "OpenAL initialized on device No Output" in the log, and `--no-daemon` makes sure the variable reaches the game), joins a world and runs every test listed in `src/gametest/resources/fabric.mod.json`, in that order. `-Ptest.level=full` runs everything, screenshots included; without it, a smoke run skips the screenshots and the slowest parts.
 
-The test mod's `TestDefaults` starts new readers on words, and `TestClientDefaults` sets the render distance to 4: every tick is drawn in software, and nothing tested is further away. Each test's class javadoc says what it checks; the table is a map.
+The test mod's `TestDefaults` starts new readers on words, and `TestClientDefaults` sets the render distance to 4: every tick is drawn in software, and nothing tested is further away. Each test's class javadoc says what it checks; the table is a map. The log names each test as it starts and finishes (`[test] running ...`), so a run's coverage can be read from it.
 
 | Test | What it plays |
 |------|---------------|
@@ -76,6 +76,12 @@ The test mod's `TestDefaults` starts new readers on words, and `TestClientDefaul
 | `LogicTest` | Every kind of Logic round, answered wrong and right. |
 | `LogicCourseTest` | The Logic course: bands, gates, review and the parent view. |
 | `Tending` | Milestones across subjects, stuck rounds, join requests, /learn give, plots, and a relog through the real disconnect handler. |
+| `TeleportGuard` | Another mod's teleport neither takes a child out of the classroom nor brings anyone in. |
+| `ClickReach` | Animals, pens, tiles and pictures clicked by the client from where the child stands: reach and box sizes as a child gets them. |
+| `MissingTile` | A tile knocked loose goes into the hand, and one left out of hand goes back to the floor. |
+| `Pointing` | The reader whose turn it isn't points: a puff where they click, rate-limited, and nothing in the round changes. |
+| `ThreeAndTeams` | Three readers taking turns; Numbers and Logic team-ups with two, counting for both. |
+| `ShippedDefaults` | The default config and no test overrides: two scheduled days of lessons end to end, no lesson twice a day, nothing mastered in two days. |
 
 `./gradlew build` compiles the tests but does not run them.
 

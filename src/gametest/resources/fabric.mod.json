@@ -69,7 +69,9 @@
       "justfatlard.learning_blocks.gametest.TeleportGuard",
       "justfatlard.learning_blocks.gametest.ClickReach",
       "justfatlard.learning_blocks.gametest.MissingTile",
-      "justfatlard.learning_blocks.gametest.Pointing"
+      "justfatlard.learning_blocks.gametest.Pointing",
+      "justfatlard.learning_blocks.gametest.ThreeAndTeams",
+      "justfatlard.learning_blocks.gametest.ShippedDefaults"
     ]
   },
   "depends": {

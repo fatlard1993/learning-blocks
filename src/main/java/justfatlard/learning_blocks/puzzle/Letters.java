@@ -180,7 +180,7 @@ public final class Letters {
 			for (int i = 0; i <= group && i < GROUPS.size(); i++) {
 				for (Letter letter : GROUPS.get(i)) {
 					String key = justfatlard.learning_blocks.reward.Memory.tileKey(letter.grapheme());
-					if (letter == last || !progress.memory().due(key)) continue;
+					if (letter == last || !progress.memory().due(key) || progress.letterUsedToday(letter)) continue;
 					int at = progress.memory().item(key).box();
 					if (at < box) {
 						due = letter;
@@ -197,6 +197,14 @@ public final class Letters {
 		for (int i = 0; i < group; i++) review.addAll(GROUPS.get(i));
 		List<Letter> from = !review.isEmpty() && random.nextInt(4) == 0 ? review : learning;
 		if (from.size() > 1 && last != null) from.remove(last);
+		// No letter twice in a day while there is another.
+		List<Letter> fresh = new ArrayList<>(from.stream().filter(letter -> !progress.letterUsedToday(letter)).toList());
+		if (fresh.isEmpty()) {
+			for (List<Letter> met : GROUPS.subList(0, Math.min(group + 1, GROUPS.size()))) {
+				for (Letter letter : met) if (letter != last && !progress.letterUsedToday(letter)) fresh.add(letter);
+			}
+		}
+		if (!fresh.isEmpty()) from = fresh;
 		return from.get(random.nextInt(from.size()));
 	}
 

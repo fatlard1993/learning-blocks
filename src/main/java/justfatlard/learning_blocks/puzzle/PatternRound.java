@@ -249,6 +249,11 @@ public final class PatternRound extends LogicRound {
 		telling.say(picked.clip(), "copy:" + copied, p -> copyPut(index), CaptionLine.plain(picked.said()), 3);
 	}
 
+	@Override
+	protected boolean teamUp() {
+		return kind == LogicCourse.Kind.COPY && !grow && room.shared();
+	}
+
 	/** Reading together, copy it is a team-up: the turn reader the first half, the other the rest. */
 	@Override
 	protected @Nullable UUID whoseTurn() {

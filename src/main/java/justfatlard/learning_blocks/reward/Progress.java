@@ -660,6 +660,13 @@ public final class Progress {
 		return java.util.Collections.unmodifiableSet(memory.usedOn(today()));
 	}
 
+	/** Whether a letters-level round asked for this letter today. */
+	public boolean letterUsedToday(justfatlard.learning_blocks.puzzle.Letter letter) {
+		if (repeatsForTests) return false;
+		String prefix = justfatlard.learning_blocks.LearningBlocks.MOD_ID + ":letter/" + letter.grapheme() + "|";
+		return memory.usedOn(today()).stream().anyMatch(lesson -> lesson.startsWith(prefix));
+	}
+
 	public boolean wordUsedToday(justfatlard.learning_blocks.puzzle.Word word) {
 		if (repeatsForTests) return false;
 		String prefix = word.id() + "|";
