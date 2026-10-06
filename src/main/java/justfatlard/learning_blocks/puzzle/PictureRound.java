@@ -47,7 +47,8 @@ public final class PictureRound extends NumbersRound {
 
 	@Override
 	protected BlockPos spotFor(int i, int count) {
-		return layout.origin().offset((i - 1) * 3, 0, -1);
+		// Near enough for a child to click from where they stand: the mats are wide, three apart.
+		return layout.origin().offset((i - 1) * 3, 0, 0);
 	}
 
 	@Override

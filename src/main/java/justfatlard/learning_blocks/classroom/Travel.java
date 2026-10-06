@@ -119,10 +119,10 @@ public final class Travel {
 			else room = Rooms.open(player, classroom, Plots.origin(player));
 			Prizes.entered(player);
 			Vec3 spawn = room.spawnFor(player.getUUID());
-			var arrived = player.teleport(new TeleportTransition(classroom, spawn, Vec3.ZERO, Room.FACING_YAW, 0, Set.of(),
+			var arrived = own(() -> player.teleport(new TeleportTransition(classroom, spawn, Vec3.ZERO, Room.FACING_YAW, 0, Set.of(),
 				entity -> {
 					if (entity instanceof ServerPlayer there) Rooms.begin(there);
-				}));
+				})));
 			if (arrived == null) throw new IllegalStateException("the teleport into the classroom did not happen");
 		} catch (Throwable failure) {
 			if (failure instanceof VirtualMachineError && !(failure instanceof StackOverflowError)) throw (VirtualMachineError) failure;
@@ -183,7 +183,7 @@ public final class Travel {
 		if (visit == null) return;
 		boolean inside = Places.isClassroom(player.level());
 		giveBack(player, visit);
-		if (inside) player.teleport(home(player.level().getServer(), visit.home()));
+		if (inside) own(() -> player.teleport(home(player.level().getServer(), visit.home())));
 		settle(player);
 	}
 
@@ -342,7 +342,7 @@ public final class Travel {
 			if (lessons > 0) Progress.of(player).setLessonsOwed(player, lessons);
 			returnForLessons(player);
 		} else if (inside) {
-			player.teleport(spawnTrip(player.level().getServer()));
+			own(() -> player.teleport(spawnTrip(player.level().getServer())));
 		} else {
 			returnForLessons(player);
 		}
@@ -418,6 +418,30 @@ public final class Travel {
 		}
 	}
 
+	private static int crossing;
+
+	/** A trip across the classroom's edge made by the classroom itself, which nothing else may make. */
+	private static <T> T own(java.util.function.Supplier<T> trip) {
+		crossing++;
+		try {
+			return trip.get();
+		} finally {
+			crossing--;
+		}
+	}
+
+	/**
+	 * Whether a teleport may carry this player to that level: across the classroom's edge only by the
+	 * classroom's own trips, since the way in and out is what puts things aside and hands them back,
+	 * and what keeps a child in for lessons. Someone in the classroom with no visit may leave.
+	 */
+	public static boolean mayCross(ServerPlayer player, ServerLevel to) {
+		if (crossing > 0) return true;
+		boolean inside = Places.isClassroom(player.level());
+		if (inside == Places.isClassroom(to)) return true;
+		return inside && Visit.of(player) == null;
+	}
+
 	/**
 	 * Moved between dimensions by something that is not this mod. Out of the classroom that way
 	 * still counts as leaving it; into it with no visit is turned round.
@@ -446,7 +470,7 @@ public final class Travel {
 			} else if (in && visit == null && Places.isClassroom(now.level())) {
 				LearningBlocks.LOGGER.info("[{}] {} arrived in the classroom without using /learn; sent to spawn",
 					LearningBlocks.MOD_ID, now.getGameProfile().name());
-				now.teleport(spawnTrip(server));
+				own(() -> now.teleport(spawnTrip(server)));
 			}
 		});
 	}

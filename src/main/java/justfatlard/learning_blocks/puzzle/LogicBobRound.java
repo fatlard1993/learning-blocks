@@ -113,13 +113,18 @@ public final class LogicBobRound extends LogicRound {
 	}
 
 	@Override
+	protected Vec3 hitSpot(Choice choice, int i, int n) {
+		return kind == LogicCourse.Kind.BOBFIX ? fixSpot(i) : super.hitSpot(choice, i, n);
+	}
+
+	@Override
 	protected float hitWidth(Choice choice) {
-		return kind == LogicCourse.Kind.BOBFIX ? 0.9F : 1.8F;
+		return kind == LogicCourse.Kind.BOBFIX ? 1.1F : 1.8F;
 	}
 
 	@Override
 	protected float hitHeight(Choice choice) {
-		return kind == LogicCourse.Kind.BOBFIX ? 1.0F : 1.1F;
+		return 1.5F;
 	}
 
 	@Override
@@ -140,7 +145,7 @@ public final class LogicBobRound extends LogicRound {
 		if (choice == answer()) pen = 1 - pen;
 		Vec3 centre = Vec3.atBottomCenterOf(penCentre(pen));
 		int k = (int) choices.subList(0, i).stream().filter(c -> penOfStart(choices.indexOf(c)) == penOfStart(i)).count();
-		return centre.add((k - 1) * 0.9, 0, -0.3);
+		return centre.add((k - 1) * 1.2, 0, -0.3);
 	}
 
 	private int penOfStart(int i) {
@@ -230,6 +235,7 @@ public final class LogicBobRound extends LogicRound {
 					one.snapTo(at.x, at.y, at.z, 0, 0);
 					add(one);
 					animalOf.put(choices.get(i), one);
+					clickable(one, choices.get(i));
 					if (choices.get(i) == answer()) misplaced = one;
 				}
 			}

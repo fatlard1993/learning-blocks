@@ -30,6 +30,19 @@ record RoomLayout(BlockPos origin) {
 	static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
 	static final BlockState BOARD = Blocks.DYED_TERRACOTTA.green().defaultBlockState();
 
+	/**
+	 * Thing {@code i} of {@code n} to click, in an arc round where the child arrives, each as far from
+	 * them as the next and well apart: within a child's reach of a thing, and a click aimed at one
+	 * never passes through another on the way, as it would along a straight row.
+	 */
+	Vec3 arcSpot(int i, int n) {
+		double angle = (i - (n - 1) / 2.0) * ARC_STEP;
+		return spawn().add(Math.sin(angle) * ARC, 0, -Math.cos(angle) * ARC);
+	}
+
+	static final double ARC = 2.2;
+	static final double ARC_STEP = Math.toRadians(38);
+
 	Vec3 spawn() {
 		return Vec3.atBottomCenterOf(origin.offset(0, 0, 3));
 	}

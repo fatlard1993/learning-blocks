@@ -600,7 +600,41 @@ public final class Room {
 		return turn.equals(player.getUUID()) || present().stream().noneMatch(p -> p.getUUID().equals(turn));
 	}
 
-	void notYourTurn(ServerPlayer player, @Nullable UUID whose) {
+	/** Ticks between one reader's pointing puffs, so mashing a button makes a few, not a flood. */
+	private static final int POINT_EVERY = 5;
+	private final Map<UUID, Long> pointedAt = new java.util.HashMap<>();
+	/** The round each reader was last told it isn't their turn: once a round is enough. */
+	private final Map<UUID, Integer> toldInRound = new java.util.HashMap<>();
+	private final List<Vec3> pointed = new ArrayList<>();
+
+	/**
+	 * Reading together, a reader whose turn it isn't points: a puff in their colour where they clicked
+	 * or punched, seen by everyone in the room, and a soft ping. It changes nothing in the round.
+	 */
+	void point(ServerPlayer player, Vec3 at) {
+		long now = level.getGameTime();
+		Long last = pointedAt.get(player.getUUID());
+		if (last != null && now - last < POINT_EVERY && now >= last) return;
+		pointedAt.put(player.getUUID(), now);
+		int colour = COLOURS[Math.min(place(player.getUUID()), COLOURS.length - 1)];
+		level.sendParticles(new net.minecraft.core.particles.DustParticleOptions(colour, 1.2F), at.x, at.y, at.z, 10, 0.12, 0.12, 0.12, 0.0);
+		level.playSound(null, at.x, at.y, at.z, net.minecraft.sounds.SoundEvents.NOTE_BLOCK_BELL.value(), net.minecraft.sounds.SoundSource.PLAYERS, 0.25F, 2.0F);
+		pointed.add(at);
+		if (pointed.size() > 32) pointed.removeFirst();
+	}
+
+	/** Where readers have pointed lately, oldest first. */
+	@ForTests
+	public List<Vec3> pointed() {
+		return List.copyOf(pointed);
+	}
+
+	/** A reader tried what isn't theirs to do just now: they point there, and hear whose turn it is once a round. */
+	void notYourTurn(ServerPlayer player, @Nullable UUID whose, Vec3 at) {
+		point(player, at);
+		Integer told = toldInRound.get(player.getUUID());
+		if (told != null && told == round) return;
+		toldInRound.put(player.getUUID(), round);
 		if (busy || Narrator.isPlaying(player)) return;
 		String name = nameOf(whose);
 		Narrator.note(player, "not_your_turn");
@@ -968,6 +1002,10 @@ public final class Room {
 
 	void sendHome(ServerPlayer player, Letter letter, Vec3 from) {
 		interaction.sendHome(player, letter, from);
+	}
+
+	void intoHand(ServerPlayer player, Letter letter) {
+		interaction.intoHand(player, letter);
 	}
 
 

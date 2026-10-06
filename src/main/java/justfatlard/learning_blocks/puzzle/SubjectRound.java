@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -132,7 +133,12 @@ public abstract class SubjectRound {
 	}
 
 	protected float hitHeight(Choice choice) {
-		return 1.2F;
+		return 1.5F;
+	}
+
+	/** Where a choice's box stands: on its spot, by default; a kind whose things stand off the block grid says where. */
+	protected Vec3 hitSpot(Choice choice, int i, int n) {
+		return Vec3.atBottomCenterOf(spotFor(i, n));
 	}
 
 	/** What stands at a choice's spot: its block, by default. */
@@ -162,9 +168,10 @@ public abstract class SubjectRound {
 			Choice choice = choices.get(i);
 			BlockPos spot = spotFor(i, choices.size());
 			stand(choice, spot);
+			if (!boxed(choice)) continue;
 			net.minecraft.world.entity.Interaction hit = EntityTypes.INTERACTION.create(level, EntitySpawnReason.TRIGGERED);
 			if (hit == null) continue;
-			Vec3 at = Vec3.atBottomCenterOf(spot);
+			Vec3 at = hitSpot(choice, i, choices.size());
 			hit.snapTo(at.x, at.y, at.z, 0, 0);
 			hit.setWidth(hitWidth(choice));
 			hit.setHeight(hitHeight(choice));
@@ -196,8 +203,32 @@ public abstract class SubjectRound {
 		made.add(entity.getUUID());
 	}
 
+	/**
+	 * Whether a choice gets a box at all. A box past a child's reach for things (three blocks) stops a
+	 * click there, rather than letting it through to the block behind: a choice as big as a pen is
+	 * better clicked as its own blocks ({@link #choiceAt}), which reach further.
+	 */
+	protected boolean boxed(Choice choice) {
+		return choice.block() == null;
+	}
+
+	/** A choice's box made this size: smaller to let a click past it, back to its own after. */
+	protected void resizeHit(Choice choice, float width, float height) {
+		for (Map.Entry<UUID, Choice> entry : hits.entrySet()) {
+			if (!entry.getValue().equals(choice)) continue;
+			if (level.getEntity(entry.getKey()) instanceof net.minecraft.world.entity.Interaction box) {
+				box.setWidth(width);
+				box.setHeight(height);
+			}
+		}
+	}
+
 	/** A choice's box gone: it can't be picked again (a tile put in a row). */
+	private final java.util.Set<Choice> retired = new java.util.HashSet<>();
+
 	protected void unhit(Choice choice) {
+		retired.add(choice);
+		owned.values().removeIf(choice::equals);
 		hits.entrySet().removeIf(entry -> {
 			if (!entry.getValue().equals(choice)) return false;
 			Entity box = level.getEntity(entry.getKey());
@@ -211,12 +242,45 @@ public abstract class SubjectRound {
 		return i < 0 ? null : spotFor(i, choices.size());
 	}
 
+	/** Where this choice's box stands. */
+	@ForTests
+	public Vec3 hitSpotOf(Choice choice) {
+		return hitSpot(choice, choices.indexOf(choice), choices.size());
+	}
+
+	/** A thing that stands for a choice: a click on it counts as one on the choice's box. */
+	protected void clickable(Entity thing, Choice choice) {
+		owned.put(thing.getUUID(), choice);
+	}
+
+	private final Map<UUID, Choice> owned = new LinkedHashMap<>();
+
 	boolean click(ServerPlayer player, Entity entity) {
 		Choice picked = hits.get(entity.getUUID());
+		if (picked == null) picked = owned.get(entity.getUUID());
 		if (picked == null) return false;
+		return clickChoice(player, picked, entity.position().add(0, entity.getBbHeight() / 2, 0));
+	}
+
+	/** The block a choice is made of, where a click on the block itself counts too: a pen's rug, past a box's reach. */
+	protected @Nullable Choice choiceAt(BlockPos pos) {
+		for (int i = 0; i < choices.size(); i++) {
+			Choice choice = choices.get(i);
+			if (choice.block() != null && !retired.contains(choice) && spotFor(i, choices.size()).equals(pos)
+				&& level.getBlockState(pos).equals(choice.block())) return choice;
+		}
+		return null;
+	}
+
+	boolean clickBlock(ServerPlayer player, BlockPos pos, Vec3 at) {
+		Choice picked = choiceAt(pos);
+		return picked != null && clickChoice(player, picked, at);
+	}
+
+	private boolean clickChoice(ServerPlayer player, Choice picked, Vec3 at) {
 		java.util.UUID whose = whoseTurn();
 		if (whose != null ? !whose.equals(player.getUUID()) : !room.mayPress(player)) {
-			room.notYourTurn(player, whose != null ? whose : room.turn);
+			room.notYourTurn(player, whose != null ? whose : room.turn, at);
 			return true;
 		}
 		pick(player, picked);
@@ -235,6 +299,11 @@ public abstract class SubjectRound {
 
 	boolean answerable() {
 		for (UUID id : hits.keySet()) if (level.getEntity(id) != null) return true;
+		for (int i = 0; i < choices.size(); i++) {
+			Choice choice = choices.get(i);
+			if (boxed(choice) || retired.contains(choice)) continue;
+			if (choice.block() == null || level.getBlockState(spotFor(i, choices.size())).equals(choice.block())) return true;
+		}
 		return false;
 	}
 
@@ -244,6 +313,7 @@ public abstract class SubjectRound {
 			Entity box = level.getEntity(id);
 			if (box != null) box.discard();
 		}
+		for (Choice choice : choices) if (!boxed(choice)) retired.add(choice);
 	}
 
 	void pressed(ServerPlayer player) {
@@ -331,6 +401,7 @@ public abstract class SubjectRound {
 		made.clear();
 		placed.clear();
 		hits.clear();
+		owned.clear();
 		for (Entity entity : level.getEntities((Entity) null, layout.bounds(), entity -> entity.entityTags().contains(TAG))) entity.discard();
 	}
 }

@@ -168,19 +168,10 @@ public final class SubjectsTest implements FabricClientGameTest {
 			check(Travel.lessons(player) == 4, "a wrong number took a lesson off");
 			// The right one, by a click on its box, as a child would.
 			NumberRound round = (NumberRound) room.subjectRound();
-			BlockPos tile = null;
-			List<SubjectRound.Choice> choices = round.choices();
-			Interaction hit = null;
-			for (Interaction box : player.level().getEntitiesOfClass(Interaction.class, new AABB(player.blockPosition()).inflate(12))) {
-				Vec3 at = box.position();
-				BlockPos under = BlockPos.containing(at.x, at.y + 0.5, at.z);
-				if (player.level().getBlockState(under).equals(round.rightForTests().block())) {
-					hit = box;
-					tile = under;
-				}
-			}
-			check(hit != null, "no click box over the right tile among " + choices);
-			Rooms.clickEntity(player, player.level(), hit);
+			BlockPos tile = BlockPos.containing(round.hitSpotOf(round.rightForTests()));
+			check(player.level().getBlockState(tile).equals(round.rightForTests().block()), "the right tile is not on its spot: " + round.choices());
+			Rooms.useBlock(player, player.level(), net.minecraft.world.InteractionHand.MAIN_HAND,
+				new net.minecraft.world.phys.BlockHitResult(Vec3.atCenterOf(tile).add(0, 0.5, 0), net.minecraft.core.Direction.UP, tile, false));
 			check(Narrator.log(player).contains("picked:numbers:" + round.number()), "the click on " + tile + " was not a pick");
 		});
 		Waits.until(session, 900, "a logic round never came after numbers", () -> {

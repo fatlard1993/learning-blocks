@@ -527,7 +527,7 @@ public final class BobRound {
 		int picked = pickHits.indexOf(entity);
 		if (picked >= 0 && mode == Mode.PREP) {
 			if (!room.mayPress(player)) {
-				room.notYourTurn(player, room.turn);
+				room.notYourTurn(player, room.turn, entity.position().add(0, entity.getBbHeight() / 2, 0));
 				return true;
 			}
 			pickPrep(player, picked);
@@ -536,7 +536,7 @@ public final class BobRound {
 		if (picked >= 0) {
 			if (!picking) return true;
 			if (picker != null && !picker.equals(player.getUUID())) {
-				room.notYourTurn(player, picker);
+				room.notYourTurn(player, picker, entity.position().add(0, entity.getBbHeight() / 2, 0));
 				return true;
 			}
 			pick(player, picked);
@@ -552,11 +552,11 @@ public final class BobRound {
 			return true;
 		}
 		if (picking) {
-			room.notYourTurn(player, picker);
+			room.notYourTurn(player, picker, entity.position().add(0, entity.getBbHeight() / 2, 0));
 			return true;
 		}
 		if (mode != Mode.SILLY && !room.mayPress(player)) {
-			room.notYourTurn(player, room.turn);
+			room.notYourTurn(player, room.turn, entity.position().add(0, entity.getBbHeight() / 2, 0));
 			return true;
 		}
 		room.touch();

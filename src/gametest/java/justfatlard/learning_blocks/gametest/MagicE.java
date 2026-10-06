@@ -76,7 +76,7 @@ public final class MagicE implements FabricClientGameTest {
 				List<String> log = Narrator.log(session.player());
 				List<String> blend = log.subList(log.lastIndexOf("light:0"), log.lastIndexOf("outcome"));
 				int at = 0;
-				for (String step : List.of("clip:phoneme/c", "clip:blend/cake/1", "clip:phoneme/k", "silent:3", "magic_e:1",
+				for (String step : List.of("clip:phoneme/c", "clip:" + (justfatlard.learning_blocks.sound.Sounds.isRecorded("blend/cake/1") ? "blend/cake/1" : "phoneme/a_long"), "clip:phoneme/k", "silent:3", "magic_e:1",
 						"caption:c · A · k · e", "clip:word/cake")) {
 					int found = blend.subList(at, blend.size()).indexOf(step);
 					check(found >= 0, "'" + step + "' is not in cake's blend after position " + at + ": " + blend);

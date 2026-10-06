@@ -8,6 +8,7 @@
     "LevelMixin",
     "PlayerLoadedMixin",
     "PunchMixin",
+    "ServerPlayerTeleportMixin",
     "TeleportCommandMixin",
     "TimePacketMixin"
   ],

@@ -60,7 +60,7 @@ public final class TileHome implements FabricClientGameTest {
 				Room room = Rooms.of(player);
 				check(room.inGap() == null && player.level().getBlockState(room.gap()).isAir(), "the gap is not empty after a wrong word");
 				// Sounded out as the word built, not the one asked for: bat's own a.
-				check(Narrator.log(player).contains("clip:blend/bat/1"), "the wrong word bat was not blended with bat's a: " + Narrator.log(player));
+				check(Narrator.log(player).contains("clip:" + (justfatlard.learning_blocks.sound.Sounds.isRecorded("blend/bat/1") ? "blend/bat/1" : "phoneme/a")), "the wrong word bat was not blended with bat's a: " + Narrator.log(player));
 				home(player, room, Letter.B);
 			});
 			Waits.until(session, 400, "the room never finished with the wrong word", () -> !Rooms.of(session.player()).busy());

@@ -79,12 +79,17 @@ public final class OddRound extends LogicRound {
 
 	@Override
 	protected BlockPos spotFor(int i, int n) {
-		return layout.origin().offset(2 * i - 3, 0, -1);
+		return BlockPos.containing(layout.arcSpot(i, n));
+	}
+
+	@Override
+	protected Vec3 hitSpot(Choice choice, int i, int n) {
+		return layout.arcSpot(i, n);
 	}
 
 	@Override
 	protected float hitWidth(Choice choice) {
-		return 1.4F;
+		return 1.2F;
 	}
 
 	@Override
@@ -97,10 +102,11 @@ public final class OddRound extends LogicRound {
 			if (thing instanceof Sheep sheep) sheep.setColor(i == odd ? other : usual);
 		}
 		if (thing == null) return;
-		Vec3 at = Vec3.atBottomCenterOf(spot);
+		Vec3 at = layout.arcSpot(i, choices.size());
 		thing.snapTo(at.x, at.y, at.z, 0, 0);
 		add(thing);
 		shown.add(thing);
+		clickable(thing, choice);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import justfatlard.learning_blocks.numbers.NumberBlock;
 import justfatlard.learning_blocks.numbers.NumberCourse;
 import justfatlard.learning_blocks.subject.Numbers;
 import net.minecraft.core.BlockPos;
+import org.jspecify.annotations.Nullable;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -75,14 +76,32 @@ public final class PensRound extends NumbersRound {
 		};
 	}
 
+	/** A pen is clicked as its rug and floor, or a creature in it. */
+	@Override
+	protected boolean boxed(Choice choice) {
+		return choice == same;
+	}
+
+	/** A pen's rug or floor, clicked as a block: that pen. */
+	@Override
+	protected @Nullable Choice choiceAt(BlockPos pos) {
+		for (boolean isLeft : new boolean[] {true, false}) {
+			BlockPos centre = penCentre(isLeft);
+			int dx = pos.getX() - centre.getX();
+			int dz = pos.getZ() - centre.getZ();
+			if (pos.getY() <= centre.getY() && pos.getY() >= centre.getY() - 1 && Math.abs(dx) <= 2 && dz >= -2 && dz <= 1) return isLeft ? leftPen : rightPen;
+		}
+		return null;
+	}
+
 	@Override
 	protected float hitWidth(Choice choice) {
-		return choice == same ? 1.1F : 3.2F;
+		return choice == same ? 1.1F : 4.8F;
 	}
 
 	@Override
 	protected float hitHeight(Choice choice) {
-		return choice == same ? 1.2F : 1.6F;
+		return choice == same ? 1.5F : 1.6F;
 	}
 
 	@Override
@@ -106,6 +125,8 @@ public final class PensRound extends NumbersRound {
 	protected void started(ServerPlayer player) {
 		fill(player, true, left, leftOnes);
 		fill(player, false, right, rightOnes);
+		for (Entity one : leftOnes) clickable(one, leftPen);
+		for (Entity one : rightOnes) clickable(one, rightPen);
 	}
 
 	private void fill(ServerPlayer player, boolean isLeft, int n, List<Entity> into) {

@@ -67,7 +67,7 @@ public final class Hardening implements FabricClientGameTest {
 				asPlayer(world, "learn");
 			});
 			context.waitTicks(40);
-			// Taken out by something that is not the portal.
+			// Something that is not the portal tries to take them out.
 			world.getServer().runOnServer(server -> {
 				ServerPlayer player = player(world);
 				check(Places.isClassroom(player.level()), "never went in");
@@ -82,9 +82,8 @@ public final class Hardening implements FabricClientGameTest {
 			context.waitTicks(10);
 			world.getServer().runOnServer(server -> {
 				ServerPlayer player = player(world);
-				check(Visit.of(player) == null, "a teleport out left the visit open");
-				check(player.getInventory().getItem(4).is(Items.EMERALD), "a teleport out did not hand the emeralds back");
-				asPlayer(world, "learn");
+				// Another mod's teleport does not cross the classroom's edge (TeleportGuard has the rest).
+				check(Places.isClassroom(player.level()) && Visit.of(player) != null, "another mod's teleport took the child out");
 			});
 			context.waitTicks(40);
 

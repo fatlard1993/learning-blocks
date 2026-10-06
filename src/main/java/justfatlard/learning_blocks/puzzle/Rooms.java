@@ -394,7 +394,7 @@ public final class Rooms {
 		if (picked != null) {
 			// Reading together, the pick is the turn reader's.
 			if (!room.mayPress(serverPlayer)) {
-				room.notYourTurn(serverPlayer, room.turn);
+				room.notYourTurn(serverPlayer, room.turn, entity.position().add(0, entity.getBbHeight() / 2, 0));
 				return InteractionResult.SUCCESS;
 			}
 			room.answers.pick(serverPlayer, picked);
@@ -539,6 +539,11 @@ public final class Rooms {
 			return result != null ? result : InteractionResult.PASS;
 		}
 		if (room != null) {
+			// Reading together, the reader whose turn it isn't can still point at what they mean.
+			if (hand == InteractionHand.MAIN_HAND && room.shared() && !room.mayPress(serverPlayer)) room.point(serverPlayer, hit.getLocation());
+			if (hand == InteractionHand.MAIN_HAND && room.subjectRound != null && room.subjectRound.clickBlock(serverPlayer, hit.getBlockPos(), hit.getLocation())) {
+				return InteractionResult.SUCCESS;
+			}
 			InteractionResult result = room.use(serverPlayer, hit.getBlockPos(), hand);
 			if (result != null) return result;
 			Letter tile = Tiles.letterOf(held);
@@ -551,7 +556,7 @@ public final class Rooms {
 				BlockPos gap = room.aimedGap(hit.getBlockPos(), target);
 				if (gap != null && !room.mayPlace(serverPlayer, gap)) {
 					// Reading together: someone else's gap. They keep the tile, and hear whose it is.
-					room.notYourTurn(serverPlayer, room.gapOwner(gap));
+					room.notYourTurn(serverPlayer, room.gapOwner(gap), hit.getLocation());
 					serverPlayer.connection.send(new ClientboundBlockUpdatePacket(level, target));
 					serverPlayer.containerMenu.broadcastChanges();
 					return InteractionResult.FAIL;

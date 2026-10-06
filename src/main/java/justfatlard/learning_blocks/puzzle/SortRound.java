@@ -89,8 +89,20 @@ public final class SortRound extends LogicRound {
 		return layout.origin().offset(group == 0 ? -3 : 3, 0, -1);
 	}
 
+	/**
+	 * In an arc round where the child stands, each as far from them as the next: a click aimed at one
+	 * from there never passes through another's box on the way, as it would along a straight row.
+	 */
+	private static final double ARC = 1.7;
+	private static final float ANIMAL_BOX_WIDTH = 1.1F;
+	private static final float ANIMAL_BOX_HEIGHT = 1.5F;
+	/** With one picked, the animals' boxes shrink to the animals, so a click past them reaches the pens. */
+	private static final float PICKED_BOX = 0.55F;
+	private static final double ARC_STEP = Math.toRadians(42);
+
 	private Vec3 thingSpot(int i) {
-		return Vec3.atBottomCenterOf(layout.origin()).add((i - (count - 1) / 2.0) * 1.0, 0, 0.6);
+		double angle = (i - (count - 1) / 2.0) * ARC_STEP;
+		return layout.spawn().add(Math.sin(angle) * ARC, 0, -Math.cos(angle) * ARC);
 	}
 
 	private Vec3 inPenSpot(int group, int k) {
@@ -105,13 +117,36 @@ public final class SortRound extends LogicRound {
 	}
 
 	@Override
+	protected Vec3 hitSpot(Choice choice, int i, int n) {
+		return i < count ? thingSpot(i) : Vec3.atBottomCenterOf(penCentre(i - count));
+	}
+
+	/** A pen is clicked as its rug and floor, or an animal already in it. */
+	@Override
+	protected boolean boxed(Choice choice) {
+		return choice != pens[0] && choice != pens[1];
+	}
+
+	/** A pen's rug (or the box and the crib), clicked as a block: that pen. */
+	@Override
+	protected @Nullable Choice choiceAt(BlockPos pos) {
+		for (int group = 0; group < 2; group++) {
+			BlockPos centre = penCentre(group);
+			int dx = pos.getX() - centre.getX();
+			int dz = pos.getZ() - centre.getZ();
+			if (pos.getY() <= centre.getY() && pos.getY() >= centre.getY() - 1 && Math.abs(dx) <= 2 && dz >= -2 && dz <= 1) return pens[group];
+		}
+		return null;
+	}
+
+	@Override
 	protected float hitWidth(Choice choice) {
-		return choice == pens[0] || choice == pens[1] ? 3.0F : 0.8F;
+		return choice == pens[0] || choice == pens[1] ? 4.8F : ANIMAL_BOX_WIDTH;
 	}
 
 	@Override
 	protected float hitHeight(Choice choice) {
-		return choice == pens[0] || choice == pens[1] ? 1.4F : 1.0F;
+		return choice == pens[0] || choice == pens[1] ? 1.6F : ANIMAL_BOX_HEIGHT;
 	}
 
 	@Override
@@ -171,6 +206,7 @@ public final class SortRound extends LogicRound {
 				Vec3 at = inPenSpot(group, -1);
 				shown.snapTo(at.x, at.y, at.z, 0, 0);
 				add(shown);
+				clickable(shown, pens[group]);
 			}
 		}
 		for (int i = 0; i < count; i++) {
@@ -178,6 +214,7 @@ public final class SortRound extends LogicRound {
 			if (thing == null) continue;
 			things.add(thing);
 			thingOf.put(choices.get(i), thing);
+			clickable(thing, choices.get(i));
 			Counting.fly(this, player, thing, thingSpot(i), i * 4, null);
 		}
 	}
@@ -230,10 +267,13 @@ public final class SortRound extends LogicRound {
 			// Picked up: it glows until it is put somewhere.
 			if (selected != null) Counting.glow(thingOf.get(selected), false);
 			selected = picked;
+			for (Choice one : unsorted()) resizeHit(one, PICKED_BOX, PICKED_BOX);
 			Entity thing = thingOf.get(picked);
 			telling.then("picked", p -> {
 				Counting.glow(thing, true);
 				hop(thing, p);
+				if (thing != null) level.playSound(null, thing.blockPosition(), net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(),
+					net.minecraft.sounds.SoundSource.BLOCKS, 0.6F, 1.6F);
 			}, 2);
 			return;
 		}
@@ -253,6 +293,8 @@ public final class SortRound extends LogicRound {
 		sortedOnes.add(thing);
 		selected = null;
 		unhit(thing);
+		if (entity != null) clickable(entity, pens[group]);
+		for (Choice one : unsorted()) resizeHit(one, ANIMAL_BOX_WIDTH, ANIMAL_BOX_HEIGHT);
 		telling.say(thing.clip(), "put:" + thing.id(), p -> {
 			Counting.glow(entity, false);
 			move(entity, to);
@@ -273,6 +315,14 @@ public final class SortRound extends LogicRound {
 			hop(entity, p);
 		}, 2).say("phrase/oops_thats", 2);
 		if (thing != null) telling.say(thing.clip(), "belongs:" + thing.id(), p -> {}, CaptionLine.plain(thing.said()), AnswerNarration.WORD_GAP);
+	}
+
+	public @Nullable Entity thingFor(Choice choice) {
+		return thingOf.get(choice);
+	}
+
+	public @Nullable Choice selected() {
+		return selected;
 	}
 
 	public List<Entity> things() {

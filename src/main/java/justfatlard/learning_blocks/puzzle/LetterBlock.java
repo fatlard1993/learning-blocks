@@ -80,6 +80,24 @@ public class LetterBlock extends Block {
 		return super.playerWillDestroy(level, pos, state, player);
 	}
 
+	/**
+	 * Knocked loose by a child in their room: straight into their hand, not dropped to be walked
+	 * over. A picked-up item goes to the first empty slot, not the one in hand, and a tile is only ever
+	 * put in the gap from the hand: dropped, it could land in the pack, gone from the floor and out of
+	 * use, and the round could not be finished.
+	 */
+	@Override
+	public void playerDestroy(ServerLevel level, net.minecraft.server.level.ServerPlayer player, BlockPos pos, BlockState state,
+			net.minecraft.world.level.block.entity.@Nullable BlockEntity blockEntity, ItemStack tool) {
+		Room room = Rooms.of(player);
+		Letter letter = state.getValue(LETTER);
+		if (room == null || !letter.isLetter() || !justfatlard.learning_blocks.classroom.Places.isClassroom(level)) {
+			super.playerDestroy(level, player, pos, state, blockEntity, tool);
+			return;
+		}
+		room.intoHand(player, letter);
+	}
+
 	@Override
 	public void wasExploded(ServerLevel level, BlockPos pos, Explosion explosion) {
 		super.wasExploded(level, pos, explosion);

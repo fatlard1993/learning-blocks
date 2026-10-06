@@ -50,7 +50,8 @@ public final class SoundOverrides implements FabricClientGameTest {
 				Word cat = Words.all().stream().filter(w -> w.text().equals("cat")).findFirst().orElseThrow();
 				check("phoneme/a".equals(cat.phonemeOf(1)), "a word with no overrides does not have the tile's own sound as standard");
 				// Hybrid blends: a vowel in the row is cut from the word's own recording; consonants are standard.
-				check("blend/cat/1".equals(cat.soundOf(1)), "cat's a is not cut from cat: " + cat.soundOf(1));
+				// A word whose vowel cut is too short to hear has none, and says the plain sound instead.
+				check((justfatlard.learning_blocks.sound.Sounds.isRecorded("blend/cat/1") ? "blend/cat/1" : "phoneme/a").equals(cat.soundOf(1)), "cat's a is not cut from cat: " + cat.soundOf(1));
 				check("phoneme/c".equals(cat.soundOf(0)) && "phoneme/t".equals(cat.soundOf(2)), "cat's consonants are not the standard ones");
 
 				CaptionLine line = CaptionLine.building(word.tiles(), 3, Set.of(3));
@@ -107,7 +108,7 @@ public final class SoundOverrides implements FabricClientGameTest {
 				int from = log.lastIndexOf("light:0");
 				List<String> blend = log.subList(from, log.lastIndexOf("outcome"));
 				List<String> clips = blend.stream().filter(step -> step.startsWith("clip:")).toList();
-				check(clips.equals(List.of("clip:phoneme/c", "clip:blend/cat/1", "clip:phoneme/t", "clip:word/cat")),
+				check(clips.equals(List.of("clip:phoneme/c", "clip:" + (justfatlard.learning_blocks.sound.Sounds.isRecorded("blend/cat/1") ? "blend/cat/1" : "phoneme/a"), "clip:phoneme/t", "clip:word/cat")),
 					"cat did not blend as c, cat's own a, t, cat: " + clips);
 				// A loose a, broken off the floor, is still the standard short a.
 				check("phoneme/a".equals(LetterBlock.phoneme(LearningBlocks.LETTER.showing(Letter.A))), "a loose a is not phoneme/a");

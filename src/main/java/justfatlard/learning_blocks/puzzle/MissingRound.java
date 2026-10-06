@@ -74,11 +74,21 @@ public final class MissingRound extends LogicRound {
 	}
 
 	@Override
+	protected BlockPos spotFor(int i, int n) {
+		return BlockPos.containing(layout.arcSpot(i, n));
+	}
+
+	@Override
+	protected Vec3 hitSpot(Choice choice, int i, int n) {
+		return layout.arcSpot(i, n);
+	}
+
+	@Override
 	protected void stand(Choice choice, BlockPos spot) {
 		Thing thing = offered.get(choices.indexOf(choice));
 		Entity shown = Counting.item(level, thing.stack(), 1.1F);
 		if (shown == null) return;
-		Vec3 at = Vec3.atBottomCenterOf(spot);
+		Vec3 at = layout.arcSpot(choices.indexOf(choice), choices.size());
 		shown.snapTo(at.x, at.y, at.z, 0, 0);
 		add(shown);
 	}

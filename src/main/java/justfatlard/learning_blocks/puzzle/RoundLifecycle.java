@@ -525,12 +525,16 @@ final class RoundLifecycle {
 		Puzzle first = Puzzle.forTarget(word, Words.all(), level.getRandom(), Puzzle.Kind.FIRST);
 		Puzzle last = Puzzle.forTarget(word, Words.all(), level.getRandom(), Puzzle.Kind.LAST);
 		if (first == null || last == null || first.shelf().size() < 2 || last.shelf().size() < 2) return null;
+		// The two answers first, then each family's other tiles in turn, no more than the floor holds.
 		List<Letter> shelf = new ArrayList<>();
-		for (Letter tile : first.shelf().subList(0, Math.min(3, first.shelf().size()))) if (!shelf.contains(tile)) shelf.add(tile);
-		for (Letter tile : last.shelf().subList(0, Math.min(3, last.shelf().size()))) if (!shelf.contains(tile)) shelf.add(tile);
 		for (int i : List.of(0, word.tiles().size() - 1)) {
 			Letter own = Letter.of(word.tiles().get(i));
 			if (own != null && !shelf.contains(own)) shelf.add(own);
+		}
+		for (int k = 0; k < 3 && shelf.size() < Puzzle.MAX_WHOLE_TILES; k++) {
+			for (Puzzle family : List.of(first, last)) {
+				if (k < family.shelf().size() && shelf.size() < Puzzle.MAX_WHOLE_TILES && !shelf.contains(family.shelf().get(k))) shelf.add(family.shelf().get(k));
+			}
 		}
 		java.util.Collections.shuffle(shelf, new java.util.Random(level.getRandom().nextLong()));
 		List<Word> family = new ArrayList<>(first.family());

@@ -130,7 +130,8 @@ public final class Together implements FabricClientGameTest {
 			Narrator.stop(max);
 			Narrator.note(max, "mark");
 			press(max, room);
-			check(!room.busy() && since(max).contains("not_your_turn"), "Max's press read Ava's word");
+			// Told once a round is enough: the second try is only pointing.
+			check(!room.busy() && !since(max).contains("not_your_turn"), "Max's press read Ava's word, or he was told twice: " + since(max));
 			// Ava answers: her tile, her press, her credit; nothing for Max.
 			Word word = room.puzzle().target();
 			int maxBefore = Progress.of(max).clean(word);
@@ -154,6 +155,8 @@ public final class Together implements FabricClientGameTest {
 			ServerPlayer max = session.player();
 			FakePlayer fake = ava[0];
 			check(Rooms.startTeamRound(max), "no team-up");
+			check(Rooms.of(max).puzzle().shelf().size() <= justfatlard.learning_blocks.puzzle.Puzzle.MAX_WHOLE_TILES,
+				"a team-up has more tiles than the floor holds: " + Rooms.of(max).puzzle().shelf());
 			Room room = Rooms.of(max);
 			Word word = room.puzzle().target();
 			check(room.puzzle().kind() == Puzzle.Kind.TEAM, "the team-up is not a two-gap round");

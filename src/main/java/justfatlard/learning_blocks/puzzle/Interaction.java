@@ -84,7 +84,7 @@ final class Interaction {
 				// Reading together, the button is the turn reader's, so the faster one can't answer for the other.
 				// Silly sentences are anybody's.
 				boolean anyone = room.bob != null && room.bob.mode == BobRound.Mode.SILLY;
-				if (!anyone && !room.mayPress(player)) room.notYourTurn(player, room.turn);
+				if (!anyone && !room.mayPress(player)) room.notYourTurn(player, room.turn, Vec3.atCenterOf(pos).add(0, 0, 0.5));
 				else room.answers.press(player);
 			}
 			return InteractionResult.PASS;
@@ -229,12 +229,51 @@ final class Interaction {
 	}
 
 	/**
+	 * A tile a child knocked loose, into their hand: the one place a tile goes into the gap from. One
+	 * already in hand goes back to its place on the floor, so a child never carries a tile they can't
+	 * use; anything else in hand moves into the pack.
+	 */
+	void intoHand(ServerPlayer player, Letter letter) {
+		Inventory inventory = player.getInventory();
+		int hand = inventory.getSelectedSlot();
+		net.minecraft.world.item.ItemStack held = inventory.getItem(hand);
+		inventory.setItem(hand, Tiles.stack(letter));
+		Letter had = Tiles.letterOf(held);
+		if (had != null) sendHome(player, had, player.getEyePosition());
+		else if (!held.isEmpty() && !inventory.add(held)) player.drop(held, false, net.minecraft.util.Prediction.SERVER_ONLY);
+		player.containerMenu.broadcastChanges();
+	}
+
+	/**
+	 * Tiles in a child's pack but not in their hand - scrolled away from, swapped to the other hand -
+	 * can't be put in the gap, and the floor no longer shows them: back to their places they go.
+	 */
+	private void outOfHand() {
+		for (ServerPlayer one : room.present()) {
+			Inventory inventory = one.getInventory();
+			boolean moved = false;
+			for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
+				if (slot == inventory.getSelectedSlot()) continue;
+				Letter letter = Tiles.letterOf(inventory.getItem(slot));
+				if (letter == null) continue;
+				inventory.setItem(slot, net.minecraft.world.item.ItemStack.EMPTY);
+				sendHome(one, letter, one.getEyePosition());
+				moved = true;
+				LearningBlocks.LOGGER.info("[{}] {}'s {} tile was in their pack, out of hand; sent back to the floor", LearningBlocks.MOD_ID,
+					one.getGameProfile().name(), letter.grapheme());
+			}
+			if (moved) one.containerMenu.broadcastChanges();
+		}
+	}
+
+	/**
 	 * A tile knocked out of reach, dropped and left to vanish, or otherwise gone must not leave a
 	 * round that cannot be finished. If the tile the target needs is nowhere - not in the gap, not on
 	 * the floor, not on the ground, not in the child's pack or on their cursor - it comes back where
 	 * it started, or on the nearest free floor.
 	 */
 	void keepSolvable(ServerPlayer player) {
+		outOfHand();
 		for (Letter letter : room.homes.keySet()) {
 			if (present(player, letter)) continue;
 			BlockPos home = room.homes.get(letter);
