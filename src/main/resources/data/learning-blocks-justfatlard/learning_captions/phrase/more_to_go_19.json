@@ -1,25 +1,25 @@
 {
-	"duration": 1.254,
+	"duration": 1.8,
 	"words": [
 		{
 			"text": "Nineteen",
-			"start": 0.0,
-			"end": 0.406
+			"start": 0.216,
+			"end": 0.56
 		},
 		{
 			"text": "more",
-			"start": 0.453,
-			"end": 0.592
+			"start": 0.624,
+			"end": 0.88
 		},
 		{
 			"text": "to",
-			"start": 0.615,
-			"end": 0.662
+			"start": 0.907,
+			"end": 0.96
 		},
 		{
 			"text": "go!",
-			"start": 0.708,
-			"end": 1.254
+			"start": 1.147,
+			"end": 1.68
 		}
 	]
 }

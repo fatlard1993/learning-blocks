@@ -1,25 +1,25 @@
 {
-	"duration": 1.347,
+	"duration": 1.44,
 	"words": [
 		{
 			"text": "Seventeen",
-			"start": 0.0,
-			"end": 0.476
+			"start": 0.411,
+			"end": 0.56
 		},
 		{
 			"text": "more",
-			"start": 0.522,
-			"end": 0.673
+			"start": 0.608,
+			"end": 0.8
 		},
 		{
 			"text": "to",
-			"start": 0.697,
-			"end": 0.743
+			"start": 0.827,
+			"end": 0.88
 		},
 		{
 			"text": "go!",
-			"start": 0.789,
-			"end": 1.347
+			"start": 1.013,
+			"end": 1.44
 		}
 	]
 }

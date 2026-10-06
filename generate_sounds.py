@@ -60,8 +60,8 @@ import urllib.request
 HERE = pathlib.Path(__file__).parent
 RESOURCES = HERE / "src/main/resources"
 SOUNDS = RESOURCES / "assets/learning-blocks-justfatlard/sounds"
-CAPTIONS = RESOURCES / "data/learning-blocks-justfatlard/phonics_captions"
-WORDS = RESOURCES / "data/learning-blocks-justfatlard/phonics_words"
+CAPTIONS = RESOURCES / "data/learning-blocks-justfatlard/learning_captions"
+WORDS = RESOURCES / "data/learning-blocks-justfatlard/learning_words"
 CACHE = HERE / ".sound-cache"
 TAKES = HERE / "sound-takes.json"
 
@@ -514,6 +514,17 @@ def blends(word_spec, tiles, sounds):
 # Lines that only came out right after asking differently, picked by ear; each is added as the clip's
 # last take and chosen in sound-takes.json.
 BY_EAR = {
+	'phrase/friend_joined': {"text": "[excited] Yay, a friend is here! Let's learn together!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/more_to_go_11': {"text": "[encouraging] Eleven more to go!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/more_to_go_12': {"text": "[encouraging] Twelve more to go!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/more_to_go_14': {"text": "[encouraging] Fourteen more to go!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/more_to_go_15': {"text": "[encouraging] Fifteen more to go!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/more_to_go_16': {"text": "[encouraging] Sixteen more to go!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/more_to_go_17': {"text": "[encouraging] Seventeen more to go!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/more_to_go_18': {"text": "[cheerful] Eighteen more to go!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/more_to_go_19': {"text": "[cheerful] Nineteen more to go!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/more_to_go_20': {"text": "[encouraging] Twenty more to go!", "model": EXPRESSIVE, "cut": ["whole"]},
+	'phrase/wants_to_learn_with_you': {"text": "[excited] Ooh, a friend wants to learn with you!", "model": EXPRESSIVE, "cut": ["whole"]},
 	'phrase/another_one_v5': {"text": "[excited] Ooh, next one!", "model": EXPRESSIVE, "cut": ["whole"]},
 	'phrase/mastered_v2': {"text": "[cheerful] Wow, you know that one now!", "model": EXPRESSIVE, "cut": ["whole"]},
 	'phrase/not_quite': {"text": "[gently] Hmm, not quite!", "model": EXPRESSIVE, "cut": ["whole"]},

@@ -1,40 +1,45 @@
 {
-	"duration": 2.72,
+	"duration": 3.28,
 	"words": [
 		{
-			"text": "A",
-			"start": 0.072,
-			"end": 0.08
-		},
-		{
-			"text": "friend",
-			"start": 0.126,
-			"end": 0.4
-		},
-		{
-			"text": "is",
-			"start": 0.453,
+			"text": "Yay,",
+			"start": 0.12,
 			"end": 0.56
 		},
 		{
+			"text": "a",
+			"start": 0.6,
+			"end": 0.64
+		},
+		{
+			"text": "friend",
+			"start": 0.697,
+			"end": 1.04
+		},
+		{
+			"text": "is",
+			"start": 1.093,
+			"end": 1.2
+		},
+		{
 			"text": "here!",
-			"start": 0.656,
-			"end": 1.12
+			"start": 1.28,
+			"end": 1.68
 		},
 		{
 			"text": "Let's",
-			"start": 1.26,
-			"end": 1.76
+			"start": 1.78,
+			"end": 2.16
 		},
 		{
 			"text": "learn",
-			"start": 1.813,
-			"end": 2.08
+			"start": 2.2,
+			"end": 2.4
 		},
 		{
 			"text": "together!",
-			"start": 2.151,
-			"end": 2.72
+			"start": 2.48,
+			"end": 3.28
 		}
 	]
 }
