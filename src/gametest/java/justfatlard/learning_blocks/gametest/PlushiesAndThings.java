@@ -19,7 +19,7 @@ import justfatlard.learning_blocks.puzzle.Words;
 import justfatlard.learning_blocks.review.Review;
 import justfatlard.learning_blocks.reward.Prize;
 import justfatlard.learning_blocks.reward.Progress;
-import justfatlard.learning_blocks.things.Things;
+import justfatlard.learning_blocks.props.Props;
 import justfatlard.learning_blocks.narration.Narrator;
 import justfatlard.learning_blocks.toy.Toy;
 import justfatlard.learning_blocks.toy.ToyBlock;
@@ -81,11 +81,11 @@ public final class PlushiesAndThings implements FabricClientGameTest {
 					check(asset(path), plush.word() + " has no " + path);
 				}
 			}
-			for (String name : Things.all().keySet()) {
+			for (String name : Props.all().keySet()) {
 				check(asset("items/" + name + ".json"), name + " has no item definition");
 			}
 			check(asset("textures/card/moon.png"), "no moon card");
-			check(Things.all().size() == 10, "props: " + Things.all().keySet());
+			check(Props.all().size() == 10, "props: " + Props.all().keySet());
 			for (Toy toy : Toy.values()) {
 				check(BuiltInRegistries.ITEM.getKey(Toys.item(toy)).getPath().equals("toy_" + toy.word()), "toy_" + toy.word() + " is not registered");
 				for (String path : List.of("models/block/toy_" + toy.word() + ".json", "textures/block/toy_" + toy.word() + ".png",
@@ -120,7 +120,7 @@ public final class PlushiesAndThings implements FabricClientGameTest {
 				Drops.expect(player, at, java.util.Map.of("plush_" + kind.name().toLowerCase(java.util.Locale.ROOT), 1), "the " + kind + " plushie");
 			}
 			// Every prop: itself, once.
-			for (String prop : justfatlard.learning_blocks.things.Things.all().keySet()) {
+			for (String prop : justfatlard.learning_blocks.props.Props.all().keySet()) {
 				level.setBlock(at, net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(LearningBlocks.id(prop)).defaultBlockState(), 3);
 				Drops.expect(player, at, java.util.Map.of(prop, 1), "the " + prop);
 			}

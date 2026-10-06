@@ -70,7 +70,7 @@ public final class SceneRun {
 	static final String DIM_OVERLAY = LearningBlocks.MOD_ID + ":dim";
 	private static final String DIM_COLOUR = "#B8000008";
 
-	private final Stage room;
+	private final RoomEffects room;
 	private final ServerLevel level;
 	private final Word word;
 	private final Scene scene;
@@ -97,7 +97,7 @@ public final class SceneRun {
 	private boolean solved;
 	private long ticks;
 
-	SceneRun(Stage room, ServerLevel level, Word word, Scene scene, BlockPos spot) {
+	SceneRun(RoomEffects room, ServerLevel level, Word word, Scene scene, BlockPos spot) {
 		this.room = room;
 		this.level = level;
 		this.word = word;
@@ -113,7 +113,6 @@ public final class SceneRun {
 		return word;
 	}
 
-	/** The one the scene is about. */
 	public @Nullable Entity character() {
 		return characters.isEmpty() ? null : characters.getFirst();
 	}
@@ -130,7 +129,6 @@ public final class SceneRun {
 		return solved;
 	}
 
-	/** What is still going on: ambients, bubbles, litter, vines. For tests. */
 	public int ambientCount() {
 		return ambients.size();
 	}
@@ -147,7 +145,6 @@ public final class SceneRun {
 		return (int) wraps.stream().filter(Entity::isAlive).count();
 	}
 
-	/** Scene blocks still waiting to become something else. For tests. */
 	public int unchangedCount() {
 		int left = 0;
 		for (Map.Entry<BlockPos, BlockState> entry : becomes.entrySet()) {
@@ -156,7 +153,6 @@ public final class SceneRun {
 		return left;
 	}
 
-	/** Everything the scene made that is still in the world. For tests. */
 	public List<Entity> alive() {
 		return made.stream().filter(Entity::isAlive).toList();
 	}
@@ -178,7 +174,6 @@ public final class SceneRun {
 		return null;
 	}
 
-	// --- Setting it up ---
 
 	void start(ServerPlayer player) {
 		for (Scene.Step step : scene.setup()) {
@@ -412,7 +407,6 @@ public final class SceneRun {
 		level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 0.4F, 1.6F);
 	}
 
-	// --- While it lasts ---
 
 	private Vec3 base() {
 		Entity who = character();
@@ -523,9 +517,7 @@ public final class SceneRun {
 		}
 	}
 
-	// --- Solving it ---
 
-	/** The right word: each solve step in turn, then everything back to normal. */
 	void solve(ServerPlayer player) {
 		solved = true;
 		int at = 0;
@@ -643,7 +635,6 @@ public final class SceneRun {
 				case "snip" -> {
 					hold(who, stack);
 					level.playSound(null, at.x, at.y, at.z, SoundEvents.SHEEP_SHEAR, SoundSource.NEUTRAL, 1.0F, 1.0F);
-					// The vines drop away and are gone.
 					for (Display.ItemDisplay piece : wraps) {
 						Vec3 from = piece.position();
 						for (int i = 1; i <= 10; i++) {
@@ -774,7 +765,6 @@ public final class SceneRun {
 		});
 	}
 
-	/** The scene's blocks become what they become when it is solved: flowers bloom, a puddle is gone. */
 	private void swap(ServerPlayer player) {
 		for (Map.Entry<BlockPos, BlockState> entry : becomes.entrySet()) {
 			BlockPos pos = entry.getKey();
@@ -842,9 +832,7 @@ public final class SceneRun {
 		}
 	}
 
-	// --- Ending ---
 
-	/** Everything the scene made, gone, and the lights back on. */
 	void end(@Nullable ServerPlayer player) {
 		for (Entity entity : made) {
 			if (entity instanceof LivingEntity living && living.isSleeping()) living.stopSleeping();

@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.review;
 
+import justfatlard.learning_blocks.ForTests;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -58,7 +59,7 @@ public final class ProgressView {
 		Memory.Mastery.NOT_SEEN, "not tried", Memory.Mastery.LEARNING, "learning",
 		Memory.Mastery.SHAKY, "shaky", Memory.Mastery.SOLID, "solid");
 
-	/** The lines each viewer was last shown, for tests. */
+	@ForTests
 	private static final Map<UUID, List<String>> shown = new HashMap<>();
 	private static final Map<UUID, String> screens = new HashMap<>();
 
@@ -73,7 +74,7 @@ public final class ProgressView {
 		api.onClose(TYPE, player -> screens.remove(player.getUUID()));
 	}
 
-	/** What this viewer was last shown, line by line: for tests. */
+	@ForTests
 	public static List<String> lastShown(ServerPlayer viewer) {
 		return shown.getOrDefault(viewer.getUUID(), List.of());
 	}
@@ -88,7 +89,6 @@ public final class ProgressView {
 		screens.clear();
 	}
 
-	/** The mix-ups, most often first, as a grown-up would say them. */
 	public static List<String> confusionLines(Memory memory, int most) {
 		List<String> lines = new ArrayList<>();
 		for (Map.Entry<String, Integer> entry : memory.confusions()) {
@@ -100,7 +100,6 @@ public final class ProgressView {
 		return lines;
 	}
 
-	/** Seconds and rounds over the last seven days. */
 	private static int[] week(Memory memory) {
 		java.time.LocalDate from = Progress.date().minusDays(6);
 		int seconds = 0;
@@ -173,7 +172,6 @@ public final class ProgressView {
 		}
 		line.accept(days.toString());
 
-		// The key, one swatch a colour.
 		int x = 2;
 		for (Memory.Mastery mastery : Memory.Mastery.values()) {
 			rows.add(swatch("key:" + mastery, x, unit[0] * UNIT + 1, 9, COLOUR.get(mastery)));
@@ -232,7 +230,7 @@ public final class ProgressView {
 			words.sort((a, b) -> a.text().compareTo(b.text()));
 			long mastered = words.stream().filter(progress::mastered).count();
 			String label = "Stage " + band.label() + " (" + mastered + "/" + words.size() + "):";
-			rows.add(Ui.faint("stage:" + band.code(), 2, unit[0] * UNIT + 2, label).build());
+			rows.add(Ui.faint("stage:" + band.code().packed(), 2, unit[0] * UNIT + 2, label).build());
 			lines.add(label);
 			int wx = 2 + (label.length() + 1) * CHAR;
 			for (Word word : words) {
@@ -300,7 +298,6 @@ public final class ProgressView {
 			.prop(ComponentType.PROP_BORDER, "flat").prop(ComponentType.PROP_BORDER_COLOR, "#FF555555").build();
 	}
 
-	/** The same colour darkened, to be read as words on the light panel. */
 	private static String darker(String colour) {
 		int argb = (int) Long.parseLong(colour.substring(1), 16);
 		int r = (argb >> 16 & 0xFF) * 3 / 5;

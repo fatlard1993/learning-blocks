@@ -41,7 +41,6 @@ public final class Logic implements Subject {
 
 	private Logic() {}
 
-	/** The thinking toys, each earned by mastering some logic. */
 	public static void linkToys() {
 		justfatlard.learning_blocks.reward.Earned.linkItems("toy:puzzle", List.of(Kind.SORT.item("kind"), Kind.SORT.item("colour"),
 			Kind.SORT.item("size"), Kind.SORT.item("things")));
@@ -79,7 +78,6 @@ public final class Logic implements Subject {
 		return true;
 	}
 
-	/** Whether the first stage, L0, is done. */
 	public boolean levelDone(Progress progress) {
 		return LogicCourse.stageDone(progress, 0);
 	}
@@ -128,7 +126,6 @@ public final class Logic implements Subject {
 		return due.isEmpty() ? null : due.get(random.nextInt(due.size()));
 	}
 
-	/** What a kind can ask in this band. */
 	static List<String> candidates(Kind kind, Band band) {
 		if (kind == band.main()) return band.mainTargets();
 		boolean first = band.code().endsWith("a");

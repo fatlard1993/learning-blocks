@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
  * Looking in the prize chest: what is waiting to go home, laid out like a chest's slots, to look at
  * and not to take. A Pandorical screen of pictures rather than a real container, so there is nothing
  * to click out and nowhere to put anything in - the prizes stay where they are safe, in the visit,
- * until the door hands them over.
+ * until the way home hands them over.
  */
 public final class PrizeChestScreen {
 	private PrizeChestScreen() {}
@@ -54,7 +54,7 @@ public final class PrizeChestScreen {
 				.prop(ComponentType.PROP_TOOLTIP, stack.getHoverName().getString()));
 		}
 		screen.text("note", PAD, 20 + rows * SLOT + 3, contents.isEmpty() ? "Nothing yet" : "They come home with you");
-		// Where the words read are kept now, which a child looking at their prizes may like to see.
+		// My words, which a child looking at their prizes may like to see.
 		screen.component(new ComponentBuilder("my_words", ComponentType.BUTTON).bounds(width - PAD - 60, 20 + rows * SLOT + 14, 60, 16)
 			.prop(ComponentType.PROP_LABEL, "My words"));
 		PandoricalApi.screens().open(player, screen.build());

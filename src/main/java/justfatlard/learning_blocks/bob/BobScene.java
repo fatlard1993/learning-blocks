@@ -46,7 +46,6 @@ public final class BobScene {
 		return big.contains(thing);
 	}
 
-	/** Whether this container has its lid on. */
 	public @Nullable String lidOn(String container) {
 		for (Map.Entry<String, Place> entry : where.entrySet()) {
 			Noun noun = Noun.of(entry.getKey());

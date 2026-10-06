@@ -28,14 +28,10 @@ public final class JoinRequests {
 	private JoinRequests() {}
 
 	public static final String NOTICE_KIND = LearningBlocks.MOD_ID + ":join";
-	/** A minute to answer. */
 	static final long ASK_FOR = 20 * 60;
-	/** Half a minute before the same child may ask again. */
 	static final long COOLDOWN = 20 * 30;
 
-	/** By the one asked: who asked, and until when. */
 	private static final Map<UUID, Map<UUID, Long>> asked = new HashMap<>();
-	/** By the one asking: when they last asked. */
 	private static final Map<UUID, Long> lastAsked = new HashMap<>();
 
 	private static String noticeId(UUID guest) {
@@ -108,7 +104,6 @@ public final class JoinRequests {
 		Narrator.play(player, new Narration().say(clip));
 	}
 
-	/** Wired once, at init: the tray's Accept and Deny, and a request that lapses. */
 	public static void listen() {
 		PandoricalApi.notices().onChoice(NOTICE_KIND, (host, noticeId, choiceId) -> {
 			UUID guest = guestOf(noticeId);
@@ -133,7 +128,6 @@ public final class JoinRequests {
 		}
 	}
 
-	/** Lapsed requests gone. */
 	private static void prune(long now) {
 		for (Map<UUID, Long> theirs : asked.values()) theirs.values().removeIf(until -> until < now);
 		asked.values().removeIf(Map::isEmpty);
@@ -151,7 +145,6 @@ public final class JoinRequests {
 		}
 	}
 
-	/** For tests: whether this child has a request from that one waiting. */
 	public static synchronized boolean waiting(UUID host, UUID guest) {
 		Map<UUID, Long> theirs = asked.get(host);
 		return theirs != null && theirs.containsKey(guest);

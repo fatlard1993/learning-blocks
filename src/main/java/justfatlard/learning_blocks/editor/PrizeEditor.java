@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.editor;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ import org.jspecify.annotations.Nullable;
 import static justfatlard.learning_blocks.editor.Ui.*;
 
 /**
- * Every prize setting, in game, for operators: PvP Dimensions' preset editor, made for one file.
+ * Every prize setting, in game, for operators.
  *
  * <p>A tab per part of the file, a row per setting with the control that changes it, and every
  * change written to {@code config/learning-blocks/prizes.json} as it is made. The file stays the one source
@@ -82,7 +83,6 @@ public final class PrizeEditor {
 	private static final Map<UUID, State> states = new ConcurrentHashMap<>();
 	private static final Map<UUID, String> screens = new ConcurrentHashMap<>();
 
-	// --- Ladders a number steps along ---
 
 	private static final int[] CAP = {0, 1, 2, 3, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100, 150, 200};
 	private static final int[] POINTS = {0, 1, 2, 3, 5, 10, 15, 20, 25, 50, 100};
@@ -117,7 +117,6 @@ public final class PrizeEditor {
 		});
 	}
 
-	/** The server stopped: nobody is editing. */
 	public static void clear() {
 		states.clear();
 		screens.clear();
@@ -139,7 +138,6 @@ public final class PrizeEditor {
 		show(player, new State(chosen, before != null && before.tab() == chosen ? before.scroll() : 0, null));
 	}
 
-	/** Words for a prize list's path, for a chat line: "New word", "the 10 words milestone". */
 	public static String describe(String prizes) {
 		String[] parts = prizes.split("\\.");
 		if (parts.length >= 3 && parts[0].equals("events") && !parts[1].equals("milestone")) {
@@ -164,19 +162,18 @@ public final class PrizeEditor {
 		return PrizeConfig.load(server);
 	}
 
-	/** A press, as a click would send it: for tests. */
+	@ForTests
 	public static void press(ServerPlayer player, String componentId) {
 		pressed(player, Map.of(ScreenApi.FALLBACK_COMPONENT_ID_KEY, componentId));
 	}
 
-	/** A press with data, such as the text typed: for tests. */
+	@ForTests
 	public static void press(ServerPlayer player, String componentId, Map<String, String> data) {
 		Map<String, String> all = new java.util.HashMap<>(data);
 		all.put(ScreenApi.FALLBACK_COMPONENT_ID_KEY, componentId);
 		pressed(player, all);
 	}
 
-	// --- Rows ---
 
 	private sealed interface Row {
 		record Heading(String text, String help) implements Row {}
@@ -193,7 +190,6 @@ public final class PrizeEditor {
 		 */
 		record Toybox(String prizes, int index, String choice) implements Row {}
 		record Action(String id, String label, String help) implements Row {}
-		/** A reader's daily reading: lessons a day, and weekends off or not. */
 		record Daily(java.util.UUID player, String name) implements Row {}
 	}
 
@@ -246,14 +242,13 @@ public final class PrizeEditor {
 				rows.add(new Row.Note(problems.isEmpty() ? "The file read cleanly." : problems.size()
 					+ (problems.size() == 1 ? " entry was" : " entries were") + " skipped; see the log"));
 				rows.add(new Row.Action("reload", "Read the file again", "Pick up a hand edit to prizes.json"));
-				// Where everybody online is, since reading earns by stage; /learn stage moves them.
-				rows.add(new Row.Heading("Readers", "/learn stage <player> <n> moves one"));
+				rows.add(new Row.Heading("Learners", "Where each is in every subject they have on; /learn stage <player> <n> moves one"));
 				int listed = 0;
 				for (ServerPlayer online : server.getPlayerList().getPlayers()) {
 					if (listed++ >= 12) break;
 					int left = justfatlard.learning_blocks.classroom.Travel.lessons(online) + Progress.of(online).lessonsOwed();
 					rows.add(new Row.Action("progress:" + online.getUUID(), online.getGameProfile().name(),
-						Stages.describe(Progress.of(online)) + (left > 0 ? ", " + left + " lessons left" : "") + ". Click for their progress"));
+						where(online) + (left > 0 ? "; " + left + " lessons left" : "") + ". Click for their progress"));
 					rows.add(new Row.Daily(online.getUUID(), online.getGameProfile().name()));
 				}
 			}
@@ -297,7 +292,6 @@ public final class PrizeEditor {
 		}
 	}
 
-	/** A prize list's rows: its items, its experience, each loot table. */
 	private static void prizeRows(List<Row> rows, JsonObject tree, String prizes) {
 		rows.add(new Row.Items(prizes));
 		rows.add(new Row.Xp(prizes));
@@ -318,7 +312,6 @@ public final class PrizeEditor {
 		rows.add(new Row.Action("toyadd:" + prizes, "Add a toy", "A new one for their collection, or one in particular"));
 	}
 
-	// --- Drawing ---
 
 	private static void show(ServerPlayer player, State state) {
 		if (!canShow(player)) return;
@@ -486,7 +479,6 @@ public final class PrizeEditor {
 		return path.substring(path.lastIndexOf('/') + 1).replace('_', ' ');
 	}
 
-	// --- Presses ---
 
 	private static void pressed(ServerPlayer player, Map<String, String> data) {
 		String id = data.get(ScreenApi.FALLBACK_COMPONENT_ID_KEY);
@@ -575,7 +567,6 @@ public final class PrizeEditor {
 		show(player, states.getOrDefault(player.getUUID(), state));
 	}
 
-	/** A prize entry that comes from the toybox, as {@code <key>:<which>}; null for any other prize. */
 	private static @org.jspecify.annotations.Nullable String toyboxChoice(JsonObject prize) {
 		for (String key : List.of("plush", "toy", "toybox")) {
 			if (prize.has(key) && prize.get(key).isJsonPrimitive()) return key + ":" + prize.get(key).getAsString();
@@ -583,7 +574,6 @@ public final class PrizeEditor {
 		return null;
 	}
 
-	/** One press's change to the tree. */
 	private static void edit(JsonObject tree, String kind, String path) {
 		switch (kind) {
 			case "t" -> PrizeFile.set(tree, path, new JsonPrimitive(!bool(tree, path, defaultBool(path))));
@@ -735,7 +725,6 @@ public final class PrizeEditor {
 		return entry == null ? id.toString() : entry.name();
 	}
 
-	// --- Reading the tree ---
 
 	private static int[] ladderFor(String path) {
 		if (path.equals("daily_cap")) return CAP;
@@ -784,7 +773,6 @@ public final class PrizeEditor {
 		return total;
 	}
 
-	/** All of a list's experience as one entry, or none. */
 	private static void setXp(JsonArray list, int points) {
 		for (int i = list.size() - 1; i >= 0; i--) {
 			if (list.get(i).isJsonObject() && list.get(i).getAsJsonObject().has("xp")) list.remove(i);
@@ -819,7 +807,6 @@ public final class PrizeEditor {
 		return found != null && found.isJsonPrimitive() ? found.getAsString() : fallback;
 	}
 
-	/** For the settings screen: a value straight from the file. */
 	public static JsonObject tree() {
 		try {
 			return PrizeFile.read();
@@ -838,5 +825,20 @@ public final class PrizeEditor {
 
 	public static String readString(String path, String fallback) {
 		return string(tree(), path, fallback);
+	}
+
+	private static String where(ServerPlayer player) {
+		Progress progress = Progress.of(player);
+		List<String> parts = new java.util.ArrayList<>();
+		if (justfatlard.learning_blocks.subject.Subjects.on(player, justfatlard.learning_blocks.subject.Subjects.READING)) {
+			parts.add("Reading " + Stages.describe(progress));
+		}
+		if (justfatlard.learning_blocks.subject.Subjects.on(player, justfatlard.learning_blocks.subject.Numbers.INSTANCE)) {
+			parts.add("Numbers " + justfatlard.learning_blocks.numbers.NumberCourse.describe(progress));
+		}
+		if (justfatlard.learning_blocks.subject.Subjects.on(player, justfatlard.learning_blocks.subject.Logic.INSTANCE)) {
+			parts.add("Logic " + justfatlard.learning_blocks.logic.LogicCourse.describe(progress));
+		}
+		return parts.isEmpty() ? "Reading " + Stages.describe(progress) : String.join("; ", parts);
 	}
 }

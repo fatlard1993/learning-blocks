@@ -42,7 +42,6 @@ import org.jspecify.annotations.Nullable;
  * </ul>
  */
 public final class NumberBobRound extends NumbersRound {
-	/** What Bob is told to put where. */
 	public enum Job {
 		APPLES("apples", "in", "box"), CATS("cats", "on", "bed");
 
@@ -61,7 +60,6 @@ public final class NumberBobRound extends NumbersRound {
 	private final Job job;
 	/** How many the goal has (Tell Bob, What's wrong), or how many the small box has (More). */
 	private final int goal;
-	/** What's wrong: the card Bob was given. */
 	private final int wrongCard;
 	private @Nullable Villager bob;
 	private Display.@Nullable TextDisplay sentence;
@@ -89,7 +87,6 @@ public final class NumberBobRound extends NumbersRound {
 		}
 	}
 
-	/** Where Bob's box or bed stands; More's big box beside it. */
 	private BlockPos place() {
 		return layout.origin().offset(kind == NumberCourse.Kind.MORE ? -1 : -2, 0, -1);
 	}
@@ -113,7 +110,6 @@ public final class NumberBobRound extends NumbersRound {
 		return BobProps.box();
 	}
 
-	/** The words on the board, with this card in the gap ("_" for none). */
 	private List<String> words(@Nullable Integer card) {
 		if (kind == NumberCourse.Kind.MORE) return List.of("put", "more", "apples", "in", "big", "box");
 		return List.of("put", card == null ? "_" : String.valueOf(card), job.things, job.prep, job.place);
@@ -131,7 +127,6 @@ public final class NumberBobRound extends NumbersRound {
 		if (kind != NumberCourse.Kind.MORE) goalPicture();
 	}
 
-	/** The goal, small and framed on the board's left: the box (or bed) and how many go with it. */
 	private void goalPicture() {
 		Vec3 at = Vec3.atBottomCenterOf(layout.origin().offset(-4, RoomLayout.WORD_Y, -4)).add(0.3, -0.2, 0.2);
 		Display.BlockDisplay frame = BobProps.goalFrame(level, at);
@@ -229,7 +224,6 @@ public final class NumberBobRound extends NumbersRound {
 		return (kind == NumberCourse.Kind.MORE ? n > goal : n == goal) ? Verdict.RIGHT : Verdict.WRONG;
 	}
 
-	/** The card in the gap, the sentence read, and Bob does it, exactly. */
 	@Override
 	protected Narration act(ServerPlayer player, Choice picked) {
 		int n = number(picked);
@@ -274,7 +268,6 @@ public final class NumberBobRound extends NumbersRound {
 		}, 4);
 	}
 
-	/** For tests: what Bob put last, and how many things are in or round the box or on the bed. */
 	public int lastPut() {
 		return lastPut;
 	}

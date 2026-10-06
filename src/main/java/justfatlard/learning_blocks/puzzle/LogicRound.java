@@ -90,12 +90,10 @@ public abstract class LogicRound extends SubjectRound {
 		};
 	}
 
-	/** A colour's word, said with its caption. */
 	protected static Narration colour(Narration narration, DyeColor colour, String tag) {
 		return narration.say("word/" + colour.getSerializedName(), tag, p -> {}, CaptionLine.plain(colour.getSerializedName()), 3);
 	}
 
-	/** A thing hops where it is, with a puff: picked, or put. */
 	protected void hop(@Nullable Entity thing, net.minecraft.server.level.ServerPlayer player) {
 		if (thing == null || !thing.isAlive()) return;
 		Vec3 at = thing.position();
@@ -106,7 +104,6 @@ public abstract class LogicRound extends SubjectRound {
 		level.sendParticles(ParticleTypes.HAPPY_VILLAGER, at.x, at.y + thing.getBbHeight() + 0.2, at.z, 3, 0.2, 0.1, 0.2, 0.0);
 	}
 
-	/** Moves a thing to a new spot: a little hop there. */
 	protected void move(@Nullable Entity thing, Vec3 to) {
 		if (thing == null || !thing.isAlive()) return;
 		level.sendParticles(ParticleTypes.POOF, thing.getX(), thing.getY() + 0.3, thing.getZ(), 4, 0.15, 0.1, 0.15, 0.01);

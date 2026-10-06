@@ -31,7 +31,6 @@ public final class CaptionLine {
 		this.fixed = fixed;
 	}
 
-	/** The words of a clip's caption, each lit while it is being said. */
 	public static CaptionLine timed(Captions.Caption caption) {
 		List<Piece> pieces = new ArrayList<>();
 		for (Captions.Word word : caption.words()) pieces.add(new Piece(word.text(), word.start(), word.end(), false));
@@ -75,7 +74,6 @@ public final class CaptionLine {
 		return new CaptionLine(pieces, -1);
 	}
 
-	/** This line with a speaker's tag before it, greyed: {@code Bob:}. */
 	public static CaptionLine tagged(String tag, CaptionLine line) {
 		List<Piece> pieces = new ArrayList<>();
 		pieces.add(new Piece(tag, 0, 0, true));
@@ -91,7 +89,6 @@ public final class CaptionLine {
 		return pieces.isEmpty();
 	}
 
-	/** What this piece looks like this far into the line. */
 	public State state(int index, float seconds) {
 		Piece piece = pieces.get(index);
 		if (piece.separator()) return State.SEPARATOR;
@@ -103,7 +100,6 @@ public final class CaptionLine {
 		return seconds < Math.max(until, piece.end()) ? State.CURRENT : State.PAST;
 	}
 
-	/** The line as one string, for logs and tests. */
 	public String text() {
 		StringBuilder out = new StringBuilder();
 		for (Piece piece : pieces) {

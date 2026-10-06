@@ -57,7 +57,6 @@ public final class Narrator {
 		companions = who;
 	}
 
-	/** This player and everyone hearing along with them. */
 	private static List<ServerPlayer> all(ServerPlayer player) {
 		List<ServerPlayer> others = companions.apply(player);
 		if (others.isEmpty()) return List.of(player);
@@ -66,11 +65,9 @@ public final class Narrator {
 		everyone.addAll(others);
 		return everyone;
 	}
-	/** Ticks left before each player's caption comes down. */
 	private static final Map<UUID, Integer> hideIn = new HashMap<>();
 	private static final Map<UUID, Deque<String>> logs = new HashMap<>();
 
-	/** Stop whatever this player is hearing and start this. */
 	public static void play(ServerPlayer player, Narration narration) {
 		stop(player);
 		if (narration.isEmpty()) return;
@@ -103,7 +100,6 @@ public final class Narrator {
 		CaptionHud.hide(player);
 	}
 
-	/** Logged out: nothing is sent, nothing is kept. */
 	public static void forget(ServerPlayer player) {
 		UUID id = player.getUUID();
 		Running run = running.remove(id);
@@ -121,13 +117,11 @@ public final class Narrator {
 		CaptionHud.clear();
 	}
 
-	/** What happened for this player lately, oldest first. */
 	public static List<String> log(ServerPlayer player) {
 		Deque<String> log = logs.get(player.getUUID());
 		return log == null ? List.of() : List.copyOf(log);
 	}
 
-	/** Write something to this player's log; the room's own actions call this. */
 	public static void note(ServerPlayer player, String what) {
 		Deque<String> log = logs.computeIfAbsent(player.getUUID(), id -> new ArrayDeque<>());
 		log.addLast(what);
@@ -172,7 +166,6 @@ public final class Narrator {
 		if (run.narration.onStop != null) Safely.run("Stopping a failed narration", () -> run.narration.onStop.accept(player));
 	}
 
-	/** Start the next step, or finish. */
 	private static void advance(ServerPlayer player, Running run) {
 		UUID id = player.getUUID();
 		Narration.Step previous = run.index >= 0 ? run.narration.steps.get(run.index) : null;

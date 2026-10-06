@@ -28,7 +28,6 @@ import org.jspecify.annotations.Nullable;
 public final class Punches {
 	private Punches() {}
 
-	/** About a third of a second. */
 	private static final long COOLDOWN = 6;
 	/** A break this soon after the click that started it is the same knock. */
 	private static final long SAME_KNOCK = 12;
@@ -37,7 +36,6 @@ public final class Punches {
 
 	private static final Map<BlockPos, Heard> heard = new HashMap<>();
 
-	/** The server stopped: no punch is still ringing. */
 	public static void clear() {
 		heard.clear();
 	}
@@ -67,7 +65,6 @@ public final class Punches {
 		return last != null && now >= last.said() && now - last.said() < SAME_KNOCK;
 	}
 
-	/** The row's letters sound as the word says them; anything else its own default. */
 	private static @Nullable String soundAt(ServerPlayer player, BlockPos pos, BlockState state) {
 		Room room = Rooms.of(player);
 		if (room != null) {

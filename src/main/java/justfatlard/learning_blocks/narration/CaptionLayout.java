@@ -24,12 +24,10 @@ public record CaptionLayout(float scale, List<List<Integer>> lines, List<Float> 
 	private static final float STEP = 0.25F;
 	private static final float SMALLEST = 1.0F;
 
-	/** How wide the words on one line may be, in a window this many GUI pixels wide. */
 	public static int budget(int windowWidth) {
 		return windowWidth - 2 * EDGE - 2 * PAD_X;
 	}
 
-	/** Lay out these words, each its own piece, for a window this wide. */
 	public static CaptionLayout fit(List<String> pieces, float wanted, int windowWidth) {
 		int budget = budget(windowWidth);
 		int[] widths = new int[pieces.size()];
@@ -68,7 +66,6 @@ public record CaptionLayout(float scale, List<List<Integer>> lines, List<Float> 
 		return new CaptionLayout(scale, lines, lineWidths);
 	}
 
-	/** The widest line, and the panel around the lot. */
 	public float widest() {
 		float widest = 0;
 		for (float width : lineWidths) widest = Math.max(widest, width);
@@ -84,7 +81,6 @@ public record CaptionLayout(float scale, List<List<Integer>> lines, List<Float> 
 		return lines.size() * lineHeight + (lines.size() - 1) * LINE_GAP + 2 * PAD_Y;
 	}
 
-	/** Whether it fits a window this wide, panel and all. */
 	public boolean fits(int windowWidth) {
 		return panelWidth() + 2 * EDGE <= windowWidth;
 	}

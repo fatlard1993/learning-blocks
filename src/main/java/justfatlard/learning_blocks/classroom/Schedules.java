@@ -29,7 +29,7 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Daily reading: for a child an operator has scheduled, a number of lessons to finish each day before
+ * Daily lessons: for a child an operator has scheduled, a number of lessons to finish each day before
  * playing. Kept in {@code config/learning-blocks/schedules.json}, by player UUID with the name alongside, so it
  * can be set while they are offline:
  *
@@ -47,13 +47,11 @@ import org.jspecify.annotations.Nullable;
 public final class Schedules {
 	private Schedules() {}
 
-	/** One child's schedule. */
 	public record Entry(String name, boolean enabled, int lessons, Map<DayOfWeek, Integer> weekdays, Map<String, Integer> subjects) {
 		public Entry(String name, boolean enabled, int lessons, Map<DayOfWeek, Integer> weekdays) {
 			this(name, enabled, lessons, weekdays, Map.of());
 		}
 
-		/** How many lessons this day of the week asks for. */
 		int on(DayOfWeek day) {
 			if (!enabled) return 0;
 			return Math.max(0, weekdays.getOrDefault(day, lessons));
@@ -63,7 +61,6 @@ public final class Schedules {
 	private static volatile ZoneId zone = ZoneId.systemDefault();
 	private static volatile boolean enforceOnRollover;
 	private static final Map<UUID, Entry> entries = new LinkedHashMap<>();
-	/** The day each online player was last checked against, for the rollover. */
 	private static final Map<UUID, String> seenDay = new HashMap<>();
 	/** Whose rollover send is on its way, so it is not queued twice. */
 	private static final java.util.Set<UUID> pending = new java.util.HashSet<>();
@@ -72,12 +69,10 @@ public final class Schedules {
 		return FabricLoader.getInstance().getConfigDir().resolve("learning-blocks").resolve("schedules.json");
 	}
 
-	/** The time zone a day starts in. */
 	public static ZoneId zone() {
 		return zone;
 	}
 
-	/** For tests: a different time zone, as the file would set it. */
 	public static void useZone(ZoneId zoneId) {
 		zone = zoneId;
 	}
@@ -86,9 +81,7 @@ public final class Schedules {
 		enforceOnRollover = enforce;
 	}
 
-	// --- The file ---
 
-	/** Read the file; a missing file is no schedules, in the server's own time zone. */
 	public static synchronized void load() {
 		entries.clear();
 		together.clear();
@@ -184,7 +177,6 @@ public final class Schedules {
 		}
 	}
 
-	/** A weekday by its English name, or null. */
 	public static @Nullable DayOfWeek weekday(String name) {
 		try {
 			return DayOfWeek.valueOf(name.toUpperCase(Locale.ROOT));
@@ -193,26 +185,22 @@ public final class Schedules {
 		}
 	}
 
-	// --- Setting ---
 
 	public static synchronized @Nullable Entry of(UUID player) {
 		return entries.get(player);
 	}
 
-	/** Every schedule, for the editor. */
 	public static synchronized Map<UUID, Entry> all() {
 		return Map.copyOf(entries);
 	}
 
-	/** Who reads with whom at daily reading time, both ways round. */
 	private static final Map<UUID, UUID> together = new HashMap<>();
 
-	/** Who this child reads with at daily reading time, or null. */
 	public static synchronized @Nullable UUID together(UUID player) {
 		return together.get(player);
 	}
 
-	/** These two read together at daily reading time (both get a schedule entry if they had none); null partner for nobody. */
+	/** These two learn together at daily lesson time (both get a schedule entry if they had none); null partner for nobody. */
 	public static synchronized void setTogether(UUID player, String name, @Nullable UUID other, String otherName) {
 		UUID was = together.remove(player);
 		if (was != null) together.remove(was, player);
@@ -225,7 +213,6 @@ public final class Schedules {
 		save();
 	}
 
-	/** A scheduled child joined: the name kept beside their UUID is the one they use now. */
 	public static synchronized void refreshName(UUID player, String name) {
 		Entry old = entries.get(player);
 		if (old == null || old.name().equals(name)) return;
@@ -233,7 +220,6 @@ public final class Schedules {
 		save();
 	}
 
-	/** Lessons a day for this child; 0 turns the schedule off. */
 	public static synchronized void set(UUID player, String name, int lessons) {
 		Entry old = entries.get(player);
 		// A plain number is that many of any subject: a split set before is gone.
@@ -255,7 +241,6 @@ public final class Schedules {
 		save();
 	}
 
-	/** A different number on one day of the week (0 for none that day); on, if it was off. */
 	public static synchronized void setWeekday(UUID player, String name, DayOfWeek day, int lessons) {
 		Entry old = entries.get(player);
 		Map<DayOfWeek, Integer> weekdays = new EnumMap<>(DayOfWeek.class);
@@ -265,7 +250,6 @@ public final class Schedules {
 		save();
 	}
 
-	/** Weekends free, or the same as other days: for the editor's toggle. */
 	public static synchronized void setWeekendsOff(UUID player, String name, boolean off) {
 		Entry old = entries.get(player);
 		Map<DayOfWeek, Integer> weekdays = new EnumMap<>(DayOfWeek.class);
@@ -287,9 +271,7 @@ public final class Schedules {
 			&& Integer.valueOf(0).equals(entry.weekdays().get(DayOfWeek.SUNDAY));
 	}
 
-	// --- Today ---
 
-	/** Lessons this child's schedule asks for on this date; 0 if they have none. */
 	public static int required(UUID player, LocalDate date) {
 		Entry entry = of(player);
 		return entry == null ? 0 : entry.on(date.getDayOfWeek());
@@ -325,7 +307,6 @@ public final class Schedules {
 		return on;
 	}
 
-	/** The subjects a schedule asks for that this child has off, for a grown-up's warning. */
 	public static java.util.List<String> askedButOff(ServerPlayer player) {
 		Entry entry = of(player.getUUID());
 		if (entry == null) return java.util.List.of();
@@ -342,14 +323,13 @@ public final class Schedules {
 		return requiredToday(player) > 0;
 	}
 
-	/** Today's reading met, where a schedule asks for any: the door opens with "All done for today!". */
 	public static boolean metToday(ServerPlayer player) {
 		return scheduledToday(player) && remaining(player) == 0;
 	}
 
 	/**
-	 * A scheduled child with reading left today, not in the classroom: sent in for what is left, by the
-	 * ordinary door, and "Reading time first!" before the first word. True if they were.
+	 * A scheduled child with lessons left today, not in the classroom: sent in for what is left, the
+	 * ordinary way in, and "Learning time first!" before the first word. True if they were.
 	 */
 	public static boolean enforce(ServerPlayer player) {
 		seenDay.put(player.getUUID(), Progress.today());
@@ -357,20 +337,20 @@ public final class Schedules {
 		if (left <= 0 || Visit.of(player) != null || player.isDeadOrDying()) return false;
 		String refused = Travel.send(player, left);
 		if (refused != null) {
-			LearningBlocks.LOGGER.warn("[{}] {}'s daily reading could not start: {}", LearningBlocks.MOD_ID, player.getGameProfile().name(), refused);
+			LearningBlocks.LOGGER.warn("[{}] {}'s daily lessons could not start: {}", LearningBlocks.MOD_ID, player.getGameProfile().name(), refused);
 			return false;
 		}
-		// Paired for daily reading: in with their partner, if they are already reading.
+		// Paired for daily lessons: in with their partner, if they are already learning.
 		UUID with = together(player.getUUID());
 		ServerPlayer partner = with == null ? null : player.level().getServer().getPlayerList().getPlayer(with);
 		Room theirs = partner == null ? null : Rooms.of(partner);
 		if (theirs != null && !theirs.leaving()) {
 			String moved = Travel.readWith(player, theirs);
-			if (moved != null) LearningBlocks.LOGGER.info("[{}] {} could not join {} for daily reading: {}", LearningBlocks.MOD_ID,
+			if (moved != null) LearningBlocks.LOGGER.info("[{}] {} could not join {} for daily lessons: {}", LearningBlocks.MOD_ID,
 				player.getGameProfile().name(), partner.getGameProfile().name(), moved);
 		}
-		Rooms.readingTime(player);
-		Progress.of(player).lessonNote(player, "daily reading: " + left + " to go today");
+		Rooms.learningTime(player);
+		Progress.of(player).lessonNote(player, "daily lessons: " + left + " to go today");
 		LearningBlocks.LOGGER.info("[{}] {} has {} of today's {} lessons to read first", LearningBlocks.MOD_ID, player.getGameProfile().name(), left,
 			requiredToday(player));
 		return true;
@@ -387,7 +367,7 @@ public final class Schedules {
 			String seen = seenDay.put(player.getUUID(), today);
 			if (seen == null || seen.equals(today) || !enforceOnRollover) continue;
 			if (remaining(player) <= 0 || Visit.of(player) != null || !pending.add(player.getUUID())) continue;
-			player.sendSystemMessage(Component.literal("It's a new day! Reading time starts in a minute."));
+			player.sendSystemMessage(Component.literal("It's a new day! Learning time starts in a minute."));
 			Later.after(player, 20 * 60, p -> {
 				pending.remove(p.getUUID());
 				enforce(p);
@@ -395,7 +375,6 @@ public final class Schedules {
 		}
 	}
 
-	/** The day turned for this player: for tests of the rollover. */
 	public static void rememberDay(ServerPlayer player, String day) {
 		seenDay.put(player.getUUID(), day);
 	}
@@ -405,7 +384,6 @@ public final class Schedules {
 		pending.remove(player);
 	}
 
-	/** Whether an operator is exempt from being kept in: always, unless scheduled today. */
 	public static boolean mayLeave(ServerPlayer player) {
 		return Admins.may(player) && !scheduledToday(player);
 	}

@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
  */
 @Mixin(CachedUserNameToIdResolver.class)
 public interface CachedNamesAccessor {
-	/** Lower-cased names the cache holds. */
 	@Accessor("profilesByName")
 	Map<String, ?> learn$byName();
 }

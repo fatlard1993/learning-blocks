@@ -49,7 +49,6 @@ public final class CaptionSettings {
 		return scaleOf(size == null ? "large" : size.get(player));
 	}
 
-	/** How big each size draws: small, medium or large. */
 	public static float scaleOf(String chosen) {
 		return switch (chosen) {
 			case "small" -> 2.0F;

@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.review;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ import justfatlard.pandorical.api.ScreenApi;
 import justfatlard.pandorical.api.ScreenBuilder;
 import justfatlard.pandorical.protocol.ComponentDef;
 import justfatlard.learning_blocks.LearningBlocks;
+import justfatlard.learning_blocks.logic.LogicCourse;
 import justfatlard.learning_blocks.editor.Admins;
 import justfatlard.learning_blocks.editor.Ui;
 import justfatlard.learning_blocks.narration.CaptionLine;
@@ -52,7 +54,7 @@ public final class Review {
 	public static final String TYPE = LearningBlocks.MOD_ID + ":review";
 
 	public enum Tab {
-		LETTERS("Letters"), PAIRS("Two-letter"), VOWELS("Vowels"), TRICKY("Tricky"), TOYBOX("Toybox"), WORDS("My words"), NUMBERS("123"), PHRASES("Phrases");
+		LETTERS("Letters"), PAIRS("Two-letter"), VOWELS("Vowels"), TRICKY("Tricky"), TOYBOX("Toybox"), WORDS("My words"), NUMBERS("123"), LOGIC("Logic"), PHRASES("Phrases");
 
 		final String label;
 
@@ -70,10 +72,9 @@ public final class Review {
 	 * What a viewer has open: whose words, and whether every word the server has is shown. The
 	 * words drawn are kept for tests: read ones, and the unread ones shown in their place.
 	 */
-	private record State(Tab tab, UUID subject, String subjectName, boolean all, String screenId,
+	private record State(Tab tab, UUID owner, String ownerName, boolean all, String screenId,
 			List<String> read, List<String> unread) {}
 
-	/** A scrolling list, added to the screen once the panel behind it is. */
 	private record Scroll(String id, int y, int height, Map<String, String> props, List<ComponentDef> children) {}
 
 	private static final Map<UUID, State> states = new HashMap<>();
@@ -91,7 +92,6 @@ public final class Review {
 		screens.onClose(TYPE, player -> states.remove(player.getUUID()));
 	}
 
-	/** The server stopped: nobody is looking at anything. */
 	public static void clear() {
 		states.clear();
 		capitals.clear();
@@ -107,19 +107,19 @@ public final class Review {
 	}
 
 	/**
-	 * Open the review on this tab for this viewer, about {@code subject}'s words (their own if null).
+	 * Open the review on this tab for this viewer, about {@code owner}'s words (their own if null).
 	 * False if they cannot see it: no Pandorical, or an operator's tab or view asked for by anybody else.
 	 */
-	public static boolean open(ServerPlayer viewer, Tab tab, @Nullable ServerPlayer subject, boolean all) {
+	public static boolean open(ServerPlayer viewer, Tab tab, @Nullable ServerPlayer owner, boolean all) {
 		if (!PandoricalApi.isAvailable(viewer)) return false;
 		boolean operator = Admins.may(viewer);
-		if (!operator && (tab.forOperators() || all || subject != null && subject != viewer)) return false;
-		ServerPlayer whose = subject != null ? subject : viewer;
+		if (!operator && (tab.forOperators() || all || owner != null && owner != viewer)) return false;
+		ServerPlayer whose = owner != null ? owner : viewer;
 		show(viewer, tab, whose.getUUID(), whose.getGameProfile().name(), all);
 		return true;
 	}
 
-	/** A press, as a click would send it: for tests. */
+	@ForTests
 	public static void press(ServerPlayer viewer, String componentId) {
 		pressed(viewer, Map.of(ScreenApi.FALLBACK_COMPONENT_ID_KEY, componentId));
 	}
@@ -129,22 +129,28 @@ public final class Review {
 		return state == null ? null : state.tab();
 	}
 
-	/** The word ids My words shows as read, in order: for tests. */
+	@ForTests
 	public static List<String> readShown(ServerPlayer viewer) {
 		State state = states.get(viewer.getUUID());
 		return state == null ? List.of() : state.read();
 	}
 
-	/** The word ids My words shows but that have not been read: for tests. */
+	@ForTests
 	public static List<String> unreadShown(ServerPlayer viewer) {
 		State state = states.get(viewer.getUUID());
 		return state == null ? List.of() : state.unread();
 	}
 
-	// --- Drawing ---
 
-	private static void show(ServerPlayer viewer, Tab tab, UUID subject, String subjectName, boolean all) {
+	private static void show(ServerPlayer viewer, Tab tab, UUID owner, String ownerName, boolean all) {
 		boolean operator = Admins.may(viewer);
+		ServerPlayer whose = viewer.level().getServer().getPlayerList().getPlayer(owner);
+		if (whose == null) {
+			// Gone offline with the screen open: back to the viewer's own.
+			whose = viewer;
+			owner = viewer.getUUID();
+			ownerName = viewer.getGameProfile().name();
+		}
 		starring.clear();
 		trickyShowing.clear();
 		toyboxShowing.clear();
@@ -155,8 +161,12 @@ public final class Review {
 		List<String> unread = new ArrayList<>();
 
 		List<Tab> tabs = new ArrayList<>();
-		boolean numbers = justfatlard.learning_blocks.subject.Subjects.on(viewer, justfatlard.learning_blocks.subject.Numbers.INSTANCE);
-		for (Tab each : Tab.values()) if ((!each.forOperators() || operator) && (each != Tab.NUMBERS || numbers)) tabs.add(each);
+		boolean numbers = justfatlard.learning_blocks.subject.Subjects.on(whose, justfatlard.learning_blocks.subject.Numbers.INSTANCE);
+		boolean logic = justfatlard.learning_blocks.subject.Subjects.on(whose, justfatlard.learning_blocks.subject.Logic.INSTANCE);
+		for (Tab each : Tab.values()) {
+			if (each.forOperators() && !operator || each == Tab.NUMBERS && !numbers || each == Tab.LOGIC && !logic) continue;
+			tabs.add(each);
+		}
 		int tabW = (INNER - 2 * (tabs.size() - 1)) / tabs.size();
 		for (int i = 0; i < tabs.size(); i++) {
 			// The more tabs, the narrower: long labels go short so they fit.
@@ -182,13 +192,14 @@ public final class Review {
 		ScreenBuilder screen = new ScreenBuilder(TYPE).title(tab.label).pauseGame(false);
 		List<Scroll> scrolls = new ArrayList<>();
 		int bottom = switch (tab) {
-			case LETTERS -> letters(parts, viewer);
-			case PAIRS -> pairs(parts, viewer);
+			case LETTERS -> letters(parts, whose);
+			case PAIRS -> pairs(parts, whose);
 			case VOWELS -> vowels(parts);
-			case TRICKY -> tricky(parts, viewer);
-			case TOYBOX -> toybox(parts, viewer);
-			case NUMBERS -> numbers(parts, viewer);
-			case WORDS -> words(viewer, scrolls, parts, subject, subjectName, all, operator, read, unread);
+			case TRICKY -> tricky(parts, whose);
+			case TOYBOX -> toybox(parts, whose);
+			case NUMBERS -> numbers(parts, whose);
+			case LOGIC -> logic(parts, whose);
+			case WORDS -> words(viewer, scrolls, parts, owner, ownerName, all, operator, read, unread);
 			case PHRASES -> phrases(scrolls, parts);
 		};
 
@@ -200,12 +211,13 @@ public final class Review {
 		screen.size(WIDTH, height);
 		screen.panel("dialog", 0, 0, WIDTH, height, Ui.panel());
 		screen.component(Ui.icon("title_icon", PAD, 3, "minecraft:book", 0.75F));
-		String title = tab == Tab.WORDS && !subject.equals(viewer.getUUID()) ? subjectName + "'s words" : tab == Tab.NUMBERS ? "Numbers" : tab.label;
+		String shown = tab == Tab.NUMBERS ? "Numbers" : tab.label;
+		String title = owner.equals(viewer.getUUID()) ? shown : ownerName + ": " + shown;
 		screen.component(Ui.text("title", PAD + 16, 7, title));
 		for (ComponentBuilder part : parts) screen.component(part);
 		// After the panel, which would otherwise be drawn over them.
 		for (Scroll scroll : scrolls) screen.scrollPanel(scroll.id(), PAD, scroll.y(), INNER, scroll.height(), scroll.props(), scroll.children());
-		states.put(viewer.getUUID(), new State(tab, subject, subjectName, all, screen.screenId(), List.copyOf(read), List.copyOf(unread)));
+		states.put(viewer.getUUID(), new State(tab, owner, ownerName, all, screen.screenId(), List.copyOf(read), List.copyOf(unread)));
 		starred.put(viewer.getUUID(), List.copyOf(starring));
 		trickyShown.put(viewer.getUUID(), List.copyOf(trickyShowing));
 		toyboxShown.put(viewer.getUUID(), List.copyOf(toyboxShowing));
@@ -218,7 +230,6 @@ public final class Review {
 		return LearningBlocks.MOD_ID + ":textures/block/letter_" + letter.grapheme() + ".png";
 	}
 
-	/** A tile to press: a button, and the tile's own face drawn over it, the click going through. */
 	private static void tile(List<ComponentBuilder> parts, String id, Letter letter, int x, int y, int size, @Nullable String tooltip) {
 		ComponentBuilder button = Ui.button(id, x, y, size, size, "");
 		if (tooltip != null) button.prop(ComponentType.PROP_TOOLTIP, tooltip);
@@ -232,11 +243,11 @@ public final class Review {
 	/** A due item's tooltip: gentle, and never a count of anything got wrong. */
 	static final String PRACTISE = "Let's practise this one!";
 
-	/** What the screen being built stars, and what each viewer's last screen starred: for tests. */
+	@ForTests
 	private static final List<String> starring = new ArrayList<>();
 	private static final Map<UUID, List<String>> starred = new HashMap<>();
 
-	/** The letters and word ids starred to practise on this viewer's screen: for tests. */
+	@ForTests
 	public static List<String> starredShown(ServerPlayer viewer) {
 		return starred.getOrDefault(viewer.getUUID(), List.of());
 	}
@@ -262,7 +273,6 @@ public final class Review {
 		}
 	}
 
-	/** The word ids My words showed as mastered: for tests. */
 	private static final List<String> masteredShowing = new ArrayList<>();
 	private static final Map<UUID, List<String>> masteredShown = new HashMap<>();
 
@@ -270,10 +280,8 @@ public final class Review {
 		return masteredShown.getOrDefault(viewer.getUUID(), List.of());
 	}
 
-	/** Who is looking at the big letters on the Letters tab. */
 	private static final java.util.Set<UUID> capitals = new java.util.HashSet<>();
 
-	/** A letter's big-and-little matches as pips along the bottom of its tile. */
 	private static void casePips(List<ComponentBuilder> parts, Letter letter, int hits, int x, int y, int size) {
 		int at = Progress.masteredAt();
 		int shown = Math.min(at, 5);
@@ -342,7 +350,7 @@ public final class Review {
 		String count = "Plushies " + plushies.size() + " of " + justfatlard.learning_blocks.plush.Plush.values().length
 			+ " · Toys " + toys.size() + " of " + justfatlard.learning_blocks.toy.Toy.values().length;
 		parts.add(Ui.faint("hint", PAD, y + 2, count));
-		parts.add(Ui.faint("hint2", PAD, y + 12, "Master a word to earn its toy!"));
+		parts.add(Ui.faint("hint2", PAD, y + 12, "Master words, numbers and puzzles to earn toys!"));
 		toyboxCounted.put(viewer.getUUID(), count);
 		return y + 22;
 	}
@@ -397,7 +405,7 @@ public final class Review {
 	private static final List<String> toyboxHints = new ArrayList<>();
 	private static final Map<UUID, List<String>> toyboxHinted = new HashMap<>();
 
-	/** The hints the Toybox tab showed this viewer, {@code plush:teddy=hug}: for tests. */
+	@ForTests
 	public static List<String> toyboxHints(ServerPlayer viewer) {
 		return toyboxHinted.getOrDefault(viewer.getUUID(), List.of());
 	}
@@ -419,7 +427,7 @@ public final class Review {
 	private static final List<String> trickyShowing = new ArrayList<>();
 	private static final Map<UUID, List<String>> trickyShown = new HashMap<>();
 
-	/** The tricky words the Tricky tab showed this viewer: for tests. */
+	@ForTests
 	public static List<String> trickyShown(ServerPlayer viewer) {
 		return trickyShown.getOrDefault(viewer.getUUID(), List.of());
 	}
@@ -430,14 +438,12 @@ public final class Review {
 		return item != null && item.box() <= 2 && progress.memory().due(key);
 	}
 
-	/** A small gold star in a corner: something due for another look. */
 	private static ComponentBuilder star(String id, int x, int y) {
 		starring.add(id.substring("star:".length()));
 		return new ComponentBuilder(id, ComponentType.TEXT).bounds(x, y, 9, 9)
 			.prop(ComponentType.PROP_TEXT, "\u2605").prop(ComponentType.PROP_COLOR, "#FFFFC832").prop(ComponentType.PROP_SHADOW, "true");
 	}
 
-	/** A letter's name: a vowel's long sound, which is its name, and a consonant's own recording. */
 	public static String nameClip(Letter letter) {
 		return "aeiou".contains(letter.grapheme()) ? "phoneme/" + letter.grapheme() + "_long" : "name/" + letter.grapheme();
 	}
@@ -489,7 +495,6 @@ public final class Review {
 		return best;
 	}
 
-	/** Two letters, one sound: each tile to hear, a word that uses it, and a tick once it is learned. */
 	private static int pairs(List<ComponentBuilder> parts, ServerPlayer viewer) {
 		Progress progress = Progress.of(viewer);
 		int size = 24;
@@ -526,9 +531,8 @@ public final class Review {
 		return bottom + 10;
 	}
 
-	/** The number tiles one to twenty, and zero: each with its dots; a click says it. Mastered ones are marked. */
-	private static int numbers(List<ComponentBuilder> parts, ServerPlayer viewer) {
-		justfatlard.learning_blocks.reward.Progress progress = justfatlard.learning_blocks.reward.Progress.of(viewer);
+	private static int numbers(List<ComponentBuilder> parts, ServerPlayer whose) {
+		justfatlard.learning_blocks.reward.Progress progress = justfatlard.learning_blocks.reward.Progress.of(whose);
 		int columns = 3;
 		int w = (INNER - 2 * (columns - 1)) / columns;
 		int row = Ui.BUTTON + 2;
@@ -537,10 +541,59 @@ public final class Review {
 			// Dots up to ten, as on the tiles' sides; past that, too many to count on a button.
 			String dots = n >= 1 && n <= 10 ? "  " + "\u25CF".repeat(n) : "";
 			boolean mastered = progress.itemMastered(justfatlard.learning_blocks.subject.Numbers.numeral(n));
+			if (mastered) masteredShowing.add(justfatlard.learning_blocks.subject.Numbers.numeral(n));
 			parts.add(Ui.button("number:" + n, PAD + (i % columns) * (w + 2), TOP + (i / columns) * row, w, Ui.BUTTON,
 				(mastered ? "\u2605 " : "") + n + dots));
 		}
 		int bottom = TOP + (justfatlard.learning_blocks.numbers.NumberBlock.HIGHEST / columns + 1) * row;
+		parts.add(Ui.faint("hint", PAD, bottom, "Click one to hear it. A star is one you know."));
+		return bottom + 10;
+	}
+
+	private record LogicGame(String label, String clip, String asks, List<String> items) {}
+
+	private static List<String> gate(LogicCourse.Kind kind, @Nullable String target) {
+		List<String> items = new ArrayList<>();
+		for (LogicCourse.Band band : LogicCourse.BANDS) {
+			for (String item : band.gate()) {
+				if (item.startsWith("logic:" + kind.id + ":") && (target == null || item.equals(kind.item(target)))) items.add(item);
+			}
+		}
+		return items;
+	}
+
+	private static final List<LogicGame> LOGIC_GAMES = List.of(
+		new LogicGame("Pens", "phrase/put_in_pens", "Put the animals in their pens!", gate(LogicCourse.Kind.SORT, "kind")),
+		new LogicGame("Colours", "phrase/sort_by_colour", "Sort them by colour!", gate(LogicCourse.Kind.SORT, "colour")),
+		new LogicGame("Big, little", "phrase/sort_by_size", "Big ones here, little ones there!", gate(LogicCourse.Kind.SORT, "size")),
+		new LogicGame("Tidy up", "phrase/toys_in_box", "Toys in the box, plushies in the crib!", gate(LogicCourse.Kind.SORT, "things")),
+		new LogicGame("Same?", "phrase/same_or_different", "Same or different?", gate(LogicCourse.Kind.SAME, null)),
+		new LogicGame("Next", "phrase/what_comes_next", "What comes next?", gate(LogicCourse.Kind.NEXT, null)),
+		new LogicGame("Mistake", "phrase/find_the_mistake", "Oops, one is wrong! Can you find it?", gate(LogicCourse.Kind.MISTAKE, null)),
+		new LogicGame("Copy it", "phrase/copy_it", "Can you make one just like it?", gate(LogicCourse.Kind.COPY, null)),
+		new LogicGame("Odd one", "phrase/which_doesnt_belong", "Which one doesn't belong?", gate(LogicCourse.Kind.ODD, null)),
+		new LogicGame("Missing", "phrase/whats_missing", "What's missing?", gate(LogicCourse.Kind.MISSING, null)),
+		new LogicGame("In order", "phrase/first_next_last", "Put them in order: first, next, last!", gate(LogicCourse.Kind.STORY, null)),
+		new LogicGame("Little to big", "phrase/little_to_big", "Put them in order, little to big!", gate(LogicCourse.Kind.SIZE, null)),
+		new LogicGame("Morning", "phrase/what_happens_first", "What happens first?", gate(LogicCourse.Kind.MORNING, null)));
+
+	private static int logic(List<ComponentBuilder> parts, ServerPlayer whose) {
+		justfatlard.learning_blocks.reward.Progress progress = justfatlard.learning_blocks.reward.Progress.of(whose);
+		int columns = 2;
+		int w = (INNER - 2 * (columns - 1)) / columns;
+		int row = Ui.BUTTON + 2;
+		for (int i = 0; i < LOGIC_GAMES.size(); i++) {
+			LogicGame game = LOGIC_GAMES.get(i);
+			StringBuilder stars = new StringBuilder();
+			for (String item : game.items()) {
+				boolean mastered = progress.itemMastered(item);
+				stars.append(mastered ? "\u2605" : "\u2606");
+				if (mastered) masteredShowing.add(item);
+			}
+			parts.add(Ui.button("logic:" + i, PAD + (i % columns) * (w + 2), TOP + (i / columns) * row, w, Ui.BUTTON,
+				game.label() + "  " + stars));
+		}
+		int bottom = TOP + ((LOGIC_GAMES.size() + columns - 1) / columns) * row;
 		parts.add(Ui.faint("hint", PAD, bottom, "Click one to hear it. A star is one you know."));
 		return bottom + 10;
 	}
@@ -611,9 +664,9 @@ public final class Review {
 	private static final int UNIT = 20;
 	private static final int WORD_UNITS = 6;
 
-	private static int words(ServerPlayer viewer, List<Scroll> scrolls, List<ComponentBuilder> parts, UUID subject, String subjectName,
+	private static int words(ServerPlayer viewer, List<Scroll> scrolls, List<ComponentBuilder> parts, UUID owner, String ownerName,
 			boolean all, boolean operator, List<String> read, List<String> unread) {
-		ServerPlayer whose = viewer.level().getServer().getPlayerList().getPlayer(subject);
+		ServerPlayer whose = viewer.level().getServer().getPlayerList().getPlayer(owner);
 		Progress progress = whose != null ? Progress.of(whose) : null;
 		Set<String> done = progress != null ? progress.words() : Set.of();
 
@@ -622,19 +675,19 @@ public final class Review {
 		// An operator's every-word view shows every word, unread ones in grey.
 		// By band, 1a, 1b: the unread ones of the band being played now as question marks.
 		Stages.Band currentBand = progress != null ? Stages.currentBand(progress) : null;
-		int current = currentBand != null ? currentBand.code() : -1;
-		Map<Integer, List<Word>> byStage = new TreeMap<>();
-		Map<Integer, Integer> hidden = new TreeMap<>();
-		Map<Integer, String> labels = new HashMap<>();
+		Stages.BandCode current = currentBand != null ? currentBand.code() : null;
+		Map<Stages.BandCode, List<Word>> byStage = new TreeMap<>();
+		Map<Stages.BandCode, Integer> hidden = new TreeMap<>();
+		Map<Stages.BandCode, String> labels = new HashMap<>();
 		for (Stages.Band band : Stages.bands()) labels.put(band.code(), band.label());
 		for (Word word : Stages.usable()) {
 			boolean isRead = done.contains(word.id().toString());
 			Stages.Band band = Stages.bandOf(word);
-			int code = band != null ? band.code() : word.stage() * 100;
+			Stages.BandCode code = band != null ? band.code() : Stages.BandCode.stageStart(word.stage());
 			if (isRead || all) byStage.computeIfAbsent(code, s -> new ArrayList<>()).add(word);
-			else if (code == current) hidden.merge(code, 1, Integer::sum);
+			else if (code.equals(current)) hidden.merge(code, 1, Integer::sum);
 		}
-		for (int stage : hidden.keySet()) byStage.computeIfAbsent(stage, s -> new ArrayList<>());
+		for (Stages.BandCode stage : hidden.keySet()) byStage.computeIfAbsent(stage, s -> new ArrayList<>());
 		for (List<Word> list : byStage.values()) list.sort((a, b) -> a.text().compareTo(b.text()));
 
 		if (operator) {
@@ -645,11 +698,11 @@ public final class Review {
 		List<ComponentDef> cards = new ArrayList<>();
 		int units = 0;
 		int perRow = INNER / (CARD_W + 2);
-		for (Map.Entry<Integer, List<Word>> entry : byStage.entrySet()) {
-			int stage = entry.getKey();
+		for (Map.Entry<Stages.BandCode, List<Word>> entry : byStage.entrySet()) {
+			Stages.BandCode stage = entry.getKey();
 			List<Word> list = entry.getValue();
 			int secret = all ? 0 : hidden.getOrDefault(stage, 0);
-			cards.add(Ui.text("stage:" + stage, 2, units * UNIT + 6, "Stage " + labels.getOrDefault(stage, String.valueOf(stage / 100))
+			cards.add(Ui.text("stage:" + stage.packed(), 2, units * UNIT + 6, "Stage " + labels.getOrDefault(stage, String.valueOf(stage.stage()))
 				+ (secret > 0 ? "  (" + secret + " more to find)" : "")).build());
 			units++;
 			int count = list.size() + secret;
@@ -680,8 +733,8 @@ public final class Review {
 
 		int listY = TOP;
 		if (cards.isEmpty()) {
-			boolean self = subject.equals(viewer.getUUID());
-			parts.add(Ui.text("empty", PAD, listY + 8, self ? "No words yet!" : subjectName + " has not read any words yet."));
+			boolean self = owner.equals(viewer.getUUID());
+			parts.add(Ui.text("empty", PAD, listY + 8, self ? "No words yet!" : ownerName + " has not read any words yet."));
 			if (self) parts.add(Ui.faint("empty_hint", PAD, listY + 22, "Read a word in the classroom and it will be here."));
 			return listY + WORD_UNITS * UNIT;
 		}
@@ -698,7 +751,6 @@ public final class Review {
 	private static final int PHRASE_ROW = 22;
 	private static final int PHRASE_ROWS = 7;
 
-	/** Every phrase clip the server knows of, from its captions and its recordings; each line's variants straight after it. */
 	public static List<String> phraseKeys() {
 		Set<String> keys = new TreeSet<>();
 		for (String key : Captions.keys()) if (key.startsWith("phrase/")) keys.add(key);
@@ -716,7 +768,6 @@ public final class Review {
 		return List.copyOf(ordered);
 	}
 
-	/** A variant's own name under its line: "v2". */
 	private static String phraseLabel(String key) {
 		String name = key.substring("phrase/".length());
 		int at = name.lastIndexOf("_v");
@@ -759,7 +810,6 @@ public final class Review {
 		return text.toString();
 	}
 
-	// --- Presses ---
 
 	private static void pressed(ServerPlayer viewer, Map<String, String> data) {
 		String id = data.get(ScreenApi.FALLBACK_COMPONENT_ID_KEY);
@@ -778,10 +828,10 @@ public final class Review {
 				return;
 			}
 			if (tab.forOperators() && !operator) return;
-			show(viewer, tab, state.subject(), state.subjectName(), state.all() && operator);
+			show(viewer, tab, state.owner(), state.ownerName(), state.all() && operator);
 		} else if (id.equals("caps")) {
 			if (!capitals.remove(viewer.getUUID())) capitals.add(viewer.getUUID());
-			show(viewer, state.tab(), state.subject(), state.subjectName(), state.all());
+			show(viewer, state.tab(), state.owner(), state.ownerName(), state.all());
 		} else if (id.startsWith("capital:")) {
 			Letter letter = Letter.of(id.substring("capital:".length()));
 			if (letter != null) say(viewer, state, List.of(nameClip(letter)), letter.upper().shown());
@@ -797,7 +847,7 @@ public final class Review {
 				if (word.id().equals(wordId)) say(viewer, state, List.of("word/" + word.text()), word.text());
 			}
 		} else if (id.equals("all")) {
-			if (operator) show(viewer, state.tab(), state.subject(), state.subjectName(), !state.all());
+			if (operator) show(viewer, state.tab(), state.owner(), state.ownerName(), !state.all());
 		} else if (id.startsWith("pair:")) {
 			Letter pair = Letter.of(id.substring("pair:".length()));
 			if (pair != null && pair.isDigraph()) say(viewer, state, List.of("phoneme/" + pair.grapheme()), pair.grapheme());
@@ -817,6 +867,13 @@ public final class Review {
 				say(viewer, state, List.of(justfatlard.learning_blocks.numbers.NumberBlock.soundOf(n)), justfatlard.learning_blocks.subject.Numbers.word(n));
 			} catch (NumberFormatException ignored) {
 				// Not a number button.
+			}
+		} else if (id.startsWith("logic:")) {
+			try {
+				LogicGame game = LOGIC_GAMES.get(Integer.parseInt(id.substring("logic:".length())));
+				say(viewer, state, List.of(game.clip()), game.asks());
+			} catch (NumberFormatException | IndexOutOfBoundsException ignored) {
+				// Not one of the games.
 			}
 		} else if (id.startsWith("short:")) {
 			Letter vowel = Letter.of(id.substring("short:".length()));

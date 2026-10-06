@@ -58,7 +58,6 @@ public final class Captions implements SimpleSynchronousResourceReloadListener {
 		return captions.get(key);
 	}
 
-	/** Every clip with a caption: {@code phrase/make_the_word}, {@code word/cat}. */
 	public static java.util.Set<String> keys() {
 		return captions.keySet();
 	}

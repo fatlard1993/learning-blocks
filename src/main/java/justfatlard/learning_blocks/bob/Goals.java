@@ -15,7 +15,6 @@ import org.jspecify.annotations.Nullable;
 public final class Goals {
 	private Goals() {}
 
-	/** The goals written by hand, in order: shape, then the sentence or two. */
 	private static final String[][] CURATED = {
 		{"SIMPLE", "put cat in box"},
 		{"SIMPLE", "put hat on dog"},
@@ -163,7 +162,6 @@ public final class Goals {
 		return true;
 	}
 
-	/** Whether a plushie or a toy is in it. */
 	static boolean hasToy(Goal goal) {
 		for (String word : goal.things()) {
 			justfatlard.learning_blocks.relate.Thing thing = justfatlard.learning_blocks.relate.Relations.thing(word);
@@ -200,10 +198,8 @@ public final class Goals {
 		return out;
 	}
 
-	/** One way a sentence can be wrong, and what it says instead. */
 	public enum Mistake { NOUN, LITTLE_WORD, ORDER }
 
-	/** A sentence that is wrong in one way, and the card it needs back. */
 	public record Wrong(Mistake mistake, List<String> row, List<String> needed) {}
 
 	/**

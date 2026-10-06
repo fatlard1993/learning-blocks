@@ -1,4 +1,4 @@
-package justfatlard.learning_blocks.things;
+package justfatlard.learning_blocks.props;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,12 +25,12 @@ import org.jspecify.annotations.Nullable;
  * A prop put down: a bin, a bathtub, a cardboard box. It faces whoever put it there and takes up
  * only its own shape.
  */
-public class ThingBlock extends Block {
+public class PropBlock extends Block {
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 	private final VoxelShape north;
 
 	/** {@code box} in model units, as the model has it facing north: x0, y0, z0, x1, y1, z1. */
-	public ThingBlock(Properties properties, double[] box) {
+	public PropBlock(Properties properties, double[] box) {
 		super(properties);
 		this.north = Block.box(box[0], box[1], box[2], box[3], box[4], box[5]);
 		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
@@ -51,7 +51,6 @@ public class ThingBlock extends Block {
 		return rotate(north, state.getValue(FACING));
 	}
 
-	/** A toy or plushie held and used on this prop: into the box, the jar, the tub, onto the desk, if it fits. */
 	@Override
 	protected net.minecraft.world.InteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, net.minecraft.world.level.Level level,
 			BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hit) {
@@ -61,7 +60,6 @@ public class ThingBlock extends Block {
 		return net.minecraft.world.InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
-	/** Sneaking, what is in or on it comes back out; otherwise, something floating in it bobs. */
 	@Override
 	protected net.minecraft.world.InteractionResult useWithoutItem(BlockState state, net.minecraft.world.level.Level level, BlockPos pos,
 			net.minecraft.world.entity.player.Player player, net.minecraft.world.phys.BlockHitResult hit) {
@@ -75,7 +73,6 @@ public class ThingBlock extends Block {
 		return net.minecraft.world.InteractionResult.SUCCESS;
 	}
 
-	/** Gone: whatever was in or on it drops beside it. */
 	@Override
 	protected void affectNeighborsAfterRemoval(BlockState state, net.minecraft.server.level.ServerLevel level, BlockPos pos, boolean moved) {
 		if (!level.getBlockState(pos).is(this)) justfatlard.learning_blocks.play.Play.removed(level, pos);

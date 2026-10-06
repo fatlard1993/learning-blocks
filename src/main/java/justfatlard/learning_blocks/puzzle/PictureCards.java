@@ -71,7 +71,6 @@ public final class PictureCards {
 		}
 	}
 
-	/** Show this card on the anchor. False if it could not be. */
 	public static boolean show(Entity anchor, String name) {
 		Picture picture = of(name);
 		if (picture == null) return false;

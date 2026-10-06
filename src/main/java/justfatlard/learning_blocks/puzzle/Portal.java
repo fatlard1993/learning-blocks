@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.List;
 import java.util.UUID;
 import justfatlard.learning_blocks.Later;
@@ -8,7 +9,6 @@ import justfatlard.learning_blocks.LearningBlocks;
 import justfatlard.learning_blocks.classroom.Travel;
 import justfatlard.learning_blocks.narration.Narration;
 import justfatlard.learning_blocks.narration.Narrator;
-import justfatlard.learning_blocks.sound.Sounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -63,7 +63,6 @@ final class Portal {
 		this.layout = layout;
 	}
 
-	/** The portal's opening: two wide, three high, in the back wall. */
 	AABB opening() {
 		BlockPos low = layout.portalLower();
 		return new AABB(low.getX(), low.getY(), low.getZ(), low.getX() + RoomLayout.PORTAL_WIDE, low.getY() + RoomLayout.PORTAL_HIGH, low.getZ() + 1);
@@ -139,12 +138,10 @@ final class Portal {
 		}
 	}
 
-	/** Whether this reader may go through. */
 	boolean openFor(ServerPlayer player) {
 		return !Travel.kept(player);
 	}
 
-	/** Which pane is up: the purple swirl (open) or the dark one (locked). */
 	private boolean fillLit;
 
 	/**
@@ -230,12 +227,11 @@ final class Portal {
 		}
 	}
 
-	/** The count of lessons left, over the portal, while there are any: for tests. */
+	@ForTests
 	@Nullable Entity sign() {
 		return sign == null ? null : level.getEntity(sign);
 	}
 
-	/** The count and the swirl taken down: the room is closing. */
 	void close() {
 		if (sign != null) {
 			Entity found = level.getEntity(sign);
@@ -245,9 +241,7 @@ final class Portal {
 		fill(null);
 	}
 
-	/** The line for the last lesson done: the portal's own, once recorded, else the door's. */
 	static String openLine(boolean doneForToday) {
-		if (doneForToday) return "phrase/done_for_today";
-		return Sounds.isRecorded("phrase/portal_open") ? "phrase/portal_open" : "phrase/door_open";
+		return doneForToday ? "phrase/done_for_today" : "phrase/portal_open";
 	}
 }

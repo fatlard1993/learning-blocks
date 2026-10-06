@@ -48,12 +48,10 @@ public final class Earned {
 	 */
 	private static final Map<String, List<String>> itemLinks = new java.util.concurrent.ConcurrentHashMap<>();
 
-	/** This toy is earned (also) by mastering these items of a subject. */
 	public static void linkItems(String key, List<String> items) {
 		itemLinks.put(key, List.copyOf(items));
 	}
 
-	/** For tests: the item links gone. */
 	public static void clearItemLinksForTests() {
 		itemLinks.clear();
 	}

@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.List;
 import java.util.UUID;
 import com.mojang.math.Transformation;
@@ -70,7 +71,6 @@ final class BoardPicture {
 	 */
 	private boolean above;
 
-	/** Where the picture goes: to the left of the word, at its height, or over its middle. */
 	private Vec3 spot(List<BlockPos> row) {
 		BlockPos first = row.getFirst();
 		if (!above) return new Vec3(first.getX() - 1.1, first.getY() + 0.5, first.getZ() + 0.6);
@@ -91,14 +91,13 @@ final class BoardPicture {
 		cardShown = PictureCards.show(hit, card) ? card : null;
 	}
 
-	/** The picture card showing, if one is: for tests. */
+	@ForTests
 	private @Nullable String cardShown;
 
 	@Nullable String card() {
 		return pictureHit == null ? null : cardShown;
 	}
 
-	/** The picture's click box, for tests and for the click events. */
 	@Nullable UUID hit() {
 		return pictureHit;
 	}
@@ -145,13 +144,11 @@ final class BoardPicture {
 		cardShown = null;
 	}
 
-	/** The picture over the board, if there is one. */
 	@Nullable Entity shown() {
 		return picture == null ? null : level.getEntity(picture);
 	}
 
-	/** A little bounce, as the prompt is said again. */
-	void bounce(ServerPlayer player, Stage stage) {
+	void bounce(ServerPlayer player, RoomEffects stage) {
 		Entity shown = shown();
 		if (shown instanceof Display.ItemDisplay display) {
 			display.setTransformationInterpolationDelay(0);

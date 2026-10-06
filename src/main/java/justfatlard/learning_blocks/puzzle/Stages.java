@@ -30,6 +30,21 @@ import justfatlard.learning_blocks.reward.Progress;
 public final class Stages {
 	private Stages() {}
 
+	/** The first stage of each extra kind of round. */
+	public static final int TRICKY_FROM = 2;
+	public static final int MIDDLE_FROM = 2;
+	public static final int READ_IT_FROM = 2;
+	public static final int FIX_FROM = 2;
+	public static final int BOB_FROM = 5;
+	public static final int WHOLE_FROM = 6;
+	public static final int PLURAL_FROM = 6;
+	public static final int PHRASE_FROM = 6;
+
+	/** Whether a child at this stage (-1: every stage done) has reached that one. */
+	public static boolean reached(int stage, int from) {
+		return stage < 0 || stage >= from;
+	}
+
 	/** A stage longer than this many rounds, at mastery, is split in two. */
 	public static final int LONG_STAGE = 45;
 	/** A band smaller than this goes in with the one before it (or after, if it is first). */
@@ -37,15 +52,36 @@ public final class Stages {
 	private static final String[] GROUPS = {"satpin", "mdgock", "eurhb", "fljvw", "xyz"};
 
 	/**
-	 * A part of a stage: stage 1's band 0 is 1a. Its code, stage * 100 + index, orders bands and
-	 * is what a band floor and a band's payout are kept as; stage 0, the letters level, is 0.
+	 * Where a band sits in the course, in order: stage 1's band 0 is 1a. The letters level is
+	 * stage 0. Saved {@link #packed}, as a band floor and as a band's payout.
 	 */
-	public record Band(int stage, int index, int of, List<Word> words) {
-		public int code() {
+	public record BandCode(int stage, int index) implements Comparable<BandCode> {
+		public static final BandCode LETTERS = new BandCode(0, 0);
+
+		public static BandCode stageStart(int stage) {
+			return new BandCode(stage, 0);
+		}
+
+		public int packed() {
 			return stage * 100 + index;
 		}
 
-		/** "1b", or "3" for a stage in one band. */
+		public static BandCode unpacked(int packed) {
+			return new BandCode(packed / 100, packed % 100);
+		}
+
+		@Override
+		public int compareTo(BandCode other) {
+			return Integer.compare(packed(), other.packed());
+		}
+	}
+
+	/** A part of a stage, 1a, 1b; a stage too short to split is one band. */
+	public record Band(int stage, int index, int of, List<Word> words) {
+		public BandCode code() {
+			return new BandCode(stage, index);
+		}
+
 		public String label() {
 			return of > 1 ? stage + String.valueOf((char) ('a' + index)) : String.valueOf(stage);
 		}
@@ -84,7 +120,6 @@ public final class Stages {
 	private static volatile int bandsAt = -1;
 	private static volatile List<Band> bands = List.of();
 
-	/** Every band, in order: the course as the child meets it. */
 	public static List<Band> bands() {
 		List<Word> now = Words.all();
 		int mastery = Progress.masteredAt();
@@ -123,7 +158,6 @@ public final class Stages {
 		return parts;
 	}
 
-	/** The bands of one stage. */
 	public static List<Band> bandsOf(int stage) {
 		return bands().stream().filter(band -> band.stage() == stage).toList();
 	}
@@ -146,7 +180,6 @@ public final class Stages {
 		}
 	}
 
-	/** Every band's label: "1a, 1b, 1c, 2a...". */
 	public static List<String> labels() {
 		return bands().stream().map(Band::label).toList();
 	}
@@ -157,9 +190,10 @@ public final class Stages {
 	 */
 	public static @org.jspecify.annotations.Nullable Band currentBand(Progress progress) {
 		if (progress.stageFloor() == 0 && !Letters.complete(progress)) return null;
-		int floor = Math.max(progress.stageFloor() * 100, progress.bandFloor());
+		BandCode floor = BandCode.stageStart(progress.stageFloor());
+		if (progress.bandFloor().compareTo(floor) > 0) floor = progress.bandFloor();
 		for (Band band : bands()) {
-			if (band.code() < floor) continue;
+			if (band.code().compareTo(floor) < 0) continue;
 			if (!complete(progress, band)) return band;
 		}
 		return null;
@@ -176,14 +210,12 @@ public final class Stages {
 		return band == null ? current(progress) != 0 : band.contains(word);
 	}
 
-	/** Every stage any usable word is at, lowest first. */
 	public static List<Integer> all() {
 		Set<Integer> stages = new TreeSet<>();
 		for (Word word : usable()) stages.add(word.stage());
 		return new ArrayList<>(stages);
 	}
 
-	/** Words the room can build and whose outcome can run here. */
 	public static List<Word> usable() {
 		List<Word> words = new ArrayList<>();
 		for (Word word : Words.all()) if (word.letters() != null && word.outcome().usable()) words.add(word);
@@ -196,13 +228,11 @@ public final class Stages {
 		return words;
 	}
 
-	/** Every word of the stage mastered: the gate to the next is open. */
 	public static boolean complete(Progress progress, int stage) {
 		for (Word word : at(stage)) if (!progress.mastered(word)) return false;
 		return true;
 	}
 
-	/** How many of a stage's words this child has mastered. */
 	public static int masteredAt(Progress progress, int stage) {
 		int count = 0;
 		for (Word word : at(stage)) if (progress.mastered(word)) count++;
@@ -219,7 +249,6 @@ public final class Stages {
 		return band == null ? -1 : band.stage();
 	}
 
-	/** How many of a stage's words this child has read. */
 	public static int readAt(Progress progress, int stage) {
 		Set<String> read = progress.words();
 		int count = 0;
@@ -237,12 +266,11 @@ public final class Stages {
 	/** The same from a band: its words and every later band's, and any later stage's word in no band. */
 	public static Set<String> from(Band band) {
 		Set<String> ids = new HashSet<>();
-		for (Band later : bands()) if (later.code() >= band.code()) for (Word word : later.words()) ids.add(word.id().toString());
+		for (Band later : bands()) if (later.code().compareTo(band.code()) >= 0) for (Word word : later.words()) ids.add(word.id().toString());
 		for (Word word : Words.all()) if (word.stage() > band.stage()) ids.add(word.id().toString());
 		return ids;
 	}
 
-	/** "stage 2, 3 of 6 read", or "every stage done". */
 	public static String describe(Progress progress) {
 		int stage = current(progress);
 		if (stage < 0) return "every stage done (" + progress.words().size() + " words)";

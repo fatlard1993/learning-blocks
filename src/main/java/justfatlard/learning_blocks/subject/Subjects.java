@@ -57,7 +57,6 @@ public final class Subjects {
 		onlyForTests = ids;
 	}
 
-	/** Whether this subject is on for this child. */
 	public static boolean on(ServerPlayer player, Subject subject) {
 		Set<String> only = onlyForTests;
 		if (only != null) return only.contains(subject.id());
@@ -65,7 +64,6 @@ public final class Subjects {
 		return own != null ? own : PrizeConfig.subjectOn(subject.id());
 	}
 
-	/** This child's subjects that are on. */
 	public static List<Subject> on(ServerPlayer player) {
 		return ALL.stream().filter(subject -> on(player, subject)).toList();
 	}
@@ -105,7 +103,6 @@ public final class Subjects {
 		};
 	}
 
-	/** The next of these after this one, in the subjects' order, round again; the first if none. */
 	private static Subject after(List<Subject> candidates, @Nullable Subject before) {
 		if (before == null) return candidates.getFirst();
 		int from = ALL.indexOf(before);
@@ -128,7 +125,6 @@ public final class Subjects {
 		return candidates.getLast();
 	}
 
-	/** Whether this child has mastered an item of any subject: {@code numbers:numeral:5}, {@code reading:word:cat}. */
 	public static boolean mastered(Progress progress, String item) {
 		int colon = item.indexOf(':');
 		Subject subject = colon < 0 ? null : of(item.substring(0, colon));

@@ -99,7 +99,6 @@ public final class PatternRound extends LogicRound {
 		return out;
 	}
 
-	/** The pattern's i-th thing, as an index (0, 1, 2) into the round's things. */
 	private int at(int i) {
 		return unit[i % unit.length];
 	}
@@ -132,7 +131,6 @@ public final class PatternRound extends LogicRound {
 		return layout.rowSpot(i, n).below();
 	}
 
-	/** A thing of the pattern up on the board at i. */
 	private void show(int i, int index) {
 		BlockPos at = rowSpot(i);
 		if (!plushies) {
@@ -211,7 +209,6 @@ public final class PatternRound extends LogicRound {
 		};
 	}
 
-	/** Copy it: where the next one goes, on the floor row in front. */
 	private BlockPos copySpot(int i) {
 		return layout.origin().offset(i - COPIED / 2, 0, 0);
 	}
@@ -290,7 +287,6 @@ public final class PatternRound extends LogicRound {
 		}
 	}
 
-	/** The next one's colour, for tests of the old stub's kind. */
 	public DyeColor next() {
 		return colourOf(at(SHOWN));
 	}

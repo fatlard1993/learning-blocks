@@ -101,13 +101,13 @@ public final class Bands implements FabricClientGameTest {
 			Progress progress = Progress.of(player);
 			check(Stages.currentBand(progress) == Stages.parse("1b"), "mastering 1a did not open 1b: " + Stages.describe(progress));
 			check(Stages.current(progress) == 1, "1b is not stage 1");
-			check(progress.paidForTests(Stages.parse("1a").code()), "1a did not pay stage_complete");
+			check(progress.paid(Stages.parse("1a").code()), "1a did not pay stage_complete");
 			check(Stages.parse("1b").contains(Rooms.of(player).puzzle().target()), "the round after 1a is not a 1b word");
 
 			// Put at a band: 2b, straight in; and back to stage 1, at 1a again.
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
 				"learn stage " + player.getGameProfile().name() + " 2b");
-			check(Stages.currentBand(progress) == Stages.parse("2b") && progress.bandFloor() == Stages.parse("2b").code(),
+			check(Stages.currentBand(progress) == Stages.parse("2b") && progress.bandFloor().equals(Stages.parse("2b").code()),
 				"/learn stage 2b did not put them at 2b: " + Stages.describe(progress));
 			check(Stages.parse("2b").contains(Rooms.of(player).puzzle().target()), "the round at 2b is not a 2b word");
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),

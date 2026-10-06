@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +27,6 @@ import org.jspecify.annotations.Nullable;
  * on the floor: the missing one, one still there, and one that never was. Right: it is back.
  */
 public final class MissingRound extends LogicRound {
-	/** What things there are, by their word. */
 	private record Thing(String word, ItemStack stack) {}
 
 	private final List<Thing> set = new ArrayList<>();
@@ -83,7 +83,7 @@ public final class MissingRound extends LogicRound {
 		add(shown);
 	}
 
-	/** Whether the one has gone yet, for tests. */
+	@ForTests
 	public boolean hidden() {
 		return hidden;
 	}

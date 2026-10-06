@@ -7,13 +7,11 @@ import justfatlard.pandorical.api.ComponentType;
 /**
  * The pieces every screen here is built from, drawn the way the game's own screens are: a panel
  * the colour of the inventory, dark words on it, pictures laid over the buttons they belong to.
- *
- * <p>Copied from PvP Dimensions' editor, so an operator meets the same controls in both mods.
+
  */
 public final class Ui {
 	private Ui() {}
 
-	/** The game's own colour for words on a panel. */
 	public static final String INK = "#FF404040";
 	public static final String FAINT = "#FF707070";
 	public static final int PAD = 8;
@@ -45,12 +43,10 @@ public final class Ui {
 		return text(id, x, y, words).prop(ComponentType.PROP_COLOR, "#FFFFFFFF").prop(ComponentType.PROP_SHADOW, "true");
 	}
 
-	/** The quieter half of a line over a button. */
 	public static ComponentBuilder litFaint(String id, int x, int y, String words) {
 		return lit(id, x, y, words).prop(ComponentType.PROP_COLOR, "#FFB4B4B4");
 	}
 
-	/** Words centred in a box, for a value between two arrows. */
 	public static ComponentBuilder centred(String id, int x, int y, int w, String words) {
 		return new ComponentBuilder(id, ComponentType.TEXT).bounds(x, y, w, 10)
 			.prop(ComponentType.PROP_TEXT, words)
@@ -73,8 +69,7 @@ public final class Ui {
 		return Map.of(ComponentType.PROP_BORDER, "beveled");
 	}
 
-	/** At most {@code letters} of it, with an ellipsis where it was cut. */
 	public static String clip(String words, int letters) {
-		return words.length() <= letters ? words : words.substring(0, Math.max(1, letters - 1)) + "…";
+		return words.length() <= letters ? words : words.substring(0, Math.max(1, letters - 3)) + "...";
 	}
 }

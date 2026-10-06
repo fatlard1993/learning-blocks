@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.reward;
 
+import justfatlard.learning_blocks.ForTests;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * What learning earns, from {@code config/learning-blocks/prizes.json}.
  *
- * <p>A server's, not a world's, like PvP Dimensions' presets: written with every setting and a
+ * <p>A server's, not a world's: written with every setting and a
  * comment beside it the first time the server starts, read at every start, and read again by
  * {@code /learn reload}. The file is JSON with comments, read leniently, so the comments can stay.
  *
@@ -27,12 +28,10 @@ import org.jspecify.annotations.Nullable;
 public final class PrizeConfig {
 
 
-	/** One event: whether it pays, what in points and what in prizes. */
 	public record Event(boolean enabled, int points, List<Prize> prizes) {
 		static final Event OFF = new Event(false, 0, List.of());
 	}
 
-	/** A total of distinct words, or of points, and what reaching it pays once. */
 	public record Mark(int at, List<Prize> prizes) {}
 
 	public final boolean enabled;
@@ -53,9 +52,7 @@ public final class PrizeConfig {
 	 * of the child's read words fixes. Not a prize, so the prizes' on-off leaves it alone.
 	 */
 	public final boolean scenes;
-	/** One round in this many is a scene, once there is a read word with one. */
 	public final int sceneEvery;
-	/** New readers start on the letters level, stage 0, before any words. */
 	public final boolean lettersFirst;
 	/**
 	 * Clean completions - solved first try, with nothing wrong built or picked before - that make a
@@ -67,17 +64,12 @@ public final class PrizeConfig {
 	 * only from letters the child knows; 0 for none.
 	 */
 	public final int letterWordEvery;
-	/** "Read it" rounds: a word already read, shown whole, and its picture picked from two or three; from stage 2. */
 	public final boolean readIt;
-	/** One round in this many is a read-it round, once there is one to ask. */
 	public final int readItEvery;
-	/** Out of 100: how often a round is a word or letter due for review rather than the usual pick. */
 	public final int reviewShare;
-	/** The kinds of word round: the first sound swapped, the last, the vowel in the middle. */
 	public final boolean firstSound;
 	public final boolean lastSound;
 	public final boolean middleVowel;
-	/** Whole-word rounds: every slot a gap, the word built from its tiles and a decoy or two. */
 	public final boolean wholeWord;
 
 	private PrizeConfig(boolean enabled, int dailyCap, Event newWord, Event solved, boolean solvedFirstTryOnly,
@@ -111,7 +103,7 @@ public final class PrizeConfig {
 		this.wholeWord = wholeWord;
 	}
 
-	/** The same, with whole-word rounds on or off: for tests. */
+	@ForTests
 	public static void useWholeWord(boolean on) {
 		PrizeConfig c = current;
 		current = new PrizeConfig(c.enabled, c.dailyCap, c.newWord, c.solved, c.solvedFirstTryOnly, c.streak, c.streakLength,
@@ -119,7 +111,7 @@ public final class PrizeConfig {
 			c.lettersFirst, c.masteryClean, c.letterWordEvery, c.readIt, c.readItEvery, c.reviewShare, c.firstSound, c.lastSound, c.middleVowel, on);
 	}
 
-	/** The same, with these kinds of round on: for tests. */
+	@ForTests
 	public static void useKinds(boolean first, boolean last, boolean middle) {
 		PrizeConfig c = current;
 		current = new PrizeConfig(c.enabled, c.dailyCap, c.newWord, c.solved, c.solvedFirstTryOnly, c.streak, c.streakLength,
@@ -127,7 +119,7 @@ public final class PrizeConfig {
 			c.lettersFirst, c.masteryClean, c.letterWordEvery, c.readIt, c.readItEvery, c.reviewShare, first, last, middle, c.wholeWord);
 	}
 
-	/** The same, with a word round in the letters level every this many rounds (0 for none): for tests. */
+	@ForTests
 	public static void useLetterWords(int every) {
 		PrizeConfig c = current;
 		current = new PrizeConfig(c.enabled, c.dailyCap, c.newWord, c.solved, c.solvedFirstTryOnly, c.streak, c.streakLength,
@@ -135,7 +127,7 @@ public final class PrizeConfig {
 			c.lettersFirst, c.masteryClean, Math.max(0, every), c.readIt, c.readItEvery, c.reviewShare, c.firstSound, c.lastSound, c.middleVowel, c.wholeWord);
 	}
 
-	/** The same, with read-it rounds and review set so: for tests. */
+	@ForTests
 	public static void useReadIt(boolean on, int every, int reviewShare) {
 		PrizeConfig c = current;
 		current = new PrizeConfig(c.enabled, c.dailyCap, c.newWord, c.solved, c.solvedFirstTryOnly, c.streak, c.streakLength,
@@ -167,7 +159,6 @@ public final class PrizeConfig {
 		return !extrasOff;
 	}
 
-	/** The same, with scenes set so: for tests, which need to know when a scene comes. */
 	public static void useScenes(boolean on, int every) {
 		PrizeConfig c = current;
 		current = new PrizeConfig(c.enabled, c.dailyCap, c.newWord, c.solved, c.solvedFirstTryOnly, c.streak, c.streakLength,
@@ -184,13 +175,11 @@ public final class PrizeConfig {
 	private static volatile int teamUpEvery = 3;
 	private static volatile @org.jspecify.annotations.Nullable Integer teamUpForTests;
 
-	/** When two read together, one round in this many is a team-up; 0 for none. */
 	public static int teamUpEvery() {
 		Integer forced = teamUpForTests;
 		return forced != null ? forced : teamUpEvery;
 	}
 
-	/** For tests: team-ups this often (0 for none), or null for the file's. */
 	public static void teamUpForTests(@org.jspecify.annotations.Nullable Integer every) {
 		teamUpForTests = every;
 	}
@@ -223,12 +212,10 @@ public final class PrizeConfig {
 		return subjectsOn.getOrDefault(subject, true);
 	}
 
-	/** How a child's subjects take turns. */
 	public static justfatlard.learning_blocks.subject.Subjects.Mix subjectMix() {
 		return subjectMix;
 	}
 
-	/** In {@code blocks}, how many rounds of one before the next. */
 	public static int subjectBlock() {
 		return subjectBlock;
 	}
@@ -238,24 +225,20 @@ public final class PrizeConfig {
 		return subjectWeights.getOrDefault(subject, 1);
 	}
 
-	/** For tests: the mix and the block size. */
 	public static void useSubjectMix(justfatlard.learning_blocks.subject.Subjects.Mix mix, int block) {
 		subjectMix = mix;
 		subjectBlock = Math.max(1, block);
 	}
 	private static volatile int bobPropShare = 20;
 
-	/** From stage 5, one round in this many is Bob's: telling him what to do, or fixing what he did; 0 for none. */
 	public static int tellBobEvery() {
 		return tellBobEvery;
 	}
 
-	/** Whether what's-wrong rounds come: Bob's sentence (from stage 5) and a word with one wrong letter (from stage 2). */
 	public static boolean whatsWrong() {
 		return whatsWrong;
 	}
 
-	/** From stage 2, one round in this many is a word with one wrong letter to fix; 0 for none. */
 	public static int whatsWrongEvery() {
 		return whatsWrong ? whatsWrongEvery : 0;
 	}
@@ -268,7 +251,6 @@ public final class PrizeConfig {
 		return bobPropShare;
 	}
 
-	/** For tests. */
 	public static void useBobPropShare(int share) {
 		bobPropShare = Math.max(0, Math.min(100, share));
 	}
@@ -305,12 +287,10 @@ public final class PrizeConfig {
 
 	private static volatile List<String> lastProblems = List.of();
 
-	/** What the last read of the file complained about. */
 	public static List<String> lastProblems() {
 		return lastProblems;
 	}
 
-	/** Use this text instead of the file: for tests, which need to know what pays. */
 	public static List<String> use(String text, MinecraftServer server) {
 		List<String> problems = new ArrayList<>();
 		current = parse(PrizeFile.parse(text), server, problems);
@@ -334,7 +314,6 @@ public final class PrizeConfig {
 		return true;
 	}
 
-	/** The mastery count a file would give: for tests of the migration. */
 	public static int masteryIn(String text) {
 		JsonObject json = PrizeFile.parse(text);
 		migrate(json);
@@ -342,7 +321,7 @@ public final class PrizeConfig {
 		return puzzles.has("mastery_clean") ? puzzles.get("mastery_clean").getAsInt() : 3;
 	}
 
-	/** The same, with this many clean completions to master: for tests. */
+	@ForTests
 	public static void useMastery(int clean) {
 		PrizeConfig c = current;
 		current = new PrizeConfig(c.enabled, c.dailyCap, c.newWord, c.solved, c.solvedFirstTryOnly, c.streak, c.streakLength,
@@ -452,7 +431,6 @@ public final class PrizeConfig {
 		return marks;
 	}
 
-	/** Whether the word book turns up anywhere in the file: the old setting or a prize. */
 	private static boolean mentionsWordBook(JsonElement json) {
 		if (json.isJsonObject()) {
 			for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
@@ -476,7 +454,6 @@ public final class PrizeConfig {
 		try {
 			if (element.getAsJsonPrimitive().isBoolean()) return element.getAsBoolean();
 		} catch (RuntimeException ignored) {
-			// Reported below.
 		}
 		problems.add(key + ": expected true or false; using " + fallback);
 		return fallback;

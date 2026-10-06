@@ -32,7 +32,7 @@ import net.minecraft.world.level.Level;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Every sound the mod makes, through one door, by one kind of name.
+ * Every sound the mod makes, through one place, by one kind of name.
  *
  * <p>Three kinds, and nothing else: {@code phoneme/<x>} for the sound a letter makes, {@code
  * word/<w>} for a whole word said aloud, and {@code phrase/<p>} for what the room says to a child
@@ -57,7 +57,6 @@ public final class Sounds {
 	private static final String SOUNDS_DIR = "assets/" + LearningBlocks.MOD_ID + "/sounds";
 	private static final String SOUNDS_JSON = "assets/" + LearningBlocks.MOD_ID + "/sounds.json";
 
-	/** Keys that have a real recording behind them. */
 	private static Set<String> recorded = Set.of();
 
 	/**
@@ -111,7 +110,6 @@ public final class Sounds {
 	}
 
 	private static final java.util.regex.Pattern VARIANT = java.util.regex.Pattern.compile("^(phrase/.+)_v(\\d+)$");
-	/** Each line with variants: the line and every recorded {@code _v<n>} of it, in order. */
 	private static Map<String, List<String>> variants = Map.of();
 	/** What is left to say of each line's variants, per player: shuffled, and dealt out one at a time. */
 	private static final Map<UUID, Map<String, java.util.Deque<String>>> bags = new java.util.HashMap<>();
@@ -134,7 +132,6 @@ public final class Sounds {
 		variants = Map.copyOf(all);
 	}
 
-	/** A line and its variants, the line first: just the line when it has none. */
 	public static List<String> variantsOf(String key) {
 		return variants.getOrDefault(key, List.of(key));
 	}
@@ -161,7 +158,6 @@ public final class Sounds {
 		return chosen;
 	}
 
-	/** A player gone: their bags of variants with them. */
 	public static synchronized void forget(UUID player) {
 		bags.remove(player);
 		lastSaid.remove(player);
@@ -172,7 +168,6 @@ public final class Sounds {
 		lastSaid.clear();
 	}
 
-	/** Every recorded clip, by key. */
 	public static Set<String> recorded() {
 		return recorded;
 	}
@@ -242,7 +237,6 @@ public final class Sounds {
 			1.0F, sound.pitch());
 	}
 
-	/** The plushie squeeze: soft and fluffy, with a little boop. */
 	public static final String PLUSH_SQUISH = "sfx/plush_squish";
 
 	/**

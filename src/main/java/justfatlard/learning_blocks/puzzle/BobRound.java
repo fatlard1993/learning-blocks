@@ -45,7 +45,6 @@ import org.jspecify.annotations.Nullable;
 public final class BobRound {
 	public enum Mode { GOAL, FIX, SILLY, PREP }
 
-	/** How long Bob takes over each sentence. */
 	private static final int ACT_TICKS = 24;
 	private static final float CARD_SIZE = 1.25F;
 	/**
@@ -53,7 +52,6 @@ public final class BobRound {
 	 * twice as far away, so about twice the size. A row too long for the board wraps.
 	 */
 	static final float ROW_SIZE = 2.8F;
-	/** A text display's letter, at size 1, about this wide (bold): a pixel is a fortieth of a block. */
 	private static final double LETTER = 5.6 / 40;
 	private static final double ROW_PAD = 0.3;
 	private static final double ROW_GAP = 0.3;
@@ -68,7 +66,6 @@ public final class BobRound {
 	private static final int CARD = 0xFFF2E8C9;
 	private static final int CARD_LIT = 0xFFFFE45E;
 	private static final int INK = 0x1E2A5A;
-	/** The Silly sentences prompt and others not yet recorded: their captions, for until they are. */
 	static final String TELL_BOB = "phrase/tell_bob";
 	static final String PICK_FOR_BOB = "phrase/pick_for_bob";
 	static final String SILLY = "phrase/silly_sentences";
@@ -104,7 +101,6 @@ public final class BobRound {
 	final List<Goal> offered = new ArrayList<>();
 	final Goals.@Nullable Wrong wrong;
 	final List<Card> cards = new ArrayList<>();
-	/** Each row's slots: the card in it, or null. */
 	final List<Card[]> rows = new ArrayList<>();
 	private final List<Display.TextDisplay> blanks = new ArrayList<>();
 	private final List<Entity> extras = new ArrayList<>();
@@ -118,13 +114,11 @@ public final class BobRound {
 	final List<String> prepWords = new ArrayList<>();
 	final List<BobScene> prepScenes = new ArrayList<>();
 	int prepRight = -1;
-	/** What is on Bob's stage now. */
 	BobScene acted;
 	@Nullable Villager bob;
 	/** Reading together: who builds, and who picks the goal; null alone. */
 	@Nullable UUID builder;
 	@Nullable UUID picker;
-	/** Reading together, the goal not yet picked. */
 	boolean picking;
 
 	private BobRound(Room room, ServerLevel level, RoomLayout layout, Mode mode, @Nullable Goal goal, Goals.@Nullable Wrong wrong) {
@@ -138,7 +132,6 @@ public final class BobRound {
 		this.acted = goal != null ? goal.start() : new BobScene(List.of());
 	}
 
-	// --- Where things are ---
 
 	private Vec3 stageSpot() {
 		return Vec3.atBottomCenterOf(layout.origin()).add(1.0, 0, -2.4);
@@ -152,7 +145,6 @@ public final class BobRound {
 		return Vec3.atBottomCenterOf(layout.origin()).add(4.3, 0, -2.6);
 	}
 
-	/** How wide a card for this word is in the row, or an empty slot. */
 	private static double rowWidth(@Nullable String word) {
 		return (word == null ? BLANK_LETTERS : Math.max(2, word.length())) * LETTER * ROW_SIZE + ROW_PAD;
 	}
@@ -218,7 +210,6 @@ public final class BobRound {
 		}
 	}
 
-	/** Card {@code i} of {@code m} on the floor: a row or two between the child and Bob's stage. */
 	private Vec3 floorSpot(int i, int m) {
 		int rowsOf = (m + PER_FLOOR_ROW - 1) / PER_FLOOR_ROW;
 		int row = i / PER_FLOOR_ROW;
@@ -229,7 +220,6 @@ public final class BobRound {
 		return new Vec3(x, layout.origin().getY() + 0.3, z);
 	}
 
-	// --- Making a round ---
 
 	/** A goal round (or a together one, picked from two), a what's-wrong round, or silly sentences. Null if none can be made. */
 	static @Nullable BobRound make(Room room, ServerLevel level, RoomLayout layout, Mode mode, ServerPlayer builder, @Nullable Goal wanted,
@@ -318,7 +308,6 @@ public final class BobRound {
 			&& a.rel() != justfatlard.learning_blocks.relate.Relations.Rel.HEAD && b.rel() != justfatlard.learning_blocks.relate.Relations.Rel.HEAD;
 	}
 
-	/** The key a preposition round is remembered by: {@code read: owl in box}. */
 	String prepKey() {
 		return "read: " + String.join(" ", prepWords);
 	}
@@ -360,7 +349,6 @@ public final class BobRound {
 		return new Puzzle(anchor, List.of(anchor), List.of(), 0, Puzzle.Kind.WHOLE);
 	}
 
-	/** Lay it all out: Bob, his stage, the goal (or two to pick from), the rows and the cards. */
 	void start(ServerPlayer player) {
 		spawnBob();
 		switch (mode) {
@@ -443,13 +431,11 @@ public final class BobRound {
 		BobProps.wave(villager);
 	}
 
-	/** A goal, framed, small: what Bob is to make. Reading together, a click box over each to pick it by. */
 	private void showPicture(@Nullable Goal shown, int which, boolean pickable) {
 		if (shown == null) return;
 		showScene(shown.end(), which, pickable);
 	}
 
-	/** A scene, framed, small, at picture spot {@code which}; pickable with a click box over it. */
 	private void showScene(BobScene shown, int which, boolean pickable) {
 		Vec3 spot = pictureSpot(which);
 		BobStage picture = new BobStage(level, spot.add(0, 0.07, 0), 0.6F);
@@ -536,9 +522,7 @@ public final class BobRound {
 		return text;
 	}
 
-	// --- Hands ---
 
-	/** A click on one of this round's things: a card, or reading together a goal to pick. True if it was one. */
 	boolean click(ServerPlayer player, Entity entity) {
 		int picked = pickHits.indexOf(entity);
 		if (picked >= 0 && mode == Mode.PREP) {
@@ -598,7 +582,6 @@ public final class BobRound {
 		return null;
 	}
 
-	/** A card into a slot, flying there. */
 	void put(Card card, int row, int slot, boolean glide) {
 		if (card.placed()) rows.get(card.row)[card.slot] = null;
 		rows.get(row)[slot] = card;
@@ -607,7 +590,6 @@ public final class BobRound {
 		relayout(glide);
 	}
 
-	/** A card back to its place on the floor. */
 	void home(Card card, boolean glide) {
 		if (card.placed()) rows.get(card.row)[card.slot] = null;
 		boolean wasPlaced = card.placed();
@@ -629,7 +611,6 @@ public final class BobRound {
 		card.hit.setHeight(big ? 0.8F : 0.75F);
 	}
 
-	/** Every card in a row goes home: after a sentence that wasn't it. */
 	void allHome() {
 		for (Card card : cards) if (card.placed()) home(card, true);
 	}
@@ -642,7 +623,6 @@ public final class BobRound {
 		for (Card card : cards) card.display.setBackgroundColor(CARD);
 	}
 
-	/** Reading together: the other reader picks a goal, and the builder tells Bob. */
 	private void pick(ServerPlayer player, int which) {
 		goal = offered.get(which);
 		picking = false;
@@ -663,9 +643,7 @@ public final class BobRound {
 		if (builds != null) Progress.of(builds).useSentenceToday(builds, goal.key(), "bob");
 	}
 
-	// --- Asking ---
 
-	/** What the room says to ask for it, and to ask again. */
 	Narration ask(Narration narration) {
 		switch (mode) {
 			case GOAL -> {
@@ -688,7 +666,6 @@ public final class BobRound {
 		}
 	}
 
-	/** The rows as their words, a card at a time; a row with a gap is cut short there. */
 	List<List<String>> rowsAsWords() {
 		List<List<String>> out = new ArrayList<>();
 		for (Card[] row : rows) {
@@ -707,7 +684,6 @@ public final class BobRound {
 		return true;
 	}
 
-	/** Each row read out, its card lit as each word is said, the sentence in the caption. */
 	private void readRows(Narration narration, List<List<String>> words) {
 		for (int r = 0; r < words.size(); r++) {
 			List<String> row = words.get(r);
@@ -720,7 +696,6 @@ public final class BobRound {
 		}
 	}
 
-	// --- The button ---
 
 	void press(ServerPlayer player) {
 		if (room.busy || room.leaving) return;
@@ -768,7 +743,7 @@ public final class BobRound {
 					Progress.of(reader).lessonNote(reader, "told Bob: " + said);
 					Prizes.sentenceSolved(reader, target.key(), firstTry);
 				}, before);
-				if (reader != player && before == 1) room.refreshDoor(reader, true);
+				if (reader != player && before == 1) room.refreshPortal(reader, true);
 			}
 			happened[0] = true;
 			telling.sayAs("Bob", "phrase/bob_hooray", "bob_hooray", p -> hooray(), 2);
@@ -813,7 +788,7 @@ public final class BobRound {
 			room.busy = false;
 			unlight();
 			room.touch();
-			room.refreshDoor(p, false);
+			room.refreshPortal(p, false);
 		});
 		room.busy = true;
 		Narrator.play(player, telling);
@@ -852,7 +827,6 @@ public final class BobRound {
 		room.answers.finish(player, telling, happened, roundAt);
 	}
 
-	/** Bob does it: each sentence in turn, from the start, a beat apart. */
 	private void act(ServerPlayer player, List<List<String>> built) {
 		if (goal == null) return;
 		acted = goal.start();
@@ -883,7 +857,6 @@ public final class BobRound {
 		}
 	}
 
-	/** Back to how it started: after a sentence that didn't make it. */
 	private void reset() {
 		if (goal == null) return;
 		acted = goal.start();
@@ -897,12 +870,10 @@ public final class BobRound {
 		level.sendParticles(ParticleTypes.HAPPY_VILLAGER, at.x, at.y + 0.8, at.z, 12, 1.0, 0.4, 0.4, 0.0);
 	}
 
-	/** Bob nods: okay, he'll do it. */
 	private void nod() {
 		if (bob != null) justfatlard.learning_blocks.feel.Gestures.run(bob, justfatlard.learning_blocks.feel.Gestures.Gesture.NOD);
 	}
 
-	/** That wasn't it: Bob shakes his head, puzzled. */
 	private void puzzled() {
 		if (bob == null) return;
 		justfatlard.learning_blocks.feel.Gestures.run(bob, justfatlard.learning_blocks.feel.Gestures.Gesture.SHAKE);
@@ -924,7 +895,6 @@ public final class BobRound {
 		level.sendParticles(ParticleTypes.HAPPY_VILLAGER, bob.getX(), bob.getY() + 1.8, bob.getZ(), 16, 0.4, 0.4, 0.4, 0.0);
 	}
 
-	// --- For tests ---
 
 	public Mode mode() {
 		return mode;
@@ -938,7 +908,6 @@ public final class BobRound {
 		return List.copyOf(offered);
 	}
 
-	/** A preposition round's words, and which of the two pictures is them. */
 	public List<String> prepWords() {
 		return List.copyOf(prepWords);
 	}
@@ -962,22 +931,18 @@ public final class BobRound {
 		return picking;
 	}
 
-	/** The words on the cards still on the floor. */
 	public List<String> floorWords() {
 		return cards.stream().filter(card -> !card.placed()).map(card -> card.word).toList();
 	}
 
-	/** The rows as they stand, each cut short at its first gap. */
 	public List<List<String>> rowWords() {
 		return rowsAsWords();
 	}
 
-	/** What is on Bob's stage. */
 	public BobScene acted() {
 		return acted;
 	}
 
-	/** A thing on Bob's stage, as an entity. */
 	public @Nullable Entity onStage(String thing) {
 		return stage.entity(thing);
 	}
@@ -994,12 +959,10 @@ public final class BobRound {
 		return false;
 	}
 
-	/** Reading together: a click on goal {@code which} of the two, as a child's would be. */
 	public boolean clickGoal(ServerPlayer player, int which) {
 		return which < pickHits.size() && click(player, pickHits.get(which));
 	}
 
-	// --- Tidying away ---
 
 	void clear() {
 		stage.clear();

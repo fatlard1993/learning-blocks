@@ -39,7 +39,7 @@ import net.minecraft.world.phys.Vec3;
 import org.slf4j.LoggerFactory;
 
 /**
- * Round F: sentences with Bob. Bob reads literally: put box in cat puts the box on the cat's head,
+ * Sentences with Bob. Bob reads literally: put box in cat puts the box on the cat's head,
  * put cat on pig has the cat riding the pig, and the lid on first then the cat in gives a cat on
  * the lid. Tell Bob: the cards make the sentence, the button reads it back and Bob does it; wrong,
  * "not quite" and the cards fly home; right, the sentence counts towards mastery. What's wrong: the

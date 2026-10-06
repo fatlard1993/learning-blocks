@@ -65,7 +65,6 @@ public final class Numbers implements Subject {
 		return n >= 0 && n < WORDS.length ? WORDS[n] : String.valueOf(n);
 	}
 
-	/** The counting toys, each earned by mastering some numbers. */
 	public static void linkToys() {
 		justfatlard.learning_blocks.reward.Earned.linkItems("toy:sorter", items(Kind.FIND, 0, 10));
 		justfatlard.learning_blocks.reward.Earned.linkItems("toy:dice", items(Kind.LOOK, 1, 6));
@@ -106,12 +105,10 @@ public final class Numbers implements Subject {
 		return true;
 	}
 
-	/** Whether the first stage, N0, is done. */
 	public boolean levelDone(Progress progress) {
 		return NumberCourse.stageDone(progress, 0);
 	}
 
-	/** The band a round is made for: the child's, or the last band once everything is done. */
 	private static Band bandOf(Progress progress) {
 		Band band = NumberCourse.current(progress);
 		return band == null ? NumberCourse.BANDS.getLast() : band;
@@ -187,7 +184,6 @@ public final class Numbers implements Subject {
 		return n <= 10 ? n : 0;
 	}
 
-	/** The number words this child has read in Reading ("six", "ten"), as numbers, within the band. */
 	private static List<String> readNumberWords(Progress progress, Band band) {
 		List<String> out = new ArrayList<>();
 		for (String n : NumberCourse.targets(Kind.NAME)) {
@@ -198,7 +194,6 @@ public final class Numbers implements Subject {
 		return out;
 	}
 
-	/** What a kind can ask in this band. */
 	static List<String> candidates(Progress progress, Kind kind, Band band) {
 		boolean first = band.code().endsWith("a");
 		return switch (kind) {
@@ -240,7 +235,6 @@ public final class Numbers implements Subject {
 		return options.getFirst();
 	}
 
-	/** The round itself. */
 	private static @Nullable SubjectRound build(Room room, ServerPlayer player, Progress progress, Kind kind, String target, Band band, RandomSource random) {
 		int stage = band.stage();
 		boolean first = band.code().endsWith("a");
@@ -310,7 +304,6 @@ public final class Numbers implements Subject {
 		return (int) items.stream().filter(progress::itemMastered).count();
 	}
 
-	/** Numbers picked for others most often, as "6/9: 3 times", whichever way round. */
 	public static List<String> mixups(Progress progress, int most) {
 		Map<String, Integer> pairs = new LinkedHashMap<>();
 		for (Map.Entry<String, Memory.Item> entry : progress.memory().items().entrySet()) {

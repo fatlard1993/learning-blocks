@@ -89,7 +89,6 @@ public abstract class NumbersRound extends SubjectRound {
 		};
 	}
 
-	/** A number tile to pick. */
 	protected static Choice tile(int n) {
 		return new Choice(String.valueOf(n), LearningBlocks.NUMBER.showing(n), NumberBlock.soundOf(n), Numbers.word(n));
 	}
@@ -116,7 +115,6 @@ public abstract class NumbersRound extends SubjectRound {
 		return a == 6 && b == 9 || a == 9 && b == 6 || a == 2 && b == 5 || a == 5 && b == 2;
 	}
 
-	/** The number a tile choice is. */
 	protected static int number(Choice choice) {
 		try {
 			return Integer.parseInt(choice.id());
@@ -125,7 +123,6 @@ public abstract class NumbersRound extends SubjectRound {
 		}
 	}
 
-	/** A sentence read aloud a word at a time, lit as it goes: numbers by their number clips. */
 	protected static Narration read(Narration narration, List<String> words) {
 		for (int i = 0; i < words.size(); i++) {
 			String word = words.get(i);

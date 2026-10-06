@@ -9,7 +9,6 @@ import org.jspecify.annotations.Nullable;
  */
 public record Instruction(String x, boolean bigX, String prep, String y, boolean bigY) {
 
-	/** These words as an instruction, or null if Bob can't make sense of them. */
 	public static @Nullable Instruction parse(List<String> words) {
 		int at = 0;
 		if (words.size() < 4 || !words.getFirst().equals("put")) return null;
@@ -36,7 +35,6 @@ public record Instruction(String x, boolean bigX, String prep, String y, boolean
 		return new Object[] {words.get(at), big, at + 1};
 	}
 
-	/** The words, with articles if asked for: "put the big cat in the box". */
 	public List<String> words(boolean articles) {
 		List<String> out = new java.util.ArrayList<>();
 		out.add("put");

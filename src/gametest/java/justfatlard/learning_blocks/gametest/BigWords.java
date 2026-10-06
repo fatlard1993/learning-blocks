@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 import org.slf4j.LoggerFactory;
 
 /**
- * Round H: big words. catfish is two chunks, cat|fish, a compound; robin, rob|in, is not. Stage 14
+ * Big words. catfish is two chunks, cat|fish, a compound; robin, rob|in, is not. Stage 14
  * is in two bands, the compounds first. A chunk round for catfish: the row in two parts with a
  * column between them, fish to build; built, each chunk is sounded out and said as its own word,
  * then the chunks slide together and catfish is said. The whole word, both chunks to build, keeps

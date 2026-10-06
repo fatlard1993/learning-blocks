@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """
-Draw the letter tiles, and the mod's icon.
+Draw the letter tiles (the mod's icon is generate_icon.py's).
 
-One wooden tile face, and twenty-six letters stamped on it, plus the gap a letter goes in. The
-letters are lowercase, because that is what a child learning to read meets first, and drawn from
+One wooden tile face, and every tile stamped on it: the letters, two- and three-letter tiles,
+capitals, and the gap a letter goes in. Letters are lowercase unless a capital, because that is
+what a child learning to read meets first, and drawn from
 a small hand-made bitmap font rather than any installed one, so the output is the same on every
 machine and the tiles never change just because somebody's fonts did.
 
 Vowels are red and consonants blue, the colours most early-reading material uses, so a child can
 see the difference as well as hear it.
 
-Pure standard library, deterministic, same approach as poopsmith's generate_textures.py.
+Pure standard library, deterministic.
 
 Usage: python3 generate_textures.py
 """

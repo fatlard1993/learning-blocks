@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
  * word after them, and what the word does after that.
  *
  * <p>Keyed to the player by id and looked up afresh when it comes due, so a child who logs out or
- * walks out of the door halfway through a blend is simply skipped rather than acted on.
+ * walks out of the portal halfway through a blend is simply skipped rather than acted on.
  */
 public final class Later {
 	private Later() {}
@@ -29,7 +29,6 @@ public final class Later {
 		jobs.add(new Job(player.getUUID(), now + Math.max(1, ticks), what));
 	}
 
-	/** Forget everything waiting for this player, when their room closes under it. */
 	public static void cancel(ServerPlayer player) {
 		cancel(player.getUUID());
 	}

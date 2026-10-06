@@ -53,9 +53,7 @@ public final class Play {
 
 	/** Shown or not: a block whose display is playing in its place draws nothing. */
 	public static final BooleanProperty HIDDEN = BooleanProperty.create("hidden");
-	/** On a display playing a block's part. */
 	static final String PLAYING = LearningBlocks.MOD_ID + ".playing";
-	/** On a display that is something put in, on or onto a block. */
 	static final String CONTENTS = LearningBlocks.MOD_ID + ".contents";
 	private static final String REL = LearningBlocks.MOD_ID + ".rel:";
 	/** One play a second at most, a block. */
@@ -73,13 +71,11 @@ public final class Play {
 		}
 	}
 
-	/** One display playing a block: the whole of it (no part), its body, or one part. */
 	private record Piece(Display display, @Nullable String body, Anim.@Nullable Part part) {}
 
 	private static final List<Running> running = new ArrayList<>();
 	private static final Map<String, Long> lastPlayed = new HashMap<>();
 
-	/** For tests: the last animation started, by block. */
 	public static volatile @Nullable String lastStarted;
 
 	public static void register() {
@@ -91,7 +87,6 @@ public final class Play {
 		return level.dimension().identifier() + "@" + pos.asLong();
 	}
 
-	/** Whether this block is playing right now. */
 	public static boolean playing(Level level, BlockPos pos) {
 		for (Running run : running) if (run.level() == level && run.pos().equals(pos)) return true;
 		return false;
@@ -246,7 +241,6 @@ public final class Play {
 		return new com.mojang.math.Transformation(matrix.getTranslation(new org.joml.Vector3f()), turn, scale, null);
 	}
 
-	/** The end: the display goes, the block shows again, whatever was in it back where it sits. */
 	private static void finish(Running run) {
 		if (run.contents() != null && !run.contents().isRemoved()) pose(run.contents(), new Matrix4f(run.rest()), 1);
 		if (run.copy() == null) return;
@@ -258,7 +252,6 @@ public final class Play {
 		for (Piece piece : run.pieces()) piece.display().discard();
 	}
 
-	/** The block shown again, if it is still one of ours, hidden. */
 	static void show(ServerLevel level, BlockPos pos) {
 		BlockState now = level.getBlockState(pos);
 		if (now.hasProperty(HIDDEN) && now.getValue(HIDDEN)) level.setBlock(pos, now.setValue(HIDDEN, false), Block.UPDATE_CLIENTS);
@@ -296,22 +289,18 @@ public final class Play {
 		return (float) Math.atan2(facing.getStepX(), facing.getStepZ());
 	}
 
-	// --- Things put in, on and onto each other ---
 
-	/** What is in or on this block, if anything: an item display at its foot. */
 	public static @Nullable Display contentsAt(Level level, BlockPos pos) {
 		List<Display.ItemDisplay> found = level.getEntitiesOfClass(Display.ItemDisplay.class, new AABB(pos).inflate(0.25),
 			display -> display.entityTags().contains(CONTENTS) && display.blockPosition().equals(pos));
 		return found.isEmpty() ? null : found.getFirst();
 	}
 
-	/** The item that is in or on this block, or empty. */
 	public static ItemStack contents(Level level, BlockPos pos) {
 		Display contents = contentsAt(level, pos);
 		return contents instanceof Display.ItemDisplay item ? item.getItemStack() : ItemStack.EMPTY;
 	}
 
-	/** How it was put there: in, on, rides, head. */
 	public static Relations.@Nullable Rel relOf(Display contents) {
 		for (String tag : contents.entityTags()) if (tag.startsWith(REL)) return Relations.Rel.valueOf(tag.substring(REL.length()));
 		return null;
@@ -372,7 +361,6 @@ public final class Play {
 		return display;
 	}
 
-	/** For tests: the last thing put somewhere, {@code doll:in:crib}. */
 	public static volatile @Nullable String lastPut;
 
 	/** Sneak and right-click with an empty hand: what is in it comes back out, into the hand. True if anything did. */
@@ -407,7 +395,6 @@ public final class Play {
 		}
 	}
 
-	/** A thing in a tub bobs, by itself, with nothing else moving. */
 	public static void playContents(ServerLevel level, BlockPos pos, Display contents, Anim anim) {
 		if (playing(level, pos)) return;
 		Matrix4f rest = restPose(contents, level.getBlockState(pos), holdOf(level, pos, contents));
@@ -415,7 +402,6 @@ public final class Play {
 		step(running.getLast(), 0);
 	}
 
-	/** Where a thing sits, put this way on this block, as a transformation from the block's foot. */
 	static Matrix4f restPose(Relations.Rel rel, BlockState state, Thing target, Thing.@Nullable Hold hold) {
 		float yaw = facingYaw(state);
 		float y = hold != null ? hold.y() : rel == Relations.Rel.HEAD ? target.height() - 0.05F : target.height();
@@ -454,7 +440,6 @@ public final class Play {
 		}
 	}
 
-	/** For tests: whether a display is still playing this block. */
 	public static boolean displayAt(ServerLevel level, BlockPos pos) {
 		return !level.getEntities((Entity) null, new AABB(pos).inflate(0.5), entity -> entity.entityTags().contains(PLAYING)).isEmpty();
 	}

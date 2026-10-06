@@ -37,7 +37,6 @@ import org.jspecify.annotations.Nullable;
  */
 public final class Relations implements SimpleSynchronousResourceReloadListener {
 
-	/** How one thing is placed relative to another: the child, the way, the parent. */
 	public enum Rel { IN, ON, UNDER, RIDES, HEAD }
 
 	public record Placement(String child, Rel rel, String parent) {}
@@ -53,14 +52,12 @@ public final class Relations implements SimpleSynchronousResourceReloadListener 
 		return List.copyOf(things.values());
 	}
 
-	/** The thing an item is, held in a hand: a plushie, a toy. */
 	public static @Nullable Thing forItem(Item item) {
 		Identifier id = BuiltInRegistries.ITEM.getKey(item);
 		for (Thing thing : things.values()) if (id.equals(thing.item()) && thing.is() != Thing.Is.CREATURE) return canonical(thing);
 		return null;
 	}
 
-	/** The thing a placed block is: a plushie or a toy by its kind, a prop. */
 	public static @Nullable Thing forBlock(BlockState state) {
 		Identifier id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
 		for (Thing thing : things.values()) {
@@ -144,7 +141,6 @@ public final class Relations implements SimpleSynchronousResourceReloadListener 
 		return null;
 	}
 
-	/** The hold a relation uses on its parent, if the parent declares one. */
 	public static Thing.@Nullable Hold holdFor(Thing parent, Rel rel) {
 		return switch (rel) {
 			case IN -> parent.hold(Thing.Hold.Way.IN);
@@ -155,7 +151,6 @@ public final class Relations implements SimpleSynchronousResourceReloadListener 
 		};
 	}
 
-	// --- Loading ---
 
 	@Override
 	public Identifier getFabricId() {

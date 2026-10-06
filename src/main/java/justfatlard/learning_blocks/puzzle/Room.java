@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,18 +32,15 @@ import org.jspecify.annotations.Nullable;
  *
  * <pre>
  *   z=-5   [ chalkboard, green, the width of the room ]
- *   z=-4        _  a  t          (button)       the word, the gap first, just above eye height
+ *   z=-4        _  a  t          (button)       the word, just above eye height
  *   z=-2     c     b     h                      the loose tiles, standing on the floor
  *   z=+3           @                            where the child arrives, looking at the board
  *   z=+5          [portal]                      home
  * </pre>
  *
- * <p>Right-click a tile on the floor and it says its sound and comes into your hand. Right-click the
- * gap and the tile you carry goes in; right-click the tile in the gap and it goes back where it came
- * from. The button sounds the word out, each tile lit as it is said, then says the word, and then
- * the word happens. Everything the room says goes through {@link Narrator}, with a caption; nothing
- * goes to chat. The walls, ceiling and all but the chalkboard are barrier, so the room is open to
- * the sky and nothing gets out of it: not a child, not a bat.
+ * <p>Everything the room says goes through {@link Narrator}, with a caption; nothing goes to chat.
+ * The walls, ceiling and all but the chalkboard are barrier, so the room is open to the sky and
+ * nothing gets out of it.
  *
  * <p>The room lives in memory; the blocks are the only thing saved, and they are rebuilt from
  * nothing every time anybody comes in, so a room is never found half-way through a round that
@@ -55,7 +53,6 @@ import org.jspecify.annotations.Nullable;
  * {@link BoardPicture} the picture.
  */
 public final class Room {
-	/** The way a child faces on arrival: north, at the board. */
 	public static final float FACING_YAW = 180.0F;
 
 	/** Ticks of doing nothing before the room asks again. */
@@ -66,15 +63,13 @@ public final class Room {
 	static final int NUDGE = 20 * 60 * 3;
 	/** Busy longer than any answer's telling takes: the round is stuck, and starts over. */
 	static final int BUSY_AT_MOST = 20 * 60 * 2;
-	/** How often the room checks the tile it is asking for still exists somewhere. */
 	private static final int TILE_CHECK = 40;
-	/** Ticks between replays of the prompt from the picture: about a second and a half. */
 	private static final int REPLAY_EVERY = 30;
-	/** Ticks after the client says it has loaded before the room speaks: about a second. */
+	/** Ticks after the client says it has loaded before the room speaks. */
 	private static final int SETTLE = 20;
 	/** If the client never says it has loaded, the room speaks anyway after this. */
 	private static final int HOLD_AT_MOST = 20 * 8;
-	/** How long a room may have nothing to ask while the door is locked for lessons. */
+	/** How long a room may have nothing to ask while the portal is locked for lessons. */
 	static final int STRANDED_AT_MOST = 200;
 
 	/** Whose room it is: the one whose plot it stands on, or, once they have gone, whoever is still reading in it. */
@@ -85,7 +80,7 @@ public final class Room {
 	final Dispenser dispenser;
 	/** Each reader's prize chest, by player: one beside the portal each. */
 	final Map<UUID, PrizeShowcase> showcases = new LinkedHashMap<>();
-	final Portal door;
+	final Portal portal;
 	final BoardPicture picture;
 	final RoundLifecycle rounds;
 	final Interaction interaction;
@@ -94,7 +89,6 @@ public final class Room {
 	@Nullable Puzzle puzzle;
 	/** A round of another subject than Reading, while one is up (see {@link SubjectRound}). */
 	@Nullable SubjectRound subjectRound;
-	/** The subject of the round up now: {@code reading}, {@code numbers}, {@code logic}. */
 	String currentSubject = "reading";
 	/** Each reader's last subject here, and how many rounds of it in a row: for the mix. */
 	final Map<UUID, String> lastSubject = new LinkedHashMap<>();
@@ -105,34 +99,27 @@ public final class Room {
 	justfatlard.learning_blocks.subject.@Nullable Subject forcedSubject;
 	@Nullable String forcedSubjectKind;
 	@Nullable String forcedSubjectTarget;
-	/** The board's frame colour as it was last painted. */
 	net.minecraft.world.item.@Nullable DyeColor frame;
 
-	/** The round of another subject up now, or null. */
 	public @Nullable SubjectRound subjectRound() {
 		return subjectRound;
 	}
 
-	/** The board frame's colour as painted, null for the plain wood. */
 	public net.minecraft.world.item.@Nullable DyeColor frameColour() {
 		return frame;
 	}
 
-	/** The subject of the round up now. */
 	public String currentSubject() {
 		return currentSubject;
 	}
 
-	/** A round of this subject, of this kind and target if given, now: for the sampler and tests. */
 	public void newSubjectRound(ServerPlayer player, justfatlard.learning_blocks.subject.Subject subject, @Nullable String kind, @Nullable String target) {
 		forcedSubject = subject;
 		forcedSubjectKind = kind;
 		forcedSubjectTarget = target;
 		rounds.newRound(player, null, false, false);
 	}
-	/** The scene being played this round, if this round is one. */
 	@Nullable SceneRun scene;
-	/** In the letters level, the letter this round asks for; null in a word round. */
 	@Nullable Letter letterTarget;
 	@Nullable Letter lastLetter;
 	@Nullable Letter forcedLetter;
@@ -142,8 +129,8 @@ public final class Room {
 	@Nullable Word lastEarlyWord;
 	/** A tricky-word round (read-it style, with cards); a phrase round's adjective and its row; counters; and tests' asked-for rounds. */
 	boolean tricky;
-	/** The band the child is at, as its code (stage * 100 + band), or -1: a change is a fresh start, as a stage's is. */
-	int band = -1;
+	/** The band the child is at, null if none: a change is a fresh start, as a stage's is. */
+	Stages.@Nullable BandCode band;
 	@Nullable Word phraseAdjective;
 	final List<BlockPos> adjectiveRow = new ArrayList<>();
 	int sinceTricky;
@@ -158,8 +145,8 @@ public final class Room {
 	@Nullable Letter forcedCase;
 	boolean forcedCaseUp;
 
-	/** Sent in by the daily schedule: "Reading time first!" before the next prompt. */
-	boolean readingTime;
+	/** Sent in by the daily schedule: "Learning time first!" before the next prompt. */
+	boolean learningTime;
 	/** The word the last round asked for, so the next is not the same. */
 	@Nullable Word lastTarget;
 	/** A read-it round: the word shown whole, and its picture to pick; and what each click box stands for. */
@@ -169,7 +156,6 @@ public final class Room {
 	final Map<UUID, Word> choices = new LinkedHashMap<>();
 	final Map<String, UUID> choiceDisplays = new LinkedHashMap<>();
 	final List<BlockPos> choiceStands = new ArrayList<>();
-	/** When the room opened, for the time spent in it. */
 	private final long openedAt;
 	/** "Which letter says..." or "Can you find the letter that says...", taking turns round by round. */
 	String letterPrompt = "phrase/which_letter_says";
@@ -179,7 +165,6 @@ public final class Room {
 	/** Rounds since the last scene, this visit: one round in {@code scene_every} is a scene. */
 	int sinceScene;
 	@Nullable Word lastScene;
-	/** The word row, left to right; the gap is the first. */
 	final List<BlockPos> row = new ArrayList<>();
 	/** Where each loose tile lives when it is not in a hand or the gap. */
 	final Map<Letter, BlockPos> homes = new LinkedHashMap<>();
@@ -191,7 +176,6 @@ public final class Room {
 	int solved;
 	/** How many words this child has sounded out since coming in. */
 	int blends;
-	/** The vowels whose magic-e line has been said this visit. */
 	final java.util.Set<String> magicSaid = new java.util.HashSet<>();
 	private long lastActive;
 	private long lastPrompted;
@@ -214,7 +198,7 @@ public final class Room {
 	boolean promptHeld;
 	long heldSince;
 	private long loadedAt = -1;
-	/** For tests: the next outcome throws, as a broken one would. */
+	/** The next outcome throws, as a broken one would. */
 	boolean failNextOutcome;
 	/** When the room last had no puzzle, while lessons were owed; -1 while it has one. */
 	private long noPuzzleSince = -1;
@@ -226,7 +210,7 @@ public final class Room {
 		this.dispenser = new Dispenser(this, level, layout);
 		this.members.add(this.owner);
 		this.showcases.put(this.owner, new PrizeShowcase(this, level, layout, dispenser, layout.prizeMarker(0)));
-		this.door = new Portal(this, level, layout);
+		this.portal = new Portal(this, level, layout);
 		this.picture = new BoardPicture(level);
 		this.rounds = new RoundLifecycle(this, level, layout);
 		this.interaction = new Interaction(this, level, layout);
@@ -234,7 +218,6 @@ public final class Room {
 		this.openedAt = level.getGameTime();
 	}
 
-	// --- Where things are ---
 
 	public BlockPos origin() {
 		return layout.origin();
@@ -245,32 +228,27 @@ public final class Room {
 		return layout.spawn();
 	}
 
-	/** The word row's positions, a tile at a time, left to right: for tests. */
+	@ForTests
 	public List<BlockPos> row() {
 		return List.copyOf(row);
 	}
 
-	/** The button that reads the word out. */
 	public BlockPos button() {
 		return layout.button();
 	}
 
-	/** Where the prize chest stands while something is waiting to be taken home: beside the door. */
 	public BlockPos prizeMarker() {
 		return layout.prizeMarker();
 	}
 
-	/** The bottom half of the door home. */
-	public BlockPos doorLower() {
-		return layout.doorLower();
+	public BlockPos portalLower() {
+		return layout.portalLower();
 	}
 
-	/** Inside the room's walls, where a tile could be set down. */
 	boolean inRoom(BlockPos pos) {
 		return layout.inRoom(pos);
 	}
 
-	/** Everything that does not change between rounds, on cleared ground. */
 	void build() {
 		layout.build(level);
 		frame = null;
@@ -281,7 +259,6 @@ public final class Room {
 		return homes.containsValue(pos) || row.contains(pos);
 	}
 
-	// --- The round, as it stands ---
 
 	public @Nullable Puzzle puzzle() {
 		return puzzle;
@@ -301,12 +278,11 @@ public final class Room {
 		return stage;
 	}
 
-	/** The letter this round asks for, in the letters level; null in a word round. For tests. */
 	public @Nullable Letter letterTarget() {
 		return letterTarget;
 	}
 
-	/** The scene this round is, if it is one: for tests. */
+	@ForTests
 	public @Nullable SceneRun scene() {
 		return scene;
 	}
@@ -316,17 +292,14 @@ public final class Room {
 		return scene != null && scene.isCharacter(entity);
 	}
 
-	/** The gap in the word row, or null between rounds. */
 	public @Nullable BlockPos gap() {
 		return row.isEmpty() ? null : row.get(Math.min(gapIndex(), row.size() - 1));
 	}
 
-	/** Every gap in the row, in order. */
 	public List<BlockPos> gaps() {
 		return List.copyOf(gapMarkers.keySet());
 	}
 
-	/** Which tile of the word is missing: the first, the last, or the vowel in the middle. */
 	private int gapIndex() {
 		return puzzle == null ? 0 : puzzle.gap();
 	}
@@ -341,12 +314,10 @@ public final class Room {
 		return inGap(gap());
 	}
 
-	/** The tile in this gap, or null. */
 	public @Nullable Letter inGap(@Nullable BlockPos gap) {
 		return interaction.inGap(gap);
 	}
 
-	// --- Leaving ---
 
 	/** A leave is under way: no new rounds, prompts, tile sounds or lines from here. */
 	public void beginLeaving(ServerPlayer player) {
@@ -360,7 +331,6 @@ public final class Room {
 		leavingSince = level.getGameTime();
 	}
 
-	/** Whether the whole room is closing. */
 	public boolean leaving() {
 		return leaving;
 	}
@@ -370,29 +340,25 @@ public final class Room {
 		return leaving || leavingMembers.containsKey(player.getUUID());
 	}
 
-	/** Ticks since leaving began; 0 while not leaving. */
 	public long leavingFor() {
 		return leaving ? level.getGameTime() - leavingSince : 0;
 	}
 
-	/** Ticks since this reader began leaving; 0 while not. */
 	public long leavingFor(ServerPlayer player) {
 		Long since = leavingMembers.get(player.getUUID());
 		return since != null ? level.getGameTime() - since : leavingFor();
 	}
 
-	// --- Reading together ---
 
 	/** Everyone reading in this room, the owner first; at most {@link #MOST_READERS}, and a plot's owner coming back on top of that. */
 	final List<UUID> members = new ArrayList<>();
 	static final int MOST_READERS = 3;
-	/** Whose turn it is, in a shared room; null alone. */
 	@Nullable UUID turn;
-	/** Readers on their way out while the others stay. */
 	final Map<UUID, Long> leavingMembers = new LinkedHashMap<>();
-	/** Each reader's stage and band when their last round was picked: a change is their fresh start. */
-	final Map<UUID, int[]> lastStage = new java.util.HashMap<>();
-	/** This round is a team-up: both build it, a gap each. */
+	/** Where a reader was when their last round was picked: a change is their fresh start. */
+	record Place(int stage, Stages.@Nullable BandCode band) {}
+
+	final Map<UUID, Place> lastStage = new java.util.HashMap<>();
 	boolean team;
 	/** Whose each gap is, in a shared room; and who put the tile in it. */
 	final Map<BlockPos, UUID> gapOwners = new LinkedHashMap<>();
@@ -409,7 +375,6 @@ public final class Room {
 	@Nullable Puzzle forcedPuzzle;
 	@Nullable Word forcedTeamWord;
 
-	/** A practice round over: everybody's own progress again. */
 	void endPractice() {
 		if (!practice) return;
 		practice = false;
@@ -426,7 +391,7 @@ public final class Room {
 	final List<UUID> teamReaders = new ArrayList<>();
 	boolean forcedTeam;
 
-	/** A team-up round next: for tests. */
+	@ForTests
 	void newTeamRound(ServerPlayer player) {
 		forcedTeam = true;
 		rounds.newRound(player, null, false, false);
@@ -474,12 +439,11 @@ public final class Room {
 		}
 	}
 
-	/** Who has a marker over them now: for tests. */
+	@ForTests
 	public java.util.Set<UUID> marked() {
 		return java.util.Set.copyOf(markerShown.keySet());
 	}
 
-	/** Take every marker down: the room is closing. */
 	private void clearMarkers() {
 		for (UUID shown : markerShown.values()) {
 			Entity found = level.getEntity(shown);
@@ -488,7 +452,7 @@ public final class Room {
 		markerShown.clear();
 	}
 
-	/** A team-up's readers, the lower first: for tests. */
+	@ForTests
 	public List<UUID> teamReaders() {
 		return List.copyOf(teamReaders);
 	}
@@ -497,12 +461,10 @@ public final class Room {
 		return List.copyOf(members);
 	}
 
-	/** Two or more reading here. */
 	public boolean shared() {
 		return members.size() > 1;
 	}
 
-	/** Whose turn it is: for tests and the cues. */
 	public @Nullable UUID turn() {
 		return turn;
 	}
@@ -516,7 +478,6 @@ public final class Room {
 		return gapOwners.get(gap);
 	}
 
-	/** The readers here and online, in the room's order. */
 	List<ServerPlayer> present() {
 		List<ServerPlayer> here = new ArrayList<>();
 		for (UUID id : members) {
@@ -537,7 +498,6 @@ public final class Room {
 		return Math.max(0, members.indexOf(player));
 	}
 
-	/** Each reader's colour, blue, orange or green, as the underscores and markers show it. */
 	static final int[] COLOURS = {0x2B6CE0, 0xF08A1E, 0x2FA844};
 
 	public int colour(UUID player) {
@@ -560,18 +520,16 @@ public final class Room {
 		return showcases.computeIfAbsent(player, id -> new PrizeShowcase(this, level, layout, dispenser, layout.prizeMarker(place(id))));
 	}
 
-	/** The chest at this spot, if it is someone's. */
 	@Nullable UUID chestOwner(BlockPos pos) {
 		for (Map.Entry<UUID, PrizeShowcase> entry : showcases.entrySet()) if (entry.getValue().prizeMarker().equals(pos)) return entry.getKey();
 		return null;
 	}
 
-	/** Another reader comes into this room, by its portal's way in. */
 	void addMember(ServerPlayer player) {
 		if (!members.contains(player.getUUID())) members.add(player.getUUID());
 		prizes(player.getUUID());
 		Narrator.note(player, "joined");
-		for (ServerPlayer one : present()) refreshDoor(one, false);
+		for (ServerPlayer one : present()) refreshPortal(one, false);
 	}
 
 	/**
@@ -594,7 +552,7 @@ public final class Room {
 		if (id.equals(owner) && !members.isEmpty()) owner = members.getFirst();
 		if (id.equals(turn)) turn = null;
 		List<ServerPlayer> left = present();
-		for (ServerPlayer one : left) refreshDoor(one, false);
+		for (ServerPlayer one : left) refreshPortal(one, false);
 		if (theirs && !left.isEmpty() && !leaving) {
 			// Their round, or half of it: the next reader's round instead.
 			busy = false;
@@ -642,7 +600,6 @@ public final class Room {
 		return turn.equals(player.getUUID()) || present().stream().noneMatch(p -> p.getUUID().equals(turn));
 	}
 
-	/** "It's Max's turn!", gently, to the one who tried. */
 	void notYourTurn(ServerPlayer player, @Nullable UUID whose) {
 		if (busy || Narrator.isPlaying(player)) return;
 		String name = nameOf(whose);
@@ -659,28 +616,23 @@ public final class Room {
 		return found == null ? "their" : found.getGameProfile().name();
 	}
 
-	// --- Rounds: see RoundLifecycle ---
 
-	/** A new round: a new word from the loaded ones, laid out on cleared rows, and asked for. */
 	void newRound(ServerPlayer player) {
 		newRound(player, null);
 	}
 
-	/**
-	 * A round from this child's stage, a word they have not read first; or for exactly this target,
-	 * which is for tests and for an operator who wants a particular word up.
-	 */
+	/** A round from this child's stage, a word they have not read first; or for exactly this target. */
 	void newRound(ServerPlayer player, @Nullable Word target) {
 		rounds.newRound(player, target, false, false);
 	}
 
-	/** A round of this kind for exactly this word: for tests. */
+	@ForTests
 	void newRound(ServerPlayer player, Word target, Puzzle.Kind kind) {
 		forcedKind = kind;
 		rounds.newRound(player, target, false, false);
 	}
 
-	/** A tricky-word, plural or phrase round for exactly these words: for tests. */
+	@ForTests
 	void newTricky(ServerPlayer player, Word word) {
 		forcedTricky = word;
 		rounds.newRound(player, null, false, false);
@@ -696,7 +648,7 @@ public final class Room {
 		rounds.newRound(player, null, false, false);
 	}
 
-	/** Whether this round is a tricky word's; the phrase round's adjective, or null: for tests. */
+	@ForTests
 	public boolean tricky() {
 		return tricky;
 	}
@@ -705,36 +657,36 @@ public final class Room {
 		return phraseAdjective;
 	}
 
-	/** A big-and-little round for this letter, finding the capital ({@code up}) or the small one: for tests. */
+	/** A big-and-little round for this letter, finding the capital ({@code up}) or the small one. */
+	@ForTests
 	void newCaseRound(ServerPlayer player, Letter letter, boolean up) {
 		forcedCase = letter.lower();
 		forcedCaseUp = up;
 		rounds.newRound(player, null, false, false);
 	}
 
-	/** The letter shown in a big-and-little round, or null: for tests. */
+	@ForTests
 	public @Nullable Letter casePrompt() {
 		return casePrompt;
 	}
 
-	/** A letters-level round asking for exactly this letter: for tests. */
+	@ForTests
 	void newLetterRound(ServerPlayer player, Letter letter) {
 		forcedLetter = letter;
 		rounds.newRound(player, null, false, false);
 	}
 
-	/** A read-it round for exactly this word, if it has a look-alike to pick instead: for tests. */
+	/** A read-it round for exactly this word, if it has a look-alike to pick instead. */
+	@ForTests
 	void newReadIt(ServerPlayer player, Word target) {
 		forcedReadIt = target;
 		rounds.newRound(player, null, false, false);
 	}
 
-	/** Whether this round is a read-it round. */
 	public boolean readIt() {
 		return readIt;
 	}
 
-	// --- Bob, and things to fix ---
 
 	/** A round with Bob: telling him, fixing what he did, or silly sentences; null in any other round. */
 	@Nullable BobRound bob;
@@ -743,7 +695,6 @@ public final class Room {
 	/** Rounds since the last of Bob's, and how many of his this visit: every third a what's-wrong. */
 	int sinceBob;
 	int bobRounds;
-	/** A test's or the sampler's asked-for round with Bob. */
 	BobRound.@Nullable Mode forcedBob;
 	justfatlard.learning_blocks.bob.@Nullable Goal forcedGoal;
 	justfatlard.learning_blocks.bob.Goals.@Nullable Mistake forcedMistake;
@@ -752,7 +703,6 @@ public final class Room {
 	int sinceFix;
 	@Nullable Letter forcedFixLetter;
 
-	/** A round with Bob of this kind, for this goal if one is given: for tests and the sampler. */
 	void newBob(ServerPlayer player, BobRound.Mode mode, justfatlard.learning_blocks.bob.@Nullable Goal goal,
 			justfatlard.learning_blocks.bob.Goals.@Nullable Mistake mistake) {
 		forcedBob = mode;
@@ -761,34 +711,33 @@ public final class Room {
 		rounds.newRound(player, null, false, false);
 	}
 
-	/** This round's Bob, for tests: null in any other round. */
+	@ForTests
 	public @Nullable BobRound bob() {
 		return bob;
 	}
 
-	/** In a word-to-fix round, the wrong letter put in its gap: for tests. */
+	@ForTests
 	public @Nullable Letter fixLetter() {
 		return fixLetter;
 	}
 
-	/** A word to fix, this one, the wrong letter this: for tests and the sampler. */
 	void newFix(ServerPlayer player, Word target, Puzzle.Kind kind, Letter wrong) {
 		forcedFixLetter = wrong;
 		forcedKind = kind;
 		rounds.newRound(player, target, false, false);
 	}
 
-	/** The word each click box on the floor stands for, in a read-it round: for tests. */
+	/** The word each click box on the floor stands for, in a read-it round. */
+	@ForTests
 	public Map<UUID, Word> choices() {
 		return java.util.Collections.unmodifiableMap(choices);
 	}
 
-	/** The word this click box stands for, if it is one of a read-it round's. */
 	@Nullable Word choiceOf(Entity entity) {
 		return choices.get(entity.getUUID());
 	}
 
-	/** A scene round for exactly this word, which must have a scene: for tests and operators. */
+	/** A scene round for exactly this word, which must have a scene. */
 	void newScene(ServerPlayer player, Word target) {
 		rounds.newRound(player, target, false, true);
 	}
@@ -807,12 +756,10 @@ public final class Room {
 		loadedAt = -1;
 	}
 
-	/** The child's client has finished loading the level they are in. */
 	void clientLoaded() {
 		loadedAt = level.getGameTime();
 	}
 
-	/** Whether the first prompt is still waiting for the child to arrive. */
 	public boolean promptHeld() {
 		return promptHeld;
 	}
@@ -833,22 +780,20 @@ public final class Room {
 		picture.bounce(player, dispenser);
 	}
 
-	/** The picture's click box, for tests and for the click events. */
 	public @Nullable UUID pictureHit() {
 		return picture.hit();
 	}
 
-	/** The picture card showing over the board, if one is: for tests. */
+	@ForTests
 	public @Nullable String pictureCard() {
 		return picture.card();
 	}
 
-	/** The picture over the board, if there is one: for tests. */
+	@ForTests
 	public @Nullable Entity picture() {
 		return picture.shown();
 	}
 
-	/** A picture of an item, as the inventory shows it; see {@link BoardPicture#of}. */
 	public static Display.@Nullable ItemDisplay pictureOf(ServerLevel level, ItemStack shown, Vec3 at) {
 		return BoardPicture.of(level, shown, at);
 	}
@@ -916,32 +861,30 @@ public final class Room {
 		return true;
 	}
 
-	/** For tests: busy since this long ago, as a narration that never finished would leave it. */
+	/** Busy since this long ago, as a narration that never finished would leave it. */
 	public void hangForTests(int ticksAgo) {
 		busy = true;
 		busySince = level.getGameTime() - ticksAgo;
 	}
 
-	/** Each reader's own part of the tick: their way out, and their lessons. */
 	void tickMember(ServerPlayer player) {
 		if (leaving(player)) return;
-		door.tick(player, this);
+		portal.tick(player, this);
 		if (leaving(player)) return;
 		strandedLessons(player);
 	}
 
-	/** For tests: the next outcome throws, as a broken one would. */
 	public void failNextOutcomeForTests() {
 		failNextOutcome = true;
 	}
 
-	/** For tests: the room loses its puzzle, as it would with nothing it could ask. */
+	/** The room loses its puzzle, as it would with nothing it could ask. */
 	public void dropPuzzleForTests() {
 		rounds.clearRound();
 		puzzle = null;
 	}
 
-	/** No puzzle and the door locked for lessons: after a while, the lessons are let go, so nobody is shut in. */
+	/** No puzzle and the portal locked for lessons: after a while, the lessons are let go, so nobody is shut in. */
 	private void strandedLessons(ServerPlayer player) {
 		int lessons = Travel.lessons(player);
 		if (puzzle != null || lessons <= 0) {
@@ -989,31 +932,27 @@ public final class Room {
 		rounds.endScene();
 		for (PrizeShowcase chest : showcases.values()) chest.close();
 		picture.remove();
-		door.close();
+		portal.close();
 		clearMarkers();
 		round++;
 		for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, layout.bounds())) item.discard();
 		if (player != null) Dispenser.unscale(player);
 	}
 
-	// --- A child's hands: see Interaction ---
 
 	/** A right-click on a block in this room, or null where the block is none of the room's business. */
 	@Nullable InteractionResult use(ServerPlayer player, BlockPos pos, InteractionHand hand) {
 		return interaction.use(player, pos, hand);
 	}
 
-	/** The sound a letter in the word row makes as part of the word; see {@link Interaction#rowSound}. */
 	@Nullable String rowSound(BlockPos pos) {
 		return interaction.rowSound(pos);
 	}
 
-	/** Whether a tile may be broken here: loose on the floor, or in the gap, and not mid-word. */
 	boolean mayBreak(BlockPos pos, BlockState state) {
 		return interaction.mayBreak(pos, state);
 	}
 
-	/** The gap a tile used on this block is going into, if any; see {@link Interaction#aimedGap}. */
 	@Nullable BlockPos aimedGap(BlockPos hit, BlockPos target) {
 		return interaction.aimedGap(hit, target);
 	}
@@ -1031,14 +970,11 @@ public final class Room {
 		interaction.sendHome(player, letter, from);
 	}
 
-	// --- The prize chest and the door: see PrizeShowcase and Portal ---
 
-	/** Show the prize chest if this child has prizes waiting, and take it away if not. */
 	public void refreshPrizeMarker(ServerPlayer player) {
 		prizes(player.getUUID()).refreshPrizeMarker(player);
 	}
 
-	/** Something was just earned: see {@link PrizeShowcase#prizeAdded}. */
 	void prizeAdded(ServerPlayer player, List<ItemStack> items, int xp) {
 		prizes(player.getUUID()).prizeAdded(items, xp);
 	}
@@ -1047,22 +983,22 @@ public final class Room {
 		prizes(player.getUUID()).refreshHaul(player);
 	}
 
-	/** Every prize that flew into the owner's chest: for tests. */
+	@ForTests
 	public List<PrizeShowcase.PrizeFlight> prizeFlights() {
 		return prizes(owner).prizeFlights();
 	}
 
-	/** Every prize that flew into this reader's chest: for tests. */
+	@ForTests
 	public List<PrizeShowcase.PrizeFlight> prizeFlights(UUID player) {
 		return prizes(player).prizeFlights();
 	}
 
-	/** Where this reader's chest stands: for tests. */
+	@ForTests
 	public BlockPos prizeMarker(UUID player) {
 		return prizes(player).prizeMarker();
 	}
 
-	/** What the haul over the chest shows, for tests. */
+	@ForTests
 	public List<ItemStack> haulShown() {
 		return prizes(owner).haulShown();
 	}
@@ -1076,32 +1012,30 @@ public final class Room {
 		return prizes(player.getUUID()).chestContents(player);
 	}
 
-	/** The door as the lessons left say; see {@link Portal#refresh}. */
-	void refreshDoor(ServerPlayer player, boolean flourish) {
-		door.refresh(player, flourish);
+	void refreshPortal(ServerPlayer player, boolean flourish) {
+		portal.refresh(player, flourish);
 	}
 
-	/** Whether the portal home is open, for anyone: for tests. */
+	@ForTests
 	public boolean portalOpen() {
-		return door.open();
+		return portal.open();
 	}
 
-	/** Whether the portal is open for this reader: for tests. */
+	@ForTests
 	public boolean portalOpenFor(ServerPlayer player) {
-		return door.openFor(player);
+		return portal.openFor(player);
 	}
 
-	/** The portal's opening, where walking in goes home: for tests. */
+	@ForTests
 	public net.minecraft.world.phys.AABB portalOpening() {
-		return door.opening();
+		return portal.opening();
 	}
 
-	/** The count of lessons left, over the door, while there are any: for tests. */
-	public @Nullable Entity doorSign() {
-		return door.sign();
+	@ForTests
+	public @Nullable Entity portalSign() {
+		return portal.sign();
 	}
 
-	// --- What words do to the room: see Dispenser ---
 
 	/**
 	 * Run this later for the child, but only while this room and this round are still going: a
@@ -1114,26 +1048,26 @@ public final class Room {
 		});
 	}
 
-	/** The creatures words have brought that are still here. */
 	public List<Entity> creatures() {
 		return dispenser.creatures();
 	}
 
-	/** Positions a word has put a block at, for tests. */
+	@ForTests
 	public List<BlockPos> placed() {
 		return dispenser.placed();
 	}
 
-	/** Just out from the button's face, where everything a word does comes from. */
 	public Vec3 mouth() {
 		return layout.mouth();
 	}
 
-	/** What the button has sent out lately, oldest first: for tests. */
+	@ForTests
 	public long sends() {
 		return dispenser.sends();
 	}
 
+	/** What the button has sent out lately, oldest first. */
+	@ForTests
 	public List<Dispenser.Dispensed> dispensed() {
 		return dispenser.dispensed();
 	}

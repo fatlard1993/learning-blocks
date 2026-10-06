@@ -27,7 +27,6 @@ import org.jspecify.annotations.Nullable;
 public final class NumberCourse {
 	private NumberCourse() {}
 
-	/** The kinds of numbers round: their names in the sampler, and the part of each item's key after numbers:. */
 	public enum Kind {
 		FIND("find", "numeral"), LOOK("look", "look"), NAME("name", "name"),
 		COUNT("count", "count"), MAKE("make", "make"), BEDS("beds", "beds"), TOYBOX("toybox", "toybox"), SCENE("scene", "scene"),
@@ -83,7 +82,6 @@ public final class NumberCourse {
 			Kind.TOWERS, List.of("diff"), List.of(Kind.ORDER, Kind.NEXT, Kind.PICTURE, Kind.MORE))
 	);
 
-	/** What each kind can ask, for the picker and the sampler. */
 	public static List<String> targets(Kind kind) {
 		return switch (kind) {
 			case FIND -> range(0, 10);
@@ -103,7 +101,6 @@ public final class NumberCourse {
 		};
 	}
 
-	/** The band a child is in: the first not finished; null once all are. */
 	public static @Nullable Band current(Progress progress) {
 		for (Band band : BANDS) if (!finished(progress, band)) return band;
 		return null;
@@ -114,7 +111,6 @@ public final class NumberCourse {
 		return true;
 	}
 
-	/** Whether every band of this stage is finished. */
 	public static boolean stageDone(Progress progress, int stage) {
 		for (Band band : BANDS) if (band.stage() == stage && !finished(progress, band)) return false;
 		return true;
@@ -125,12 +121,10 @@ public final class NumberCourse {
 		return null;
 	}
 
-	/** The bands before this one. */
 	public static List<Band> before(Band band) {
 		return BANDS.subList(0, BANDS.indexOf(band));
 	}
 
-	/** "N1b, counting to 10": where a child is, for people. */
 	public static String describe(Progress progress) {
 		Band band = current(progress);
 		if (band == null) return "all of N0-N2 done";
@@ -141,7 +135,6 @@ public final class NumberCourse {
 		};
 	}
 
-	/** Every gate item, in order. */
 	public static List<String> gateItems() {
 		List<String> all = new ArrayList<>();
 		for (Band band : BANDS) all.addAll(band.gate());

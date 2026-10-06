@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import justfatlard.learning_blocks.narration.CaptionLine;
 import justfatlard.learning_blocks.narration.Narration;
 import justfatlard.learning_blocks.numbers.NumberBlock;
@@ -16,7 +17,6 @@ import org.jspecify.annotations.Nullable;
  * The button flashes it again.
  */
 public final class LookRound extends NumbersRound {
-	/** How long the dots are up. */
 	static final int FLASH = 40;
 	private final int n;
 	private Display.@Nullable BlockDisplay shown;
@@ -35,7 +35,7 @@ public final class LookRound extends NumbersRound {
 		shown = on ? Counting.boardDots(this, n, 2.2F) : null;
 	}
 
-	/** Whether the dots are up just now, for tests. */
+	@ForTests
 	public boolean showing() {
 		return shown != null && shown.isAlive();
 	}

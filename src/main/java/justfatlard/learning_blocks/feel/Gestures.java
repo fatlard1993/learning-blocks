@@ -68,7 +68,6 @@ public final class Gestures {
 
 	private static final List<Running> running = new ArrayList<>();
 
-	/** For tests: the last gesture started, {@code nod:villager}. */
 	public static volatile @Nullable String lastStarted;
 
 	public static void register() {
@@ -93,13 +92,11 @@ public final class Gestures {
 		begin(level, run);
 	}
 
-	/** Whether this one is in the middle of a gesture. */
 	public static boolean busy(Entity who) {
 		for (Running run : running) if (run.who().getUUID().equals(who.getUUID())) return true;
 		return false;
 	}
 
-	/** Whatever this one is doing, ended now, and it put back. */
 	public static void stop(Entity who) {
 		for (Iterator<Running> it = running.iterator(); it.hasNext(); ) {
 			Running run = it.next();
@@ -179,7 +176,6 @@ public final class Gestures {
 		return Vec3.directionFromRotation(0, yaw + 90.0F).scale(-1);
 	}
 
-	/** Where it is and how it is turned at tick {@code t} of this gesture. */
 	private static Pose pose(Running run, int t) {
 		Entity who = run.who();
 		double wave = Math.sin(Math.PI * 2 * t / 8.0);
@@ -297,7 +293,6 @@ public final class Gestures {
 		if (who instanceof LivingEntity living) living.setYBodyRot(run.yaw());
 	}
 
-	/** For tests: whether this one is back exactly where it started, and turned as it was. */
 	public static boolean atHome(Entity who, Vec3 home, float yaw) {
 		return who.position().distanceTo(home) < 1.0E-4 && Math.abs(net.minecraft.util.Mth.wrapDegrees(who.getYRot() - yaw)) < 0.01F;
 	}

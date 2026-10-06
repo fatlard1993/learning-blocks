@@ -87,7 +87,7 @@ public final class ExitAndDays implements FabricClientGameTest {
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			Room room = Rooms.of(player);
-			check(room.portalOpen() && room.doorSign() == null, "an ordinary visit's portal is not open");
+			check(room.portalOpen() && room.portalSign() == null, "an ordinary visit's portal is not open");
 			Narrator.note(player, "mark");
 		});
 		lookAtPortal(session);
@@ -119,7 +119,7 @@ public final class ExitAndDays implements FabricClientGameTest {
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			Room room = Rooms.of(player);
-			check(Places.isClassroom(player.level()) && !room.portalOpen() && room.doorSign() != null, "sent for two, the portal is not locked");
+			check(Places.isClassroom(player.level()) && !room.portalOpen() && room.portalSign() != null, "sent for two, the portal is not locked");
 			Narrator.stop(player);
 			Narrator.note(player, "mark");
 			walkInto(player);

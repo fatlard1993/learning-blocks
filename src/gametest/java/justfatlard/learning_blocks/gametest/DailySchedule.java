@@ -27,7 +27,7 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * The daily reading schedule. Scheduled for two a day and joining with none done: sent in for two,
- * "Reading time first!", the door locked; two solved and "All done for today!" and the door open.
+ * "Reading time first!", the portal locked; two solved and "All done for today!" and the portal open.
  * The next day asks for two again, less what was already done that day. A weekday set to none asks
  * for nothing. The time zone moves the day's boundary. An operator is never kept in, unless scheduled
  * themselves. The schedule is read back from its file. A day turning while playing sends nobody in by
@@ -79,8 +79,8 @@ public final class DailySchedule implements FabricClientGameTest {
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			check(Narrator.log(player).contains("clip:phrase/done_for_today"), "\"All done for today!\" was not said: " + Narrator.log(player));
-			check(!Narrator.log(player).contains("clip:phrase/portal_open") && !Narrator.log(player).contains("clip:phrase/door_open"), "the ordinary portal line was said instead");
-			check(Rooms.of(player).portalOpen(), "the door did not open");
+			check(!Narrator.log(player).contains("clip:phrase/portal_open"), "the ordinary portal line was said instead");
+			check(Rooms.of(player).portalOpen(), "the portal did not open");
 			check(Progress.of(player).doneToday() == 2, "today's count is " + Progress.of(player).doneToday());
 			asPlayer(player, "learn leave");
 		});

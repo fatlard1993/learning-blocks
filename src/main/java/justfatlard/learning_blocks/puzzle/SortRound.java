@@ -93,7 +93,6 @@ public final class SortRound extends LogicRound {
 		return Vec3.atBottomCenterOf(layout.origin()).add((i - (count - 1) / 2.0) * 1.0, 0, 0.6);
 	}
 
-	/** Where the next one into a pen goes: round its middle. */
 	private Vec3 inPenSpot(int group, int k) {
 		Vec3 centre = Vec3.atBottomCenterOf(penCentre(group));
 		return centre.add(((k + 1) % 3 - 1) * 0.8, 0, (k + 1) / 3 * 0.8 - 0.6);
@@ -193,7 +192,6 @@ public final class SortRound extends LogicRound {
 		};
 	}
 
-	/** The things still to sort, for tests, with the pen each goes in. */
 	public List<Choice> unsorted() {
 		return thingOf.keySet().stream().filter(choice -> thingOf.get(choice) != null && !sortedOnes.contains(choice)).toList();
 	}
@@ -246,7 +244,6 @@ public final class SortRound extends LogicRound {
 		put(player, telling);
 	}
 
-	/** The one picked, into its pen. */
 	private void put(ServerPlayer player, Narration telling) {
 		Choice thing = selected;
 		int group = groupOf.get(thing);

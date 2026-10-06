@@ -19,10 +19,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * The classroom is not entered or left by {@code /tp}; it has a door, and the door does work.
+ * The classroom is not entered or left by {@code /tp}: the way in and out puts things aside and
+ * hands them back, which a teleport would skip.
  *
  * <p>Failed outright rather than allowed and put right afterwards, so whoever typed it is told
- * why, and which command does it properly. The same shape as PvP Dimensions' arena rule.
+ * why, and which command does it properly.
  */
 @Mixin(TeleportCommand.class)
 public class TeleportCommandMixin {

@@ -13,9 +13,10 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 /**
- * A wooden number tile, like the letter tiles: a numeral on the front and back, the same amount in
- * dots on the sides (see {@code generate_numbers.py}). Right-clicked anywhere, it says its number.
- * In the classroom, the room answers a click on one itself.
+ * Every wooden tile that is not a letter: the numbers 0 to 20 (a numeral front and back, the same
+ * amount in dots on the sides; see {@code generate_numbers.py}), the symbol tiles plus, minus and
+ * equals, and Logic's tick and cross. Right-clicked anywhere, a number says itself. In the
+ * classroom, the room answers a click on one itself.
  */
 public class NumberBlock extends Block {
 	public static final int HIGHEST = 20;
@@ -42,7 +43,6 @@ public class NumberBlock extends Block {
 		return defaultBlockState().setValue(NUMBER, Math.max(0, Math.min(NO, number)));
 	}
 
-	/** What a number says: {@code number/3}; a symbol, its word: {@code word/plus}. */
 	public static String soundOf(int number) {
 		return switch (number) {
 			case PLUS -> "word/plus";

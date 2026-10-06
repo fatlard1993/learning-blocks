@@ -22,28 +22,25 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * {@code /learn} to go to the classroom, {@code /learn leave} to come home. Anybody may use
- * either: the classroom is for everyone, and the door is the same door for everybody.
+ * either: the classroom is for everyone, and the way in and out is the same for everybody.
  * {@code /learn reload}, for operators, reads the prizes file again, and {@code /learn prizes}
  * opens the editor that writes it. {@code /learn stage <player> [n]} shows or sets where a child is.
- * {@code /learn send <player> [lessons]} sends a child in, the door locked until the lessons are
+ * {@code /learn send <player> [lessons]} sends a child in, the portal locked until the lessons are
  * done; {@code lessons} and {@code release} report and clear them. {@code sounds}, {@code vowels},
  * {@code words} and (for operators) {@code phrases} open the review screens.
  */
 public final class LearnCommand {
 	private LearnCommand() {}
 
-	/** The main command; and its old name, kept as another way in to every subcommand. */
 	public static final String NAME = "learn";
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		com.mojang.brigadier.tree.LiteralCommandNode<CommandSourceStack> learn = dispatcher.register(Commands.literal(NAME)
 			.executes(LearnCommand::enter)
 			.then(Commands.literal("leave").executes(LearnCommand::leave))
-			// Reading together: ask to join someone, and their yes or no.
 			.then(Commands.literal("join").then(Commands.argument("player", EntityArgument.player()).executes(LearnCommand::join)))
 			.then(Commands.literal("accept").then(Commands.argument("player", EntityArgument.player()).executes(context -> answer(context, true))))
 			.then(Commands.literal("decline").then(Commands.argument("player", EntityArgument.player()).executes(context -> answer(context, false))))
-			// The grown-ups' sampler: any kind of round, now, as practice.
 			.then(Commands.literal("try")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.executes(context -> withPlayer(context, viewer -> justfatlard.learning_blocks.review.SamplerScreen.open(viewer) ? null
@@ -111,7 +108,6 @@ public final class LearnCommand {
 			.then(Commands.literal("home")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.then(Commands.argument("player", EntityArgument.player()).executes(LearnCommand::home)))
-			// Plots of players long gone, given back to be handed out again.
 			.then(Commands.literal("plots")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.then(Commands.literal("prune").then(Commands.argument("days", IntegerArgumentType.integer(1, 3650)).executes(context -> {
@@ -121,7 +117,6 @@ public final class LearnCommand {
 						+ " of players not seen in " + days + " days"), true);
 					return 1;
 				}))))
-			// A lost plushie or toy back: only one the child has earned.
 			.then(Commands.literal("give")
 				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
 				.then(Commands.argument("player", EntityArgument.player())
@@ -196,7 +191,46 @@ public final class LearnCommand {
 				.then(Commands.literal("cancel").executes(context -> withPlayer(context, PrizeSessions::cancel)))));
 	}
 
-	/** Everyone a daily schedule can be about: who is online, and who already has one. */
+	/**
+	 * The help line for every command, shown in Pandorical's mods screen. Brigadier leaves an
+	 * operator's commands out of what any other client is sent, so those lines only reach operators.
+	 */
+	public static void describe() {
+		String[][] lines = {
+			{"/learn", "Go to your Learning Blocks classroom."},
+			{"/learn leave", "Go home from the classroom, with everything you went in with."},
+			{"/learn join <player>", "Ask to learn with someone in their classroom; they say yes or no."},
+			{"/learn accept <player>", "Let someone who asked come and learn with you."},
+			{"/learn decline <player>", "Say no to someone who asked to learn with you."},
+			{"/learn sounds", "Hear every letter's sound."},
+			{"/learn vowels", "Hear the vowels, short and long."},
+			{"/learn words", "See and hear the words you have read."},
+			{"/learn toybox", "See the plushies and toys you have earned."},
+			{"/learn silly", "Make silly sentences with Bob, once you have reached his stage."},
+			{"/learn words all", "Every word the server has, read or not."},
+			{"/learn words <player>", "The words another player has read."},
+			{"/learn phrases", "Hear every recorded phrase, with its caption and length."},
+			{"/learn prizes", "Change what learning earns: events, items, loot; and which subjects and rounds."},
+			{"/learn reload", "Read config/learning-blocks/prizes.json again after a hand edit."},
+			{"/learn send <player> [lessons]", "Send a child to the classroom; with lessons, the portal stays dark until they are done."},
+			{"/learn lessons <player>", "How many lessons a child has left."},
+			{"/learn release <player>", "Clear a child's lessons, opening the portal."},
+			{"/learn home <player>", "Bring a child home from the classroom now, with everything they went in with."},
+			{"/learn daily <player> <lessons> [reading 5 numbers 5 ...]", "Lessons to do each day before playing; a child who joins with some left is sent in. Optionally split by subject; off stops it."},
+			{"/learn daily <player> <weekday> <lessons>", "A different number of lessons on one day of the week."},
+			{"/learn daily <player> with <other>", "Two children do their daily lessons in one classroom: whoever arrives second joins the first."},
+			{"/learn subjects <player> [reading on numbers off ...]", "Show or set which subjects a child learns; default follows the server."},
+			{"/learn stage <player> [stage]", "Show or set where a child is: a Reading stage (0, 1a, 2...), or a Numbers or Logic band (N0a, L1b...)."},
+			{"/learn progress <player> [export]", "A child's progress on screen, or written to config/learning-blocks/reports."},
+			{"/learn try [kind] [word]", "Try any kind of round now, as practice that counts for nothing; with no kind, the sampler screen."},
+			{"/learn pair <player> <other>", "Put two children in one classroom to take turns."},
+			{"/learn unpair <player>", "Send a child back to a classroom of their own."},
+			{"/learn give <player> <thing>", "Give back a plushie or toy a child has earned and lost."},
+			{"/learn plots prune <days>", "Free the classroom plots of players not seen in that many days."},
+		};
+		for (String[] line : lines) PandoricalApi.commandHelp().describe(line[0], line[1]);
+	}
+
 	private static List<String> readerNames(CommandSourceStack source) {
 		java.util.Set<String> names = new java.util.TreeSet<>();
 		for (ServerPlayer online : source.getServer().getPlayerList().getPlayers()) names.add(online.getGameProfile().name());
@@ -292,7 +326,6 @@ public final class LearnCommand {
 		return 1;
 	}
 
-	/** "Can I learn with you?": put to the other child as a question with Accept and Deny. */
 	private static int join(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 		ServerPlayer guest = context.getSource().getPlayerOrException();
 		ServerPlayer host = EntityArgument.getPlayer(context, "player");
@@ -305,7 +338,6 @@ public final class LearnCommand {
 		return 1;
 	}
 
-	/** The one asked says yes (in they come) or no. */
 	private static int answer(CommandContext<CommandSourceStack> context, boolean yes) throws CommandSyntaxException {
 		ServerPlayer host = context.getSource().getPlayerOrException();
 		ServerPlayer guest = EntityArgument.getPlayer(context, "player");
@@ -317,7 +349,6 @@ public final class LearnCommand {
 		return 1;
 	}
 
-	/** A practice round of a kind, now, in the caller's classroom. */
 	private static int sample(CommandContext<CommandSourceStack> context, @Nullable String word, @Nullable String target) {
 		String name = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "kind");
 		// Another subject: /learn try numbers [kind [target]].
@@ -385,7 +416,6 @@ public final class LearnCommand {
 		return 1;
 	}
 
-	/** Daily reading together: these two start paired when both are on (or "nobody"). */
 	private static int dailyWith(CommandContext<CommandSourceStack> context) {
 		String name = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "reader");
 		String otherName = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "other");
@@ -396,7 +426,7 @@ public final class LearnCommand {
 		}
 		if (otherName.equalsIgnoreCase("nobody")) {
 			justfatlard.learning_blocks.classroom.Schedules.setTogether(who.getKey(), who.getValue(), null, "");
-			context.getSource().sendSuccess(() -> Component.literal(who.getValue() + " reads on their own at daily reading time"), true);
+			context.getSource().sendSuccess(() -> Component.literal(who.getValue() + " learns on their own at daily lesson time"), true);
 			return 1;
 		}
 		var other = reader(context.getSource(), otherName);
@@ -406,11 +436,10 @@ public final class LearnCommand {
 			return 0;
 		}
 		justfatlard.learning_blocks.classroom.Schedules.setTogether(who.getKey(), who.getValue(), other.getKey(), other.getValue());
-		context.getSource().sendSuccess(() -> Component.literal(who.getValue() + " and " + other.getValue() + " read together at daily reading time"), true);
+		context.getSource().sendSuccess(() -> Component.literal(who.getValue() + " and " + other.getValue() + " learn together at daily lesson time"), true);
 		return 1;
 	}
 
-	/** Show, set or change a daily schedule. */
 	private static int daily(CommandContext<CommandSourceStack> context, @Nullable String weekday, @Nullable Integer lessons) {
 		String name = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "reader");
 		var who = reader(context.getSource(), name);
@@ -433,7 +462,7 @@ public final class LearnCommand {
 		var entry = justfatlard.learning_blocks.classroom.Schedules.of(id);
 		ServerPlayer online = context.getSource().getServer().getPlayerList().getPlayer(id);
 		StringBuilder text = new StringBuilder(shown + ": ");
-		if (entry == null || !entry.enabled()) text.append("no daily reading");
+		if (entry == null || !entry.enabled()) text.append("no daily lessons");
 		else {
 			text.append(entry.lessons()).append(" lessons a day");
 			for (var override : entry.weekdays().entrySet()) {
@@ -447,7 +476,6 @@ public final class LearnCommand {
 		return 1;
 	}
 
-	/** Which subjects a child has on: shown, or set ("numbers off", "logic on", "reading default"). */
 	private static int subjects(CommandContext<CommandSourceStack> context, @Nullable String settings) throws CommandSyntaxException {
 		ServerPlayer player = EntityArgument.getPlayer(context, "player");
 		Progress progress = Progress.of(player);
@@ -489,7 +517,6 @@ public final class LearnCommand {
 		return 1;
 	}
 
-	/** Some of each subject a day: /learn daily Sam 10 reading 5 numbers 5. */
 	private static int dailySplit(CommandContext<CommandSourceStack> context) {
 		String name = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "reader");
 		var who = reader(context.getSource(), name);
@@ -527,7 +554,6 @@ public final class LearnCommand {
 		return 1;
 	}
 
-	/** A reader's progress, as JSON under config/learning-blocks/reports, for a grown-up to look at outside the game. */
 	private static int export(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 		ServerPlayer reader = EntityArgument.getPlayer(context, "player");
 		java.nio.file.Path file = justfatlard.learning_blocks.review.ProgressView.export(reader);
@@ -539,7 +565,6 @@ public final class LearnCommand {
 		return 1;
 	}
 
-	/** Send a child in for a number of lessons, or an ordinary visit; already in, set the lessons. */
 	private static int send(CommandContext<CommandSourceStack> context, @Nullable Integer lessons) throws CommandSyntaxException {
 		ServerPlayer player = playerOrOffline(context, "they can be sent when they're on; /learn daily sets lessons that wait for them");
 		if (player == null) return 0;
@@ -565,7 +590,7 @@ public final class LearnCommand {
 
 	/**
 	 * Home now, whatever keeps them in: the safe way out, forced. Their lessons for this visit go;
-	 * their daily reading stays, so the reply says how to turn that off too.
+	 * their daily schedule stays, so the reply says how to turn that off too.
 	 */
 	private static int home(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 		ServerPlayer player = EntityArgument.getPlayer(context, "player");
@@ -581,20 +606,20 @@ public final class LearnCommand {
 		boolean daily = justfatlard.learning_blocks.classroom.Schedules.of(player.getUUID()) != null;
 		context.getSource().sendSuccess(() -> Component.literal("Sent " + name + " home."
 			+ (lessons > 0 ? " The " + lessons + (lessons == 1 ? " lesson" : " lessons") + " left on this visit are cleared." : "")
-			+ (daily ? " Their daily reading isn't: if today's isn't done, they'll be sent in again at their next login (/learn daily "
+			+ (daily ? " Their daily schedule isn't: if today's isn't done, they'll be sent in again at their next login (/learn daily "
 				+ name + " off turns it off)." : "")
 			+ " /learn release " + name + " clears any lessons still owed."), true);
 		return 1;
 	}
 
 	private static int release(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-		ServerPlayer player = playerOrOffline(context, "nothing keeps them in while they're away; /learn daily <name> off turns off their daily reading");
+		ServerPlayer player = playerOrOffline(context, "nothing keeps them in while they're away; /learn daily <name> off turns off their daily lessons");
 		if (player == null) return 0;
 		int had = Travel.lessons(player) + Progress.of(player).lessonsOwed();
 		Travel.setLessons(player, 0);
 		Progress.of(player).setLessonsOwed(player, 0);
 		if (had > 0) Progress.of(player).lessonNote(player, had + " lessons released by an operator");
-		context.getSource().sendSuccess(() -> Component.literal(player.getGameProfile().name() + " has no lessons left; the door is open"), true);
+		context.getSource().sendSuccess(() -> Component.literal(player.getGameProfile().name() + " has no lessons left; the portal is open"), true);
 		return 1;
 	}
 
@@ -651,7 +676,6 @@ public final class LearnCommand {
 		return 1;
 	}
 
-	/** Open a review screen for the player who typed it. */
 	private static int review(CommandContext<CommandSourceStack> context, Review.Tab tab, @Nullable ServerPlayer subject, boolean all) {
 		return withPlayer(context, player -> {
 			if (!PandoricalApi.isAvailable(player)) return "This needs the Pandorical mod on your game";
@@ -659,7 +683,6 @@ public final class LearnCommand {
 		});
 	}
 
-	/** Run something for the player who typed it; what it says went wrong is their failure line. */
 	private static int withPlayer(CommandContext<CommandSourceStack> context, java.util.function.Function<ServerPlayer, String> what) {
 		ServerPlayer player = context.getSource().getPlayer();
 		if (player == null) {
@@ -693,7 +716,6 @@ public final class LearnCommand {
 		return 1;
 	}
 
-	/** Read config/learning-blocks/prizes.json again, and say what was wrong with it, if anything. */
 	private static int reload(CommandContext<CommandSourceStack> context) {
 		List<String> problems = PrizeConfig.load(context.getSource().getServer());
 		if (problems.isEmpty()) {

@@ -33,7 +33,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Round E: two-word phrases (big pig: one big pig; six cod: six of them), a tricky word (the room
+ * Two-word phrases (big pig: one big pig; six cod: six of them), a tricky word (the room
  * says it, the child finds its card, and nothing is sounded out), big and little letters both ways
  * round (and the letters level not done until every pair is mastered, unless done before capitals),
  * and a plural (cats: three cats; dogs said with a /z/). Full run: {@code learning-phrase-round.png},

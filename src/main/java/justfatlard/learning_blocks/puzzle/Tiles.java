@@ -41,7 +41,6 @@ public final class Tiles {
 		return -1;
 	}
 
-	/** Take every tile out of this child's inventory, and off their cursor. */
 	public static void clear(ServerPlayer player) {
 		Inventory inventory = player.getInventory();
 		for (int slot = 0; slot < inventory.getContainerSize(); slot++) {

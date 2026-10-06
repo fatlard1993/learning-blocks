@@ -44,7 +44,6 @@ public final class NotesRound extends LogicRound {
 		answer(high(SHOWN) ? high : low);
 	}
 
-	/** Whether the i-th note is high. */
 	private boolean high(int i) {
 		return unit[i % unit.length] == startHigh;
 	}
@@ -77,7 +76,6 @@ public final class NotesRound extends LogicRound {
 		level.sendParticles(ParticleTypes.NOTE, at.x, at.y + 0.7, at.z, 1, 0, 0, 0, isHigh ? 0.9 : 0.2);
 	}
 
-	/** The row played, a note at a time. */
 	private Narration tune(Narration narration, int upTo, boolean withAnswer) {
 		for (int i = 0; i < upTo; i++) {
 			int which = i;

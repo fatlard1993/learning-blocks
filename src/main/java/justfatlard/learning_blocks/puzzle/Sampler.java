@@ -63,7 +63,6 @@ public final class Sampler {
 		}
 	}
 
-	/** Every kind's name, for tab completion. */
 	public static List<String> kindNames() {
 		List<String> names = new ArrayList<>();
 		for (Kind kind : Kind.values()) names.add(kind.id());
@@ -71,7 +70,6 @@ public final class Sampler {
 		return names;
 	}
 
-	/** The words (or letters) a round of this kind can be made of, for tab completion and a random pick. */
 	public static List<String> targets(Kind kind) {
 		RandomSource random = RandomSource.create(1);
 		List<String> found = new ArrayList<>();
@@ -97,7 +95,7 @@ public final class Sampler {
 			}
 			case PHRASE -> {
 				for (Word word : Stages.usable()) {
-					if (Phrases.creature(word) == null || !Phrases.creature(word).usable()) continue;
+					if (AdjectivePhrases.creature(word) == null || !AdjectivePhrases.creature(word).usable()) continue;
 					Puzzle round = Puzzle.forTarget(word, Words.all(), random, Puzzle.Kind.FIRST);
 					if (round != null && round.shelf().size() >= 2) found.add(word.text());
 				}
@@ -279,7 +277,7 @@ public final class Sampler {
 			case READIT -> word != null && Rooms.startReadIt(player, word);
 			case SCENE -> word != null && Rooms.startScene(player, word);
 			case PHRASE -> {
-				List<Word> adjectives = Stages.usable().stream().filter(w -> Phrases.ADJECTIVES.contains(w.text())).toList();
+				List<Word> adjectives = Stages.usable().stream().filter(w -> AdjectivePhrases.ADJECTIVES.contains(w.text())).toList();
 				yield word != null && !adjectives.isEmpty()
 					&& Rooms.startPhrase(player, adjectives.get(player.getRandom().nextInt(adjectives.size())), word);
 			}

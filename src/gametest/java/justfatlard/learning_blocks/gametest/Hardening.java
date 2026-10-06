@@ -67,7 +67,7 @@ public final class Hardening implements FabricClientGameTest {
 				asPlayer(world, "learn");
 			});
 			context.waitTicks(40);
-			// Taken out by something that is not the door.
+			// Taken out by something that is not the portal.
 			world.getServer().runOnServer(server -> {
 				ServerPlayer player = player(world);
 				check(Places.isClassroom(player.level()), "never went in");
@@ -117,13 +117,13 @@ public final class Hardening implements FabricClientGameTest {
 				check(Travel.lessons(player) == 2, "lessons changed again: " + Travel.lessons(player));
 			});
 
-			// Nothing to ask with the door locked: after a while the lessons are let go.
+			// Nothing to ask with the portal locked: after a while the lessons are let go.
 			world.getServer().runOnServer(server -> Rooms.of(player(world)).dropPuzzleForTests());
 			context.waitTicks(230);
 			world.getServer().runOnServer(server -> {
 				ServerPlayer player = player(world);
 				check(Travel.lessons(player) == 0, "a room with nothing to ask still holds lessons: " + Travel.lessons(player));
-				check(Rooms.of(player).portalOpen(), "the door stayed locked");
+				check(Rooms.of(player).portalOpen(), "the portal stayed locked");
 			});
 
 			// A stash holding an item this server has not got: kept, as a stand-in that saves back as it was.
@@ -159,13 +159,13 @@ public final class Hardening implements FabricClientGameTest {
 			world.getServer().runOnServer(server -> {
 				ServerPlayer player = player(world);
 				Visit.set(player, Visit.of(player).withPrizes(List.of(new ItemStack(Items.GOLD_INGOT)), 0));
-				click(player, Rooms.of(player).doorLower());
+				click(player, Rooms.of(player).portalLower());
 			});
 			context.waitTicks(12);
 		}
 		context.waitTicks(10);
 
-		// Back: not stuck. In a fresh room, and the door works.
+		// Back: not stuck. In a fresh room, and the portal works.
 		try (TestSingleplayerContext world = save.open()) {
 			ready(context, world);
 			world.getServer().runOnServer(server -> {

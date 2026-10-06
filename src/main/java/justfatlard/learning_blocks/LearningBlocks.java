@@ -96,7 +96,6 @@ public class LearningBlocks implements ModInitializer {
 
 	public static final Identifier NUMBER_ID = id("number");
 
-	/** A wooden number tile, 0 to 20, told apart by its {@code number} state. */
 	public static final justfatlard.learning_blocks.numbers.NumberBlock NUMBER = new justfatlard.learning_blocks.numbers.NumberBlock(BlockBehaviour.Properties.of()
 		.strength(0.2F, 3600000.0F)
 		.sound(SoundType.WOOL)
@@ -108,7 +107,6 @@ public class LearningBlocks implements ModInitializer {
 
 	public static final Identifier PLUSH_ID = id("plush");
 
-	/** A plushie: a soft toy, any of the set by its {@code kind}, to keep, place and hear. */
 	public static final justfatlard.learning_blocks.plush.PlushBlock PLUSH = new justfatlard.learning_blocks.plush.PlushBlock(BlockBehaviour.Properties.of()
 		// Breaks at one punch, like a torch: a toy is easy to pick back up.
 		.instabreak()
@@ -147,7 +145,6 @@ public class LearningBlocks implements ModInitializer {
 			.baseBlock("minecraft:bedrock"));
 		PandoricalApi.content().registerItem(LETTER_ID.toString(), new ItemRegistration()
 			.model(MOD_ID + ":item/letter"));
-		// Number tiles, as the letter tiles; a right-click says the number.
 		PandoricalApi.content().registerBlock(NUMBER_ID.toString(), new BlockRegistration()
 			.baseBlock("minecraft:white_wool")
 			.interactive()
@@ -155,13 +152,12 @@ public class LearningBlocks implements ModInitializer {
 			.requiresCorrectTool(false));
 		PandoricalApi.content().registerItem(NUMBER_ID.toString(), new ItemRegistration()
 			.model(MOD_ID + ":item/number"));
-		// Plushies: soft, small, and a right-click squeaks.
 		PandoricalApi.content().registerBlock(PLUSH_ID.toString(), new BlockRegistration()
 			.baseBlock("minecraft:white_wool")
 			.interactive()
 			.strength(0.0F)
 			.requiresCorrectTool(false));
-		justfatlard.learning_blocks.things.Things.register();
+		justfatlard.learning_blocks.props.Props.register();
 		justfatlard.learning_blocks.toy.Toys.register();
 		justfatlard.learning_blocks.play.Play.register();
 		justfatlard.learning_blocks.classroom.Sky.register();
@@ -179,7 +175,6 @@ public class LearningBlocks implements ModInitializer {
 		// The way in, as a button on the server's own action menu, so nobody has to type.
 		PandoricalApi.actionMenus().suggestButton(
 			ActionMenuApi.Button.runs("minecraft:book", "Learning Blocks", "learn"));
-		PandoricalApi.commandHelp().describe("/learn", "Go to your Learning Blocks classroom.");
 		// Hearing the letters and your words again, from anywhere: safe for any child to press.
 		PandoricalApi.actionMenus().suggestButton(
 			ActionMenuApi.Button.runs("minecraft:note_block", "Letter sounds", "learn sounds"));
@@ -189,22 +184,7 @@ public class LearningBlocks implements ModInitializer {
 			ActionMenuApi.Button.runs("minecraft:villager_spawn_egg", "Silly sentences", "learn silly"));
 		PandoricalApi.actionMenus().suggestButton(
 			ActionMenuApi.Button.runs("minecraft:ender_pearl", "Go home", "learn leave"));
-		PandoricalApi.commandHelp().describe("/learn sounds", "Hear every letter's sound.");
-		PandoricalApi.commandHelp().describe("/learn vowels", "Hear the vowels, short and long.");
-		PandoricalApi.commandHelp().describe("/learn words", "See and hear the words you have read.");
-		PandoricalApi.commandHelp().describe("/learn words all", "Every word the server has, read or not.");
-		PandoricalApi.commandHelp().describe("/learn words <player>", "The words another player has read.");
-		PandoricalApi.commandHelp().describe("/learn phrases", "Hear every recorded phrase, with its caption and length.");
-		// Operators only: Brigadier leaves the command out of the list anybody else's client is sent,
-		// so the mods screen offers it, and its Add button, to operators alone.
-		PandoricalApi.commandHelp().describe("/learn prizes", "Change what learning earns: events, items, loot; and which subjects and rounds.");
-		PandoricalApi.commandHelp().describe("/learn send <player> [lessons]",
-			"Send a child to the classroom; with lessons, the door stays shut until they are done.");
-		PandoricalApi.commandHelp().describe("/learn lessons <player>", "How many lessons a child has left.");
-		PandoricalApi.commandHelp().describe("/learn release <player>", "Clear a child's lessons, opening the door.");
-		PandoricalApi.commandHelp().describe("/learn reload", "Read config/learning-blocks/prizes.json again after a hand edit.");
-		PandoricalApi.commandHelp().describe("/learn leave",
-			"Go home from the classroom, with everything you went in with.");
+		LearnCommand.describe();
 
 		Visit.init();
 		Plots.init();

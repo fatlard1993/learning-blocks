@@ -1,6 +1,21 @@
 # Learning Blocks
 
-A server-side Fabric mod of learning games for young children, in a quiet classroom dimension of their own, on an ordinary survival server. It comes in subjects: **Reading** (letter sounds, words, sentences, big words) is the first and the biggest; **Numbers** and **Logic** have a first small step each, with more to come (see Subjects). Everything from The puzzle down is Reading.
+A server-side Fabric mod of learning games for young children, in a quiet classroom dimension of their own, on an ordinary survival server. It has three subjects: **Reading** (letter sounds, words, sentences, big words), **Numbers** (counting, quick looks, comparing and order) and **Logic** (sorting, patterns, odd one out, what's missing, putting things in order). Everything is spoken, so a child who can't read yet can play; the voice, captions and screens are English only.
+
+The classroom, Subjects, Numbers and Logic are about all three subjects. The puzzle through Stages are Reading's. From Prizes on, everything is shared again, except Words, which is Reading's data format.
+
+## Install
+
+Put the Learning Blocks jar on the server. It also needs these two mods, on the server **and** on every player's game:
+
+- [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
+- [Pandorical](https://www.curseforge.com/minecraft/mc-mods/pandorical)
+
+The Minecraft, Fabric Loader and Java versions it targets are the ones in this mod's `gradle.properties`. Players need nothing else: Pandorical brings the tiles, pictures, captions, screens and voice from the server. A player without Pandorical gets none of these.
+
+Children get in from the action menu. Press **J** (Pandorical's "Open action menus" key, which can be changed in Controls) and click **Learning Blocks**, or type `/learn`.
+
+**Offline-mode servers.** With `online-mode=false`, the server does not check names. Anyone can join under an operator's name or a child's, and take over their commands, progress, things and prizes. Install an authentication mod (one that makes each player set a password) before children play on such a server.
 
 ## The classroom
 
@@ -8,7 +23,7 @@ Press the **Learning Blocks** button on the action menu (or type `/learn`) and y
 
 Nothing in the classroom can get hurt and nobody gets hungry. It's survival, so that letter tiles can be knocked loose and set down the ordinary way, but that is all: the only blocks that break are letter tiles, a tile can only go in the word's gap or on the floor, nothing else can be placed, and nothing a word puts in the room can be opened, slept in or taken. You can't fall out of it either: step off the edge and you're back on the floor.
 
-What you were carrying stays at the door. Your things, your experience, your game mode and any potion effects still running are put aside on the way in and handed back on the way out, exactly as they were. Nothing from the classroom comes home with you.
+What you were carrying is put aside on the way in. Your things, your experience, your game mode and any potion effects still running are put aside on the way in and handed back on the way out, exactly as they were. Nothing from the classroom comes home with you.
 
 To go home, walk through the portal behind you: no clicking, just walk in (facing it, or any way round as long as you walk in and stand in it for a second; a push from a word doesn't count). While lessons keep a child in, the portal is dark with a soft wall across it and the number left over it, and walking into it says how many are left; when the last one is done it lights up with a whoosh and swirls. **Go home** on the action menu (or `/learn leave`) is the other way out, and says the same count while lessons are left. Clicking a creature or a villager in the classroom never opens another mod's dialogue or a trade.
 
@@ -77,7 +92,7 @@ Feelings show as a little bubble with a face in it over whoever feels them: glad
 
 ## Reading together
 
-Two (or three) children can share one classroom. `/learn join <player>` asks to read with someone who is in their classroom; they get a **[Yes]** and a **[No]** to click in chat, and a yes brings the asker in by the ordinary way (their own things put aside, their own lessons and prizes) or straight across from their own classroom. Operators can `/learn pair <a> <b>` and `/learn unpair <player>`, and `/learn daily <reader> with <other>` (or `with nobody`) pairs two for daily reading time: whoever arrives second goes into the first one's room.
+Two (or three) children can share one classroom. `/learn join <player>` asks to learn with someone who is in their classroom. They hear "Somebody wants to learn with you!" and get a notice with **Accept** and **Deny** (a minute to answer; a child can ask again after half a minute). An accept brings the asker in by the ordinary way (their own things put aside, their own lessons and prizes) or straight across from their own classroom. Operators can `/learn pair <a> <b>` and `/learn unpair <player>`, and `/learn daily <reader> with <other>` (or `with nobody`) pairs two for their daily lessons: whoever arrives second goes into the first one's room.
 
 Rounds take turns. Each is picked for the reader whose turn it is, from their own stage band, mastery, review and today's lessons, and starts with "Your turn!" and their name in the caption; their gap's underscore is in their colour (blue, orange, green) and a little arrow in the same colour floats over them. Only they can put a tile in the gap, press the button or pick a picture: the other can knock tiles loose, carry and drop them, and hear them, but a tile aimed at the gap stays in their hand and they hear "Wait for your turn!" with "It's Max's turn!" written. Everything counts only for the reader whose turn it is (mastery, lessons, the daily count, prizes, which fly into their own chest: each reader has one beside the portal), and everybody hears and sees everything.
 
@@ -91,7 +106,7 @@ Some words can't be sounded out: the, I, to, no, go, he, she, we, me, be, was, y
 
 ## Big and little letters
 
-Once a letter's sound is mastered in the letters level, its capital comes in too, both ways round: the board shows a and asks "Which one is the big... A?", with three capitals on the floor, or shows A and asks for the little one. The other tiles are letters the child knows, and never b with d, p with q, m with w or n with u until both are solid. Right: the letter's name, twice, with a sparkle running between the two tiles ("A... a!"). Wrong: the tile says its name and flies home. Each letter's pair is mastered after three clean matches, either way round, and a group (and the letters level) isn't done until its sounds and its pairs both are. Readers who finished the letters level before capitals keep their place; for them, and for everyone after the letters level, a big-and-little round comes up now and then as review. The Letters tab has an **A B C** button to show the capitals, with each pair's matches as pips, and the progress screen shows each pair's mastery.
+Once a letter's sound is mastered in the letters level, its capital comes in too, both ways round: the board shows a and asks "Which one is the big... A?", with three capitals on the floor, or shows A and asks for the little one. The other tiles are letters the child knows, and never b with d, p with q, m with w or n with u until both are solid. Right: the letter's name, twice, with a sparkle running between the two tiles ("A... a!"). Wrong: the tile says its name and flies home. Each letter's pair is mastered after three clean matches, either way round, and a group (and the letters level) isn't done until its sounds and its pairs both are. After the letters level, a big-and-little round comes up now and then as review. The Letters tab has an **A B C** button to show the capitals, with each pair's matches as pips, and the progress screen shows each pair's mastery.
 
 ## Plurals and phrases
 
@@ -105,11 +120,11 @@ Thirty-four soft toys, each a word Minecraft has no creature or thing for: owl, 
 
 In lessons they stand in for the animals: reading owl brings an owl plushie popping out of the button, a lesson prop that is cleared at the next word (not a prize); built wrong, it pops out and you spin round. Bug is the ladybug now, and hug brings the teddy as well as the hearts.
 
-Nineteen toys, the second family to collect, in the same chunky style: a drum, a kite, a spinning top, stacking rings, a toy cap and a dress-up wig (both worn on the head), a butterfly net, a bowling pin, a sock puppet, a doll's crib, a toy car, van, jet, bus, ship, train and truck, a doll and an ABC block made of the same wood as the letter tiles. Put one down and right-click it, and it makes its own little noise (a toot, a ding, a squeak, a whirr) and says its word. Reading a toy word pops the toy out with its noise and hearts, a lesson prop like the plushies; built wrong, it pops out and you spin round. Cap and wig put the toy on your head; ship still gives a boat to ride, and jet still sends you up.
+Twenty-nine toys, the second family to collect. Nineteen are word toys, in the same chunky style: a drum, a kite, a spinning top, stacking rings, a toy cap and a dress-up wig (both worn on the head), a butterfly net, a bowling pin, a sock puppet, a doll's crib, a toy car, van, jet, bus, ship, train and truck, a doll and an ABC block made of the same wood as the letter tiles. Five are counting toys and five are thinking toys, earned in Numbers and Logic (see those sections). Put one down and right-click it, and it makes its own little noise (a toot, a ding, a squeak, a whirr) and says its word. Reading a toy word pops the toy out with its noise and hearts, a lesson prop like the plushies; built wrong, it pops out and you spin round. Cap and wig put the toy on your head; ship still gives a boat to ride, and jet still sends you up.
 
-**Earned by mastery.** Every plushie and toy belongs to the word (or words) that bring it: the owl to owl, the car to car, the teddy to hug, the ladybug to bug. When the last of them is mastered (clean on three different days), the child earns it: it flies into the prize chest with "Ooh! You got a new plushie!" or "Ooh! A new toy!" and comes home the usual way, once per toy, ever. This is the `toy_mastered` event, on by default (the editor's Events tab can turn it off, or add prizes to it). A reader who had already mastered a toy's words earns it on their next way in. One they already have from an older random prize stays theirs, and no second comes. A word file can say `"earns": "teddy"` to choose for itself; otherwise the link comes from the toy its picture or outcome names. The **Toybox** tab (`/learn toybox`) has two shelves, Plushies and Toys: the ones a child has in colour (with how many, if more than one; a click says the word); the rest as "?", with the word that earns it underneath and pips for how near it is to mastered ("Master: hug" in its tooltip); and "Plushies 7 of 34 · Toys 3 of 19".
+**Earned by mastery.** Every plushie and toy belongs to the word (or words) that bring it: the owl to owl, the car to car, the teddy to hug, the ladybug to bug. When the last of them is mastered (clean on three different days), the child earns it: it flies into the prize chest with "Ooh! You got a new plushie!" or "Ooh! A new toy!" and comes home the usual way, once per toy, ever. This is the `toy_mastered` event, on by default (the editor's Events tab can turn it off, or add prizes to it). A reader who had already mastered a toy's words earns it on their next way in. A word file can say `"earns": "teddy"` to choose for itself; otherwise the link comes from the toy its picture or outcome names. The **Toybox** tab (`/learn toybox`) has two shelves, Plushies and Toys: the ones a child has in colour (with how many, if more than one; a click says the word); the rest as "?", with the word that earns it underneath and pips for how near it is to mastered ("Master: hug" in its tooltip); and "Plushies 7 of 34 · Toys 3 of 29".
 
-They can still be prizes. `{ "plush": "random_new" }` gives a plushie the child hasn't got yet (any one, once they have them all), `{ "plush": "owl" }` that one; `{ "toy": "random_new" }` and `{ "toy": "drum" }` the same for toys; and `{ "toybox": "random_new" }` one they haven't got from either, every missing one equally likely. New prize files no longer give a random toy for each stage band and milestone, since mastery earns them; a file from before keeps what it had. To switch an existing file over, take the `{ "toybox": "random_new" }` rows out of `stage_complete` and the milestones (the editor's ✕ on each row does it). Each prize list on the editor has **Add a plushie** and **Add a toy**, and a row's arrows go through "A new one" and every kind.
+They can still be prizes. `{ "plush": "random_new" }` gives a plushie the child hasn't got yet (any one, once they have them all), `{ "plush": "owl" }` that one; `{ "toy": "random_new" }` and `{ "toy": "drum" }` the same for toys; and `{ "toybox": "random_new" }` one they haven't got from either, every missing one equally likely. Each prize list on the editor has **Add a plushie** and **Add a toy**, and a row's arrows go through "A new one" and every kind.
 
 **Play.** Every toy, put down anywhere, plays when right-clicked (once a second at most), saying its word as it goes: the car zooms a little loop on turning wheels and parks, the van honks and bounces, the bus beeps and rocks side to side as its wheels roll, the truck rumbles and its dump bed tips up on its hinge and back down, the train chugs forward and back on its wheels puffing smoke, the jet takes off with its propeller whirring, circles overhead and lands, the ship bobs on the waves, the top spins and wobbles to a stop, the drum bounces on each beat, the kite lifts off its reel and flies up on its string, fluttering, its bow-tied tail waving, and settles back, the stacking rings (each a square ring round a hole) come off the post one by one into a pile beside it and go back on, biggest first, the bowling pin tips over and springs back, the doll dances, the ABC block tumbles, the sock puppet's mouth flaps as it chatters, the crib rocks to a lullaby, the net swishes and catches a butterfly, and the cap and wig spin on their stands. Most move as one piece; the truck, bus, rings, sock puppet, kite, jet, car and train move their parts as well; each ends exactly where it began. Toys, plushies and the props (bin, bathtub, box, jar, fan, mop, corn, mug, desk, fork) all break at a punch, outside the classroom; inside it the room's own rules still hold.
 
@@ -161,15 +176,18 @@ The room remembers what each child gets right and wrong: every word and every so
 
 ## Hearing it again
 
-Three screens open from anywhere, the overworld included, from the **Letters** and **My words** buttons on the action menu (or `/learn sounds`, `/learn vowels`, `/learn words`), with tabs across the top to move between them. Click anything to hear it, just to you, with what was said written along the bottom.
+One screen opens from anywhere, the overworld included, from the **Letter sounds** and **My words** buttons on the action menu (or `/learn sounds`, `/learn vowels`, `/learn words`, `/learn toybox`), with tabs across the top: Letters, Two-letter, Vowels, Tricky, Toybox, My words, and for a child with Numbers or Logic on, **123** and **Logic**. Click anything to hear it, just to you, with what was said written along the bottom.
 
 - **Letters**: all 26 letters, drawn like the tiles (vowels red, consonants blue), with a green tick on each one a child has learned in the letters level. Click a letter for its sound, or the **Name** button under it for its name ("bee" for b; a vowel's name is its long sound). **A B C** shows the capitals instead, each with its big-and-little matches as pips; clicking one says its name.
 - **Two-letter**: every two-letter tile, to hear, with a word that uses it, and a tick once a child has learned it (by reading words with it, first try, a couple of times).
 - **Vowels**: a, e, i, o and u, each with a short button (the sound, then the vowel's keyword from the letters level, apple, egg, ink, on or up, with its picture) and a long button.
 - **Tricky**: the tricky words open at your stage, to hear, with their clean picks as pips, and how many more are to come.
+- **Toybox**: the plushies and toys earned (see Plushies and toys).
+- **123**: the numbers 0 to 20, each with its dots; a click says it, and a star marks one mastered.
+- **Logic**: each of Logic's games (pens, colours, what comes next, odd one out...), with a star for each part of it mastered; a click asks its question.
 - **My words**: every word you've read, by stage band (1a, 1b...), with its picture. The words still to find in the stage you're on show as question marks, so you can see how many are left without being told what they are. The prize chest's screen has a **My words** button too.
 
-Operators also get **Phrases**, every recorded line the room says, with its caption and length, and can see every word the server has (`/learn words all`, or the button on the screen) or another player's (`/learn words <player>`).
+Operators also get **Phrases**, every recorded line the room says, with its caption and length, and can see every word the server has (`/learn words all`, or the button on the screen) or another player's (`/learn words <player>`). Opened on another player, every tab shows that player's progress, with their name in the title.
 
 ## Letters first
 
@@ -179,7 +197,7 @@ Letters come in the usual groups: s a t p i n, then m d g o c k, then e u r h b,
 
 Blending starts early. Once s a t p i n are known, one round in three (`letter_word_every`; 0 turns it off) is a word made only of letters the child knows, asked by its first sound with three tiles, all known: sat, sit, sip, tap, tip, pat and nap to begin with, and more as more letters are learned (map, cat, dig, kid, dog...). Reading one counts like any word, but the level is still finished by knowing every letter.
 
-Readers from before the letters level stay where they are. `letters_first` (on by default, in `puzzles` in prizes.json and on the prize editor's General tab) turns it off for new readers, and `/learn stage <player> 1` skips it; `/learn stage <player> 0` starts the letters again.
+`letters_first` (on by default, in `puzzles` in prizes.json and on the prize editor's General tab) turns it off for new readers, and `/learn stage <player> 1` skips it; `/learn stage <player> 0` starts the letters again.
 
 ## Stages
 
@@ -187,9 +205,9 @@ Words come a short vowel at a time, the order reading is usually taught in, and 
 
 A child's day has no repeats: a word asked once is not asked again that day while their band has another. Once every word of the band has had its turn, the room fills in, first with the same words in a kind of round they haven't had today (the last sound swapped instead of the first, the whole word, read it, a situation), then with something from before due for another look (a word, then a big-and-little pair), then a situation or phrase of words already read, and only after all that the same word again, never twice running. Leaving and coming back the same day doesn't start it over; the day is the schedule's (`timezone`).
 
-Only one clean completion a day counts towards mastering anything (a word, a letter, a two-letter tile, a big-and-little pair, a tricky word): mastered means clean on three different days. More rounds the same day are practice: they still count as lessons, for review and for the daily schedule. So a band takes at least three days; at ten lessons a day, a band of up to ten words takes three, and a bigger one about its words times three over ten (1c's 15 words, five days; 8a's 12, four). The whole course is then at least about 95 days at ten a day, after the letters level.
+Only one clean completion a day counts towards mastering anything (a word, a letter, a two-letter tile, a big-and-little pair, a tricky word): mastered means clean on three different days. More rounds the same day are practice: they still count as lessons, for review and for the daily schedule. So a band takes at least three days; at ten lessons a day, a band of up to ten words takes three, and a bigger one about its words times three over ten (1c's 15 words, five days; 8a's 12, four). The whole Reading course is then at least about 95 days at ten Reading lessons a day, after the letters level. With all three subjects on and taking turns (the default), only about one lesson in three is Reading, so expect roughly three times as long, or give Reading its own share of the day (`/learn daily Sam 10 reading 6 numbers 2 logic 2`).
 
-Long stages come in bands, so the gate (and "You're ready for new words!", and `stage_complete`) comes every 4 to 15 words rather than every 24. Within a stage, words are ordered by the latest letter group they need (s a t p i n; m d g o c k; e u r h b; f l j v w; x y z; then two-letter tiles). Stages 1 and 2 split by group: 1a is words of s a t p i n alone (ant, sat, tap, pat, nap), 1b adds the second group (cat, map, man, tag), and 1c is the rest; a band of fewer than four words joins its neighbour, so stage 2 is 2a (pin, sip, sit, tip, pig, dig, kid) and 2b. Any other stage that would take more than 45 rounds at mastery is split in two halves in the same order. A band only limits which words are asked for: the tiles on the floor still come from the whole stage's families, so a 1a round (_at: sat) still offers c, b and h. The bands are shown as 1a, 1b, 1c on My words and the progress screen, and `/learn stage <player> 1b` puts a reader at one. A reader from before bands keeps their stage, starting at its first band.
+Long stages come in bands, so the gate (and "You're ready for new words!", and `stage_complete`) comes every 4 to 15 words rather than every 24. Within a stage, words are ordered by the latest letter group they need (s a t p i n; m d g o c k; e u r h b; f l j v w; x y z; then two-letter tiles). Stages 1 and 2 split by group: 1a is words of s a t p i n alone (ant, sat, tap, pat, nap), 1b adds the second group (cat, map, man, tag), and 1c is the rest; a band of fewer than four words joins its neighbour, so stage 2 is 2a (pin, sip, sit, tip, pig, dig, kid) and 2b. Any other stage that would take more than 45 rounds at mastery is split in two halves in the same order. A band only limits which words are asked for: the tiles on the floor still come from the whole stage's families, so a 1a round (_at: sat) still offers c, b and h. The bands are shown as 1a, 1b, 1c on My words and the progress screen, and `/learn stage <player> 1b` puts a reader at one.
 
 | Band | Words | Rounds at mastery 3 |
 |------|-------|---------------------|
@@ -257,7 +275,7 @@ Everything a word brings is harmless, can't be hurt, and stays in the classroom:
 
 ## Prizes
 
-Reading can earn things to take home to the main server. Nothing is given inside the classroom: whatever a child earns waits with the things they left at the door, a chest by the portal home shows that something is waiting, and on the way out the room says "You earned a prize!". At home they get their own things back first, then the prizes; whatever doesn't fit is dropped at their feet. That holds however the visit ends: the door, `/learn leave`, logging out and back in somewhere else, or a respawn.
+Every subject can earn things to take home to the main server. Nothing is given inside the classroom: whatever a child earns waits with the things put aside on the way in, a chest by the portal home shows that something is waiting, and on the way out the room says "You earned a prize!". At home they get their own things back first, then the prizes; whatever doesn't fit is dropped at their feet. That holds however the visit ends: the portal, `/learn leave`, logging out and back in somewhere else, or a respawn.
 
 What pays, and what with, is set in `config/learning-blocks/prizes.json`, written with every setting and a comment beside it the first time the server starts.
 
@@ -275,7 +293,7 @@ Events, each of which can give points, prizes, or both, and each of which can be
 | `solved` | Any word read; `first_try_only` limits it to a word read before any other was built that round |
 | `streak` | Every `length` words read in a row; building a different word starts the count over |
 | `stage_complete` | Every word of a stage band (1a, 1b...) mastered; pays once per band |
-| `milestone` | Totals of different words ever read |
+| `milestone` | Totals of different things ever learned: words read, and Numbers' and Logic's things mastered |
 | `toy_mastered` | Every word that earns a plushie or toy mastered: the toy, once (on by default) |
 | `daily_visit` | The first visit of each real day |
 
@@ -283,164 +301,7 @@ Points are optional and off by default: each threshold pays once, the first time
 
 A prize is items (`item`, `count`, optional `components`), experience (`xp`), one roll of a loot table (`loot_table`), or something for the toybox (`plush`, `toy`, `toybox`; see Plushies and toys). There are no command prizes.
 
-There used to be a word book, "My Words", handed out as a written book; the My words screen replaced it. A file that still mentions `word_book` loads without complaint (one line in the log says it's ignored), and the next save from the prize editor leaves it out. Books already handed out stay ordinary written books.
-
-The file as first written:
-
-```jsonc
-// Learning Blocks prizes: what reading earns, handed over at home when a child leaves the classroom.
-//
-// Nothing here goes into the classroom's own inventory. Everything earned waits with the
-// things put aside at the door and is handed back after them; whatever does not fit is
-// dropped at the child's feet at home.
-//
-// A prize is one of:
-//   { "item": "minecraft:cookie", "count": 3 }                 items; "components" optional
-//   { "item": "minecraft:paper", "components": { "minecraft:custom_name": "A gold star" } }
-//   { "xp": 10 }                                               experience points
-//   { "loot_table": "minecraft:gameplay/cat_morning_gift" }    one roll of a loot table
-//   { "plush": "random_new" }                                  a plushie the child hasn't got yet
-//   { "plush": "owl" }                                         that plushie
-//   { "toy": "random_new" }                                    a toy the child hasn't got yet
-//   { "toy": "drum" }                                          that toy
-//   { "toybox": "random_new" }                                 a plushie or a toy they haven't got
-// Anything naming an item or loot table this server has not got is skipped, with a line in
-// the log, and kept in this file. There are no command prizes.
-//
-// Every setting here can also be changed in game: /learn prizes (operators only). The menu
-// writes this file as it goes, comments and all; /learn reload reads a hand edit.
-
-{
-  // Everything below, on or off at once.
-  "enabled": true,
-
-  // At most this many payouts per child per real day, counting every event and threshold
-  // that pays. 0 for no cap. A payout over the cap is not lost: it is owed, and paid on a
-  // later day, oldest first, within that day's cap.
-  "daily_cap": 0,
-  "events": {
-    // The first time a child ever reads a word. Pays once per word, ever, so guessing every
-    // letter in turn earns nothing more.
-    "new_word": {
-      "enabled": true,
-      "points": 0,
-      "prizes": [ { "item": "minecraft:cookie", "count": 1 } ]
-    },
-
-    // Any word read. first_try_only: only when no other word was built this round first.
-    "solved": {
-      "enabled": false,
-      "first_try_only": true,
-      "points": 1,
-      "prizes": []
-    },
-
-    // Every "length" words read in a row. Building a different word resets the count.
-    "streak": {
-      "enabled": true,
-      "length": 3,
-      "points": 0,
-      "prizes": [ { "xp": 10 } ]
-    },
-
-    // Every word in a stage read at least once. Pays once per stage.
-    "stage_complete": {
-      "enabled": true,
-      "points": 0,
-      "prizes": [ { "item": "minecraft:emerald", "count": 1 } ]
-    },
-
-    // Totals of different words ever read. Each pays once.
-    "milestone": {
-      "enabled": true,
-      "every": [
-        { "words": 10, "prizes": [ { "item": "minecraft:emerald", "count": 3 } ] },
-        { "words": 25, "prizes": [ { "item": "minecraft:diamond", "count": 1 } ] },
-        { "words": 100, "prizes": [ { "item": "minecraft:diamond", "count": 5 } ] }
-      ]
-    },
-
-    // A plushie or toy earned by mastering every word that brings it (owl by owl, the teddy by
-    // hug, the car by car): the toy itself, once, ever, and these prizes as well. On by default:
-    // this is how the collection fills.
-    "toy_mastered": {
-      "enabled": true,
-      "points": 0,
-      "prizes": []
-    },
-
-    // The first visit of each real day.
-    "daily_visit": {
-      "enabled": false,
-      "points": 0,
-      "prizes": [ { "item": "minecraft:apple", "count": 1 } ]
-    }
-  },
-
-  // Points add up from the events above that give them. Each threshold pays once, the
-  // first time the total reaches it. Off by default.
-  "points": {
-    "enabled": false,
-    "thresholds": [
-      { "points": 10, "prizes": [ { "item": "minecraft:gold_ingot", "count": 1 } ] },
-      { "points": 50, "prizes": [ { "item": "minecraft:diamond", "count": 1 } ] }
-    ]
-  },
-
-  // How rounds are asked. scenes: now and then, instead of "Can you make...", the room acts
-  // out a little problem (a villager in the rain) and the child works out which word helps.
-  // Only words already read are asked this way. scene_every: one round in this many.
-  // letters_first: a new reader starts on the letters level (stage 0): hear a sound, find its
-  // letter, before any words. Readers from before are left where they are. mastery_clean
-  // (1 to 10): clean completions - right first time, nothing wrong built or picked before - that
-  // master a word, a letter or a two-letter tile; a stage (or a group of letters) opens the next
-  // only when everything in it is mastered. Misses neither add nor take away.
-  // letter_word_every: once s a t p i n are known, one letters round in this many is a word
-  // built only from letters the child knows (sat, tap, sip); 0 for none.
-  // read_it: from stage 2, now and then a word already read is shown whole, not said, and the
-  // child picks its picture from two or three that sound alike; read_it_every: one in this many.
-  // review_share: out of 100, how often a round is a word or letter due for another look (one
-  // missed lately, or never got first try) rather than the usual pick.
-  // first_sound, last_sound, middle_vowel: the kinds of word round, each on or off. First sound
-  // swaps the first tile (_at: cat, bat, hat); last sound, once most of a stage is read, the
-  // last (ma_: map, mat, man); middle vowel, from stage 2, the vowel (c_t: cat, cot, cut).
-  // whole_word: from stage 6, every slot a gap: the word built from its own tiles and a
-  // decoy or two the child knows. Words with no family are asked this way too.
-  // team_up: when two read together, now and then both work on one word, each with a gap of
-  // their own; team_up_every: one round in this many (0 for none).
-  // tell_bob: from stage 5, now and then the child tells Bob, a very literal helper, what to
-  // do, with word cards (put the cat in the box), and he does exactly what it says;
-  // tell_bob_every: one round in this many (0 for none). whats_wrong: what's-wrong rounds,
-  // Bob's sentence already made and acted out wrong, one card to fix (from stage 5), and a
-  // word on the board with one wrong letter (from stage 2); whats_wrong_every: one round in
-  // this many is a word to fix. silly_counts: whether a silly sentence told to Bob (Silly
-  // sentences, from the action menu) counts as a lesson; never towards mastery.
-  // bob_prop_share: out of 100, at most how often Bob's goal is one with only props in it (a
-  // mug on a desk) rather than a plushie or a toy; never two of those in a row.
-  "puzzles": {
-    "scenes": true,
-    "scene_every": 4,
-    "letters_first": true,
-    "mastery_clean": 3,
-    "letter_word_every": 3,
-    "read_it": true,
-    "read_it_every": 5,
-    "review_share": 30,
-    "first_sound": true,
-    "last_sound": true,
-    "middle_vowel": true,
-    "whole_word": true,
-    "team_up": true,
-    "team_up_every": 3,
-    "tell_bob": true,
-    "tell_bob_every": 5,
-    "whats_wrong": true,
-    "whats_wrong_every": 6,
-    "silly_counts": false,
-    "bob_prop_share": 20
-  }
-}
-```
+The file is written the first time the server starts, at `config/learning-blocks/prizes.json`, with a comment over every setting saying what it does; the prize editor keeps the comments when it saves. It holds the whole server config despite its name: prizes, the kinds of round (`puzzles`) and the subjects (`subjects`).
 
 A child's progress (every word read, streak, points, what has already paid) is kept on the player in the world save, and outlives every visit and death.
 
@@ -459,12 +320,12 @@ Words are data, not code. Each is one file, `data/<namespace>/learning_words/<wo
 `icon` (an item id) is the picture shown over the board while the word is asked for; without it the picture is what the outcome brings (a creature's spawn egg, the item, the block). `sounds`, one per tile, says a tile differently in this word: `"a_long"` for the letter's name, `"silent"` for a letter that says nothing (shown greyed in the caption), `null` for the tile's own sound:
 
 ```json
-{ "tiles": ["c", "a", "k", "e"], "sounds": [null, "a_long", null, "silent"], "stage": 6, "outcome": { ... } }
+{ "tiles": ["c", "a", "k", "e"], "sounds": [null, "a_long", null, "silent"], "stage": 9, "outcome": { ... } }
 ```
 
 `picture: "clear"` marks a word whose picture is unmistakably that word, for read-it rounds. `requires` (a list of mod ids) leaves a word out entirely when any of those mods isn't installed (poop needs Poopsmith). A word that only prefers a mod's thing uses a `prefer` outcome, which falls back to vanilla.
 
-`picture_card` names a picture card for the board (see Everyday things and picture cards); `icon` can name a plushie (`learning-blocks-justfatlard:plush_owl`) or a thing.
+`picture_card` names a picture card for the board (see Props and picture cards); `icon` can name a plushie (`learning-blocks-justfatlard:plush_owl`) or a thing.
 
 `tricky: true` makes it a tricky word (with `puzzle: false`): its `stage` is when it opens, and `shown` (a list of tiles, `cap_i` for I) is how the board and its card write it when that isn't its tiles. `plural: true` (with `puzzle: false`) makes it a plural: its tiles are a word's plus `s`, `"z"` in `sounds` for an s that says /z/, and its outcome the creature three times.
 
@@ -506,7 +367,7 @@ A puzzle is made from a family of words sharing everything but one tile (cat, ba
 
 A word naming a mob, item, block, particle, sound or effect that isn't installed is skipped, so a data pack can reach for another mod's creatures without breaking anything when that mod is missing.
 
-A data pack can add words, or replace the shipped ones, by writing files at the same paths.
+A data pack can add words, or replace the shipped ones, by writing files at the same paths. A word added this way has no recording: its caption shows as usual, but where the word would be said the room plays a short chime instead, and its letters are sounded out from the shipped letter sounds.
 
 ## Commands
 
@@ -518,23 +379,23 @@ A data pack can add words, or replace the shipped ones, by writing files at the 
 - `/learn words all`, `/learn words <player>`, `/learn phrases`: every word, someone else's words, and every recorded phrase (operators only)
 - `/learn reload`: read `config/learning-blocks/prizes.json` again (operators only)
 - `/learn send <player> [lessons]`: send a player to the classroom (operators only). With a number of lessons (solved words), the portal is locked, with the count over it, until they're done; `/learn leave` waits too. If something else takes them out, the lessons are kept and their next login takes them back. Operators are never kept in
-- `/learn join <player>`, `/learn accept <player>`, `/learn decline <player>`: ask to read with someone, and answer (anyone). `/learn pair <a> <b>`, `/learn unpair <player>`, `/learn daily <reader> with <other|nobody>` (operators): see Reading together
+- `/learn join <player>`, `/learn accept <player>`, `/learn decline <player>`: ask to learn with someone, and answer (anyone). `/learn pair <a> <b>`, `/learn unpair <player>`, `/learn daily <reader> with <other|nobody>` (operators): see Reading together
 - `/learn home <player>`: sends a child home right now, past lessons, the daily schedule and the portal's lock, the same safe way as the portal (their things, experience, effects and prizes back, the visit ended). The lessons left on that visit are cleared; their daily schedule is not, so a day not done sends them in again at their next login (`/learn daily <player> off` stops that). Operators only.
 - `/learn lessons <player>`, `/learn release <player>`: how many are left, and clearing them (operators only). These, `send` and `progress` say so when the player named is offline, by the name the server knows them by
 - `/learn stage <player> [n]`: show where a player is, or put them at stage `n`, or a band of one, `1b` (operators only). Everything from there up is read again; what it paid stays paid. `1` starts them over. A numbers band, `N0a` to `N2b`, or a logic band, `L0a` to `L3b`, puts their numbers or logic there instead (the bands before it mastered)
 - `/learn progress <player>`: a reader's progress (operators only): their stage; every letter and two-letter sound, and every word, coloured not tried / learning / shaky / solid; the sounds they mix up most ("mixes up b and d: 5 times"); the sentences told to Bob, with their clean days and misses; time and rounds this week; and their lessons history. Also from a reader's name on the prize editor's General tab. `/learn progress <player> export` writes the same to `config/learning-blocks/reports/<uuid>-<player>.json`
-- `/learn daily <player> [n|off]`, `/learn daily <player> <weekday> <n>` (operators only): a daily reading schedule, a number of lessons to finish each day before playing, with any day of the week different (weekends 0, say). With no number it shows the schedule and today's progress. A scheduled child joining with fewer rounds solved today than the day asks for is sent into the classroom ("Reading time first!") for what is left, rounds they solved earlier that day counting, with the portal locked until they're done ("All done for today! Off you go and play!"). A new day starting while they play waits for their next login (`enforce_on_rollover` gives a minute's notice and sends them in instead). Operators are never kept in unless they schedule themselves. An offline player is found by name through the server's own name cache (`usercache.json`: anyone who has joined; a name it has never seen is refused, "have them join once"), or by UUID, which stores their real name if the server knows it; the stored name is brought up to date whenever they join. Kept in `config/learning-blocks/schedules.json` by UUID, with the name alongside and a `timezone` for when a day starts (the server's own by default; the prize cap and daily visit use it too). The prize editor's Readers list sets lessons a day and weekends off too
+- `/learn daily <player> [n|off]`, `/learn daily <player> <weekday> <n>` (operators only): a daily schedule, a number of lessons to finish each day before playing, with any day of the week different (weekends 0, say). With no number it shows the schedule and today's progress. A scheduled child joining with fewer rounds solved today than the day asks for is sent into the classroom ("Learning time first!") for what is left, rounds they solved earlier that day counting, with the portal locked until they're done ("All done for today! Off you go and play!"). A new day starting while they play waits for their next login (`enforce_on_rollover` gives a minute's notice and sends them in instead). Operators are never kept in unless they schedule themselves. An offline player is found by name through the server's own name cache (`usercache.json`: anyone who has joined; a name it has never seen is refused, "have them join once"), or by UUID, which stores their real name if the server knows it; the stored name is brought up to date whenever they join. Kept in `config/learning-blocks/schedules.json` by UUID, with the name alongside and a `timezone` for when a day starts (the server's own by default; the prize cap and daily visit use it too). The prize editor's Learners list sets lessons a day and weekends off too
 - `/learn try [kind] [word]` (operators): the sampler. Runs a round of any kind right now in your classroom (taking you in if need be), as practice: it plays and says and does everything, but nothing counts (no mastery, memory, prizes, lessons or daily count, no stage change), and the round after is your ordinary next one. Kinds: letters, case, early, first, last, middle, whole, readit, scene, phrase, tricky, plural, teamup (or together, when two read together), fixit (a word with one wrong letter), bob (Tell Bob, by goal: cat-in-box), whatswrong (Bob's sentence made wrong), prep (the little words: owl in box or on box), sentence (silly sentences); the word or letter is optional and tab-completes. With no kind, a screen of buttons, one per kind, and Next for another of the last kind
 - `/learn subjects <player> [reading on|off|default] [numbers ...] [logic ...]` (operators): show or set which subjects a child has on; `default` follows the server's `subjects` setting. See Subjects
 - `/learn daily <player> <n> reading <n> numbers <n> logic <n>` (operators): a daily schedule of some of each subject (any subject left out isn't asked for); a plain `/learn daily <player> <n>` is any subject again
 - `/learn try numbers [kind [target]]`, `/learn try logic [kind [target]]` (operators): the sampler for the other subjects, as practice like the rest. Logic's kinds: sort, same, next, mistake, copy, notes, odd, missing, story, size, morning, bobsort, bobbig, bobleft, bobfix (`/learn try logic next abc`). Numbers' kinds: find, look, name, count, make, beds, toybox, scene, bob, fix, team, pens, towers, order, next, picture, more; their targets tab-complete (`/learn try numbers pens same`, `/learn try numbers make 7`)
 - `/learn prizes`: the prize editor (operators only); `/learn prizes done` and `cancel` finish editing a list's items
 
-`/learn`, `/learn leave` and the three review screens are open to everyone. `/tp` won't take anybody into or out of the classroom: the door does work a teleport would skip, so the command is refused and names the right one.
+`/learn`, `/learn leave`, `/learn join`, `/learn accept`, `/learn decline`, `/learn silly`, `/learn toybox` and the review screens are open to everyone. `/tp` won't take anybody into or out of the classroom: the way in and out does work a teleport would skip, so the command is refused and names the right one.
 
 ## Pandorical
 
-Learning Blocks runs server-side, and Pandorical is required: the server will not load this mod without it. Pandorical carries the letter tiles' textures and models to each client, puts the Learning Blocks button on the action menu, and is the route real recorded sounds will reach players by.
+Learning Blocks runs on the server, and Pandorical is required there and on every player's game (see Install). Pandorical carries the tiles' textures and models, the pictures, the recorded voice and the captions to each player, draws the screens, and puts the Learning Blocks buttons on the action menu.
 
 ## Development
 

@@ -26,7 +26,6 @@ final class AnswerCommit {
 		return a != null && b != null && a.tiles().equals(b.tiles());
 	}
 
-	/** Lessons left before this answer. */
 	static int lessonsBefore(ServerPlayer player) {
 		// A practice round takes no lesson off.
 		Room room = Rooms.of(player);
@@ -48,13 +47,11 @@ final class AnswerCommit {
 		return band.words().stream().allMatch(w -> sameWord(w, word) || progress.mastered(w));
 	}
 
-	/** Whether this clean completion is the one that masters the word. */
 	static boolean masters(ServerPlayer player, Word word, boolean firstTry) {
 		Progress progress = Progress.of(player);
 		return firstTry && progress.cleanCountsToday(word) && progress.clean(word) + 1 == Progress.masteredAt();
 	}
 
-	/** A right answer: the round's tally, progress and prizes, and a lesson off. */
 	void right(ServerPlayer player, String what, Runnable credit, int lessonsBefore) {
 		// A practice round: nothing counted, paid or taken off; only the telling.
 		if (room.practice) {
@@ -68,8 +65,8 @@ final class AnswerCommit {
 			Safely.run("Counting " + player.getGameProfile().name() + "'s lesson", () -> {
 				Visit visit = Visit.of(player);
 				if (visit != null) Visit.set(player, visit.withLessons(lessonsBefore - 1));
-				// The door waits for "All done!" to open; until then it shows the count.
-				if (lessonsBefore - 1 > 0) room.refreshDoor(player, false);
+				// The portal waits for "All done!" to open; until then it shows the count.
+				if (lessonsBefore - 1 > 0) room.refreshPortal(player, false);
 				else Progress.of(player).lessonNote(player, "lessons all done");
 			});
 		}

@@ -42,7 +42,6 @@ import org.jspecify.annotations.Nullable;
 final class Counting {
 	private Counting() {}
 
-	/** Something to count: a creature, an item, or a block, and its word, said as a plural. */
 	enum What {
 		PIG(EntityTypes.PIG, null, null, "pigs"), COW(EntityTypes.COW, null, null, "cows"), CHICKEN(EntityTypes.CHICKEN, null, null, "chickens"),
 		SHEEP(EntityTypes.SHEEP, null, null, "sheep"), CAT(EntityTypes.CAT, null, null, "cats"), KITTEN(EntityTypes.CAT, null, null, "kittens"),
@@ -66,7 +65,6 @@ final class Counting {
 			return "word/" + plural;
 		}
 
-		/** The creatures, for counting rounds that count creatures. */
 		static final List<What> CREATURES = List.of(PIG, COW, CHICKEN, SHEEP, CAT);
 	}
 
@@ -94,7 +92,6 @@ final class Counting {
 		return block(level, what.block, size);
 	}
 
-	/** An item, shown standing up and turning to face whoever looks. */
 	static Display.@Nullable ItemDisplay item(ServerLevel level, ItemStack stack, float size) {
 		Display.ItemDisplay display = EntityTypes.ITEM_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
 		if (display == null) return null;
@@ -105,7 +102,6 @@ final class Counting {
 		return display;
 	}
 
-	/** A block, standing on its foot. */
 	static Display.@Nullable BlockDisplay block(ServerLevel level, @Nullable BlockState state, float size) {
 		if (state == null) return null;
 		Display.BlockDisplay display = EntityTypes.BLOCK_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
@@ -135,7 +131,6 @@ final class Counting {
 		return dispense(round, player, what, n, spots, stagger, landed, 0.7F);
 	}
 
-	/** The same, at this size. */
 	static List<Entity> dispense(SubjectRound round, ServerPlayer player, What what, int n, List<Vec3> spots, int stagger, @Nullable Consumer<Entity> landed, float size) {
 		List<Entity> out = new ArrayList<>();
 		for (int i = 0; i < n; i++) {
@@ -149,7 +144,6 @@ final class Counting {
 		return out;
 	}
 
-	/** One thing out of the button after {@code delay} ticks, in an arc to {@code to}. */
 	static void fly(SubjectRound round, ServerPlayer player, Entity thing, Vec3 to, int delay, @Nullable Consumer<Entity> landed) {
 		ServerLevel level = round.level;
 		Vec3 from = round.layout.mouth();
@@ -183,7 +177,6 @@ final class Counting {
 		});
 	}
 
-	/** How long {@code n} things take to all be out and landed. */
 	static int dispenseTicks(int n, int stagger) {
 		return Math.max(0, n - 1) * stagger + Dispenser.FLIGHT + 2;
 	}
@@ -224,7 +217,6 @@ final class Counting {
 		return narration;
 	}
 
-	/** Big text on the board, in the middle (or at {@code x} along it): a numeral, a word, dots. */
 	static Display.TextDisplay boardText(SubjectRound round, String text, int colour, float size, double x, double y) {
 		Display.TextDisplay display = EntityTypes.TEXT_DISPLAY.create(round.level, EntitySpawnReason.TRIGGERED);
 		Vec3 at = Vec3.atCenterOf(round.layout.origin().offset(0, RoomLayout.WORD_Y, -4)).add(x, y, 0.45);
@@ -235,14 +227,12 @@ final class Counting {
 		return round.add(display);
 	}
 
-	/** Dots, as a die's face or ten-frames: one string, rows of five. */
 	static String dots(int n) {
 		StringBuilder text = new StringBuilder();
 		for (int i = 0; i < n; i++) text.append(i > 0 && i % 5 == 0 ? "\n" : "").append("●");
 		return text.toString();
 	}
 
-	/** The number tile's dotted side shown big on the board: a block display of the tile, turned to show its side. */
 	static Display.BlockDisplay boardDots(SubjectRound round, int n, float size) {
 		Display.BlockDisplay display = EntityTypes.BLOCK_DISPLAY.create(round.level, EntitySpawnReason.TRIGGERED);
 		display.setBlockState(justfatlard.learning_blocks.LearningBlocks.NUMBER.showing(n));

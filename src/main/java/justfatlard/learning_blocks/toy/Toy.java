@@ -17,7 +17,6 @@ public enum Toy implements StringRepresentable {
 	// The thinking toys, for Logic: earned by mastering logic.
 	PUZZLE(Sound.CLACK), CUPS(Sound.CLACK), MAZE(Sound.CLACK), CUBE(Sound.CLACK), ROBOT(Sound.DING);
 
-	/** A toy's own little noise, as it is squeezed or pops out. */
 	public enum Sound {
 		SQUEAK(SoundEvents.CHICKEN_EGG, 1.9F), TOOT(SoundEvents.NOTE_BLOCK_DIDGERIDOO.value(), 1.6F),
 		DING(SoundEvents.NOTE_BLOCK_BELL.value(), 1.4F),
@@ -50,7 +49,6 @@ public enum Toy implements StringRepresentable {
 		return name;
 	}
 
-	/** Worn on the head: the cap and the wig. */
 	public boolean worn() {
 		return this == CAP || this == WIG;
 	}

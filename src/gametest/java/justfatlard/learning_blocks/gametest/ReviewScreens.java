@@ -138,6 +138,33 @@ public final class ReviewScreens implements FabricClientGameTest {
 			});
 			shoot(session, "learning-review-phrases");
 
+			// A child's own Numbers and Logic tabs, seen by an operator: the child's stars, not the operator's.
+			session.onServer(server -> {
+				ServerPlayer player = session.player();
+				net.fabricmc.fabric.api.entity.FakePlayer child = StandIns.inClassroom(player.level(), "TestKidA", player.position());
+				try {
+					String three = justfatlard.learning_blocks.subject.Numbers.numeral(3);
+					String pens = justfatlard.learning_blocks.logic.LogicCourse.Kind.SORT.item("kind");
+					Progress.of(child).setItemCleanForTests(child, three, Progress.masteredAt());
+					Progress.of(child).setItemCleanForTests(child, pens, Progress.masteredAt());
+					check(!Progress.of(player).itemMastered(three), "the operator already knows three");
+					check(Review.open(player, Review.Tab.NUMBERS, child, false), "the child's numbers would not open");
+					check(Review.masteredShown(player).contains(three), "the numbers tab did not show the child's three: " + Review.masteredShown(player));
+					Review.press(player, "tab:LOGIC");
+					check(Review.openTab(player) == Review.Tab.LOGIC, "the logic tab did not open");
+					check(Review.masteredShown(player).contains(pens), "the logic tab did not show the child's pens: " + Review.masteredShown(player));
+					Review.press(player, "logic:0");
+					check(lastPlayed().equals("phrase/put_in_pens"), "the pens game did not ask its question: " + lastPlayed());
+					Review.press(player, "close");
+					// The operator's own: no stars of the child's.
+					check(Review.open(player, Review.Tab.LOGIC, null, false), "the operator's logic would not open");
+					check(!Review.masteredShown(player).contains(pens), "the operator's logic tab shows the child's stars");
+				} finally {
+					StandIns.online(server, child, false);
+				}
+			});
+			shoot(session, "learning-review-logic");
+
 			session.onServer(server -> {
 				ServerPlayer player = session.player();
 				Review.press(player, "close");

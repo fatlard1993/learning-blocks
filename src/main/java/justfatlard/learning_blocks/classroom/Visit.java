@@ -20,16 +20,15 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * A child's time in the classroom, kept on the player: where they came from, and everything that
- * was set aside at the door so it could be handed back at the other one.
+ * was set aside on the way in so it could be handed back on the way out.
  *
  * <p>On the player, persistent and carried through deaths, because the pack and its stash must
  * never disagree: the player's own save holds both, written together, so a crash between the two
  * doors can lose neither and double neither. It is written before anything is taken, so a visit
  * that exists is always a visit with somewhere to put things back from.
  *
- * <p>Effects are part of it. PvP Dimensions, which this is slimmed down from, puts a pack and a
- * level aside and clears effects on the way out; a child who went in with a potion running should
- * come out with it still running.
+ * <p>Effects are part of it: a child who went in with a potion running comes out with it still
+ * running.
  *
  * <p>Prizes earned inside wait here too, never in the classroom inventory: they are saved in the
  * same record as the stash, so there is no moment at which a prize exists in two places or none.
@@ -38,13 +37,13 @@ import org.jspecify.annotations.Nullable;
 public record Visit(Home home, List<Slot> kit, Experience experience, String gameMode, List<MobEffectInstance> effects,
 		List<ItemStack> prizes, int prizeXp, int lessons, Vitals vitals) {
 
-	/** The cursor's slot in a kit: what was held on the pointer at the door. */
+	/** The cursor's slot in a kit: what was held on the pointer on the way in. */
 	public static final int CURSOR = -1;
 	/** The 2x2 crafting grid's first slot in a kit; the other three follow, downwards. */
 	public static final int CRAFTING = -2;
 
 	/**
-	 * Health, hunger, air and burning at the door, handed back at the other one, so a visit is not
+	 * Health, hunger, air and burning on the way in, handed back on the way out, so a visit is not
 	 * a free heal. A negative health is "not saved": visits begun before this was kept.
 	 */
 	public record Vitals(float health, int food, float saturation, int air, int fire) {
@@ -72,7 +71,6 @@ public record Visit(Home home, List<Slot> kit, Experience experience, String gam
 		}
 	}
 
-	/** Where to put somebody back. */
 	public record Home(ResourceKey<Level> dimension, double x, double y, double z, float yaw, float pitch) {
 		static final Codec<Home> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(Home::dimension),
@@ -127,11 +125,11 @@ public record Visit(Home home, List<Slot> kit, Experience experience, String gam
 		Slot.CODEC.listOf().fieldOf("kit").forGetter(Visit::kit),
 		Experience.CODEC.fieldOf("experience").forGetter(Visit::experience),
 		Codec.STRING.fieldOf("game_mode").forGetter(Visit::gameMode),
-		LenientItems.dropping(MobEffectInstance.CODEC, "An effect put aside at the door").fieldOf("effects").forGetter(Visit::effects),
+		LenientItems.dropping(MobEffectInstance.CODEC, "An effect put aside on the way in").fieldOf("effects").forGetter(Visit::effects),
 		// Absent on visits begun before prizes existed, which have none waiting.
 		LenientItems.CODEC.listOf().optionalFieldOf("prizes", List.of()).forGetter(Visit::prizes),
 		Codec.INT.optionalFieldOf("prize_xp", 0).forGetter(Visit::prizeXp),
-		// Lessons an operator sent this child for, still to do before the door opens.
+		// Lessons an operator sent this child for, still to do before the portal opens.
 		Codec.INT.optionalFieldOf("lessons", 0).forGetter(Visit::lessons),
 		Vitals.CODEC.optionalFieldOf("vitals", Vitals.NONE).forGetter(Visit::vitals)
 	).apply(instance, Visit::new));
@@ -153,7 +151,6 @@ public record Visit(Home home, List<Slot> kit, Experience experience, String gam
 		else player.setAttached(ATTACHMENT, visit);
 	}
 
-	/** Everything this player is carrying, wearing and under, as it is right now. */
 	public static Visit snapshot(ServerPlayer player) {
 		List<Slot> kit = new ArrayList<>();
 		Inventory inventory = player.getInventory();
@@ -175,14 +172,12 @@ public record Visit(Home home, List<Slot> kit, Experience experience, String gam
 			player.gameMode().getName(), List.copyOf(effects), List.of(), 0, 0, Vitals.of(player));
 	}
 
-	/** This visit, with more waiting to be handed over at home. */
 	public Visit withPrizes(List<ItemStack> more, int moreXp) {
 		List<ItemStack> all = new ArrayList<>(prizes);
 		for (ItemStack stack : more) if (!stack.isEmpty()) all.add(stack.copy());
 		return new Visit(home, kit, experience, gameMode, effects, List.copyOf(all), prizeXp + moreXp, lessons, vitals);
 	}
 
-	/** This visit, with this many lessons still to do before the door opens. */
 	public Visit withLessons(int remaining) {
 		return new Visit(home, kit, experience, gameMode, effects, prizes, prizeXp, Math.max(0, remaining), vitals);
 	}
@@ -201,7 +196,6 @@ public record Visit(Home home, List<Slot> kit, Experience experience, String gam
 		lay(player, kit);
 	}
 
-	/** Every slot of this player's inventory that holds anything, as it is now. */
 	public static List<Slot> pack(ServerPlayer player) {
 		List<Slot> slots = new ArrayList<>();
 		Inventory inventory = player.getInventory();
@@ -212,14 +206,12 @@ public record Visit(Home home, List<Slot> kit, Experience experience, String gam
 		return List.copyOf(slots);
 	}
 
-	/** Empty the pointer and the crafting grid, once they are in the kit. */
 	public static void clearHands(ServerPlayer player) {
 		player.containerMenu.setCarried(ItemStack.EMPTY);
 		player.inventoryMenu.getCraftSlots().clearContent();
 		player.inventoryMenu.slotsChanged(player.inventoryMenu.getCraftSlots());
 	}
 
-	/** Lay these slots out in the inventory; whatever finds its slot taken goes wherever there is room. */
 	public static void lay(ServerPlayer player, List<Slot> slots) {
 		Inventory inventory = player.getInventory();
 		for (Slot slot : slots) {

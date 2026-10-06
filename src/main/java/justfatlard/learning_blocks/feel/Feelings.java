@@ -66,14 +66,12 @@ public final class Feelings {
 		});
 	}
 
-	/** Paper drawn as one of the emote pictures: a feeling, or the waving hand. */
 	public static ItemStack picture(String name) {
 		ItemStack stack = new ItemStack(Items.PAPER);
 		stack.set(DataComponents.ITEM_MODEL, LearningBlocks.id("emote/" + name));
 		return stack;
 	}
 
-	/** A feeling over this creature or character, for {@code lasts} ticks (0 for as long as it is there). */
 	public static Display.@Nullable ItemDisplay show(Entity over, Face face, int lasts) {
 		clear(over);
 		if (!(over.level() instanceof ServerLevel level)) return null;
@@ -112,12 +110,10 @@ public final class Feelings {
 		shown.put(bubble.getUUID(), new Shown(bubble, over, face.id(), now, lasts > 0 ? now + lasts : Long.MAX_VALUE));
 	}
 
-	/** Up off the top of its owner a little, at this size. */
 	private static Transformation pose(float scale) {
 		return new Transformation(new Vector3f(0, 0.45F, 0), null, new Vector3f(scale * SIZE), null);
 	}
 
-	/** Whatever this creature is feeling, gone. */
 	public static void clear(Entity over) {
 		for (Iterator<Shown> it = shown.values().iterator(); it.hasNext(); ) {
 			Shown one = it.next();
@@ -136,7 +132,6 @@ public final class Feelings {
 		return null;
 	}
 
-	/** Every bubble showing, in any room. For tests. */
 	public static int count() {
 		return (int) shown.values().stream().filter(one -> one.display().isAlive()).count();
 	}

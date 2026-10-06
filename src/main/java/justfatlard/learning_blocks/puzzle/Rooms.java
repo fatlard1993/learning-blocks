@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,11 +32,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Whose room is whose, while they are in it, and the clicks that reach one.
- *
- * <p>In memory only. A room is rebuilt from nothing on every way in, so there is nothing about one
- * worth saving; what must survive a restart - the plot, and the things put aside at the door - is
- * on the player.
+ * Whose room is whose, while they are in it, and the clicks that reach one. In memory only: a room
+ * is rebuilt from nothing on every way in; what must survive a restart (the plot, and the things
+ * put aside on the way in) is on the player.
  */
 public final class Rooms {
 	private Rooms() {}
@@ -96,7 +95,6 @@ public final class Rooms {
 		return at(level, origin) != null;
 	}
 
-	/** The room standing at this spot, if there is one. */
 	static @Nullable Room at(ServerLevel level, BlockPos origin) {
 		for (Room room : rooms.values()) if (room.level == level && room.origin().equals(origin)) return room;
 		return null;
@@ -115,7 +113,6 @@ public final class Rooms {
 		return true;
 	}
 
-	/** Every room, once each. */
 	static java.util.Collection<Room> all() {
 		java.util.Set<Room> each = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
 		each.addAll(rooms.values());
@@ -132,7 +129,7 @@ public final class Rooms {
 				List.of(VanillaHudElement.HELD_ITEM_TOOLTIP, VanillaHudElement.OVERLAY_MESSAGE));
 			room.refreshPrizeMarker(player);
 			room.refreshHaul(player);
-			room.refreshDoor(player, false);
+			room.refreshPortal(player, false);
 			return;
 		}
 		// The item name that pops up over the hotbar sits where the caption does, and the caption
@@ -143,7 +140,7 @@ public final class Rooms {
 		room.newRound(player);
 		room.refreshPrizeMarker(player);
 		room.refreshHaul(player);
-		room.refreshDoor(player, false);
+		room.refreshPortal(player, false);
 	}
 
 	/** The client has loaded the level it is in: a room waiting to speak can, shortly. */
@@ -152,10 +149,9 @@ public final class Rooms {
 		if (room != null) room.clientLoaded();
 	}
 
-	/** The lessons left changed: the door shows it. */
 	public static void lessonsChanged(ServerPlayer player) {
 		Room room = of(player);
-		if (room != null) room.refreshDoor(player, false);
+		if (room != null) room.refreshPortal(player, false);
 	}
 
 	/** A payout, put aside for this child: it flies into the chest when the room next gets to say so. */
@@ -165,7 +161,6 @@ public final class Rooms {
 		room.prizeAdded(player, items, xp);
 	}
 
-	/** Something was put aside for this child: the chest by the door shows it. */
 	public static void prizesChanged(ServerPlayer player) {
 		Room room = of(player);
 		if (room != null) {
@@ -174,7 +169,6 @@ public final class Rooms {
 		}
 	}
 
-	/** A round for exactly this word, now: for tests, and for showing a particular word. False if it can't be. */
 	public static boolean startRound(ServerPlayer player, Word target) {
 		Room room = of(player);
 		if (room == null || Puzzle.forTarget(target, Words.all(), player.getRandom()) == null) return false;
@@ -183,7 +177,7 @@ public final class Rooms {
 		return true;
 	}
 
-	/** A round of this kind for exactly this word: for tests. False if the word has no such frame. */
+	@ForTests
 	public static boolean startRound(ServerPlayer player, Word target, Puzzle.Kind kind) {
 		Room room = of(player);
 		Puzzle puzzle = Puzzle.forTarget(target, Words.all(), player.getRandom(), kind);
@@ -193,7 +187,7 @@ public final class Rooms {
 		return true;
 	}
 
-	/** A letters round asking for exactly this letter: for tests. */
+	@ForTests
 	public static boolean startLetterRound(ServerPlayer player, Letter letter) {
 		Room room = of(player);
 		if (room == null) return false;
@@ -202,7 +196,7 @@ public final class Rooms {
 		return true;
 	}
 
-	/** The next round, chosen as the room chooses it: for tests. */
+	@ForTests
 	public static void nextRound(ServerPlayer player) {
 		Room room = of(player);
 		if (room == null) return;
@@ -210,13 +204,13 @@ public final class Rooms {
 		room.newRound(player);
 	}
 
-	/** "Reading time first!" before this child's next prompt: they were sent in by their daily schedule. */
-	public static void readingTime(ServerPlayer player) {
+	/** "Learning time first!" before this child's next prompt: they were sent in by their daily schedule. */
+	public static void learningTime(ServerPlayer player) {
 		Room room = of(player);
-		if (room != null) room.readingTime = true;
+		if (room != null) room.learningTime = true;
 	}
 
-	/** A team-up round for whoever reads together here: for tests. True if it is one. */
+	@ForTests
 	public static boolean startTeamRound(ServerPlayer player) {
 		Room room = of(player);
 		if (room == null) return false;
@@ -225,7 +219,7 @@ public final class Rooms {
 		return room.team();
 	}
 
-	/** A tricky-word round for this word: for tests. */
+	@ForTests
 	public static boolean startTricky(ServerPlayer player, Word word) {
 		Room room = of(player);
 		if (room == null) return false;
@@ -234,7 +228,7 @@ public final class Rooms {
 		return room.tricky();
 	}
 
-	/** A plural round for this plural: for tests. */
+	@ForTests
 	public static boolean startPlural(ServerPlayer player, Word plural) {
 		Room room = of(player);
 		if (room == null) return false;
@@ -243,7 +237,7 @@ public final class Rooms {
 		return room.puzzle() != null && room.puzzle().kind() == Puzzle.Kind.PLURAL;
 	}
 
-	/** A phrase round, the adjective over the noun: for tests. */
+	@ForTests
 	public static boolean startPhrase(ServerPlayer player, Word adjective, Word noun) {
 		Room room = of(player);
 		if (room == null) return false;
@@ -252,7 +246,7 @@ public final class Rooms {
 		return room.phraseAdjective() != null;
 	}
 
-	/** A big-and-little round for this letter: for tests. */
+	@ForTests
 	public static boolean startCaseRound(ServerPlayer player, Letter letter, boolean up) {
 		Room room = of(player);
 		if (room == null) return false;
@@ -261,7 +255,6 @@ public final class Rooms {
 		return room.casePrompt() != null;
 	}
 
-	/** A round with Bob of this kind, for this goal (or one picked), with this mistake: for tests and the sampler. True if it is one. */
 	public static boolean startBob(ServerPlayer player, BobRound.Mode mode, justfatlard.learning_blocks.bob.@Nullable Goal goal,
 			justfatlard.learning_blocks.bob.Goals.@Nullable Mistake mistake) {
 		Room room = of(player);
@@ -278,7 +271,7 @@ public final class Rooms {
 	public static @Nullable String silly(ServerPlayer player) {
 		justfatlard.learning_blocks.reward.Progress progress = justfatlard.learning_blocks.reward.Progress.of(player);
 		int stage = Stages.current(progress);
-		if (stage >= 0 && stage < RoundLifecycle.BOB_FROM) {
+		if (stage >= 0 && stage < Stages.BOB_FROM) {
 			// Said, not written: the child pressing this button can't read the reason yet.
 			sayQuietly(player, "phrase/bob_comes_later");
 			return null;
@@ -319,10 +312,7 @@ public final class Rooms {
 		return startBob(player, BobRound.Mode.SILLY, null, null);
 	}
 
-	/**
-	 * A word to fix: this word on the board with this wrong letter in it, of any kind of round that
-	 * makes it a family word; for tests and the sampler. False if no kind does.
-	 */
+	/** A word to fix: this word on the board with this wrong letter in it, of any kind of round that makes it a family word. False if no kind does. */
 	public static boolean startFix(ServerPlayer player, Word target, @Nullable Letter wrong) {
 		Room room = of(player);
 		if (room == null) return false;
@@ -343,7 +333,7 @@ public final class Rooms {
 		return false;
 	}
 
-	/** A big word with this chunk to build, the one starting at tile {@code start}: for tests. False if it can't be. */
+	@ForTests
 	public static boolean startChunk(ServerPlayer player, Word target, int start) {
 		Room room = of(player);
 		if (room == null || Puzzle.buildableChunks(target).stream().noneMatch(range -> range[0] == start)) return false;
@@ -353,7 +343,8 @@ public final class Rooms {
 		return room.puzzle() != null && room.puzzle().kind() == Puzzle.Kind.CHUNK && room.puzzle().target().id().equals(target.id());
 	}
 
-	/** A read-it round for this word: for tests. False if it has no look-alike to pick instead. */
+	/** A read-it round for this word. False if it has no look-alike to pick instead. */
+	@ForTests
 	public static boolean startReadIt(ServerPlayer player, Word target) {
 		Room room = of(player);
 		if (room == null) return false;
@@ -362,7 +353,7 @@ public final class Rooms {
 		return room.readIt();
 	}
 
-	/** A scene round for this word, which must have a usable scene: for tests. */
+	@ForTests
 	public static boolean startScene(ServerPlayer player, Word target) {
 		Room room = of(player);
 		if (room == null || target.usableScene().isEmpty() || Puzzle.forTarget(target, Words.all(), player.getRandom()) == null) return false;
@@ -371,13 +362,14 @@ public final class Rooms {
 		return true;
 	}
 
-	/** Run a word's outcome in this child's room, as reading it would: for tests. */
+	@ForTests
 	public static void runOutcome(ServerPlayer player, Word word) {
 		Room room = of(player);
 		if (room != null) word.outcome().run(player, room.dispenser);
 	}
 
-	/** A word's cheeky version, as when it is built but was not the word asked for: for tests. */
+	/** A word's cheeky version, as when it is built but was not the word asked for. */
+	@ForTests
 	public static void runWrongOutcome(ServerPlayer player, Word word) {
 		Room room = of(player);
 		if (room != null) word.wrongOutcome().run(player, room.dispenser);
@@ -444,7 +436,6 @@ public final class Rooms {
 	/** How long a leave may take before the room sees it through itself: the prize line, and some. */
 	static final int LEAVE_AT_MOST = 100;
 
-	/** Each room's own clock: asking again after a quiet spell. */
 	public static void tick(MinecraftServer server) {
 		java.util.Set<Room> ticked = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
 		for (Map.Entry<UUID, Room> entry : new ArrayList<>(rooms.entrySet())) {
@@ -483,7 +474,6 @@ public final class Rooms {
 		}
 	}
 
-	/** Everything the room made, gone; called on the way out. */
 	public static void close(ServerPlayer player) {
 		Room room = rooms.remove(player.getUUID());
 		if (room != null) {
@@ -532,7 +522,7 @@ public final class Rooms {
 	}
 
 	/**
-	 * A right-click on a block in the classroom. The room's own controls first - the door, the button,
+	 * A right-click on a block in the classroom. The room's own controls first - the portal, the button,
 	 * the prize chest, a word's bed or chest - then a tile being placed, which may go only in the gap
 	 * or on the room's floor. Nothing else is used on a block here: the classroom is survival, so a
 	 * child can knock tiles loose and set them down, and every other way a held item changes the
@@ -579,7 +569,6 @@ public final class Rooms {
 		return held.isEmpty() ? InteractionResult.PASS : InteractionResult.FAIL;
 	}
 
-	/** Whether this block may be broken: in the classroom only a tile, loose or in the gap. */
 	public static boolean mayBreak(Level level, Player player, BlockPos pos, BlockState state) {
 		if (level.isClientSide() || !Places.isClassroom(level) || player.isCreative()) return true;
 		Room room = player instanceof ServerPlayer serverPlayer ? of(serverPlayer) : null;

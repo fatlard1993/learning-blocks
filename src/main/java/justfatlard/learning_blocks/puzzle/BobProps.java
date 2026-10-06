@@ -19,7 +19,6 @@ import org.jspecify.annotations.Nullable;
 final class BobProps {
 	private BobProps() {}
 
-	/** The ink and the card of a word card. */
 	static final int INK = 0x1E2A5A;
 	static final int CARD = 0xFFF2E8C9;
 
@@ -44,7 +43,6 @@ final class BobProps {
 		return villager;
 	}
 
-	/** Once he is in the world: hello. */
 	static void wave(Villager bob) {
 		Gestures.run(bob, Gestures.Gesture.WAVE);
 	}

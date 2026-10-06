@@ -221,12 +221,10 @@ public final class Anims {
 		for (int w = 0; w < xs.length * zs.length; w++) anim.part("wheel" + w, xs[w % 2], y, zs[w / 2]).spin('x', from, to, degreesPerTick);
 	}
 
-	/** This toy's play. */
 	public static Anim of(Toy toy) {
 		return TOYS.getOrDefault(toy, SQUISH);
 	}
 
-	/** What a thing in a tub does: floats, bobbing. */
 	public static final Anim FLOAT = Anim.of().key(4, 0, 0.06F, 0, 0, 0, 5).key(10, 0, -0.02F, 0, 0, 0, -5).key(16, 0, 0.05F, 0, 0, 0, 4)
 		.key(22, 0, 0, 0, 0, 0, -2).puff(4, ParticleTypes.SPLASH, 4, 0.4F).sound(0, SoundEvents.PLAYER_SPLASH, 1.6F).rest(26);
 }

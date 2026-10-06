@@ -22,7 +22,6 @@ import org.jspecify.annotations.Nullable;
  * by whatever the whole toy is doing.
  */
 public final class Anim {
-	/** A pose at a tick. */
 	public record Key(int tick, float x, float y, float z, float yaw, float pitch, float roll, float sx, float sy, float sz) {
 		/** This pose, in the world, for a toy facing {@code facingYaw} radians (its forward turned from south). */
 		Matrix4f matrix(float facingYaw) {
@@ -37,7 +36,6 @@ public final class Anim {
 		}
 	}
 
-	/** Something heard or seen at a tick: a sound, a puff of particles at a height over the toy, or a line said. */
 	public record Event(int tick, @Nullable SoundEvent sound, float pitch, @Nullable ParticleOptions particle, int count, float height) {}
 
 	/** A part's pose at a tick: moved, in model units, and turned about its pivot round the model's axes. */
@@ -114,7 +112,6 @@ public final class Anim {
 		return turn(to + 2, 0, 0, 0, axis == 'x' ? home : 0, axis == 'y' ? home : 0, axis == 'z' ? home : 0);
 	}
 
-	/** The whole toy's pose at any tick, between its keys. */
 	Key wholeAt(int tick) {
 		Key before = null;
 		Key after = null;
@@ -130,7 +127,6 @@ public final class Anim {
 			lerp(before.sx(), after.sx(), t), lerp(before.sy(), after.sy(), t), lerp(before.sz(), after.sz(), t));
 	}
 
-	/** A part's pose at any tick, between its poses. */
 	static Turn partAt(Part part, int tick) {
 		Turn before = null;
 		Turn after = null;
@@ -156,7 +152,6 @@ public final class Anim {
 			.translate(-pivot.x, -pivot.y, -pivot.z);
 	}
 
-	/** Every tick something new is posed at: the whole toy's keys and every part's. */
 	java.util.SortedSet<Integer> poseTicks() {
 		java.util.SortedSet<Integer> ticks = new java.util.TreeSet<>();
 		for (Key key : keys) ticks.add(key.tick());
@@ -189,7 +184,6 @@ public final class Anim {
 		return this;
 	}
 
-	/** A squash or stretch, standing still. */
 	public Anim squash(int tick, float wide, float tall) {
 		return key(tick, 0, 0, 0, 0, 0, 0, wide, tall, wide);
 	}
@@ -209,7 +203,6 @@ public final class Anim {
 		return key(tick, 0, 0, 0);
 	}
 
-	/** A puff of the default kind. */
 	public Anim poof(int tick) {
 		return puff(tick, ParticleTypes.POOF, 4, 0.4F);
 	}

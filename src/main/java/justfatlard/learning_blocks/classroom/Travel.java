@@ -26,19 +26,16 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Going into the classroom and coming out of it, and the backstops for every way somebody might
- * cross without using the door.
+ * cross without using the portal.
  *
  * <p>There is one way in, {@link #enter}, and one way out, {@link #leave}. Both the command and the
- * door inside the room come through them, and every backstop ends up in one or the other, so what
+ * portal inside the room come through them, and every backstop ends up in one or the other, so what
  * is put aside and what is given back are decided in exactly one place each.
- *
- * <p>Slimmed down from PvP Dimensions' {@code Travel}: no fees, teams or kits, one dimension, and
- * effects kept rather than lost.
+
  */
 public final class Travel {
 	private Travel() {}
 
-	// --- In ---
 
 	/**
 	 * Into this player's own room. What went wrong, said to them, or null once they are on their way.
@@ -138,10 +135,9 @@ public final class Travel {
 		return null;
 	}
 
-	// --- Out ---
 
 	/**
-	 * Out and home, by the door or the command. False when they were not in.
+	 * Out and home, by the portal or the command. False when they were not in.
 	 *
 	 * <p>A child with prizes waiting hears "You earned a prize!" in the room first, and goes home
 	 * when it has been said: said before the trip, since what is playing and showing in the
@@ -171,8 +167,8 @@ public final class Travel {
 	}
 
 	/**
-	 * The whole way out, in one tick: the stash back, the trip home, then the prizes and the word
-	 * book where they stand, and only then the visit ended. Nothing saves in the middle of a tick,
+	 * The whole way out, in one tick: the stash back, the trip home, then the prizes where they
+	 * stand, and only then the visit ended. Nothing saves in the middle of a tick,
 	 * so no save ever sees the prizes both waiting and handed over, or neither.
 	 */
 	private static void goHome(ServerPlayer player) {
@@ -196,12 +192,12 @@ public final class Travel {
 		goHome(player);
 	}
 
-	/** For tests: every ordinary way home does nothing, as if something were wedged; only {@link #forceHome} gets through. */
+	/** Every ordinary way home does nothing, as if something were wedged; only {@link #forceHome} gets through. */
 	public static volatile boolean wedgedForTests;
 
 	/**
 	 * Home right now, whatever keeps them in: lessons, the portal's lock, a leave that never
-	 * finished. By the same way out as the door (their things back, the trip, the prizes, the visit
+	 * finished. By the same way out as the portal (their things back, the trip, the prizes, the visit
 	 * ended), with the prize line skipped. The lessons left on this visit go; the daily schedule
 	 * does not, so a day not yet done sends them in again at their next login. False if they had
 	 * no visit to end.
@@ -216,7 +212,6 @@ public final class Travel {
 		return Visit.of(player) == null;
 	}
 
-	// --- Never stuck ---
 
 	/** How long tries to leave are remembered, how many in that time mean stuck, and how long after the last. */
 	static final int TRIES_WITHIN = 30 * 20;
@@ -226,7 +221,6 @@ public final class Travel {
 	/** When each child last tried to leave (the portal, a click on it, Go home, /learn leave), by game time. */
 	private static final java.util.Map<java.util.UUID, java.util.ArrayDeque<Long>> attempts = new java.util.HashMap<>();
 
-	/** For tests: the last stuck line logged. */
 	public static volatile @Nullable String lastStuck;
 
 	private static void triedToLeave(ServerPlayer player) {
@@ -263,7 +257,7 @@ public final class Travel {
 	}
 
 	/**
-	 * Everything the door took, handed back; nobody is moved, and the visit stays open for
+	 * Everything put aside on the way in, handed back; nobody is moved, and the visit stays open for
 	 * {@link #settle}. The room's own things go first, so a helmet handed out for HAT does not come
 	 * home on anybody's head.
 	 */
@@ -299,14 +293,12 @@ public final class Travel {
 		attempts.remove(player.getUUID());
 	}
 
-	/** Every way out that is not the door: stash, prizes, done, wherever they are. */
 	private static void handBack(ServerPlayer player, Visit visit) {
 		if (player.isDeadOrDying() || player.isRemoved()) return;
 		giveBack(player, visit);
 		settle(player);
 	}
 
-	/** Back where they came from, or the world's spawn where that is gone. */
 	private static TeleportTransition home(MinecraftServer server, Visit.Home home) {
 		ServerLevel level = server.getLevel(home.dimension());
 		if (level == null || Places.isClassroom(home.dimension())) return spawnTrip(server);
@@ -321,7 +313,6 @@ public final class Travel {
 			TeleportTransition.DO_NOTHING);
 	}
 
-	// --- Backstops ---
 
 	/**
 	 * Logging in. Someone who logged out inside with a visit carries on in a fresh room, since what
@@ -355,11 +346,10 @@ public final class Travel {
 		} else {
 			returnForLessons(player);
 		}
-		// A daily schedule with reading left today: in they go, for what is left.
+		// A daily schedule with lessons left today: in they go, for what is left.
 		if (Visit.of(player) == null) Schedules.enforce(player);
 	}
 
-	// --- Lessons ---
 
 	/** The most lessons a child is kept for at once: every count up to it can be said aloud. */
 	public static final int MOST_LESSONS = 20;
@@ -369,7 +359,6 @@ public final class Travel {
 		return left > 0 && left <= MOST_LESSONS ? "phrase/more_to_go_" + left : null;
 	}
 
-	/** Lessons still to do before this child's portal opens; 0 for an ordinary visit. */
 	public static int lessons(ServerPlayer player) {
 		Visit visit = Visit.of(player);
 		return visit == null ? 0 : visit.lessons();
@@ -380,7 +369,6 @@ public final class Travel {
 		return lessons(player) > 0 && !Schedules.mayLeave(player);
 	}
 
-	/** Set the lessons left on this child's visit, and show it on the door. */
 	public static void setLessons(ServerPlayer player, int remaining) {
 		Visit visit = Visit.of(player);
 		if (visit == null) return;
@@ -389,11 +377,11 @@ public final class Travel {
 	}
 
 	/**
-	 * Send a child to the classroom, by the ordinary door, for this many lessons (or an ordinary
+	 * Send a child to the classroom, the ordinary way in, for this many lessons (or an ordinary
 	 * visit, for null). Already there, it only sets the lessons. What went wrong, or null.
 	 */
 	public static @Nullable String send(ServerPlayer player, @Nullable Integer lessons) {
-		// Lessons nobody could ever finish would keep the door shut for good.
+		// Lessons nobody could ever finish would keep the portal shut for good.
 		if (lessons != null && lessons > 0 && !Rooms.puzzleAvailable(player)) {
 			return "there are no words here for them to read, so lessons would never end";
 		}
@@ -422,7 +410,6 @@ public final class Travel {
 		}
 	}
 
-	/** A death inside ends the visit at the respawn, wherever that puts them. */
 	public static void respawned(ServerPlayer player) {
 		Visit visit = Visit.of(player);
 		if (visit != null && !Places.isClassroom(player.level())) {
@@ -438,8 +425,8 @@ public final class Travel {
 	 * <p>Deferred a tick, never done here: this fires from the middle of {@code ServerPlayer.teleport},
 	 * which finishes by sending along every player still standing in the level just left. Turning
 	 * somebody round from in here puts them back in that level before that runs, the tail of the
-	 * outer teleport sends them in again, and this fires again with no stack ever unwinding - it
-	 * took PvP Dimensions' server down with a StackOverflowError. A tick later the outer teleport is
+	 * outer teleport sends them in again, and this fires again with no stack ever unwinding, into a
+	 * StackOverflowError. A tick later the outer teleport is
 	 * over. The player is looked up afresh, because they may have logged out or died in between.
 	 */
 	public static void changedLevel(ServerPlayer player, ServerLevel from, ServerLevel to) {
@@ -457,7 +444,7 @@ public final class Travel {
 				if (visit.lessons() > 0) Progress.of(now).setLessonsOwed(now, visit.lessons());
 				handBack(now, visit);
 			} else if (in && visit == null && Places.isClassroom(now.level())) {
-				LearningBlocks.LOGGER.info("[{}] {} arrived in the classroom without using the door; sent to spawn",
+				LearningBlocks.LOGGER.info("[{}] {} arrived in the classroom without using /learn; sent to spawn",
 					LearningBlocks.MOD_ID, now.getGameProfile().name());
 				now.teleport(spawnTrip(server));
 			}
@@ -467,10 +454,10 @@ public final class Travel {
 	/**
 	 * Why a teleport command may not set this player down in this level, or null where it may.
 	 *
-	 * <p>Both ways across are refused, because both doors do work a teleport skips: going in is
+	 * <p>Both ways across are refused, because both the way in and the way out do work a teleport skips: going in is
 	 * where a child's things are put aside, going out is where they come back. A teleport in would
 	 * put somebody in the room holding their own pack; a teleport out would run the whole leaving
-	 * off the back of a command that said nothing about it. So the command fails, naming the door.
+	 * off the back of a command that said nothing about it. So the command fails, naming the right one.
 	 */
 	public static @Nullable String refuse(ServerPlayer player, ServerLevel level) {
 		String who = player.getGameProfile().name();
@@ -480,7 +467,7 @@ public final class Travel {
 				+ "/learn leave, or /execute as " + who + " run learn leave";
 		}
 		if (!inside && Places.isClassroom(level)) {
-			return "The classroom is entered with /learn, which puts a player's things aside at the door: "
+			return "The classroom is entered with /learn, which puts a player's things aside on the way in: "
 				+ "/execute as " + who + " run learn";
 		}
 		return null;

@@ -25,11 +25,8 @@ final class AnswerNarration {
 	private static final int PHONEME_GAP = 8;
 	/** How long a silent letter stays lit, with nothing said: long enough to be seen. */
 	private static final int SILENT_BEAT = 10;
-	/** Ticks after a chunk said as its own word, before the next. */
 	private static final int CHUNK_GAP = 10;
-	/** A beat for a big word's chunks to slide together in. */
 	private static final int JOIN_BEAT = 10;
-	/** Ticks after the whole word, before it happens. */
 	static final int WORD_GAP = 6;
 	/** A beat for the word to happen in before the room says anything about it. */
 	private static final int OUTCOME_BEAT = 20;
@@ -48,11 +45,6 @@ final class AnswerNarration {
 		this.commit = new AnswerCommit(room);
 	}
 
-	/**
-	 * The button: sound the word out a tile at a time, each tile lit while it is said and the
-	 * caption building up {@code c · a · t}; then the whole word, then what the word does, then
-	 * what the room thinks of it.
-	 */
 	void press(ServerPlayer player) {
 		Puzzle current = room.puzzle;
 		if (current == null || room.busy || room.leaving) return;
@@ -110,7 +102,6 @@ final class AnswerNarration {
 			blend.then("unlight_adjective", p -> lightAdjective(false), 2);
 		}
 		soundOut(blend, tiles, word, current);
-		// The two words together: "big... pig".
 		if (adjective != null && word != null) {
 			blend.say("word/" + adjective.text(), "light:phrase", p -> lightAdjective(true),
 				CaptionLine.building(List.of(adjective.text(), word.text()), 0), 2)
@@ -134,7 +125,7 @@ final class AnswerNarration {
 					Prizes.solved(reader, word, firstTry);
 				}, before);
 				// The other reader's last lesson: their own way out opens too.
-				if (reader != player && before == 1) room.refreshDoor(reader, true);
+				if (reader != player && before == 1) room.refreshPortal(reader, true);
 			}
 			happened[0] = true;
 			blend.say("phrase/great_teamwork", 2);
@@ -254,7 +245,7 @@ final class AnswerNarration {
 			blend.add(room.prizes(player.getUUID()).prizeLine());
 			int left = lessonsBefore - 1;
 			if (lessonsBefore > 0 && justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null) blend.say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left));
-			if (lessonsBefore == 1) blend.say(doorLine(player)).then("door_open", p -> room.refreshDoor(p, true), 10);
+			if (lessonsBefore == 1) blend.say(portalLine(player)).then("door_open", p -> room.refreshPortal(p, true), 10);
 			blend.say("phrase/another_one").then("next_round", room::newRound, 0);
 		} else {
 			commit.wrong(player);
@@ -328,7 +319,6 @@ final class AnswerNarration {
 		}
 	}
 
-	/** A team-up's readers who are here, the presser among them. */
 	private List<ServerPlayer> teamReaders(ServerPlayer presser) {
 		List<ServerPlayer> readers = new java.util.ArrayList<>();
 		for (ServerPlayer one : room.present()) if (room.teamReaders.contains(one.getUUID())) readers.add(one);
@@ -336,7 +326,6 @@ final class AnswerNarration {
 		return readers;
 	}
 
-	/** The word's tiles this reader's gaps hold: their own part of a team-up. */
 	private List<Integer> ownSlots(ServerPlayer reader, Puzzle current) {
 		List<Integer> own = new java.util.ArrayList<>();
 		List<BlockPos> gapPositions = room.gaps();
@@ -346,7 +335,6 @@ final class AnswerNarration {
 		return own;
 	}
 
-	/** What follows a right answer: it happens, it is praised, a prize if one came, and the next round. */
 	private void tellRight(ServerPlayer player, Narration blend, Word word, Puzzle current, int lessonsBefore, boolean newWord, boolean lastOfStage,
 			boolean inScene, boolean justMastered) {
 		String target = current.target().text();
@@ -367,7 +355,7 @@ final class AnswerNarration {
 		int left = lessonsBefore - 1;
 		if (lessonsBefore > 0 && justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null) blend.say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left));
 		if (lessonsBefore == 1) {
-			blend.say(doorLine(player)).then("door_open", p -> room.refreshDoor(p, true), 10);
+			blend.say(portalLine(player)).then("door_open", p -> room.refreshPortal(p, true), 10);
 		}
 		if (!lastOfStage) blend.say("phrase/another_one");
 		blend
@@ -421,7 +409,7 @@ final class AnswerNarration {
 			chant.add(room.prizes(player.getUUID()).prizeLine());
 			int left = lessonsBefore - 1;
 			if (lessonsBefore > 0 && justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null) chant.say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left));
-			if (lessonsBefore == 1) chant.say(doorLine(player)).then("door_open", p -> room.refreshDoor(p, true), 10);
+			if (lessonsBefore == 1) chant.say(portalLine(player)).then("door_open", p -> room.refreshPortal(p, true), 10);
 			if (!lastOfLevel) chant.say("phrase/another_one");
 			chant.then("next_round", room::newRound, 0);
 		} else {
@@ -442,7 +430,7 @@ final class AnswerNarration {
 			room.busy = false;
 			unlight();
 			room.touch();
-			room.refreshDoor(p, false);
+			room.refreshPortal(p, false);
 			if (happened[0] && room.round == roundAt && !room.leaving) room.later(p, 1, room::newRound);
 		});
 		room.busy = true;
@@ -464,7 +452,6 @@ final class AnswerNarration {
 		return -1;
 	}
 
-	/** The silent e and its vowel lit together, with a trail of sparkles from the e back to the vowel. */
 	private void magicE(ServerPlayer player, int vowel, int e) {
 		for (int i = 0; i < room.row.size(); i++) setLit(room.row.get(i), i == vowel || i == e);
 		if (e >= room.row.size()) return;
@@ -516,7 +503,7 @@ final class AnswerNarration {
 			chant.add(room.prizes(player.getUUID()).prizeLine());
 			int left = lessonsBefore - 1;
 			if (lessonsBefore > 0 && justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null) chant.say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left));
-			if (lessonsBefore == 1) chant.say(doorLine(player)).then("door_open", p -> room.refreshDoor(p, true), 10);
+			if (lessonsBefore == 1) chant.say(portalLine(player)).then("door_open", p -> room.refreshPortal(p, true), 10);
 			if (!lastOfLevel) chant.say("phrase/another_one");
 			chant.then("next_round", room::newRound, 0);
 		} else {
@@ -531,7 +518,6 @@ final class AnswerNarration {
 		finish(player, chant, happened, roundAt);
 	}
 
-	/** The shown letter and its match lit together, a sparkle running between them. */
 	private void caseLink(ServerPlayer player) {
 		light(-1);
 		if (room.row.size() < 2) return;
@@ -546,12 +532,10 @@ final class AnswerNarration {
 		Narrator.note(player, "case_link");
 	}
 
-	/** The door opening: "All done for today!" when it was the day's reading, "The door is open!" otherwise. */
-	private static String doorLine(ServerPlayer player) {
+	private static String portalLine(ServerPlayer player) {
 		return Portal.openLine(justfatlard.learning_blocks.classroom.Schedules.metToday(player));
 	}
 
-	/** A word just mastered: a little sparkle over its picture, or over the word where there is none. */
 	private void sparkle(ServerPlayer player) {
 		net.minecraft.world.entity.Entity shown = room.picture();
 		net.minecraft.world.phys.Vec3 at = shown != null ? shown.position()
@@ -562,12 +546,10 @@ final class AnswerNarration {
 		Narrator.note(player, "mastered");
 	}
 
-	/** Light one tile of the word row, and put the rest out; -1 lights them all. */
 	private void light(int index) {
 		for (int i = 0; i < room.row.size(); i++) setLit(room.row.get(i), index < 0 || i == index);
 	}
 
-	/** Tiles {@code [from, to)} lit, the rest not: one chunk of a big word. */
 	private void lightRange(int from, int to) {
 		for (int i = 0; i < room.row.size(); i++) setLit(room.row.get(i), i >= from && i < to);
 	}
@@ -624,8 +606,8 @@ final class AnswerNarration {
 			return;
 		}
 		// A phrase: the adjective and the word together, whichever word was built, friendly either way.
-		if (room.phraseAdjective != null && Phrases.fits(room.phraseAdjective, word)) {
-			Phrases.run(player, room.phraseAdjective, word, room);
+		if (room.phraseAdjective != null && AdjectivePhrases.fits(room.phraseAdjective, word)) {
+			AdjectivePhrases.run(player, room.phraseAdjective, word, room);
 			return;
 		}
 		// Built but not the word asked for: the word's cheeky version, if it has one.

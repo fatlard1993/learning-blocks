@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -37,7 +38,6 @@ import org.joml.Vector3f;
  * breakfast, put on your boots, go outside.
  */
 public final class SequenceRound extends LogicRound {
-	/** A card: what it says, and how it is drawn. */
 	private record Card(String clip, String said) {}
 
 	private final List<Card> cards = new ArrayList<>();
@@ -75,7 +75,7 @@ public final class SequenceRound extends LogicRound {
 		answer(next());
 	}
 
-	/** The card wanted next, for tests. */
+	@ForTests
 	public Choice next() {
 		return choices.stream().filter(c -> Integer.parseInt(c.id()) == done).findFirst().orElse(choices.getFirst());
 	}
@@ -114,7 +114,6 @@ public final class SequenceRound extends LogicRound {
 		drawn.put(choice, draw(Integer.parseInt(choice.id()), Vec3.atBottomCenterOf(spot)));
 	}
 
-	/** A card's picture, standing at this foot. */
 	private List<Entity> draw(int card, Vec3 foot) {
 		List<Entity> made = new ArrayList<>();
 		switch (kind) {
@@ -206,7 +205,6 @@ public final class SequenceRound extends LogicRound {
 		return done + 1 == cards.size() ? Verdict.RIGHT : Verdict.HOLD;
 	}
 
-	/** A card up into its place on the board. */
 	private void up(Choice picked) {
 		int k = Integer.parseInt(picked.id());
 		Vec3 to = Vec3.atBottomCenterOf(slot(k)).add(0, 0, 0.7);

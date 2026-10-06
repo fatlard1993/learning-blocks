@@ -53,7 +53,7 @@ import net.minecraft.world.phys.Vec3;
 import org.slf4j.LoggerFactory;
 
 /**
- * Round I: each child's own sky and weather in the classroom, feelings in bubbles, gestures, toys
+ * Each child's own sky and weather in the classroom, feelings in bubbles, gestures, toys
  * that move in parts, and Bob's mix of goals.
  *
  * <p>Night, rain, snow and a storm in this child's room only: another child in the classroom (a

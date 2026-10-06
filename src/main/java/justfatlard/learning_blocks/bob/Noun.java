@@ -38,7 +38,6 @@ public record Noun(String word, Kind kind, Thing thing) {
 		return thing.small() || kind == Kind.WEARABLE || kind == Kind.LID;
 	}
 
-	/** Has room under it: a desk, a crib. */
 	public boolean hasUnder() {
 		return thing.holds(Thing.Hold.Way.UNDER);
 	}
@@ -64,7 +63,6 @@ public record Noun(String word, Kind kind, Thing thing) {
 		return all;
 	}
 
-	/** The little words a sentence is made with. */
 	public static final List<String> PREPOSITIONS = List.of("in", "on", "under");
 	public static final List<String> ARTICLES = List.of("the", "a");
 	public static final List<String> ADJECTIVES = List.of("big");

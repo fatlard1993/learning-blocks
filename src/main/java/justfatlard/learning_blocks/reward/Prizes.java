@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 /**
  * What the room tells this when a child reads, and what it pays for.
  *
- * <p>Every payout goes into the child's visit - saved beside the things put aside at the door - and
+ * <p>Every payout goes into the child's visit - saved beside the things put aside on the way in - and
  * is handed over at home on the way out. Nothing is given inside, so nothing earned can be lost in
  * the classroom, dropped into the void, or carried out twice.
  *
@@ -26,13 +26,11 @@ import net.minecraft.world.item.ItemStack;
 public final class Prizes {
 	private Prizes() {}
 
-	/** Whether reading this word would be this child's first time: what "That's a new word!" says. */
 	public static boolean isNewWord(ServerPlayer player, Word word) {
 		PrizeConfig config = PrizeConfig.get();
 		return config.enabled && config.newWord.enabled() && !Progress.of(player).rewarded.contains(word.id().toString());
 	}
 
-	/** Came into the classroom. */
 	public static void entered(ServerPlayer player) {
 		PrizeConfig config = PrizeConfig.get();
 		Progress progress = Progress.of(player);
@@ -43,7 +41,7 @@ public final class Prizes {
 		if (!config.enabled) return;
 		payOwed(player);
 		if (firstToday) award(player, progress, "daily_visit", config.dailyVisit);
-		// Toys whose words were mastered before toys were earned this way: theirs now.
+		// Toys whose words are all mastered but not yet earned: earned now.
 		Earned.check(player, progress, null);
 		payThresholds(player, progress);
 	}
@@ -98,8 +96,8 @@ public final class Prizes {
 		// Not only on a fresh word: a stage payout that failed (a full cap is not failing) is tried again.
 		// Per band, 1a, 1b: more often than per stage, which is the point.
 		justfatlard.learning_blocks.puzzle.Stages.Band band = justfatlard.learning_blocks.puzzle.Stages.bandOf(word);
-		if (config.stageComplete.enabled() && band != null && !paid(progress, band) && justfatlard.learning_blocks.puzzle.Stages.complete(progress, band)) {
-			if (award(player, progress, "stage_complete", config.stageComplete)) progress.stagesPaid.add(band.code());
+		if (config.stageComplete.enabled() && band != null && !progress.paid(band.code()) && justfatlard.learning_blocks.puzzle.Stages.complete(progress, band)) {
+			if (award(player, progress, "stage_complete", config.stageComplete)) progress.markPaid(band.code());
 		}
 		Earned.check(player, progress, word);
 		payThresholds(player, progress);
@@ -165,8 +163,8 @@ public final class Prizes {
 		payOwed(player);
 
 		credit(player, progress, config, fresh, firstTry);
-		if (config.stageComplete.enabled() && !progress.stagesPaid.contains(0) && justfatlard.learning_blocks.puzzle.Letters.complete(progress)) {
-			if (award(player, progress, "stage_complete", config.stageComplete)) progress.stagesPaid.add(0);
+		if (config.stageComplete.enabled() && !progress.paid(justfatlard.learning_blocks.puzzle.Stages.BandCode.LETTERS) && justfatlard.learning_blocks.puzzle.Letters.complete(progress)) {
+			if (award(player, progress, "stage_complete", config.stageComplete)) progress.markPaid(justfatlard.learning_blocks.puzzle.Stages.BandCode.LETTERS);
 		}
 		payThresholds(player, progress);
 		progress.save(player);
@@ -185,8 +183,8 @@ public final class Prizes {
 		if (!config.enabled) return;
 		payOwed(player);
 		credit(player, progress, config, fresh, firstTry);
-		if (config.stageComplete.enabled() && !progress.stagesPaid.contains(0) && justfatlard.learning_blocks.puzzle.Letters.complete(progress)) {
-			if (award(player, progress, "stage_complete", config.stageComplete)) progress.stagesPaid.add(0);
+		if (config.stageComplete.enabled() && !progress.paid(justfatlard.learning_blocks.puzzle.Stages.BandCode.LETTERS) && justfatlard.learning_blocks.puzzle.Letters.complete(progress)) {
+			if (award(player, progress, "stage_complete", config.stageComplete)) progress.markPaid(justfatlard.learning_blocks.puzzle.Stages.BandCode.LETTERS);
 		}
 		payThresholds(player, progress);
 		progress.save(player);
@@ -226,7 +224,6 @@ public final class Prizes {
 		progress.save(player);
 	}
 
-	/** A subject's level done ({@code numbers:1}): stage_complete pays, once ever for it. */
 	public static void levelComplete(ServerPlayer player, String level) {
 		PrizeConfig config = PrizeConfig.get();
 		Progress progress = Progress.of(player);
@@ -238,19 +235,10 @@ public final class Prizes {
 		progress.save(player);
 	}
 
-	/** Built a word that was not the one asked for: the streak starts over. */
 	public static void missed(ServerPlayer player) {
 		Progress progress = Progress.of(player);
 		progress.streak = 0;
 		progress.save(player);
-	}
-
-	/**
-	 * Whether a band has paid: its own code, or, from a save before bands, its whole stage (kept as
-	 * the plain stage number, which no band code is).
-	 */
-	private static boolean paid(Progress progress, justfatlard.learning_blocks.puzzle.Stages.Band band) {
-		return progress.stagesPaid.contains(band.code()) || band.stage() > 0 && progress.stagesPaid.contains(band.stage());
 	}
 
 	/** An event's points and prizes; true when it has paid, or had nothing to pay. */
@@ -263,7 +251,6 @@ public final class Prizes {
 		return paid;
 	}
 
-	/** Every threshold reached and not yet paid, lowest first, until the cap says stop. */
 	private static void payThresholds(ServerPlayer player, Progress progress) {
 		PrizeConfig config = PrizeConfig.get();
 		if (!config.pointsEnabled) return;

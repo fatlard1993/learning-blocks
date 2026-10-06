@@ -3,7 +3,7 @@
 Write the letter block's blockstate, a model for every letter, two-letter tile and the gap, and the item definition that makes a
 tile in the hand look like the letter it carries.
 
-Twenty-seven near-identical files are exactly the kind of thing nobody should edit by hand, so
+Near-identical files, one per tile, are exactly the kind of thing nobody should edit by hand, so
 nobody does: change this and run it.
 
 Usage: python3 generate_models.py

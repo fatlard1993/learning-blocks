@@ -15,7 +15,6 @@ public record Goal(String key, Shape shape, List<List<String>> rows, List<Instru
 	/** The order sentences come in: a plain one, with big, with the and a, then two in a row where the order matters. */
 	public enum Shape { SIMPLE, BIG, ARTICLES, RECIPE }
 
-	/** A goal from its sentences, as written; throws on one Bob could not read. */
 	public static Goal of(Shape shape, String... sentences) {
 		List<List<String>> rows = new ArrayList<>();
 		List<Instruction> steps = new ArrayList<>();
@@ -38,7 +37,6 @@ public record Goal(String key, Shape shape, List<List<String>> rows, List<Instru
 		return String.join("+", parts).toLowerCase(Locale.ROOT);
 	}
 
-	/** Everything in it, in the order it is first named: what stands on Bob's stage to begin with. */
 	public List<String> things() {
 		LinkedHashSet<String> things = new LinkedHashSet<>();
 		for (Instruction step : steps) {
@@ -55,12 +53,10 @@ public record Goal(String key, Shape shape, List<List<String>> rows, List<Instru
 		return cards;
 	}
 
-	/** Where it all starts: everything on the floor. */
 	public BobScene start() {
 		return new BobScene(things());
 	}
 
-	/** What it looks like done right: each sentence done in turn. */
 	public BobScene end() {
 		BobScene scene = start();
 		for (Instruction step : steps) scene.apply(step);

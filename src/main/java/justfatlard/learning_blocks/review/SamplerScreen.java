@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.review;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,7 +28,7 @@ public final class SamplerScreen {
 	private static final int CELL_W = (WIDTH - 2 * PAD - (COLUMNS - 1) * 4) / COLUMNS;
 
 	private static final Map<UUID, String> open = new HashMap<>();
-	/** The kind each viewer last ran from the screen: for tests. */
+	@ForTests
 	private static final Map<UUID, String> ran = new HashMap<>();
 
 	public static void register(ScreenApi api) {
@@ -35,7 +36,6 @@ public final class SamplerScreen {
 		api.onClose(TYPE, player -> open.remove(player.getUUID()));
 	}
 
-	/** The screen, for an operator with Pandorical; false otherwise. */
 	public static boolean open(ServerPlayer viewer) {
 		if (!Admins.may(viewer) || !PandoricalApi.isAvailable(viewer)) return false;
 		Sampler.Kind[] kinds = Sampler.Kind.values();

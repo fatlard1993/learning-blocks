@@ -31,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
  * A trip to the classroom and back hands everything back: every item in the slot it was in,
  * experience to the point, the game mode, and every effect still running.
  *
- * <p>Effects are the one PvP Dimensions loses, so they are the one most worth watching. The pack is
+ * <p>Effects are the easiest to lose, so they are the one most worth watching. The pack is
  * deliberately awkward - armour worn, something in the off hand, a stack partway down the pack, a
  * fraction of a level - because a restore that only puts things back "somewhere" passes a test
  * that only checks the hotbar.
@@ -113,8 +113,8 @@ public final class RoundTrip implements FabricClientGameTest {
 			shoot(session, "solved");
 
 			// A first read of a word is a new word: a diamond, waiting in the visit and nowhere else,
-			// with the chest by the door to say so, which pops up as the prize flies in.
-			Waits.until(session, 300, "no prize chest by the door", () -> {
+			// with the chest by the portal to say so, which pops up as the prize flies in.
+			Waits.until(session, 300, "no prize chest by the portal", () -> {
 				Room room = Rooms.of(session.player());
 				return room != null && session.player().level().getBlockState(room.prizeMarker()).is(net.minecraft.world.level.block.Blocks.CHEST);
 			});
@@ -126,7 +126,7 @@ public final class RoundTrip implements FabricClientGameTest {
 				check(!player.getInventory().hasAnyMatching(stack -> stack.is(Items.DIAMOND)), "the prize went into the classroom inventory");
 				Room room = Rooms.of(player);
 				check(player.level().getBlockState(room.prizeMarker()).is(net.minecraft.world.level.block.Blocks.CHEST),
-					"no prize chest by the door");
+					"no prize chest by the portal");
 			});
 
 			session.command("/learn leave");

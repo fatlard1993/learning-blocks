@@ -1,4 +1,4 @@
-package justfatlard.learning_blocks.things;
+package justfatlard.learning_blocks.props;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,8 +21,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
  * box, a jar, a fan, a mop, corn, a mug, a desk, a fork, to put down. Their art is made by
  * {@code generate_things.py}; the names here must match it.
  */
-public final class Things {
-	private Things() {}
+public final class Props {
+	private Props() {}
 
 	/** Blocks: their shape facing north, the vanilla block a client without the mod sees, and their sound. Every one breaks at a punch. */
 	private record Spec(double[] box, String base, SoundType sound) {}
@@ -47,7 +47,7 @@ public final class Things {
 		for (Map.Entry<String, Spec> entry : BLOCKS.entrySet()) {
 			Identifier id = LearningBlocks.id(entry.getKey());
 			Spec spec = entry.getValue();
-			ThingBlock block = Registry.register(BuiltInRegistries.BLOCK, id, new ThingBlock(BlockBehaviour.Properties.of()
+			PropBlock block = Registry.register(BuiltInRegistries.BLOCK, id, new PropBlock(BlockBehaviour.Properties.of()
 				.instabreak().sound(spec.sound()).noOcclusion()
 				.setId(ResourceKey.create(Registries.BLOCK, id)), spec.box()));
 			Item item = Registry.register(BuiltInRegistries.ITEM, id, new BlockItem(block, new Item.Properties()
@@ -60,7 +60,6 @@ public final class Things {
 		}
 	}
 
-	/** Every thing's item, by name: for tests and the review. */
 	public static Map<String, Item> all() {
 		return java.util.Collections.unmodifiableMap(registered);
 	}

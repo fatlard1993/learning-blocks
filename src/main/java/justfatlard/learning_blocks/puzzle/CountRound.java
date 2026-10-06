@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.List;
 import justfatlard.learning_blocks.narration.CaptionLine;
@@ -41,7 +42,7 @@ public final class CountRound extends NumbersRound {
 		return n;
 	}
 
-	/** The creatures out, in counting order: for tests. */
+	@ForTests
 	public List<Entity> things() {
 		return List.copyOf(things);
 	}

@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.List;
 import justfatlard.learning_blocks.LearningBlocks;
@@ -70,7 +71,7 @@ public final class MakeRound extends NumbersRound {
 		return chosen != null;
 	}
 
-	/** The tile in the gap just now, for tests. */
+	@ForTests
 	public @Nullable Choice chosen() {
 		return chosen;
 	}
@@ -116,7 +117,7 @@ public final class MakeRound extends NumbersRound {
 	@Override
 	protected void tellWrong(ServerPlayer player, Choice picked, Narration telling) {}
 
-	/** What the button made, for tests. */
+	@ForTests
 	public List<Entity> out() {
 		return List.copyOf(out);
 	}

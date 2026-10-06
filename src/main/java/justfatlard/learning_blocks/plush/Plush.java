@@ -16,7 +16,6 @@ public enum Plush implements StringRepresentable {
 		return name;
 	}
 
-	/** The word it says. */
 	public String word() {
 		return name;
 	}

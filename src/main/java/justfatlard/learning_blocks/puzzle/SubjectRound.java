@@ -34,7 +34,7 @@ import org.jspecify.annotations.Nullable;
  * as any round does (the item's memory and mastery, prizes, the lesson, the day's count, a toy
  * earned); another: it is told what it is, wiggles, and the question is asked again. A kind can
  * hold a pick without a verdict (a tile put in a gap, the next number put in a row) and give the
- * verdict later, from the button. Everything else a round is - the turn, the door, the prompts,
+ * verdict later, from the button. Everything else a round is - the turn, the portal, the prompts,
  * the idle replays - is the room's, as for Reading's rounds; the room holds a stand-in puzzle
  * meanwhile, as for Bob's.
  */
@@ -62,22 +62,17 @@ public abstract class SubjectRound {
 		this.layout = room.layout;
 	}
 
-	/** Whose round it is. */
 	public abstract Subject subject();
 
-	/** The kind of round, for the log and the sampler. */
 	public abstract String kind();
 
-	/** The item it asks: {@code numbers:numeral:3}. */
 	public abstract String item();
 
 	/** The right answer among the choices (one of them, where several would do). */
 	protected abstract Choice answer();
 
-	/** The board: what the question shows. */
 	protected abstract void board();
 
-	/** The question, said. */
 	public abstract Narration ask(Narration narration);
 
 	/** Whether this child has finished the subject's level: its "ready for more" moment, once. */
@@ -161,7 +156,6 @@ public abstract class SubjectRound {
 		return new Puzzle(anchor, List.of(anchor), List.of(), 0, Puzzle.Kind.WHOLE);
 	}
 
-	/** Laid out: the board, and the choices on their spots, each with a box that hears it picked. */
 	void start(ServerPlayer player) {
 		board();
 		for (int i = 0; i < choices.size(); i++) {
@@ -186,20 +180,17 @@ public abstract class SubjectRound {
 	/** After the board and the choices: anything else a kind sets going (creatures out of the button). */
 	protected void started(ServerPlayer player) {}
 
-	/** A block the round put down, to be taken up again with it. */
 	protected void set(BlockPos pos, BlockState state) {
 		level.setBlock(pos, state, RoomLayout.FLAGS);
 		placed.add(pos.immutable());
 	}
 
-	/** An entity the round made, to go with it, and added to the world. */
 	protected <T extends Entity> T add(T entity) {
 		made(entity);
 		level.addFreshEntity(entity);
 		return entity;
 	}
 
-	/** An entity the round made, to go with it. */
 	protected void made(Entity entity) {
 		entity.addTag(TAG);
 		made.add(entity.getUUID());
@@ -215,13 +206,11 @@ public abstract class SubjectRound {
 		});
 	}
 
-	/** Where a choice stands. */
 	protected @Nullable BlockPos spotOf(Choice choice) {
 		int i = choices.indexOf(choice);
 		return i < 0 ? null : spotFor(i, choices.size());
 	}
 
-	/** A click or punch on one of the choices' boxes: true if it was one. */
 	boolean click(ServerPlayer player, Entity entity) {
 		Choice picked = hits.get(entity.getUUID());
 		if (picked == null) return false;
@@ -244,13 +233,12 @@ public abstract class SubjectRound {
 		return false;
 	}
 
-	/** Whether anything is left to pick: a choice's box still there. */
 	boolean answerable() {
 		for (UUID id : hits.keySet()) if (level.getEntity(id) != null) return true;
 		return false;
 	}
 
-	/** For tests: every choice's box gone, as a chunk unloading or another mod might take them. */
+	/** Every choice's box gone, as a chunk unloading or another mod might take them. */
 	public void loseChoicesForTests() {
 		for (UUID id : hits.keySet()) {
 			Entity box = level.getEntity(id);
@@ -258,24 +246,20 @@ public abstract class SubjectRound {
 		}
 	}
 
-	/** The button, in this round: the round's own, or the question again. */
 	void pressed(ServerPlayer player) {
 		if (room.busy || room.leaving) return;
 		room.touch();
 		if (!press(player)) room.replay(player);
 	}
 
-	/** The right choice. For tests. */
 	public Choice rightForTests() {
 		return answer();
 	}
 
-	/** A choice picked, as a click on it does. For tests. */
 	public void pickForTests(ServerPlayer player, Choice choice) {
 		pick(player, choice);
 	}
 
-	/** The button pressed, as the button does. For tests. */
 	public void pressForTests(ServerPlayer player) {
 		pressed(player);
 	}
@@ -331,7 +315,6 @@ public abstract class SubjectRound {
 		room.answers.finish(player, telling, happened, roundAt);
 	}
 
-	/** A friendly little hop and a puff at the one picked that was not it. */
 	protected void wiggle(@Nullable BlockPos at) {
 		if (at == null) return;
 		Vec3 top = Vec3.atCenterOf(at).add(0, 0.6, 0);
@@ -339,7 +322,6 @@ public abstract class SubjectRound {
 		level.playSound(null, at, SoundEvents.WOOD_HIT, SoundSource.BLOCKS, 0.6F, 1.4F);
 	}
 
-	/** Everything it put down and made, gone. */
 	void clear() {
 		for (UUID id : made) {
 			Entity entity = level.getEntity(id);

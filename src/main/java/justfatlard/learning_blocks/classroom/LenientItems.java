@@ -62,7 +62,6 @@ public final class LenientItems {
 		return paper;
 	}
 
-	/** The saved item a stand-in holds, or null for an ordinary item. */
 	public static @Nullable Tag rawOf(ItemStack stack) {
 		CustomData data = stack.get(DataComponents.CUSTOM_DATA);
 		if (data == null || !stack.is(Items.PAPER)) return null;

@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 /**
  * The rules of the room: nothing gets hurt, nobody gets hungry, and nobody falls out of the world.
  *
- * <p>Survival mode, set at the door, with the room's own checks on breaking and placing
+ * <p>Survival mode, set on the way in, with the room's own checks on breaking and placing
  * ({@code Rooms.mayBreak}, {@code Rooms.useBlock}), is what keeps the room itself from being dug
  * up; weather is kept out by {@code LevelMixin} and {@link #tick}; these are the rest.
  */
@@ -56,7 +56,6 @@ public final class Classroom {
 		}
 	}
 
-	/** Their own sky, a full stomach, and back on the floor after a fall. */
 	private static void care(ServerPlayer player, boolean turned) {
 		ServerLevel classroom = (ServerLevel) player.level();
 		if (turned) Sky.overworldTurned(player);

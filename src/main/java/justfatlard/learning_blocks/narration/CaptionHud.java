@@ -38,7 +38,6 @@ final class CaptionHud {
 	private static final int ABOVE_BOTTOM = 62;
 	/** Raised: in the band between the letters on the floor and the board, which a small caption fits. */
 	private static final int RAISED = 108;
-	/** Down from the top of the screen. */
 	private static final int BELOW_TOP = 14;
 	private static final int PAD_Y = CaptionLayout.PAD_Y;
 	private static final int TEXT_HEIGHT = CaptionLayout.TEXT_HEIGHT;
@@ -55,7 +54,6 @@ final class CaptionHud {
 
 	private static final Map<UUID, Shown> shown = new HashMap<>();
 
-	/** Put this line up, replacing whatever was there, lit as it is {@code seconds} in. */
 	static void show(ServerPlayer player, CaptionLine line, float seconds) {
 		if (line.isEmpty() || !CaptionSettings.shown(player)) {
 			hide(player);
@@ -120,7 +118,6 @@ final class CaptionHud {
 		shown.put(player.getUUID(), new Shown(line, states));
 	}
 
-	/** Relight the words for this moment in the line; only what changed is sent. */
 	static void advance(ServerPlayer player, float seconds) {
 		Shown current = shown.get(player.getUUID());
 		if (current == null) return;

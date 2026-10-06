@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.List;
 import justfatlard.learning_blocks.narration.CaptionLine;
@@ -56,7 +57,7 @@ public final class NumberRound extends NumbersRound {
 		Counting.chant(telling, n, popped, true);
 	}
 
-	/** What popped out for the chant, for tests. */
+	@ForTests
 	public List<Entity> popped() {
 		return List.copyOf(popped);
 	}

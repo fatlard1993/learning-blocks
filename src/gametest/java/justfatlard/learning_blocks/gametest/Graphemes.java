@@ -22,7 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Round D's tiles and stages. The igh tile is one tile of three letters: light is l, igh, t, and
+ * The later stages' tiles. The igh tile is one tile of three letters: light is l, igh, t, and
  * sounded out it says igh once (cut from light itself, or the standard igh), never i, g or h. An
  * r-controlled round, star, with the ar tile. Then three new outcomes: a crown, a wool tent, a raft.
  * Full run: {@code learning-igh-tile.png}, {@code learning-r-controlled-round.png},

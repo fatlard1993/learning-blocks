@@ -81,7 +81,6 @@ public final class Words implements SimpleSynchronousResourceReloadListener {
 		return ranges;
 	}
 
-	/** A chunk's tiles as a word, as its sound is filed: {@code fish}. */
 	public static String chunkText(Word word, int[] range) {
 		return String.join("", word.tiles().subList(range[0], range[1]));
 	}
@@ -106,12 +105,10 @@ public final class Words implements SimpleSynchronousResourceReloadListener {
 		return pictureCards.get(word.id());
 	}
 
-	/** The tricky words, known by sight: the, said, you. */
 	public static List<Word> tricky() {
 		return tricky;
 	}
 
-	/** The plurals: cats, dogs. */
 	public static List<Word> plurals() {
 		return plurals;
 	}
@@ -121,12 +118,10 @@ public final class Words implements SimpleSynchronousResourceReloadListener {
 		return shownTiles.getOrDefault(word.id(), word.tiles());
 	}
 
-	/** Every letter's keyword, puzzle word or not: apple, zap. */
 	public static List<Word> keywords() {
 		return keywords;
 	}
 
-	/** A keyword or a puzzle word by what it spells, or null. */
 	public static @org.jspecify.annotations.Nullable Word spelled(String text) {
 		for (Word word : keywords) if (word.text().equals(text)) return word;
 		for (Word word : words) if (word.text().equals(text)) return word;
@@ -257,7 +252,6 @@ public final class Words implements SimpleSynchronousResourceReloadListener {
 		for (var entry : object.entrySet()) if (!entry.getKey().equals("properties")) scan(entry.getValue(), found);
 	}
 
-	/** Turns {@code ns:learning_words/cat.json} back into {@code ns:cat}. */
 	private static Identifier wordOf(Identifier file) {
 		String path = file.getPath();
 		int start = DIRECTORY.length() + 1;

@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.toy;
 
+import justfatlard.learning_blocks.ForTests;
 import justfatlard.learning_blocks.sound.Sounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -74,7 +75,6 @@ public class ToyBlock extends Block {
 		return InteractionResult.SUCCESS;
 	}
 
-	/** A toy or plushie held and used on this one: in, on or onto it, if it fits. */
 	@Override
 	protected InteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
 			net.minecraft.world.InteractionHand hand, BlockHitResult hit) {
@@ -88,17 +88,15 @@ public class ToyBlock extends Block {
 		justfatlard.learning_blocks.play.Play.recover(state, level, pos);
 	}
 
-	/** Gone: whatever was in or on it drops, and anything playing it stops. */
 	@Override
 	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean moved) {
 		if (!level.getBlockState(pos).is(this)) justfatlard.learning_blocks.play.Play.removed(level, pos);
 		super.affectNeighborsAfterRemoval(state, level, pos, moved);
 	}
 
-	/** The last toy squeezed, by anyone: for tests. */
+	@ForTests
 	public static volatile @Nullable Toy lastSqueezed;
 
-	/** Its own little noise, a puff, and its word, with its caption, for whoever squeezed it. */
 	public static void squeak(ServerLevel level, BlockPos pos, Toy toy, ServerPlayer player) {
 		lastSqueezed = toy;
 		level.playSound(null, pos, toy.sound.event, SoundSource.BLOCKS, 0.8F, toy.sound.pitch);

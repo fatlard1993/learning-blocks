@@ -53,7 +53,6 @@ public class LetterBlock extends Block {
 		return letter.isLetter() ? "phoneme/" + letter.grapheme() : null;
 	}
 
-	/** What this tile says: its sound, or its name for a capital. */
 	public static String soundOf(Letter letter) {
 		return letter.isCapital() ? nameOf(letter.lower()) : "phoneme/" + letter.grapheme();
 	}
@@ -63,7 +62,6 @@ public class LetterBlock extends Block {
 		return letter.isVowel() ? "phoneme/" + letter.grapheme() + "_long" : "name/" + letter.grapheme();
 	}
 
-	/** Placed by anybody, anywhere: it says its sound from where it now stands. */
 	@Override
 	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity by, ItemStack stack) {
 		super.setPlacedBy(level, pos, state, by, stack);
@@ -82,7 +80,6 @@ public class LetterBlock extends Block {
 		return super.playerWillDestroy(level, pos, state, player);
 	}
 
-	/** Blown up: the same. */
 	@Override
 	public void wasExploded(ServerLevel level, BlockPos pos, Explosion explosion) {
 		super.wasExploded(level, pos, explosion);

@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A child's hands in the room: what a right-click does to the door, the chest, the button and the
+ * A child's hands in the room: what a right-click does to the portal, the chest, the button and the
  * tiles; tiles into and out of the gaps, and home to their places on the floor; and a round kept
  * finishable when a tile goes missing.
  */
@@ -50,7 +50,6 @@ final class Interaction {
 		if (layout.isPortal(pos)) {
 			// Walking through is the way home (Portal.tick); a click on it works too.
 			if (Travel.kept(player)) {
-				// Locked: lessons first. It says how many.
 				int left = Travel.lessons(player);
 				if (hand == InteractionHand.MAIN_HAND && !room.busy && !room.leaving && justfatlard.learning_blocks.classroom.Travel.moreToGo(left) != null) {
 					Narrator.play(player, new Narration().say(justfatlard.learning_blocks.classroom.Travel.moreToGo(left)));
@@ -66,8 +65,8 @@ final class Interaction {
 		}
 		UUID chestOwner = room.chestOwner(pos);
 		if (chestOwner != null && level.getBlockState(pos).is(Blocks.CHEST)) {
-			// A chest to look in, not to take from: what is waiting, shown; it all comes home at the
-			// door. The first look each visit says so.
+			// A chest to look in, not to take from: what is waiting, shown; it all comes home on the way
+			// out. The first look each visit says so.
 			if (hand == InteractionHand.MAIN_HAND) {
 				// Each reader's own chest shows their own prizes, whoever looks.
 				ServerPlayer whose = level.getServer().getPlayerList().getPlayer(chestOwner);
@@ -91,7 +90,6 @@ final class Interaction {
 			return InteractionResult.PASS;
 		}
 		if (room.letterTarget != null && pos.equals(room.gapMarker) && hand == InteractionHand.MAIN_HAND && player.getMainHandItem().isEmpty()) {
-			// The gap asks its question again: which letter says this?
 			room.replay(player);
 			return InteractionResult.SUCCESS;
 		}
@@ -106,7 +104,6 @@ final class Interaction {
 		return InteractionResult.SUCCESS;
 	}
 
-	/** The tile in this gap, or null. */
 	@Nullable Letter inGap(@Nullable BlockPos gap) {
 		if (gap == null) return null;
 		BlockState state = level.getBlockState(gap);
@@ -147,7 +144,6 @@ final class Interaction {
 		return sound == null ? "" : sound;
 	}
 
-	/** Whether a tile may be broken here: loose on the floor, or in the gap, and not mid-word. */
 	boolean mayBreak(BlockPos pos, BlockState state) {
 		if (!state.is(LearningBlocks.LETTER) || room.busy) return false;
 		if (room.gapMarkers.containsKey(pos)) return true;
@@ -164,12 +160,11 @@ final class Interaction {
 			BlockPos marker = entry.getValue();
 			if (target.equals(gap) || hit.equals(gap) || hit.equals(marker) || hit.equals(marker.above()) || hit.equals(marker.below())) return gap;
 		}
-		// The board beside the first underscore, as before: the one gap of a single-gap round.
+		// The board beside the first underscore: the one gap of a single-gap round.
 		if (room.gapMarkers.size() == 1 && room.gapMarker != null && hit.equals(room.gapMarker.west())) return room.gap();
 		return null;
 	}
 
-	/** The word in the row as the gaps now spell it, or null while any is empty. */
 	@Nullable List<String> built() {
 		Puzzle puzzle = room.puzzle;
 		if (puzzle == null) return null;
@@ -197,7 +192,6 @@ final class Interaction {
 		if (old != null) sendHome(player, old, Vec3.atCenterOf(gap));
 	}
 
-	/** The tiles in the gaps, back to their places on the floor: after a wrong word. */
 	void returnGapTile(ServerPlayer player) {
 		for (BlockPos gap : room.gapMarkers.keySet()) {
 			Letter old = inGap(gap);

@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,10 +39,9 @@ import org.jspecify.annotations.Nullable;
 /**
  * The button, as a dispenser: everything a word or a scene does to the room, and what it left
  * there - the creatures it brought, the blocks it put down, the things it only showed for a moment
- * - so the room can tidy it all away. What an outcome sees of it is {@link Stage}.
+ * - so the room can tidy it all away. What an outcome sees of it is {@link RoomEffects}.
  */
-public final class Dispenser implements Stage {
-	/** How many creatures a room keeps before the oldest goes. */
+public final class Dispenser implements RoomEffects {
 	private static final int MAX_SPAWNED = 8;
 	private static final int FLAGS = RoomLayout.FLAGS;
 	private static final int HALF = RoomLayout.HALF;
@@ -60,7 +60,7 @@ public final class Dispenser implements Stage {
 	final List<BlockPos> placed = new ArrayList<>();
 	/** Floor a block is on its way to, which nothing else may take meanwhile. */
 	final java.util.Set<BlockPos> reserved = new java.util.HashSet<>();
-	/** Where each thing the button sent out started, for tests. */
+	@ForTests
 	private final List<Dispensed> dispensed = new ArrayList<>();
 
 	Dispenser(Room room, ServerLevel level, RoomLayout layout) {
@@ -88,8 +88,8 @@ public final class Dispenser implements Stage {
 		return layout.prizeMarker();
 	}
 
-	private BlockPos doorLower() {
-		return layout.doorLower();
+	private BlockPos portalLower() {
+		return layout.portalLower();
 	}
 
 	@Override
@@ -97,9 +97,7 @@ public final class Dispenser implements Stage {
 		room.later(player, ticks, what);
 	}
 
-	// --- What words do to the room ---
 
-	/** The creatures words have brought that are still here. */
 	@Override
 	public List<Entity> creatures() {
 		List<Entity> found = new ArrayList<>();
@@ -110,7 +108,7 @@ public final class Dispenser implements Stage {
 		return found;
 	}
 
-	/** Positions a word has put a block at, for tests. */
+	@ForTests
 	public List<BlockPos> placed() {
 		return List.copyOf(placed);
 	}
@@ -118,7 +116,7 @@ public final class Dispenser implements Stage {
 	/**
 	 * Put a block down: at the child's feet if asked and the floor there is free, otherwise on the
 	 * nearest free floor in front of them. Never on the board, the word, the loose tiles, the button,
-	 * the door, the prize chest, where creatures arrive or where a child is set down. A bed takes
+	 * the portal, the prize chest, where creatures arrive or where a child is set down. A bed takes
 	 * two free squares side by side.
 	 */
 	void place(ServerPlayer player, BlockState state, boolean feet) {
@@ -165,7 +163,6 @@ public final class Dispenser implements Stage {
 		}
 	}
 
-	/** Open floor the room is not using, with nothing standing in it (except the child, at their feet). */
 	private boolean free(BlockPos pos, ServerPlayer player, boolean feet) {
 		int x = pos.getX() - origin.getX();
 		int z = pos.getZ() - origin.getZ();
@@ -205,14 +202,11 @@ public final class Dispenser implements Stage {
 		if (attribute != null) attribute.removeModifier(SCALE_ID);
 	}
 
-	// --- The button, as a dispenser ---
 
-	/** Something the button sent out, and where it started. */
 	public record Dispensed(String what, Vec3 from) {}
 
 	/** How long anything takes to get from the button to the child: under a second. */
 	static final int FLIGHT = 14;
-	/** Between the parts of a sequence, each out of the button in turn. */
 	static final int STAGGER = 8;
 	private static final double ITEM_GRAVITY = 0.04;
 
@@ -221,15 +215,14 @@ public final class Dispenser implements Stage {
 		return layout.mouth();
 	}
 
-	/** What the button has sent out lately, oldest first: for tests. */
+	/** What the button has sent out lately, oldest first. */
+	@ForTests
 	public List<Dispensed> dispensed() {
 		return List.copyOf(dispensed);
 	}
 
-	/** Every send ever, counted: the log above keeps only the last few. */
 	private long sends;
 
-	/** How many things the button has ever sent out, for a test to see a new one. */
 	public long sends() {
 		return sends;
 	}
@@ -247,7 +240,6 @@ public final class Dispenser implements Stage {
 		sent(what, mouth());
 	}
 
-	/** The click and puff of something leaving the button. */
 	void puff() {
 		Vec3 at = mouth();
 		level.playSound(null, at.x, at.y, at.z, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.2F);
@@ -315,14 +307,12 @@ public final class Dispenser implements Stage {
 		}
 	}
 
-	/** Where a character stands to be seen: on the floor a little in front of the child, toward the board, inside the walls. */
 	private Vec3 standingFor(ServerPlayer player) {
 		double x = Math.max(origin.getX() + 0.5 - 3.5, Math.min(origin.getX() + 0.5 + 3.5, player.getX()));
 		double z = Math.max(origin.getZ() + 0.5 - 3.0, Math.min(origin.getZ() + 0.5 + 2.0, player.getZ() - 2.2));
 		return new Vec3(x, origin.getY(), z);
 	}
 
-	/** An item thrown from the button to land at the child's feet, picked up the ordinary way. */
 	@Override
 	public void dispenseItem(ServerPlayer player, ItemStack stack) {
 		puff();
@@ -332,7 +322,6 @@ public final class Dispenser implements Stage {
 		sent("item", item.position());
 	}
 
-	/** Something worn: it flies from the button to the child and is on them when it arrives. */
 	@Override
 	public void dispenseWorn(ServerPlayer player, ItemStack stack, java.util.function.Consumer<ServerPlayer> wear) {
 		puff();
@@ -373,7 +362,6 @@ public final class Dispenser implements Stage {
 			reserved.remove(spot.east());
 			if (!level.getBlockState(spot).isAir()) return;
 			placeAt(spot, state);
-			// A plushie lands with its own soft squish.
 			if (state.is(LearningBlocks.PLUSH)) justfatlard.learning_blocks.sound.Sounds.effectAt(level, spot, justfatlard.learning_blocks.sound.Sounds.PLUSH_SQUISH);
 			if (lasts > 0) later(p, lasts, q -> vanishBlock(spot, state));
 		});
@@ -412,7 +400,6 @@ public final class Dispenser implements Stage {
 		later(player, steps, arrive);
 	}
 
-	/** A firework, from the button, up; a dud fizzles out in smoke instead of bursting. */
 	@Override
 	public void dispenseFirework(ServerPlayer player, ItemStack rocket, boolean dud) {
 		puff();
@@ -432,7 +419,6 @@ public final class Dispenser implements Stage {
 		}
 	}
 
-	// --- What a word does when it was not the word asked for ---
 
 	/**
 	 * What a creature does once out: runs off to the far corner, chases its tail, or circles the
@@ -458,7 +444,6 @@ public final class Dispenser implements Stage {
 				}
 			}
 			case "bounce" -> {
-				// Boing, boing, boing: happy hops on the spot.
 				for (int i = 10; i < 50; i += 10) later(player, i, p -> hop(creature, 0.42));
 			}
 			case "bonk" -> {
@@ -496,7 +481,6 @@ public final class Dispenser implements Stage {
 		}
 	}
 
-	/** A creature does something where it stands: hearts over it, sits, spins round, or hops. */
 	@Override
 	public void creatureDoes(ServerPlayer player, Entity creature, String what) {
 		Vec3 over = creature.position().add(0, creature.getBbHeight() + 0.4, 0);
@@ -544,7 +528,6 @@ public final class Dispenser implements Stage {
 		creature.needsSync = true;
 	}
 
-	/** Ah-choo: a puff at the nose, the sneeze, and a little jump with it. */
 	private void sneeze(Entity creature) {
 		if (!creature.isAlive()) return;
 		Vec3 nose = creature.getEyePosition().add(creature.getLookAngle().scale(0.4));
@@ -553,7 +536,6 @@ public final class Dispenser implements Stage {
 		hop(creature, 0.3);
 	}
 
-	/** A bump and stars round the head: a slapstick bonk. */
 	private void dizzy(Entity creature, net.minecraft.sounds.SoundEvent sound) {
 		if (!creature.isAlive()) return;
 		Vec3 head = creature.position().add(0, creature.getBbHeight() + 0.3, 0);
@@ -605,7 +587,7 @@ public final class Dispenser implements Stage {
 
 	/**
 	 * A tiny hut of planks around a spot: the eight squares round it, two high, with the side towards
-	 * the room's door left open, and a roof only when the child fits under it. Only into empty room
+	 * the room's portal left open, and a roof only when the child fits under it. Only into empty room
 	 * squares; gone in a puff after {@code lasts} ticks, and at the next round whatever happens.
 	 */
 	void hut(ServerPlayer player, BlockPos at, int lasts) {
@@ -625,7 +607,7 @@ public final class Dispenser implements Stage {
 		for (int dx = -1; dx <= 1; dx++) {
 			for (int dz = -1; dz <= 1; dz++) {
 				if (dx == 0 && dz == 0) continue;
-				// The doorway: towards the door, always open.
+				// The doorway: towards the portal, always open.
 				if (dx == 0 && dz == 1) continue;
 				for (int dy = 0; dy <= 1; dy++) {
 					BlockPos pos = at.offset(dx, dy, dz);
@@ -655,17 +637,15 @@ public final class Dispenser implements Stage {
 		});
 	}
 
-	/** An empty square inside the room that is none of the room's own: the board, the tiles, the button, the door. */
 	private boolean hutMay(BlockPos pos, boolean forScene) {
 		int x = pos.getX() - origin.getX();
 		int z = pos.getZ() - origin.getZ();
 		if (Math.abs(x) >= HALF - 1 || Math.abs(z) >= HALF - 1 || pos.getY() < origin.getY() || pos.getY() >= origin.getY() + HEIGHT - 1) return false;
 		if (!level.getBlockState(pos).isAir() || reserved.contains(pos) || room.holds(pos)) return false;
-		if (pos.equals(prizeMarker()) || pos.equals(doorLower()) || pos.equals(doorLower().above())) return false;
+		if (pos.equals(prizeMarker()) || pos.equals(portalLower()) || pos.equals(portalLower().above())) return false;
 		return forScene || room.scene() == null || !room.scene().occupies(pos);
 	}
 
-	/** Every creature runs off from the child, with a hop. */
 	@Override
 	public void scatterCreatures(ServerPlayer player) {
 		for (Entity creature : creatures()) {
@@ -681,7 +661,6 @@ public final class Dispenser implements Stage {
 		}
 	}
 
-	/** One snowball out of the button, at the child. */
 	@Override
 	public void throwSnowball(ServerPlayer player) {
 		puff();
@@ -695,7 +674,6 @@ public final class Dispenser implements Stage {
 		sent("snowball", from);
 	}
 
-	/** Things fly at the child's head, bonk, and tumble off to lie on the floor a moment. */
 	@Override
 	public void bonk(ServerPlayer player, List<ItemStack> stacks, net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent> sound) {
 		puff();
@@ -717,7 +695,6 @@ public final class Dispenser implements Stage {
 		}
 	}
 
-	/** The child turned round, a little at a time. */
 	@Override
 	public void spin(ServerPlayer player, float turns, int ticks) {
 		float step = 360.0F * turns / ticks;
@@ -730,7 +707,6 @@ public final class Dispenser implements Stage {
 		}
 	}
 
-	/** Something rolls out of the button and across the floor, turning over, and is gone at the wall. */
 	@Override
 	public void roll(ServerPlayer player, ItemStack stack, int ticks) {
 		puff();
@@ -774,7 +750,6 @@ public final class Dispenser implements Stage {
 		return throwItem(mouth(), target, stack, FLIGHT);
 	}
 
-	/** An item entity thrown from here to come down about there, this many ticks later. */
 	@Override
 	public ItemEntity throwItem(Vec3 from, Vec3 target, ItemStack stack, int ticks) {
 		ItemEntity item = new ItemEntity(level, from.x, from.y, from.z, stack.copy());
@@ -804,7 +779,6 @@ public final class Dispenser implements Stage {
 		}
 	}
 
-	// --- Tidying away ---
 
 	/** A boat or cart a word brought goes with its round, like a placed block: left, it drifts into later rounds and wedges against the board. */
 	void clearVehicles() {
@@ -818,7 +792,6 @@ public final class Dispenser implements Stage {
 		}
 	}
 
-	/** Every creature gone in a puff, and everything else a word left: a new stage's clean slate. */
 	void clearForStage() {
 		for (UUID id : spawned) {
 			Entity entity = level.getEntity(id);
@@ -832,7 +805,6 @@ public final class Dispenser implements Stage {
 		reserved.clear();
 	}
 
-	/** Everything a word left, gone: the room is closing. */
 	void clearAll() {
 		for (UUID id : spawned) {
 			Entity entity = level.getEntity(id);

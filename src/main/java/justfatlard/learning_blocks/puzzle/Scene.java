@@ -115,7 +115,6 @@ public record Scene(String line, List<Step> setup, List<Step> solve) {
 		return sound.map(BuiltInRegistries.SOUND_EVENT::containsKey).orElse(true);
 	}
 
-	// --- Setup ---
 
 	/**
 	 * Who the scene is about, standing on the floor to the left, facing the child: a villager unless
@@ -300,7 +299,6 @@ public record Scene(String line, List<Step> setup, List<Step> solve) {
 		}
 	}
 
-	// --- Solve ---
 
 	/** Every character in the scene settles: {@code sit} or {@code lie} (a pet lying down). */
 	public record Pose(String pose) implements Step {
@@ -514,7 +512,6 @@ public record Scene(String line, List<Step> setup, List<Step> solve) {
 		}
 	}
 
-	// --- Feelings, gestures, sky and weather ---
 
 	/**
 	 * A feeling in a bubble over the character (or every character, {@code all}): in the setup, how

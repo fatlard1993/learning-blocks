@@ -95,8 +95,7 @@ public sealed interface Outcome {
 	/** Whether every id resolves and nothing it would do is harmful. Asked when a puzzle is picked. */
 	boolean usable();
 
-	/** Do it, for this child, in their room. */
-	void run(ServerPlayer player, Stage room);
+	void run(ServerPlayer player, RoomEffects room);
 
 	Kind kind();
 
@@ -115,7 +114,6 @@ public sealed interface Outcome {
 		return ParticleTypes.CODEC.parse(JsonOps.INSTANCE, json).result().orElse(null);
 	}
 
-	/** A block with these properties set, or null if the block or any property is not one this server knows. */
 	static @Nullable BlockState blockStateOf(Identifier block, Map<String, String> properties) {
 		Block found = BuiltInRegistries.BLOCK.getOptional(block).orElse(null);
 		if (found == null) return null;
@@ -191,7 +189,6 @@ public sealed interface Outcome {
 
 	Codec<Outcome> CODEC = Codec.recursive("outcome", self -> Kind.CODEC.dispatch("type", Outcome::kind, kind -> kind.codec(self)));
 
-	// --- Sky, weather and feelings ---
 
 	/**
 	 * This child's sky, theirs only: it glides on to {@code day}, {@code dusk}, {@code night} or
@@ -218,7 +215,6 @@ public sealed interface Outcome {
 			return null;
 		}
 
-		/** The time it ends at. */
 		public justfatlard.learning_blocks.classroom.Sky.@Nullable Time to() {
 			return named(time);
 		}
@@ -229,7 +225,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			justfatlard.learning_blocks.classroom.Sky.Time to = named(time);
 			if (to == null) return;
 			if (flicker) {
@@ -268,7 +264,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			if (weather.equals("cloud")) {
 				room.puffFromButton("cloud");
 				justfatlard.learning_blocks.classroom.Sky.cloud(player.level(), Vec3.atBottomCenterOf(room.origin()), lasts > 0 ? lasts : 140);
@@ -312,7 +308,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			EntityType<?> type = harmlessType(entity, baby);
 			if (type == null) return;
 			Entity made = type.create(player.level(), EntitySpawnReason.MOB_SUMMONED);
@@ -363,7 +359,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.puffFromButton("dark");
 			if (flicker) {
 				justfatlard.learning_blocks.classroom.Sky.dark(player, 4);
@@ -374,7 +370,6 @@ public sealed interface Outcome {
 		}
 	}
 
-	// --- Creatures ---
 
 	/** What a creature a word brings may do once out. */
 	List<String> ACTS = List.of("none", "flee", "spin", "circle", "bounce", "bonk", "sneeze");
@@ -413,7 +408,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			EntityType<?> type = type();
 			if (type == null) return;
 			ServerLevel level = player.level();
@@ -461,11 +456,11 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.dispenseEffect(player, p -> come(p, room));
 		}
 
-		private static void come(ServerPlayer player, Stage room) {
+		private static void come(ServerPlayer player, RoomEffects room) {
 			for (Entity creature : room.creatures()) {
 				Vec3 toward = player.position().subtract(creature.position());
 				Vec3 flat = new Vec3(toward.x, 0, toward.z);
@@ -477,9 +472,7 @@ public sealed interface Outcome {
 		}
 	}
 
-	// --- Things to hold and wear ---
 
-	/** An item stack from an id, a count and optional components, built with the server's registries. */
 	private static ItemStack stack(ServerPlayer player, Identifier item, int count, Optional<Dynamic<?>> components) {
 		return stack(player.level().registryAccess(), item, count, components);
 	}
@@ -521,7 +514,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			EquipmentSlot equipment = equipment();
 			if (equipment == null) return;
 			ItemStack worn = stack(player, item, count, components);
@@ -547,12 +540,11 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.dispenseItem(player, stack(player, item, count, components));
 		}
 	}
 
-	// --- The child themselves ---
 
 	record Effect(Identifier effect, int duration, int amplifier) implements Outcome {
 		static final MapCodec<Effect> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -577,7 +569,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			Holder<MobEffect> holder = holder();
 			if (holder != null) room.dispenseEffect(player, p -> p.addEffect(new MobEffectInstance(holder, duration, amplifier)));
 		}
@@ -602,7 +594,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.dispenseEffect(player, p -> room.scale(p, amount, duration));
 		}
 	}
@@ -625,7 +617,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.dispenseEffect(player, this::shove);
 		}
 
@@ -638,7 +630,6 @@ public sealed interface Outcome {
 		}
 	}
 
-	// --- The room ---
 
 	/** @param lasts ticks after landing before it goes again in a puff of smoke; 0 to stay until the next round */
 	record PlaceBlock(Identifier block, Map<String, String> properties, String at, int lasts) implements Outcome {
@@ -664,7 +655,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			BlockState state = state();
 			if (state != null) room.dispenseBlock(player, state, at.equals("feet"), lasts);
 		}
@@ -702,7 +693,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.dispenseEffect(player, p -> {
 				burst(p);
 				for (int i = 1; i < repeat; i++) room.later(p, i * every, this::burst);
@@ -749,7 +740,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			IntList list = new IntArrayList(colors);
 			ItemStack rocket = new ItemStack(Items.FIREWORK_ROCKET);
 			rocket.set(net.minecraft.core.component.DataComponents.FIREWORKS, dud ? new Fireworks(0, List.of())
@@ -771,7 +762,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.dispenseEffect(player, p -> room.scatterCreatures(p));
 		}
 	}
@@ -798,7 +789,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			for (int i = 0; i < count; i++) {
 				if (i == 0) room.throwSnowball(player);
 				else room.later(player, i * every, room::throwSnowball);
@@ -828,7 +819,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			List<ItemStack> stacks = items.stream().map(id -> new ItemStack(BuiltInRegistries.ITEM.getValue(id))).toList();
 			Holder<SoundEvent> bonk = sound.flatMap(BuiltInRegistries.SOUND_EVENT::get).<Holder<SoundEvent>>map(found -> found)
 				.orElse(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(net.minecraft.sounds.SoundEvents.WOOD_HIT));
@@ -854,7 +845,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.dispenseEffect(player, p -> room.spin(p, turns, ticks));
 		}
 	}
@@ -877,7 +868,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.roll(player, new ItemStack(BuiltInRegistries.ITEM.getValue(item)), ticks);
 		}
 	}
@@ -913,7 +904,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			var voice = voice().orElseThrow();
 			room.dispenseEffect(player, p -> {
 				for (int i = 0; i < notes.size(); i++) {
@@ -947,7 +938,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.dispenseEffect(player, p -> {
 				Vec3 toward = room.mouth().subtract(p.position());
 				Vec3 flat = new Vec3(toward.x, 0, toward.z);
@@ -979,7 +970,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			BlockState walls = blockStateOf(block, Map.of());
 			if (walls != null) room.dispenseEffect(player, p -> room.hut(p, p.blockPosition(), lasts, false, walls));
 		}
@@ -1002,7 +993,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.dispenseEffect(player, p -> {
 				for (Entity creature : room.creatures()) room.creatureDoes(p, creature, what);
 			});
@@ -1026,7 +1017,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			room.strike(player, lasts);
 		}
 	}
@@ -1041,7 +1032,6 @@ public sealed interface Outcome {
 			return Kind.PREFER;
 		}
 
-		/** The option that runs here, or null if none can. */
 		public @Nullable Outcome chosen() {
 			for (Outcome option : options) if (option.usable()) return option;
 			return null;
@@ -1053,7 +1043,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			Outcome option = chosen();
 			if (option != null) option.run(player, room);
 		}
@@ -1072,7 +1062,7 @@ public sealed interface Outcome {
 		}
 
 		@Override
-		public void run(ServerPlayer player, Stage room) {
+		public void run(ServerPlayer player, RoomEffects room) {
 			for (int i = 0; i < steps.size(); i++) {
 				Outcome step = steps.get(i);
 				if (i == 0) step.run(player, room);

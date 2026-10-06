@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,9 +45,7 @@ import org.jspecify.annotations.Nullable;
 final class BobStage {
 	/** On everything a stage makes, so it can all be found and tidied away. */
 	static final String TAG = LearningBlocks.MOD_ID + ".bob";
-	/** How far apart the things standing on the floor are, at full size. */
 	private static final double SPACING = 1.35;
-	/** How much bigger "big" is. */
 	static final float BIG = 1.5F;
 	private static final int GLIDE = 6;
 
@@ -66,12 +65,11 @@ final class BobStage {
 		return anchor;
 	}
 
-	/** The thing's entity, for tests: a creature, or a display. */
+	@ForTests
 	@Nullable Entity entity(String thing) {
 		return made.get(thing);
 	}
 
-	/** Where the thing was last put, its foot. */
 	@Nullable Vec3 at(String thing) {
 		return at.get(thing);
 	}
@@ -80,13 +78,11 @@ final class BobStage {
 		return java.util.Collections.unmodifiableMap(made);
 	}
 
-	/** Show the scene: everything in it made if it is not already, and put where it now is. */
 	void show(BobScene scene, boolean glide) {
 		for (Entity entity : made.values()) {
 			entity.stopRiding();
 			entity.ejectPassengers();
 		}
-		// Anything gone from the scene goes from the floor.
 		for (String thing : new ArrayList<>(made.keySet())) {
 			if (!scene.things().contains(thing)) made.remove(thing).discard();
 		}
@@ -99,7 +95,6 @@ final class BobStage {
 		}
 	}
 
-	/** Everything this stage made, gone. */
 	void clear() {
 		for (Entity entity : made.values()) {
 			entity.ejectPassengers();
@@ -214,7 +209,6 @@ final class BobStage {
 		return entity;
 	}
 
-	/** The block each thing is shown as, turned to face the child. */
 	static @Nullable BlockState blockOf(Noun noun) {
 		return blockOf(noun.thing());
 	}

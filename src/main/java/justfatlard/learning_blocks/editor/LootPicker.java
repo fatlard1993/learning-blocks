@@ -15,8 +15,8 @@ import org.jspecify.annotations.Nullable;
 import static justfatlard.learning_blocks.editor.Ui.*;
 
 /**
- * Every loot table the server has loaded, found by typing part of its name and taken with a click.
- * PvP Dimensions' block picker, made a list: a loot table has an id and no picture.
+ * Every loot table the server has loaded, found by typing part of its name and taken with a click:
+ * a list, since a loot table has an id and no picture.
  *
  * <p>Laid out once and refilled in place as the search changes, which leaves the search box holding
  * the keyboard between letters. Read from the server each time it is opened, so a data pack's
@@ -64,7 +64,6 @@ final class LootPicker {
 		return row >= 0 && row < ROWS && index < found.size() ? found.get(index) : null;
 	}
 
-	/** The picker's own rows. @return how tall */
 	static int layout(List<ComponentBuilder> into, MinecraftServer server, int x, int y, int width, String label, String query, int page) {
 		Map<String, Map<String, String>> state = state(server, query, page);
 		int top = y;

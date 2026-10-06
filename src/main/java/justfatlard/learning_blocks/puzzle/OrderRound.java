@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,12 +60,12 @@ public final class OrderRound extends NumbersRound {
 		return line(narration, "phrase/put_in_order", "Put the numbers in order!");
 	}
 
-	/** How many are in the row so far, for tests. */
+	@ForTests
 	public int done() {
 		return done;
 	}
 
-	/** The next one wanted, for tests. */
+	@ForTests
 	public Choice next() {
 		return choices.stream().filter(choice -> number(choice) == done + 1).findFirst().orElseThrow();
 	}

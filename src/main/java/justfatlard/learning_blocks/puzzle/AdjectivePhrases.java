@@ -21,13 +21,12 @@ import org.jspecify.annotations.Nullable;
  * brought to a party, or feeling sad, glad or mad (a face in a bubble over it). A pair that
  * cannot be shown is never offered.
  */
-public final class Phrases {
-	private Phrases() {}
+public final class AdjectivePhrases {
+	private AdjectivePhrases() {}
 
 	/** The adjectives a phrase can start with, all words a child reads anyway. */
 	public static final List<String> ADJECTIVES = List.of("big", "red", "wet", "fun", "six", "sad", "glad", "mad");
 
-	/** The creature a word brings, if that is what it does. */
 	static Outcome.@Nullable SpawnEntity creature(Word noun) {
 		if (noun.outcome() instanceof Outcome.SpawnEntity spawn) return spawn;
 		if (noun.outcome() instanceof Outcome.Sequence sequence) {
@@ -36,13 +35,11 @@ public final class Phrases {
 		return null;
 	}
 
-	/** Whether this adjective and this noun make a phrase the room can show. */
 	public static boolean fits(Word adjective, Word noun) {
 		Outcome.SpawnEntity spawn = creature(noun);
 		return ADJECTIVES.contains(adjective.text()) && spawn != null && spawn.usable();
 	}
 
-	/** The phrase happens, in this room: the creature, as the adjective says. */
 	static void run(ServerPlayer player, Word adjective, Word noun, Room room) {
 		Outcome.SpawnEntity spawn = creature(noun);
 		if (spawn == null) {
@@ -61,7 +58,6 @@ public final class Phrases {
 	}
 
 
-	/** One creature, as the adjective makes it. */
 	private static void change(ServerPlayer player, String adjective, Entity creature, Room room) {
 		switch (adjective) {
 			case "big" -> {
@@ -115,7 +111,6 @@ public final class Phrases {
 		level.sendParticles(particle, at.x, at.y, at.z, 6, creature.getBbWidth() * 0.4, 0.1, creature.getBbWidth() * 0.4, 0.02);
 	}
 
-	/** A phrase for a round, from the adjectives and creature words this child has read, or null. */
 	static Word @Nullable [] pick(Progress progress, net.minecraft.util.RandomSource random) {
 		List<Word> adjectives = new java.util.ArrayList<>();
 		List<Word> nouns = new java.util.ArrayList<>();

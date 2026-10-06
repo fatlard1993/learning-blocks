@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A prize list's items are made by holding them, the way PvP Dimensions makes kits: the operator's
+ * A prize list's items are made by holding them: the operator's
  * own pack is put aside, the list is laid out in its place, they arrange it from the creative menu
  * or from chests and say done, and whatever they are holding is the list. Their own pack comes back.
  *
@@ -70,7 +70,6 @@ public final class PrizeSessions {
 		return player.getAttached(ATTACHMENT);
 	}
 
-	/** Put the pack aside and lay out the list at this path. What went wrong, or null. */
 	public static @Nullable String start(ServerPlayer player, String prizes, String tab) {
 		if (!Admins.may(player)) return "Only operators can change prizes";
 		if (Visit.of(player) != null) return "Leave the classroom first; prizes are made outside";
@@ -107,7 +106,6 @@ public final class PrizeSessions {
 		return null;
 	}
 
-	/** What they hold becomes the list's items; their own pack comes back. */
 	public static @Nullable String done(ServerPlayer player) {
 		Editing editing = of(player);
 		if (editing == null) return "You aren't editing any prizes";
@@ -139,7 +137,6 @@ public final class PrizeSessions {
 		return null;
 	}
 
-	/** The pack exactly as it was put aside, and the session over. */
 	private static void restore(ServerPlayer player, Editing editing) {
 		player.closeContainer();
 		player.getInventory().clearContent();
@@ -155,7 +152,6 @@ public final class PrizeSessions {
 			.append(button("Done", "/learn prizes done")).append(" ").append(button("Cancel", "/learn prizes cancel")));
 	}
 
-	// --- Items and their entries ---
 
 	/** The item entries this server can't make (a removed mod's item): kept in the file as they are, never laid out or dropped. */
 	static List<JsonElement> unmakeable(JsonArray list, MinecraftServer server) {
@@ -172,7 +168,6 @@ public final class PrizeSessions {
 		return one;
 	}
 
-	/** The item entries of a prize list, as stacks; entries this server cannot make are left out. */
 	static List<ItemStack> items(JsonArray list, MinecraftServer server) {
 		DynamicOps<JsonElement> ops = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
 		List<ItemStack> stacks = new ArrayList<>();
@@ -188,7 +183,6 @@ public final class PrizeSessions {
 		return stacks;
 	}
 
-	/** Stacks as prize entries, {@code {"item", "count", "components"}}. */
 	static List<JsonObject> entries(List<ItemStack> stacks, MinecraftServer server) {
 		DynamicOps<JsonElement> ops = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
 		List<JsonObject> entries = new ArrayList<>();

@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.List;
 import justfatlard.learning_blocks.narration.CaptionLine;
@@ -108,7 +109,7 @@ public final class BedsRound extends NumbersRound {
 		telling.say(NumberBlock.soundOf(more), "right:" + more, p -> {}, CaptionLine.plain(Numbers.word(more) + " more beds!"), AnswerNarration.WORD_GAP);
 	}
 
-	/** The kittens and the beds, for tests. */
+	@ForTests
 	public int kittens() {
 		return kittens;
 	}

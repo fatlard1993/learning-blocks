@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * <p>The hat HAT puts on a child's head is a leather helmet, and holding one unlocks a recipe, which
  * pops a "New Recipe Unlocked" toast over the room. More to the point, nothing from the classroom
  * comes home with a child, and an unlocked recipe or an advancement is something that would. What
- * is handed back at the door on the way out does not count either, since it was theirs already.
+ * is handed back on the way out does not count either, since it was theirs already.
  */
 @Mixin(InventoryChangeTrigger.class)
 public abstract class InventoryChangeTriggerMixin {

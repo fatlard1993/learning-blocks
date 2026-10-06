@@ -63,14 +63,11 @@ public final class PrizeFile {
 		Files.move(temporary, path, java.nio.file.StandardCopyOption.REPLACE_EXISTING, java.nio.file.StandardCopyOption.ATOMIC_MOVE);
 	}
 
-	/** Everything the file holds when nobody has touched it. */
 	public static JsonObject defaults() {
 		return parse(DEFAULT_VALUES);
 	}
 
-	// --- Paths: "events.new_word.prizes.2" ---
 
-	/** What is at this path, or null. */
 	public static @Nullable JsonElement get(JsonObject tree, String path) {
 		JsonElement at = tree;
 		for (String part : path.split("\\.")) {
@@ -106,7 +103,6 @@ public final class PrizeFile {
 		}
 	}
 
-	/** The array at this path, made empty there if missing. */
 	public static JsonArray array(JsonObject tree, String path) {
 		JsonElement found = get(tree, path);
 		if (found != null && found.isJsonArray()) return found.getAsJsonArray();
@@ -132,7 +128,6 @@ public final class PrizeFile {
 		}
 	}
 
-	// --- Writing, with comments ---
 
 	static String text(JsonObject tree) {
 		StringBuilder out = new StringBuilder();
@@ -193,7 +188,6 @@ public final class PrizeFile {
 		}
 	}
 
-	/** The word book is gone: its setting and any word book prize are left out of what is written. */
 	private static void dropWordBook(JsonElement json) {
 		if (json.isJsonObject()) {
 			JsonObject object = json.getAsJsonObject();
@@ -233,7 +227,7 @@ public final class PrizeFile {
 		The rest of the mod's server settings are here too: puzzles (kinds of round) and subjects.
 
 		Nothing here goes into the classroom's own inventory. Everything earned waits with the
-		things put aside at the door and is handed back after them; whatever does not fit is
+		things put aside on the way in and is handed back after them; whatever does not fit is
 		dropped at the child's feet at home.
 
 		A prize is one of:
@@ -350,6 +344,5 @@ public final class PrizeFile {
 		}
 		""";
 
-	/** Names of the events, in the order the file and the editor show them. */
 	public static final List<String> EVENTS = List.of("new_word", "solved", "streak", "stage_complete", "milestone", "toy_mastered", "daily_visit");
 }

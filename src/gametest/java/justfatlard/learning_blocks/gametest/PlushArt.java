@@ -9,8 +9,8 @@ import justfatlard.learning_blocks.plush.PlushBlock;
 import justfatlard.learning_blocks.plush.Plushies;
 import justfatlard.learning_blocks.puzzle.Letter;
 import justfatlard.learning_blocks.puzzle.LetterBlock;
-import justfatlard.learning_blocks.things.ThingBlock;
-import justfatlard.learning_blocks.things.Things;
+import justfatlard.learning_blocks.props.PropBlock;
+import justfatlard.learning_blocks.props.Props;
 import justfatlard.learning_blocks.toy.Toy;
 import justfatlard.learning_blocks.toy.ToyBlock;
 import justfatlard.learning_blocks.toy.Toys;
@@ -77,7 +77,7 @@ public final class PlushArt implements FabricClientGameTest {
 		shoot(session, "learning-plush-icons");
 		session.context().setScreen(() -> null);
 
-		// The big-word plushies, round H's, in a row of their own near the camera.
+		// The big-word plushies, in a row of their own near the camera.
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			ServerLevel level = (ServerLevel) player.level();
@@ -115,8 +115,8 @@ public final class PlushArt implements FabricClientGameTest {
 				level.setBlock(at, Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, toys[i]).setValue(ToyBlock.FACING, Direction.NORTH), 3);
 			}
 			int x = -5;
-			for (Item item : Things.all().values()) {
-				level.setBlock(base.offset(x, 0, 8), ((BlockItem) item).getBlock().defaultBlockState().setValue(ThingBlock.FACING, Direction.NORTH), 3);
+			for (Item item : Props.all().values()) {
+				level.setBlock(base.offset(x, 0, 8), ((BlockItem) item).getBlock().defaultBlockState().setValue(PropBlock.FACING, Direction.NORTH), 3);
 				x++;
 			}
 			player.getInventory().clearContent();

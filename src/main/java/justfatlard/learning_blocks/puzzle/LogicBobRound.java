@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import justfatlard.learning_blocks.ForTests;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -50,10 +51,9 @@ public final class LogicBobRound extends LogicRound {
 	private @Nullable Entity bigCat;
 	private @Nullable Entity littleCat;
 	private @Nullable Entity cat;
-	/** What's wrong: the one in the wrong pen, its choice, and each animal's choice. */
 	private final Map<Choice, Entity> animalOf = new LinkedHashMap<>();
 	private @Nullable Entity misplaced;
-	/** What Bob did last, for tests: the word on the card. */
+	@ForTests
 	private @Nullable String did;
 
 	public LogicBobRound(Room room, LogicCourse.Kind kind, String goal, int stage, RandomSource random) {
@@ -125,7 +125,6 @@ public final class LogicBobRound extends LogicRound {
 	@Override
 	protected void stand(Choice choice, BlockPos spot) {
 		if (kind == LogicCourse.Kind.BOBFIX) return;
-		// A word card standing up to be read.
 		Display.TextDisplay card = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
 		Vec3 at = Vec3.atBottomCenterOf(spot).add(0, 0.3, 0);
 		card.snapTo(at.x, at.y, at.z, 0, 0);
@@ -135,7 +134,6 @@ public final class LogicBobRound extends LogicRound {
 		add(card);
 	}
 
-	/** What's wrong: where each animal stands, two in each pen, the wrong one swapped in. */
 	private Vec3 fixSpot(int i) {
 		int pen = i < 2 ? 0 : 1;
 		Choice choice = choices.get(i);
@@ -156,7 +154,6 @@ public final class LogicBobRound extends LogicRound {
 		if (kind != LogicCourse.Kind.BOBFIX) goalPicture();
 	}
 
-	/** The goal, small and framed on the board's left. */
 	private void goalPicture() {
 		Vec3 at = Vec3.atBottomCenterOf(layout.origin().offset(-4, RoomLayout.WORD_Y, -4)).add(0.3, -0.2, 0.2);
 		Display.BlockDisplay frame = BobProps.goalFrame(level, at);
@@ -269,7 +266,6 @@ public final class LogicBobRound extends LogicRound {
 		return line(narration, "phrase/tell_bob", "Tell Bob!");
 	}
 
-	/** Bob does it, exactly: the card in the gap, read out, and done. */
 	@Override
 	protected @Nullable Narration act(ServerPlayer player, Choice picked) {
 		if (kind == LogicCourse.Kind.BOBFIX) return null;
@@ -351,7 +347,6 @@ public final class LogicBobRound extends LogicRound {
 		telling.then("undo", p -> undo(), 4);
 	}
 
-	/** For tests: the card Bob did last, and where things are. */
 	public @Nullable String did() {
 		return did;
 	}

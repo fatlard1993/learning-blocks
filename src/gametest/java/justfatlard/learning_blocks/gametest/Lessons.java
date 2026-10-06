@@ -23,10 +23,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * A child sent in for lessons stays until they are done: the door is iron with the count over it,
- * the door and {@code /learn leave} do nothing, the count survives logging out, and after the
- * last solve "All done! The door is open!" is said and the door works. An ordinary visit's door is
- * open; an operator can release a child, and is never kept in themselves.
+ * A child sent in for lessons stays until they are done: the portal is dark with the count over
+ * it, the portal and {@code /learn leave} do nothing, the count survives logging out, and after the
+ * last solve "All done! The portal is open!" is said and the portal works. An ordinary visit's
+ * portal is open; an operator can release a child, and is never kept in themselves.
  */
 public final class Lessons implements FabricClientGameTest {
 
@@ -37,14 +37,14 @@ public final class Lessons implements FabricClientGameTest {
 			save = world.getWorldSave();
 			ready(context, world);
 
-			// An ordinary visit: the wooden door, open.
+			// An ordinary visit: the portal, open.
 			world.getServer().runOnServer(server -> asPlayer(world, "learn"));
 			context.waitTicks(40);
 			world.getServer().runOnServer(server -> {
 				ServerPlayer player = world.getConnection().getServerPlayer();
 				Room room = Rooms.of(player);
-				check(room.portalOpen(), "an ordinary visit's door is not the wooden one");
-				check(room.doorSign() == null, "an ordinary visit has a lessons count over the door");
+				check(room.portalOpen(), "an ordinary visit's portal is not open");
+				check(room.portalSign() == null, "an ordinary visit has a lessons count over the portal");
 				check(!Travel.kept(player), "an ordinary visit keeps the child in");
 			});
 			world.getServer().runOnServer(server -> asPlayer(world, "learn leave"));
@@ -58,7 +58,7 @@ public final class Lessons implements FabricClientGameTest {
 				check(Places.isClassroom(player.level()), "send did not take the child in");
 				locked(player, 2);
 				asPlayer(world, "learn leave");
-				click(player, Rooms.of(player).doorLower());
+				click(player, Rooms.of(player).portalLower());
 			});
 			context.waitTicks(30);
 			world.getServer().runOnServer(server -> check(Visit.of(world.getConnection().getServerPlayer()) != null,
@@ -104,9 +104,9 @@ public final class Lessons implements FabricClientGameTest {
 				check(Narrator.log(player).contains("clip:phrase/more_to_go_1"), "\"One more to go!\" was not said after the first lesson");
 				Room room = Rooms.of(player);
 				check(Travel.lessons(player) == 0, "lessons left after both were done: " + Travel.lessons(player));
-				check(room.portalOpen(), "the door did not open after the lessons");
-				check(room.doorSign() == null, "the count is still over the open door");
-				click(player, room.doorLower());
+				check(room.portalOpen(), "the portal did not open after the lessons");
+				check(room.portalSign() == null, "the count is still over the open portal");
+				click(player, room.portalLower());
 			});
 			for (int tick = 0; tick < 300; tick++) {
 				boolean[] out = new boolean[1];
@@ -115,7 +115,7 @@ public final class Lessons implements FabricClientGameTest {
 				context.waitTicks(1);
 			}
 			world.getServer().runOnServer(server -> check(Visit.of(world.getConnection().getServerPlayer()) == null,
-				"the open door did not take the child home"));
+				"the open portal did not take the child home"));
 
 			// Released by an operator.
 			world.getServer().runOnServer(server -> console(server, "learn send " + name(world) + " 3"));
@@ -125,7 +125,7 @@ public final class Lessons implements FabricClientGameTest {
 				locked(player, 3);
 				console(server, "learn release " + name(world));
 				check(!Travel.kept(player) && Rooms.of(player).portalOpen(),
-					"release did not open the door");
+					"release did not open the portal");
 
 				// An operator is never kept in.
 				console(server, "learn send " + name(world) + " 2");
@@ -146,14 +146,14 @@ public final class Lessons implements FabricClientGameTest {
 		context.waitTicks(20);
 	}
 
-	/** Locked for this many: the iron door, the count over it, and kept in. */
+	/** Locked for this many: the dark portal, the count over it, and kept in. */
 	private static void locked(ServerPlayer player, int left) {
 		Room room = Rooms.of(player);
 		check(Travel.lessons(player) == left, "lessons left are " + Travel.lessons(player) + ", not " + left);
 		check(Travel.kept(player), "the child is not kept in with lessons left");
-		check(!room.portalOpen(), "the door is not locked with lessons left");
-		check(room.doorSign() instanceof Display.TextDisplay sign && sign.getText().getString().equals(left + " left"),
-			"the door does not say " + left + " left: " + room.doorSign());
+		check(!room.portalOpen(), "the portal is not locked with lessons left");
+		check(room.portalSign() instanceof Display.TextDisplay sign && sign.getText().getString().equals(left + " left"),
+			"the portal does not say " + left + " left: " + room.portalSign());
 	}
 
 	private static String name(TestSingleplayerContext world) {

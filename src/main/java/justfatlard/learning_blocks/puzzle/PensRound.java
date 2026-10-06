@@ -91,7 +91,6 @@ public final class PensRound extends NumbersRound {
 			super.stand(choice, spot);
 			return;
 		}
-		// A pen, three across and two deep inside.
 		for (int dx = -2; dx <= 2; dx++) {
 			for (int dz = -2; dz <= 1; dz++) {
 				// A flat rug of a border, so the creatures inside are in full view.
@@ -112,7 +111,6 @@ public final class PensRound extends NumbersRound {
 	private void fill(ServerPlayer player, boolean isLeft, int n, List<Entity> into) {
 		BlockPos centre = penCentre(isLeft);
 		List<Vec3> spots = new ArrayList<>();
-		// Two by two, well apart.
 		for (int i = 0; i < n; i++) spots.add(Vec3.atBottomCenterOf(centre).add((i % 2 - 0.5) * 1.3, 0, -1.0 + (i / 2) * 0.9));
 		into.addAll(Counting.dispense(this, player, what, n, spots, 3, null, 0.6F));
 	}

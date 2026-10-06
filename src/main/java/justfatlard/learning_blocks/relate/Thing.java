@@ -39,7 +39,6 @@ public record Thing(String word, Is is, @Nullable Identifier entity, @Nullable I
 		return tags.contains("small");
 	}
 
-	/** Can wear a cap or a wig: a creature, a plushie, the doll. */
 	public boolean wearer() {
 		return tags.contains("wearer");
 	}

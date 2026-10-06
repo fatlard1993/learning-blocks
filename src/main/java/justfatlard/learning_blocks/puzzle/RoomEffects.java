@@ -17,20 +17,16 @@ import net.minecraft.world.phys.Vec3;
  * button, put blocks down, move creatures and the child about. Nothing about puzzles, tiles or
  * rounds; {@link Dispenser} is the room's.
  */
-public interface Stage {
-	/** Where the room's floor is centred. */
+public interface RoomEffects {
 	BlockPos origin();
 
-	/** Where a child is set down, looking at the board. */
 	Vec3 spawn();
 
-	/** Just out from the button's face, where everything a word does comes from. */
 	Vec3 mouth();
 
 	/** Later, for this child, only while this room and this round are still going. */
 	void later(ServerPlayer player, int ticks, Consumer<ServerPlayer> what);
 
-	/** The creatures words have brought that are still here. */
 	List<Entity> creatures();
 
 	void dispenseCreature(ServerPlayer player, Entity creature);
@@ -52,7 +48,6 @@ public interface Stage {
 
 	void dispenseFirework(ServerPlayer player, ItemStack rocket, boolean dud);
 
-	/** The button's click and puff, logged as sending this out. */
 	void puffFromButton(String what);
 
 	/** A block put down here, and taken up again at the next round. */
@@ -68,7 +63,6 @@ public interface Stage {
 
 	void hut(ServerPlayer player, BlockPos at, int lasts, boolean forScene);
 
-	/** The same, of these blocks: a wool tent, a brick house. */
 	void hut(ServerPlayer player, BlockPos at, int lasts, boolean forScene, BlockState walls);
 
 	void throwSnowball(ServerPlayer player);
@@ -81,6 +75,5 @@ public interface Stage {
 
 	void scale(ServerPlayer player, double amount, int duration);
 
-	/** A lightning rod out of the button, struck by a little bolt of sparks, gone after {@code lasts}. */
 	void strike(ServerPlayer player, int lasts);
 }

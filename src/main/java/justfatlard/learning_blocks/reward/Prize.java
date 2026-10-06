@@ -40,7 +40,6 @@ public sealed interface Prize {
 		public static final String RANDOM_NEW = "random_new";
 	}
 
-	/** A toy: one in particular, or {@code random_new}. */
 	record Toy(String which) implements Prize {}
 
 	/** From the whole toybox: {@code random_new}, a plushie or a toy the child has not got yet. */

@@ -68,7 +68,6 @@ public record Word(Identifier id, List<String> tiles, List<Optional<String>> sou
 		Optional<Identifier> icon, Optional<Outcome> wrong, Optional<Scene> scene, boolean keyword, boolean puzzle, boolean clearPicture,
 		boolean tricky, boolean plural) {
 
-	/** The sound override that says nothing. */
 	public static final String SILENT = "silent";
 
 	/** A list entry that may be JSON null: read as absent. */
@@ -121,7 +120,6 @@ public record Word(Identifier id, List<String> tiles, List<Optional<String>> sou
 		return wrong.filter(Outcome::usable).orElse(outcome);
 	}
 
-	/** Its scene, if it has one this server can play. */
 	public Optional<Scene> usableScene() {
 		return scene.filter(Scene::usable);
 	}
@@ -188,7 +186,6 @@ public record Word(Identifier id, List<String> tiles, List<Optional<String>> sou
 		return "phoneme/" + tiles.get(index);
 	}
 
-	/** The word itself, as its sound is filed: {@code cat}. */
 	public String text() {
 		return String.join("", tiles);
 	}
@@ -206,10 +203,7 @@ public record Word(Identifier id, List<String> tiles, List<Optional<String>> sou
 		return tiles.subList(1, tiles.size());
 	}
 
-	/**
-	 * The tiles as letter blocks can show them, or null where one of them is a grapheme no single
-	 * letter tile can show ("sh"), which this room cannot build yet.
-	 */
+	/** The tiles as letter blocks, or null where a tile names no {@link Letter}. */
 	public @Nullable List<Letter> letters() {
 		List<Letter> letters = new ArrayList<>();
 		for (String tile : tiles) {

@@ -24,12 +24,10 @@ public final class Memory {
 	/** Rounds before an item in each box (1 to 5) is due again. */
 	private static final int[] INTERVAL = {0, 2, 5, 12, 30, 80};
 	public static final int TOP_BOX = 5;
-	/** How many of the things built instead each item keeps. */
 	private static final int MIXUPS_KEPT = 5;
 	private static final int DAYS_KEPT = 35;
 	private static final int LESSONS_KEPT = 20;
 
-	/** One word or sound. */
 	public static final class Item {
 		int attempts;
 		int firstTry;
@@ -77,7 +75,6 @@ public final class Memory {
 		}
 	}
 
-	/** One day's time and rounds. */
 	public record Day(int seconds, int rounds, int solved) {
 		static final Codec<Day> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.INT.optionalFieldOf("seconds", 0).forGetter(Day::seconds),
@@ -86,7 +83,6 @@ public final class Memory {
 		).apply(instance, Day::new));
 	}
 
-	/** How well a word or a sound is known, for the grown-ups: never tried, learning, shaky, or solid. */
 	public enum Mastery { NOT_SEEN, LEARNING, SHAKY, SOLID }
 
 	final Map<String, Item> items;
@@ -109,9 +105,8 @@ public final class Memory {
 	 * {@code hit:<key>} for the letters level's counts.
 	 */
 	final Map<String, String> counted;
-	/** The plushies this reader has been given, by name, and how many of each. */
+	/** The Toybox: plushies by name and toys as {@code toy:<name>}, each with how many. */
 	final Map<String, Integer> plushies;
-	/** The day {@link #usedToday} is for, and the lessons given that day: {@code <word id>|<kind>}. */
 	String today;
 	final java.util.LinkedHashSet<String> usedToday;
 
@@ -132,7 +127,6 @@ public final class Memory {
 		this.lessons = new ArrayList<>(lessons);
 	}
 
-	/** A new reader's: gated from the start. */
 	static Memory fresh() {
 		return new Memory(Map.of(), Map.of(), 0, Map.of(), List.of(), true, true, false, Map.of(), "", List.of(), Map.of());
 	}
@@ -157,12 +151,10 @@ public final class Memory {
 		Codec.unboundedMap(Codec.STRING, Codec.INT).optionalFieldOf("plushies", Map.of()).forGetter(m -> m.plushies)
 	).apply(instance, Memory::new));
 
-	/** Whether a clean completion of this key would count today: none has yet. */
 	public boolean countsToday(String key, String day) {
 		return spreadOff || !day.equals(counted.get(key));
 	}
 
-	/** Count it, if it may be: true when it did. */
 	boolean count(String key, String day) {
 		if (!countsToday(key, day)) return false;
 		counted.put(key, day);
@@ -171,12 +163,10 @@ public final class Memory {
 
 	private static volatile boolean spreadOff;
 
-	/** For tests: every clean completion counts, as many a day as there are. */
 	public static void spreadOffForTests(boolean off) {
 		spreadOff = off;
 	}
 
-	/** The lessons given today, {@code <word id>|<kind>}; a new day starts empty. */
 	java.util.Set<String> usedOn(String day) {
 		if (!day.equals(today)) {
 			today = day;
@@ -193,13 +183,11 @@ public final class Memory {
 		return "tile:" + grapheme;
 	}
 
-	/** Clean completions: right first time, nothing wrong built or picked before. */
 	public int clean(String key) {
 		Item item = items.get(key);
 		return item == null ? 0 : item.firstTry;
 	}
 
-	/** For tests: this many clean completions, in the top box, seen long ago. */
 	void master(String key, int clean) {
 		Item item = items.computeIfAbsent(key, k -> new Item(0, 0, 0, 1, rounds, List.of()));
 		item.firstTry = Math.max(item.firstTry, clean);
@@ -214,7 +202,6 @@ public final class Memory {
 		item.attempts = Math.max(item.attempts, clean);
 	}
 
-	/** Forget an item entirely: a word an operator sends a child back to read again. */
 	void forget(String key) {
 		items.remove(key);
 	}
@@ -254,7 +241,6 @@ public final class Memory {
 		}
 	}
 
-	/** Two sounds mixed up, whichever way round. */
 	void mixedUp(String a, String b) {
 		if (a.equals(b)) return;
 		String pair = a.compareTo(b) < 0 ? a + "|" + b : b + "|" + a;
@@ -275,7 +261,6 @@ public final class Memory {
 		return Math.max(0, INTERVAL[Math.max(1, Math.min(TOP_BOX, item.box))] - (rounds - item.seen));
 	}
 
-	/** How well it is known: solid once mastered ({@code masteredAt} clean completions). */
 	public Mastery mastery(String key, int masteredAt) {
 		Item item = items.get(key);
 		if (item == null || item.attempts == 0) return Mastery.NOT_SEEN;
@@ -284,7 +269,6 @@ public final class Memory {
 		return Mastery.LEARNING;
 	}
 
-	/** Mixed-up pairs, most often first. */
 	public List<Map.Entry<String, Integer>> confusions() {
 		List<Map.Entry<String, Integer>> list = new ArrayList<>(pairs.entrySet());
 		list.sort(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder()).thenComparing(Map.Entry.comparingByKey()));
@@ -295,7 +279,6 @@ public final class Memory {
 		return rounds;
 	}
 
-	/** A round began: the clock every due time is counted in. */
 	void round(String today) {
 		rounds++;
 		Day day = days.getOrDefault(today, new Day(0, 0, 0));
@@ -310,20 +293,17 @@ public final class Memory {
 		trimDays();
 	}
 
-	/** A round solved today, of any kind: what a daily schedule counts. */
 	void solved(String today) {
 		Day day = days.getOrDefault(today, new Day(0, 0, 0));
 		days.put(today, new Day(day.seconds(), day.rounds(), day.solved() + 1));
 		trimDays();
 	}
 
-	/** Rounds solved on this day. */
 	public int solvedOn(String day) {
 		Day found = days.get(day);
 		return found == null ? 0 : found.solved();
 	}
 
-	/** For tests: rounds solved today set to this many. */
 	void setSolved(String today, int solved) {
 		Day day = days.getOrDefault(today, new Day(0, 0, 0));
 		days.put(today, new Day(day.seconds(), day.rounds(), solved));

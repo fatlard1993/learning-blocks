@@ -25,7 +25,6 @@ public final class Places {
 	/** Clear of the middle, where nothing ever is, so an origin never lands on a seam. */
 	private static final int OFFSET = 4 * SPACING;
 
-	/** The height a child stands at: the floor is the layer under it. */
 	public static final int FLOOR_Y = 64;
 	/** How high a room's walls stand over its floor; it has no lid, for its sky. */
 	public static final int WALL_HEIGHT = 6;

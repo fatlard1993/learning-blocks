@@ -35,7 +35,6 @@ public final class NextRound extends NumbersRound {
 		return gap;
 	}
 
-	/** The row: two numbers and the gap, in order. */
 	private int[] row() {
 		return after ? new int[] {from - 1, from, -1} : new int[] {-1, from, from + 1};
 	}

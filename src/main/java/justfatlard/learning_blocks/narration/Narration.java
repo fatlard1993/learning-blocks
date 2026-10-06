@@ -64,7 +64,6 @@ public final class Narration {
 			return shown == null || speaker == null ? shown : CaptionLine.tagged(speaker + ":", shown);
 		}
 
-		/** Who says this, if not the room's own voice: {@code Bob}. */
 		@Nullable String speaker() {
 			if (!label.startsWith(SPEAKER)) return null;
 			int end = label.indexOf('|', SPEAKER.length());
@@ -84,7 +83,6 @@ public final class Narration {
 		return this;
 	}
 
-	/** The same, with a caption given here: a line not recorded yet. */
 	public Narration sayAs(String speaker, String clip, String label, @Nullable Consumer<ServerPlayer> action, CaptionLine line, int gap) {
 		steps.add(new Step(clip, null, action, line, true, gap, SPEAKER + speaker + "|" + label));
 		return this;
@@ -93,12 +91,10 @@ public final class Narration {
 	final List<Step> steps = new ArrayList<>();
 	@Nullable Consumer<ServerPlayer> onStop;
 
-	/** Say exactly this clip, not a variant of it. */
 	public Narration sayExactly(String clip) {
 		return add(new Step(clip, null, null, null, true, GAP, EXACT + clip));
 	}
 
-	/** Say a clip, with its own caption, then the usual gap. */
 	public Narration say(String clip) {
 		return say(clip, GAP);
 	}
@@ -117,19 +113,16 @@ public final class Narration {
 		return this;
 	}
 
-	/** Say a clip from a block, so it is heard from there, with its own caption. */
 	public Narration sayAt(String clip, BlockPos at) {
 		steps.add(new Step(clip, at.immutable(), null, null, true, GAP, clip));
 		return this;
 	}
 
-	/** Do something, then say a clip with the caption given here rather than the clip's own. */
 	public Narration say(String clip, String label, Consumer<ServerPlayer> action, CaptionLine line, int gap) {
 		steps.add(new Step(clip, null, action, line, true, gap, label));
 		return this;
 	}
 
-	/** Do something, then say a clip with its own caption. */
 	public Narration say(String clip, String label, Consumer<ServerPlayer> action, int gap) {
 		steps.add(new Step(clip, null, action, null, true, gap, label));
 		return this;
@@ -156,12 +149,10 @@ public final class Narration {
 		return this;
 	}
 
-	/** The steps, to be added to another narration. */
 	public List<Step> steps() {
 		return List.copyOf(steps);
 	}
 
-	/** A step taken from another narration. */
 	public Narration add(Step step) {
 		steps.add(step);
 		return this;
@@ -171,7 +162,6 @@ public final class Narration {
 		return steps.isEmpty();
 	}
 
-	/** Ticks from start to finish, for anybody who has to wait one out. */
 	public int length() {
 		int total = 0;
 		for (Step step : steps) total += step.length();

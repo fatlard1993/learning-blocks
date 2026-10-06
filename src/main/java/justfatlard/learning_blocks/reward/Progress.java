@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
  * A child's reading so far, for good: every word they have ever read, their streak, their points,
  * and what has already been paid, so nothing pays twice.
  *
- * <p>Kept apart from the {@code Visit}, which ends at the door; this outlives every visit, and
+ * <p>Kept apart from the {@code Visit}, which ends on the way out; this outlives every visit, and
  * every death. Mutable, and written back with {@link #save} after each change.
  */
 public final class Progress {
@@ -48,9 +48,8 @@ public final class Progress {
 	final Set<String> rewarded;
 	/** The lowest stage this child may be at: 0 (letters first) for a new reader, 1 for one from before letters, or what an operator set. */
 	int stageFloor;
-	/** A band an operator put this child at, as its code (stage * 100 + band), or 0: nothing below it is asked. */
+	/** A band an operator put this child at, {@link justfatlard.learning_blocks.puzzle.Stages.BandCode#packed}: nothing below it is asked. */
 	int bandFloor;
-	/** First-try matches of each letter in the letters level, by grapheme. */
 	final java.util.Map<String, Integer> letterHits;
 	/**
 	 * Lessons still owed from a visit something else ended - another mod's teleport - kept here
@@ -62,14 +61,10 @@ public final class Progress {
 	final Set<Integer> thresholdsPaid;
 	final Set<Integer> milestonesPaid;
 	final Set<Integer> stagesPaid;
-	/** The real-world day {@link #paidToday} counts for, as {@code yyyy-mm-dd}. */
 	String day;
 	int paidToday;
-	/** The last real-world day this child came into the classroom. */
 	String lastVisit;
-	/** What this child gets right and wrong, and when to look again: see {@link Memory}. */
 	final Memory memory;
-	/** Payouts the cap held back, oldest first. */
 	final List<Owed> owed;
 	/**
 	 * What was saved, when it could not be read: kept, and written back exactly as it was, so a
@@ -130,7 +125,6 @@ public final class Progress {
 		).apply(instance, SubjectState::new));
 	}
 
-	/** Subjects: what is on for this child, and today's rounds of each. */
 	SubjectState subjects = SubjectState.fresh();
 
 	private static final com.mojang.serialization.MapCodec<Progress> FIELDS = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -156,7 +150,6 @@ public final class Progress {
 		lessonsOwed, letterHits, memory, bandFloor) -> new Progress(words, streak, points, thresholds, milestones, stages, day, paidToday,
 		lastVisit, owed, rewarded, stageFloor, lessonsOwed, letterHits, memory.orElseGet(Memory::legacy), bandFloor)));
 
-	/** Everything: the reading (and shared) fields, and the subjects beside them. */
 	public static final Codec<Progress> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		FIELDS.forGetter(p -> p),
 		SubjectState.CODEC.optionalFieldOf("subjects").forGetter(p -> java.util.Optional.of(p.subjects))
@@ -216,18 +209,15 @@ public final class Progress {
 
 	private boolean warned;
 
-	/** Whether what was saved could not be read, and is being kept as it was. For tests. */
 	public boolean unreadable() {
 		return broken != null;
 	}
 
-	/** Written back, so the change is saved with the player. */
 	public void save(ServerPlayer player) {
 		if (practice.get(player.getUUID()) == this) return;
 		player.setAttached(ATTACHMENT, this);
 	}
 
-	/** Readers in a practice round, and the copy of their progress it plays with. */
 	private static final java.util.Map<java.util.UUID, Progress> practice = new java.util.concurrent.ConcurrentHashMap<>();
 
 	/**
@@ -251,12 +241,10 @@ public final class Progress {
 		return practice.containsKey(player.getUUID());
 	}
 
-	/** The server stopped: nobody is practising. */
 	public static void forgetPractice() {
 		practice.clear();
 	}
 
-	/** This reader's own progress as it would be saved, whatever a practice round is doing: for tests. */
 	public static net.minecraft.nbt.Tag savedForTests(ServerPlayer player) {
 		Progress real = player.getAttached(ATTACHMENT);
 		return real == null ? net.minecraft.nbt.EndTag.INSTANCE : CODEC.encodeStart(net.minecraft.nbt.NbtOps.INSTANCE, real).getOrThrow();
@@ -271,7 +259,6 @@ public final class Progress {
 		return memory.casesWaived;
 	}
 
-	/** A big-and-little match, first try or not. */
 	public void caseAnswered(ServerPlayer player, justfatlard.learning_blocks.puzzle.Letter letter, boolean right, boolean firstTry) {
 		String key = justfatlard.learning_blocks.puzzle.Letters.caseKey(letter);
 		if (right && firstTry) hit(key);
@@ -280,28 +267,23 @@ public final class Progress {
 		save(player);
 	}
 
-	/** For tests: this letter's big-and-little clean matches. */
 	public void setCaseHitsForTests(ServerPlayer player, justfatlard.learning_blocks.puzzle.Letter letter, int hits) {
 		letterHits.put(justfatlard.learning_blocks.puzzle.Letters.caseKey(letter), hits);
 		save(player);
 	}
 
-	/** Clean completions that master a word or a letter: {@code mastery_clean}. */
 	public static int masteredAt() {
 		return Math.max(1, PrizeConfig.get().masteryClean);
 	}
 
-	/** This word's clean completions. */
 	public int clean(justfatlard.learning_blocks.puzzle.Word word) {
 		return memory.clean(Memory.wordKey(word.id().toString()));
 	}
 
-	/** Whether this word is mastered: clean completions enough. */
 	public boolean mastered(justfatlard.learning_blocks.puzzle.Word word) {
 		return clean(word) >= masteredAt();
 	}
 
-	/** Every word id mastered. */
 	public Set<String> masteredIds() {
 		Set<String> ids = new LinkedHashSet<>();
 		int at = masteredAt();
@@ -311,7 +293,6 @@ public final class Progress {
 		return ids;
 	}
 
-	/** For tests: this word read and mastered, as if by enough clean rounds long ago. */
 	public void masterForTests(ServerPlayer player, justfatlard.learning_blocks.puzzle.Word word) {
 		words.add(word.id().toString());
 		rewarded.add(word.id().toString());
@@ -319,7 +300,6 @@ public final class Progress {
 		save(player);
 	}
 
-	/** For tests: this word read, with exactly this many clean completions. */
 	public void setCleanForTests(ServerPlayer player, justfatlard.learning_blocks.puzzle.Word word, int clean) {
 		words.add(word.id().toString());
 		rewarded.add(word.id().toString());
@@ -327,18 +307,15 @@ public final class Progress {
 		save(player);
 	}
 
-	/** A round solved, of any kind: counted for today, which is what a daily schedule asks for. */
 	public void solvedToday(ServerPlayer player) {
 		memory.solved(today());
 		save(player);
 	}
 
-	/** Rounds solved today. */
 	public int doneToday() {
 		return memory.solvedOn(today());
 	}
 
-	/** For tests: rounds solved today set to this many. */
 	public void setDoneTodayForTests(ServerPlayer player, int done) {
 		memory.setSolved(today(), done);
 		save(player);
@@ -370,7 +347,6 @@ public final class Progress {
 		}
 	}
 
-	/** For tests: stand this progress in for the player's own, as a save from before would load. */
 	public static void setForTests(ServerPlayer player, Progress progress) {
 		player.setAttached(ATTACHMENT, progress);
 	}
@@ -401,7 +377,6 @@ public final class Progress {
 		save(player);
 	}
 
-	/** In the letters level: the sound asked for, found (or not, and what was picked instead). */
 	public void letterAnswered(ServerPlayer player, String target, String picked, boolean firstTry) {
 		if (target.equals(picked)) memory.right(Memory.tileKey(target), firstTry, today());
 		else {
@@ -411,19 +386,16 @@ public final class Progress {
 		save(player);
 	}
 
-	/** A round began, today. */
 	public void roundBegan(ServerPlayer player) {
 		memory.round(today());
 		save(player);
 	}
 
-	/** Time spent in the classroom, today. */
 	public void timeSpent(ServerPlayer player, int seconds) {
 		memory.time(today(), seconds);
 		save(player);
 	}
 
-	/** A line in the lessons history, dated today. */
 	public void lessonNote(ServerPlayer player, String what) {
 		memory.lesson(today() + ": " + what);
 		save(player);
@@ -446,19 +418,21 @@ public final class Progress {
 		return stageFloor;
 	}
 
-	/** Whether this band (or stage, from before bands) has paid its stage_complete: for tests. */
-	public boolean paidForTests(int code) {
-		return stagesPaid.contains(code);
+	public boolean paid(justfatlard.learning_blocks.puzzle.Stages.BandCode band) {
+		return stagesPaid.contains(band.packed());
 	}
 
-	public int bandFloor() {
-		return bandFloor;
+	public void markPaid(justfatlard.learning_blocks.puzzle.Stages.BandCode band) {
+		stagesPaid.add(band.packed());
 	}
 
-	/** Put this child at a band: as {@link #setStage}, and nothing in the stage's earlier bands asked either. */
+	public justfatlard.learning_blocks.puzzle.Stages.BandCode bandFloor() {
+		return justfatlard.learning_blocks.puzzle.Stages.BandCode.unpacked(bandFloor);
+	}
+
 	public void setBand(ServerPlayer player, justfatlard.learning_blocks.puzzle.Stages.Band band) {
 		setStage(player, band.stage(), justfatlard.learning_blocks.puzzle.Stages.from(band));
-		bandFloor = band.code();
+		bandFloor = band.code().packed();
 		save(player);
 	}
 
@@ -472,38 +446,31 @@ public final class Progress {
 
 	private static @org.jspecify.annotations.Nullable Boolean lettersFirstOverride;
 
-	/** For tests: new readers start on letters, or on words, whatever the setting; null for the setting. */
 	public static void lettersFirstForTests(@org.jspecify.annotations.Nullable Boolean first) {
 		lettersFirstOverride = first;
 	}
 
-	/** First-try matches of this letter so far. */
 	public int letterHits(String grapheme) {
 		return letterHits.getOrDefault(grapheme, 0);
 	}
 
-	/** A letter matched first try. */
 	public void hitLetter(ServerPlayer player, String grapheme) {
 		hit(grapheme);
 		save(player);
 	}
 
-	/** A clean match of a letter, a two-letter tile or a big-and-little pair: counted once a day. */
 	void hit(String key) {
 		if (memory.count("hit:" + key, today())) letterHits.merge(key, 1, Integer::sum);
 	}
 
-	/** Whether a clean match of this letters-level key would count today. */
 	public boolean hitCountsToday(String key) {
 		return memory.countsToday("hit:" + key, today());
 	}
 
-	/** Whether a clean completion of this word would count today. */
 	public boolean cleanCountsToday(justfatlard.learning_blocks.puzzle.Word word) {
 		return memory.countsToday(Memory.wordKey(word.id().toString()), today());
 	}
 
-	/** The plushies this reader has, by kind, and how many of each. */
 	public java.util.Map<justfatlard.learning_blocks.plush.Plush, Integer> plushies() {
 		java.util.Map<justfatlard.learning_blocks.plush.Plush, Integer> owned = new java.util.EnumMap<>(justfatlard.learning_blocks.plush.Plush.class);
 		for (var entry : memory.plushies.entrySet()) {
@@ -513,7 +480,6 @@ public final class Progress {
 		return owned;
 	}
 
-	/** One more of this plushie: given. */
 	public void ownPlushie(ServerPlayer player, justfatlard.learning_blocks.plush.Plush plush) {
 		memory.plushies.merge(plush.word(), 1, Integer::sum);
 		save(player);
@@ -534,7 +500,6 @@ public final class Progress {
 		return from.get(random.nextInt(from.size()));
 	}
 
-	/** The toys this reader has, by kind, and how many of each: kept with the plushies as {@code toy:<name>}. */
 	public java.util.Map<justfatlard.learning_blocks.toy.Toy, Integer> toys() {
 		java.util.Map<justfatlard.learning_blocks.toy.Toy, Integer> owned = new java.util.EnumMap<>(justfatlard.learning_blocks.toy.Toy.class);
 		for (var entry : memory.plushies.entrySet()) {
@@ -547,13 +512,11 @@ public final class Progress {
 
 	private static final String TOY = "toy:";
 
-	/** One more of this toy: given. */
 	public void ownToy(ServerPlayer player, justfatlard.learning_blocks.toy.Toy toy) {
 		memory.plushies.merge(TOY + toy.word(), 1, Integer::sum);
 		save(player);
 	}
 
-	/** Which toy a prize gives: the one it names, or for {@code random_new} one this reader hasn't got. */
 	public justfatlard.learning_blocks.toy.@org.jspecify.annotations.Nullable Toy chooseToy(String which, net.minecraft.util.RandomSource random) {
 		justfatlard.learning_blocks.toy.Toy named = justfatlard.learning_blocks.toy.Toy.of(which);
 		if (named != null) return named;
@@ -579,12 +542,10 @@ public final class Progress {
 		return random.nextInt(plushiesMissing + toysMissing) >= plushiesMissing;
 	}
 
-	/** Whether this has ever paid as new: a word id, {@code letter:a}, a sentence's key. */
 	public boolean rewardedFor(String key) {
 		return rewarded.contains(key);
 	}
 
-	// --- Any subject's items: keys namespaced by subject, numbers:numeral:5 ---
 
 	public int itemClean(String key) {
 		return memory.clean(key);
@@ -594,7 +555,6 @@ public final class Progress {
 		return itemClean(key) >= masteredAt();
 	}
 
-	/** Whether a clean answer of this item would count today: one a day, as for words. */
 	public boolean itemCountsToday(String key) {
 		return memory.countsToday(key, today());
 	}
@@ -623,13 +583,11 @@ public final class Progress {
 		return !repeatsForTests && memory.usedOn(today()).stream().anyMatch(used -> used.startsWith(prefix));
 	}
 
-	/** For tests: this item with exactly this many clean completions. */
 	public void setItemCleanForTests(ServerPlayer player, String key, int clean) {
 		memory.setClean(key, clean);
 		save(player);
 	}
 
-	/** Whether this subject is on for this child: their own setting where a grown-up gave one, else null for the server's default. */
 	public java.lang.@org.jspecify.annotations.Nullable Boolean subjectOn(String subject) {
 		return subjects.on.get(subject);
 	}
@@ -640,14 +598,12 @@ public final class Progress {
 		save(player);
 	}
 
-	/** A round of this subject solved: counted for today's schedule. */
 	public void solvedToday(ServerPlayer player, String subject) {
 		rollSubjectDay();
 		subjects.done.merge(subject, 1, Integer::sum);
 		solvedToday(player);
 	}
 
-	/** Rounds of this subject solved today. */
 	public int doneToday(String subject) {
 		rollSubjectDay();
 		return subjects.done.getOrDefault(subject, 0);
@@ -659,12 +615,10 @@ public final class Progress {
 		subjects.done.clear();
 	}
 
-	/** A sentence told to Bob, by its goal's key: {@code sentence:put cat in box}. */
 	public static String sentenceKey(String goal) {
 		return "sentence:" + goal;
 	}
 
-	/** Clean completions of this goal's sentence. */
 	public int sentenceClean(String goal) {
 		return memory.clean(sentenceKey(goal));
 	}
@@ -673,24 +627,20 @@ public final class Progress {
 		return sentenceClean(goal) >= masteredAt();
 	}
 
-	/** Whether a clean completion of this sentence would count today. */
 	public boolean sentenceCountsToday(String goal) {
 		return memory.countsToday(sentenceKey(goal), today());
 	}
 
-	/** Bob made it: up a box if first try, a clean day if it is the first today. */
 	public void sentenceRight(ServerPlayer player, String goal, boolean firstTry) {
 		memory.right(sentenceKey(goal), firstTry, today());
 		save(player);
 	}
 
-	/** Bob made something else, from this. */
 	public void sentenceMissed(ServerPlayer player, String goal, String built) {
 		memory.missed(sentenceKey(goal), built, masteredAt());
 		save(player);
 	}
 
-	/** A sentence given today, so the day has others first. */
 	public void useSentenceToday(ServerPlayer player, String goal, String kind) {
 		memory.usedOn(today()).add(sentenceKey(goal) + "|" + kind);
 		save(player);
@@ -701,18 +651,15 @@ public final class Progress {
 		return !repeatsForTests && memory.usedOn(today()).stream().anyMatch(used -> used.startsWith(prefix));
 	}
 
-	/** For tests: this sentence with exactly this many clean completions. */
 	public void setSentenceCleanForTests(ServerPlayer player, String goal, int clean) {
 		memory.setClean(sentenceKey(goal), clean);
 		save(player);
 	}
 
-	/** The lessons given today, {@code <word id>|<kind>}: a lesson is a word and a kind of round. */
 	public java.util.Set<String> usedToday() {
 		return java.util.Collections.unmodifiableSet(memory.usedOn(today()));
 	}
 
-	/** Whether this word was a target today, in any kind of round. */
 	public boolean wordUsedToday(justfatlard.learning_blocks.puzzle.Word word) {
 		if (repeatsForTests) return false;
 		String prefix = word.id() + "|";
@@ -731,13 +678,11 @@ public final class Progress {
 		repeatsForTests = allowed;
 	}
 
-	/** A lesson given: this word, this kind of round. */
 	public void useToday(ServerPlayer player, justfatlard.learning_blocks.puzzle.Word word, String kind) {
 		memory.usedOn(today()).add(word.id() + "|" + kind);
 		save(player);
 	}
 
-	/** For tests: set a letter's count outright. */
 	public void setLetterHits(ServerPlayer player, String grapheme, int hits) {
 		letterHits.put(grapheme, hits);
 		save(player);
@@ -759,7 +704,6 @@ public final class Progress {
 		save(player);
 	}
 
-	/** Mark a word read, for the stages; true if it was not already. */
 	public boolean read(ServerPlayer player, String id) {
 		boolean added = words.add(id);
 		save(player);
@@ -790,12 +734,10 @@ public final class Progress {
 	private static @org.jspecify.annotations.Nullable Supplier<LocalDate> clock;
 	private static Supplier<java.time.Instant> now = java.time.Instant::now;
 
-	/** Stand a different calendar in for the real one: for tests, which cannot wait a day. Null for the real one. */
 	public static void useClock(@org.jspecify.annotations.Nullable Supplier<LocalDate> date) {
 		clock = date;
 	}
 
-	/** Stand a different moment in for now, read in the schedule's time zone: for tests of the day's boundary. */
 	public static void useInstant(Supplier<java.time.Instant> instant) {
 		now = instant;
 		clock = null;
@@ -806,12 +748,10 @@ public final class Progress {
 		return clock != null ? clock.get() : LocalDate.ofInstant(now.get(), justfatlard.learning_blocks.classroom.Schedules.zone());
 	}
 
-	/** Today, as {@code yyyy-mm-dd}. */
 	public static String today() {
 		return date().toString();
 	}
 
-	/** Start today's count over if the day has turned since it was last looked at. */
 	void rollDay() {
 		String now = today();
 		if (!now.equals(day)) {

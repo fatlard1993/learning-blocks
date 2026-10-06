@@ -3,8 +3,8 @@
 The things in the classroom that are not toys, and the picture cards.
 
 The worn cap and wig (the toy cap's and wig's look on a head; the toys themselves are made by
-generate_toys.py), three props to put down (a bin, a bathtub, a cardboard box: block models
-over vanilla textures), and picture cards for words no item shows (the moon, a sad face).
+generate_toys.py), the props to put down (a bin, a bathtub, a cardboard box and the rest: block
+models over vanilla textures), and picture cards for words no item shows (the moon, a sad face).
 
 Usage: python3 generate_things.py
 """

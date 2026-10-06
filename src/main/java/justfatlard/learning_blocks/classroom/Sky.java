@@ -47,7 +47,6 @@ public final class Sky {
 	public static final ResourceKey<Biome> BIOME = ResourceKey.create(Registries.BIOME, LearningBlocks.id("classroom"));
 	public static final ResourceKey<Biome> SNOWY = ResourceKey.create(Registries.BIOME, LearningBlocks.id("classroom_snowy"));
 
-	/** Times of day on the classroom clock, in ticks. */
 	public enum Time {
 		DAY(6000), DAWN(23300), DUSK(12700), NIGHT(18000);
 
@@ -114,7 +113,6 @@ public final class Sky {
 		return weathers.getOrDefault(player.getUUID(), Weather.CLEAR);
 	}
 
-	/** This child's sky turns to this time of day at once, theirs only. */
 	public static void setTime(ServerPlayer player, long ticks) {
 		glide(player, ticks, 0);
 	}
@@ -214,12 +212,10 @@ public final class Sky {
 			null, new org.joml.Vector3f((float) puff[3], (float) puff[4], (float) puff[5]), null);
 	}
 
-	/** Clouds drifting over any room. For tests. */
 	public static int clouds() {
 		return (int) clouds.stream().filter(one -> one.display().isAlive()).count();
 	}
 
-	/** This child's weather turns to this, theirs only; snow turns their room's air cold. */
 	public static void setWeather(ServerPlayer player, Weather weather) {
 		Weather before = weathers.put(player.getUUID(), weather);
 		if (!Places.isClassroom(player.level())) return;
@@ -236,7 +232,6 @@ public final class Sky {
 		light(player);
 	}
 
-	/** Gone from the classroom: what they are sent outside is the world's own sky. */
 	public static void forget(ServerPlayer player) {
 		if (weathers.get(player.getUUID()) == Weather.SNOW) chill(player, false);
 		if (!player.hasDisconnected()) light(player);
@@ -248,7 +243,6 @@ public final class Sky {
 
 	static final String DARK_OVERLAY = LearningBlocks.MOD_ID + ":dark";
 	private static final String DARK_COLOUR = "#E0000006";
-	/** When each child's lights come back on, by game time. */
 	private static final Map<UUID, Long> darkUntil = new HashMap<>();
 
 	/**
@@ -269,7 +263,6 @@ public final class Sky {
 		player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.STONE_BUTTON_CLICK_OFF, SoundSource.PLAYERS, 0.8F, 0.8F);
 	}
 
-	/** Whether this child's lights are out. For tests. */
 	public static boolean isDark(ServerPlayer player) {
 		return darkUntil.containsKey(player.getUUID());
 	}
@@ -365,7 +358,6 @@ public final class Sky {
 		paint((ServerLevel) player.level(), room.origin(), cold ? SNOWY : BIOME);
 	}
 
-	/** A room's biome, all of it: the classroom's, which rains, or its cold one, which snows. */
 	public static void paint(ServerLevel level, BlockPos origin, ResourceKey<Biome> biome) {
 		var holder = level.registryAccess().lookupOrThrow(Registries.BIOME).get(biome);
 		if (holder.isEmpty()) return;

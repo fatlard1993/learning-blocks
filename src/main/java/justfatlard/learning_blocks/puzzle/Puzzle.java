@@ -11,17 +11,12 @@ import net.minecraft.util.RandomSource;
 import org.jspecify.annotations.Nullable;
 
 /**
- * One round: the word to make, the gap in it, and the family it comes from.
+ * One word round: the word to make, the gap in it, and the family it comes from.
  *
- * <p>Everything in a round shares a frame: the word with one tile missing. The room shows the frame
- * with a gap where that tile goes, and the loose tiles are what the family has there: one makes
- * the target, the others make real words too, which is the point - a child who puts B in the gap
- * hears "bat" and meets a bat, and learns something from the wrong answer as well as the right one.
- *
- * <p>Three kinds: the first sound swapped (_at: cat, bat, hat), the last sound (ma_: map, mat,
- * man), or the vowel in the middle (c_t: cat, cot, cut). A family of the first two kinds is one
- * stage's words; a middle-vowel family spans every stage up to the child's, since it needs vowels
- * from several.
+ * <p>The loose tiles are what the family has in the gap: one makes the target, the others make
+ * real words too, so a child who puts b in the gap hears "bat" and meets a bat, and learns from the
+ * wrong answer as well as the right one. A middle-vowel family spans every stage up to the
+ * child's, since it needs vowels from several; the other kinds' families are one stage's words.
  *
  * @param target  the word the room asks for
  * @param family  every usable word in the target's frame, the target included
@@ -43,7 +38,6 @@ public record Puzzle(Word target, List<Word> family, List<Letter> shelf, int gap
 	/** Tiles on the floor for a whole-word round: the word's, and a decoy or two. */
 	public static final int MAX_WHOLE_TILES = 6;
 
-	/** Every slot that is a gap: one, or all of them in a whole-word round. */
 	public List<Integer> gaps() {
 		// A plural: the first sound, and the s on the end.
 		if (kind == Kind.PLURAL || kind == Kind.TEAM) return List.of(0, target.tiles().size() - 1);
@@ -62,17 +56,14 @@ public record Puzzle(Word target, List<Word> family, List<Letter> shelf, int gap
 		return all;
 	}
 
-	/** A first-sound round, the gap at the front. */
 	public Puzzle(Word target, List<Word> family, List<Letter> shelf) {
 		this(target, family, shelf, 0, Kind.FIRST);
 	}
 
-	/** The tile the gap wants: the target's. */
 	public Letter answer() {
 		return Letter.of(target.tiles().get(gap));
 	}
 
-	/** The family word these tiles spell, or null if they spell nothing it knows. */
 	public @Nullable Word spelled(List<String> tiles) {
 		for (Word word : family) {
 			if (word.tiles().equals(tiles)) return word;
@@ -131,7 +122,6 @@ public record Puzzle(Word target, List<Word> family, List<Letter> shelf, int gap
 		return pick(words, random, read, stage, kinds, singles());
 	}
 
-	/** Every single letter: what any reader past the letters level knows. */
 	public static Set<Letter> singles() {
 		Set<Letter> all = new java.util.LinkedHashSet<>();
 		for (Letter letter : Letter.values()) if (letter.isSingle()) all.add(letter);
@@ -217,7 +207,6 @@ public record Puzzle(Word target, List<Word> family, List<Letter> shelf, int gap
 		return of(target, family, gapOf(kind, target), kind, random, known, words);
 	}
 
-	/** A frame has something to learn: a word of this stage not yet read. */
 	private static boolean hasFresh(List<Word> family, Set<String> read, java.util.function.Predicate<Word> targetable) {
 		return family.stream().anyMatch(word -> !read.contains(word.id().toString()) && targetable.test(word));
 	}
@@ -262,7 +251,6 @@ public record Puzzle(Word target, List<Word> family, List<Letter> shelf, int gap
 		return usable(target) ? of(target, List.of(target), 0, Kind.FIRST, random, singles(), words) : null;
 	}
 
-	/** A round of this kind for exactly this target, or null if the target has no such frame. */
 	public static @Nullable Puzzle forTarget(Word target, Collection<Word> words, RandomSource random, Kind kind) {
 		if (!usable(target)) return null;
 		String frame = frameOf(kind, target);

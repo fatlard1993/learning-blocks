@@ -59,19 +59,16 @@ public final class Letters {
 		Letter.CK, Set.of(Letter.C, Letter.K, Letter.Q),
 		Letter.Q, Set.of(Letter.C, Letter.K, Letter.CK));
 
-	/** Whether these two tiles say the same sound. */
 	public static boolean soundAlike(Letter a, Letter b) {
 		return a == b || SAME_SOUND.getOrDefault(a, Set.of()).contains(b);
 	}
 
-	/** Every letter the level teaches, in the order it teaches them. */
 	public static List<Letter> all() {
 		List<Letter> all = new ArrayList<>();
 		for (List<Letter> group : GROUPS) all.addAll(group);
 		return all;
 	}
 
-	/** This letter's keyword, if the server has it and its outcome can run here. */
 	public static @Nullable Word keyword(Letter letter) {
 		String text = KEYWORDS.get(letter);
 		if (text == null) return null;
@@ -79,7 +76,6 @@ public final class Letters {
 		return word != null && word.outcome().usable() ? word : null;
 	}
 
-	/** Clean first-try matches that make a letter (or a two-letter tile) mastered: {@code mastery_clean}. */
 	public static int knownAfter() {
 		return Math.max(1, PrizeConfig.get().masteryClean);
 	}
@@ -102,14 +98,11 @@ public final class Letters {
 		return -1;
 	}
 
-	// --- Big and little letters ---
 
-	/** The mastery item for a letter's capital and small letter together: {@code case:a}. */
 	public static String caseKey(Letter letter) {
 		return "case:" + letter.lower().grapheme();
 	}
 
-	/** Clean matches of this letter's big and little, either way round. */
 	public static int caseHits(Progress progress, Letter letter) {
 		return progress.letterHits(caseKey(letter));
 	}
@@ -142,7 +135,6 @@ public final class Letters {
 		return open.isEmpty() ? null : open.get(random.nextInt(open.size()));
 	}
 
-	/** Whether the group being learned still has a sound to master, rather than only big-and-little pairs. */
 	public static boolean soundsLeft(Progress progress) {
 		int group = currentGroup(progress);
 		return group >= 0 && GROUPS.get(group).stream().anyMatch(letter -> !known(progress, letter));
@@ -228,9 +220,7 @@ public final class Letters {
 		return chosen;
 	}
 
-	// --- Early blending ---
 
-	/** Tiles on the floor in a letters-level word round: the answer and two others. */
 	public static final int WORD_TILES = 3;
 
 	/**
@@ -265,7 +255,6 @@ public final class Letters {
 		Word target = fits.get(random.nextInt(fits.size()));
 		Letter answer = target.letters().getFirst();
 		String rime = target.rime();
-		// The family: every word with this rime, whichever stage, whose first letter is known.
 		List<Word> family = new ArrayList<>();
 		for (Word word : words) {
 			List<Letter> letters = word.letters();
@@ -293,7 +282,6 @@ public final class Letters {
 		return new Puzzle(target, List.copyOf(family), List.copyOf(shelf), 0, Puzzle.Kind.FIRST);
 	}
 
-	/** The group a letter is in, or -1. */
 	public static int groupOf(Letter letter) {
 		for (int i = 0; i < GROUPS.size(); i++) if (GROUPS.get(i).contains(letter)) return i;
 		return -1;

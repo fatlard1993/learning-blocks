@@ -1,27 +1,32 @@
 {
 	"overview": [
-		"Learning Blocks: learning games for young children, in a classroom of their own. Reading first: hear each letter, put one in the gap, and see what the word does; numbers and logic to come.",
+		"Learning Blocks: learning games for young children in a quiet classroom of their own: Reading, Numbers and Logic, spoken aloud, with prizes to take home.",
 		"Press the Learning Blocks button (or /learn) to go in, and walk through the portal to come home with everything you went in with."
 	],
 	"versions": {
 		"0.2.0": [
-			"Phonics is now Learning Blocks, the first subject of several: Reading.",
-			"Everything carries over: plushies, toys, letter tiles and props in worlds and inventories, each reader's progress, toys and daily schedule, and the server's prizes and schedules settings.",
-			"/learn is the command now; /phonics still works.",
-			"Subjects: Reading, plus a first step of Numbers (which block says three?) and Logic (what comes next?), taking turns, with a hello and a coloured board edge for each.",
-			"Wooden number tiles, 0 to 20, with dots on the sides.",
-			"/learn subjects turns a child's subjects on and off; a daily schedule can ask for some of each.",
-			"Numbers, stages N0 to N2: which block says it, quick looks, counting creatures and things out of the button, make a number with the button, beds for kittens, counting your Toybox, scenes, Bob with number cards, pens, towers, number lines, and the picture with that many.",
-			"Counting toys to earn: an abacus, dice, dominoes, a shape sorter and a balance scale; and symbol tiles, plus, minus and equals.",
+			"Phonics is now Learning Blocks, and Reading is one of three subjects. 0.2.0 starts fresh: progress, toys and schedules from Phonics do not carry over, and /phonics is gone; use /learn.",
+			"Subjects: Reading, Numbers and Logic take turns, with a hello and a coloured board edge for each. /learn subjects turns a child's subjects on and off, and a daily schedule can ask for some of each.",
+			"Numbers, stages N0 to N2: which block says it, quick looks, counting creatures out of the button, make a number, beds for kittens, counting your Toybox, scenes, Bob with number cards, pens, towers, number lines, and the picture with that many.",
+			"Wooden number tiles, 0 to 20, with dots on the sides; and symbol tiles, plus, minus and equals.",
 			"Logic, stages L0 to L3: sorting animals into pens, same or different, patterns (what comes next, find the mistake, copy it, notes), odd one out, what's missing, putting things in order, and Bob with word cards.",
-			"Thinking toys to earn: puzzle pieces, stacking cups, a bead maze, a puzzle cube and a toy robot."
+			"Reading, stages 9 to 14: magic e, vowel teams, ng and nk, r-controlled vowels, ow, ay, igh and oi, and big words in chunks (cat|fish).",
+			"Mastery: a word, number or pattern counts as learned after clean days, not one good try. Stages come in bands (1a, 1b), and old words come back for review.",
+			"Tricky words, big and little letters, plurals and two-word phrases, and Read it rounds.",
+			"Tell Bob: build a sentence from word cards and Bob acts it out; silly sentences from the action menu.",
+			"Plushies and toys to earn, kept in the Toybox tab, and props and picture cards around the room.",
+			"Sky, weather and feelings: some words change your own sky, and creatures show how they feel.",
+			"Learning together: two or three children in one classroom, taking turns, with team-up rounds. /learn join asks; the other says yes or no.",
+			"The portal: walk through it to go home. While lessons are left it stays dark with the count over it.",
+			"For grown-ups: daily schedules by weekday, /learn progress with an export, /learn home, /learn give for a lost plushie or toy, /learn plots prune, and the sampler (/learn try) for any kind of round.",
+			"A child who gets stuck is sent home safely, and the log says why."
 		],
 		"0.1.0": [
 			"A classroom with one puzzle: _ A T, three letters to try, and a button that reads the word out.",
 			"CAT brings a cat, BAT a bat, HAT a hat on your head.",
 			"Every letter, word and cheer is spoken, with big captions that light up each word as it is said.",
 			"Letter tiles say their sound when placed, picked up or hit.",
-			"Prizes to take home for new words, streaks and more, set by the server in config/learning-blocks/prizes.json.",
+			"Prizes to take home for new words, streaks and more, set by the server in the prizes file.",
 			"A book, My Words, that lists every word you have read.",
 			"Operators can change every prize in game with /learn prizes, items and all.",
 			"Captions can be turned off, made smaller, or moved; they now sit at the top by default.",
