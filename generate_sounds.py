@@ -44,7 +44,7 @@ under that prefix (e.g. --force phoneme/k).
 
 Key from $ELEVENLABS_API_KEY or ~/.config/elevenlabs/key. Needs ffmpeg.
 
-Usage: python3 generate_sounds.py [--force <prefix>]... [--takes|--next <key>] [--take <key> <n>]
+Usage: python3 generate_sounds.py [--force <prefix>]... [--takes|--next <key>] [--take <key> <n>] [--blends]
 """
 
 import base64
@@ -499,8 +499,9 @@ BLEND_STRETCH = 1.5
 
 
 def blends(word_spec, tiles, sounds):
-	"""The word's vowel tiles as blend clips, cut from the same recording as the word. A word asked
-	for by its sounds has no letters to cut by, so it has none and the game uses the plain sound."""
+	"""The word's vowel tiles as blend clips, cut from its sentence recording ("The word is nap."):
+	a word said on its own is too short for its letters to be timed apart. A word asked for by its
+	sounds has no letters to cut by, so it has none and the game uses the plain sound."""
 	if "<phoneme" in word_spec["text"]:
 		return
 	start = word_spec["text"].lower().index("".join(tiles))
@@ -724,6 +725,20 @@ def write(name, spec, result):
 	caption.write_text(json.dumps({"duration": round(length, 3), "words": words}, indent="\t") + "\n")
 
 
+# Shorter than this, a vowel cut is a click (and comes out of the slow-down empty): the game plays the plain sound instead.
+SHORTEST_BLEND = 0.1
+
+
+def cut_blends(key, word, carrier):
+	result, _ = recorded(key, carrier, False)
+	align = result["alignment"]
+	starts, ends = align["character_start_times_seconds"], align["character_end_times_seconds"]
+	for i, blend in blends(carrier, carrier["tiles"], carrier["sounds"]):
+		a, b = window(blend, starts, ends, float("inf"))
+		if b - a >= SHORTEST_BLEND:
+			write(f"blend/{word}/{i}", blend, result)
+
+
 def main(argv):
 	force = [argv[i + 1] for i, arg in enumerate(argv) if arg == "--force"]
 	every = dict(clips())
@@ -750,14 +765,21 @@ def main(argv):
 			break
 
 	key = api_key()
+	if "--blends" in argv:
+		for name, takes in every.items():
+			if name.startswith("word/"):
+				word = name.removeprefix("word/")
+				for stale in [*(SOUNDS / "blend" / word).glob("*.ogg"), *(CAPTIONS / "blend" / word).glob("*.json")]:
+					stale.unlink()
+				cut_blends(key, word, takes[0])
+		return
 	picks = chosen()
 	made = json.loads(MADE.read_text()) if MADE.exists() else {}
 	asked = cut = 0
 	for name, takes in every.items():
 		spec = takes[min(picks.get(name, 0), len(takes) - 1)]
 		fresh_wanted = any(name.startswith(p) for p in force)
-		outputs = [name] + ([f"blend/{name.removeprefix('word/')}/{i}" for i, _ in blends(spec, spec["tiles"], spec["sounds"])]
-			if name.startswith("word/") else [])
+		outputs = [name]
 		mark = fingerprint(spec)
 		if not fresh_wanted and made.get(name) == mark and all(present(o) for o in outputs):
 			continue
@@ -772,8 +794,7 @@ def main(argv):
 				stale.unlink()
 			for stale in (CAPTIONS / "blend" / word).glob("*.json"):
 				stale.unlink()
-			for i, blend in blends(spec, spec["tiles"], spec["sounds"]):
-				write(f"blend/{word}/{i}", blend, result)
+			cut_blends(key, word, takes[0])
 		made[name] = mark
 		CACHE.mkdir(exist_ok=True)
 		MADE.write_text(json.dumps(made, indent="\t", sort_keys=True) + "\n")
