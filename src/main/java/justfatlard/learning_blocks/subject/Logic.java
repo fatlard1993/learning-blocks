@@ -1,11 +1,7 @@
 package justfatlard.learning_blocks.subject;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import justfatlard.learning_blocks.logic.LogicCourse;
 import justfatlard.learning_blocks.logic.LogicCourse.Band;
 import justfatlard.learning_blocks.logic.LogicCourse.Kind;
@@ -35,9 +31,32 @@ import org.jspecify.annotations.Nullable;
 public final class Logic implements Subject {
 	public static final Logic INSTANCE = new Logic();
 
-	private final Map<UUID, Integer> rounds = new HashMap<>();
-	private final Map<UUID, String> last = new HashMap<>();
-	private final Map<UUID, Integer> extra = new HashMap<>();
+	private final CoursePicker<Kind, Band> picker = new CoursePicker<>() {
+		@Override
+		protected Course<Kind, Band> course() {
+			return LogicCourse.COURSE;
+		}
+
+		@Override
+		protected @Nullable Kind kindOf(String id) {
+			return Kind.of(id);
+		}
+
+		@Override
+		protected List<String> targetsOf(Kind kind) {
+			return LogicCourse.targets(kind);
+		}
+
+		@Override
+		protected List<String> candidates(Progress progress, Kind kind, Band band) {
+			return Logic.candidates(kind, band);
+		}
+
+		@Override
+		protected @Nullable SubjectRound build(Room room, ServerPlayer player, Progress progress, Kind kind, String target, Band band, RandomSource random) {
+			return Logic.build(room, kind, target, band.stage(), random);
+		}
+	};
 
 	private Logic() {}
 
@@ -82,66 +101,9 @@ public final class Logic implements Subject {
 		return LogicCourse.stageDone(progress, 0);
 	}
 
-	private static Band bandOf(Progress progress) {
-		Band band = LogicCourse.current(progress);
-		return band == null ? LogicCourse.BANDS.getLast() : band;
-	}
-
 	@Override
 	public @Nullable SubjectRound round(ServerPlayer player, @Nullable String kindId, @Nullable String target, RandomSource random) {
-		Room room = Rooms.of(player);
-		if (room == null) return null;
-		Progress progress = Progress.of(player);
-		Band band = bandOf(progress);
-		Kind kind;
-		if (kindId != null) {
-			kind = Kind.of(kindId);
-			if (kind == null) return null;
-		} else {
-			int count = rounds.merge(player.getUUID(), 1, Integer::sum);
-			Band review = review(progress, band, random);
-			if (review != null) {
-				band = review;
-				kind = review.main();
-			} else if (count % 3 == 0 && !band.extras().isEmpty()) {
-				int start = extra.merge(player.getUUID(), 1, Integer::sum);
-				kind = band.extras().get(start % band.extras().size());
-			} else {
-				kind = band.main();
-			}
-			kind = freshKind(progress, kind, band);
-		}
-		if (target != null && !LogicCourse.targets(kind).contains(target)) return null;
-		String chosen = target != null ? target : pickTarget(player, progress, kind, band, random);
-		SubjectRound made = build(room, kind, chosen, band.stage(), random);
-		if (made == null) return null;
-		last.put(player.getUUID(), made.item());
-		if (!room.practice()) progress.useItemToday(player, made.item(), kind.id);
-		return made;
-	}
-
-	/**
-	 * No lesson twice in a day while the band has another: a kind whose every target was asked today
-	 * gives way to one of the band's other kinds that still has one.
-	 */
-	private static Kind freshKind(Progress progress, Kind kind, Band band) {
-		if (!allUsed(progress, kind, band)) return kind;
-		List<Kind> others = new ArrayList<>();
-		others.add(band.main());
-		others.addAll(band.extras());
-		for (Kind other : others) if (other != kind && !allUsed(progress, other, band)) return other;
-		return kind;
-	}
-
-	private static boolean allUsed(Progress progress, Kind kind, Band band) {
-		return candidates(kind, band).stream().allMatch(t -> progress.itemUsedToday(kind.item(t)));
-	}
-
-	private static @Nullable Band review(Progress progress, Band band, RandomSource random) {
-		List<Band> earlier = LogicCourse.before(band);
-		if (earlier.isEmpty() || random.nextInt(5) != 0) return null;
-		List<Band> due = earlier.stream().filter(b -> b.gate().stream().anyMatch(progress::itemDue)).toList();
-		return due.isEmpty() ? null : due.get(random.nextInt(due.size()));
+		return picker.pick(player, kindId, target, random);
 	}
 
 	static List<String> candidates(Kind kind, Band band) {
@@ -155,16 +117,6 @@ public final class Logic implements Subject {
 			case BOBSORT -> List.of("pigs", "cows", "sheep");
 			default -> LogicCourse.targets(kind);
 		};
-	}
-
-	private String pickTarget(ServerPlayer player, Progress progress, Kind kind, Band band, RandomSource random) {
-		List<String> options = new ArrayList<>(candidates(kind, band));
-		String before = last.get(player.getUUID());
-		if (options.size() > 1) options.removeIf(t -> kind.item(t).equals(before));
-		java.util.Collections.shuffle(options, new java.util.Random(random.nextLong()));
-		options.sort(Comparator.<String>comparingInt(t -> progress.itemUsedToday(kind.item(t)) ? 1 : 0)
-			.thenComparingInt(t -> progress.itemClean(kind.item(t))));
-		return options.getFirst();
 	}
 
 	private static @Nullable SubjectRound build(Room room, Kind kind, String target, int stage, RandomSource random) {

@@ -1,12 +1,10 @@
 package justfatlard.learning_blocks.subject;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import justfatlard.learning_blocks.numbers.NumberCourse;
 import justfatlard.learning_blocks.numbers.NumberCourse.Band;
 import justfatlard.learning_blocks.numbers.NumberCourse.Kind;
@@ -50,10 +48,37 @@ public final class Numbers implements Subject {
 		"eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty",
 		"plus", "minus", "equals", "same", "different"};
 
-	/** Each child's numbers rounds so far this session, and their last item: for the mix and no repeats. */
-	private final Map<UUID, Integer> rounds = new HashMap<>();
-	private final Map<UUID, String> last = new HashMap<>();
-	private final Map<UUID, Integer> extra = new HashMap<>();
+	private final CoursePicker<Kind, Band> picker = new CoursePicker<>() {
+		@Override
+		protected Course<Kind, Band> course() {
+			return NumberCourse.COURSE;
+		}
+
+		@Override
+		protected @Nullable Kind kindOf(String id) {
+			return Kind.of(id);
+		}
+
+		@Override
+		protected List<String> targetsOf(Kind kind) {
+			return NumberCourse.targets(kind);
+		}
+
+		@Override
+		protected List<String> candidates(Progress progress, Kind kind, Band band) {
+			return Numbers.candidates(progress, kind, band);
+		}
+
+		@Override
+		protected boolean available(ServerPlayer player, Room room, Progress progress, Kind kind, Band band) {
+			return Numbers.available(room, progress, kind, band);
+		}
+
+		@Override
+		protected @Nullable SubjectRound build(Room room, ServerPlayer player, Progress progress, Kind kind, String target, Band band, RandomSource random) {
+			return Numbers.build(room, player, progress, kind, target, band, random);
+		}
+	};
 
 	private Numbers() {}
 
@@ -109,68 +134,12 @@ public final class Numbers implements Subject {
 		return NumberCourse.stageDone(progress, 0);
 	}
 
-	private static Band bandOf(Progress progress) {
-		Band band = NumberCourse.current(progress);
-		return band == null ? NumberCourse.BANDS.getLast() : band;
-	}
-
 	@Override
 	public @Nullable SubjectRound round(ServerPlayer player, @Nullable String kindId, @Nullable String target, RandomSource random) {
-		Room room = Rooms.of(player);
-		if (room == null) return null;
-		Progress progress = Progress.of(player);
-		Band band = bandOf(progress);
-		Kind kind;
-		if (kindId != null) {
-			kind = Kind.of(kindId);
-			if (kind == null) return null;
-		} else {
-			int count = rounds.merge(player.getUUID(), 1, Integer::sum);
-			Band review = review(progress, band, random);
-			if (review != null) {
-				band = review;
-				kind = review.main();
-			} else if (count % 3 == 0) {
-				kind = nextExtra(player, room, progress, band);
-			} else {
-				kind = band.main();
-			}
-		}
-		String chosen = target != null ? target : pickTarget(player, progress, kind, band, random);
-		if (chosen == null) {
-			if (kindId != null) return null;
-			kind = band.main();
-			chosen = pickTarget(player, progress, kind, band, random);
-			if (chosen == null) return null;
-		}
-		if (target != null && !NumberCourse.targets(kind).contains(target)) return null;
-		SubjectRound made = build(room, player, progress, kind, chosen, band, random);
-		if (made == null) return null;
-		last.put(player.getUUID(), made.item());
-		if (!room.practice()) progress.useItemToday(player, made.item(), kind.id);
-		return made;
+		return picker.pick(player, kindId, target, random);
 	}
 
-	/** Now and then (one in five), an earlier band's item that is due again: its band, or null. */
-	private static @Nullable Band review(Progress progress, Band band, RandomSource random) {
-		List<Band> earlier = NumberCourse.before(band);
-		if (earlier.isEmpty() || random.nextInt(5) != 0) return null;
-		List<Band> due = earlier.stream().filter(b -> b.gate().stream().anyMatch(progress::itemDue)).toList();
-		return due.isEmpty() ? null : due.get(random.nextInt(due.size()));
-	}
-
-	/** The band's extras in turn, skipping any that can't be asked of this child just now. */
-	private Kind nextExtra(ServerPlayer player, Room room, Progress progress, Band band) {
-		List<Kind> extras = band.extras();
-		int start = extra.merge(player.getUUID(), 1, Integer::sum);
-		for (int i = 0; i < extras.size(); i++) {
-			Kind kind = extras.get((start + i) % extras.size());
-			if (available(player, room, progress, kind, band)) return kind;
-		}
-		return band.main();
-	}
-
-	private static boolean available(ServerPlayer player, Room room, Progress progress, Kind kind, Band band) {
+	private static boolean available(Room room, Progress progress, Kind kind, Band band) {
 		return switch (kind) {
 			case TOYBOX -> ownedCount(progress, "toys") >= 1 || ownedCount(progress, "plushies") >= 1;
 			case NAME -> !readNumberWords(progress, band).isEmpty();
@@ -224,17 +193,6 @@ public final class Numbers implements Subject {
 	}
 
 	/** The target least known and not asked today, never the last one again; null if there is none. */
-	private @Nullable String pickTarget(ServerPlayer player, Progress progress, Kind kind, Band band, RandomSource random) {
-		List<String> options = new ArrayList<>(candidates(progress, kind, band));
-		if (options.isEmpty()) return null;
-		String before = last.get(player.getUUID());
-		if (options.size() > 1) options.removeIf(t -> kind.item(t).equals(before));
-		java.util.Collections.shuffle(options, new java.util.Random(random.nextLong()));
-		options.sort(Comparator.<String>comparingInt(t -> progress.itemUsedToday(kind.item(t)) ? 1 : 0)
-			.thenComparingInt(t -> progress.itemClean(kind.item(t))));
-		return options.getFirst();
-	}
-
 	private static @Nullable SubjectRound build(Room room, ServerPlayer player, Progress progress, Kind kind, String target, Band band, RandomSource random) {
 		int stage = band.stage();
 		boolean first = band.code().endsWith("a");

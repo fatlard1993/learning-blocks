@@ -26,7 +26,7 @@ import org.jspecify.annotations.Nullable;
 public final class LogicCourse {
 	private LogicCourse() {}
 
-	public enum Kind {
+	public enum Kind implements justfatlard.learning_blocks.subject.Course.Kind {
 		SORT("sort"), SAME("same"), NEXT("next"), MISTAKE("mistake"), COPY("copy"), NOTES("notes"), ODD("odd"), MISSING("missing"),
 		STORY("story"), SIZE("size"), MORNING("morning"), BOBSORT("bobsort"), BOBBIG("bobbig"), BOBLEFT("bobleft"), BOBFIX("bobfix");
 
@@ -36,6 +36,12 @@ public final class LogicCourse {
 			this.id = id;
 		}
 
+		@Override
+		public String id() {
+			return id;
+		}
+
+		@Override
 		public String item(String target) {
 			return "logic:" + id + ":" + target;
 		}
@@ -46,7 +52,8 @@ public final class LogicCourse {
 		}
 	}
 
-	public record Band(String code, int stage, List<String> gate, Kind main, List<String> mainTargets, List<Kind> extras) {}
+	public record Band(String code, int stage, List<String> gate, Kind main, List<String> mainTargets, List<Kind> extras)
+		implements justfatlard.learning_blocks.subject.Course.Band<Kind> {}
 
 	private static List<String> items(Kind kind, String... targets) {
 		List<String> out = new ArrayList<>();
@@ -92,28 +99,26 @@ public final class LogicCourse {
 		};
 	}
 
+	public static final justfatlard.learning_blocks.subject.Course<Kind, Band> COURSE = new justfatlard.learning_blocks.subject.Course<>(BANDS);
+
 	public static @Nullable Band current(Progress progress) {
-		for (Band band : BANDS) if (!finished(progress, band)) return band;
-		return null;
+		return COURSE.current(progress);
 	}
 
 	public static boolean finished(Progress progress, Band band) {
-		for (String item : band.gate()) if (!progress.itemMastered(item)) return false;
-		return true;
+		return COURSE.finished(progress, band);
 	}
 
 	public static boolean stageDone(Progress progress, int stage) {
-		for (Band band : BANDS) if (band.stage() == stage && !finished(progress, band)) return false;
-		return true;
+		return COURSE.stageDone(progress, stage);
 	}
 
 	public static @Nullable Band band(String code) {
-		for (Band band : BANDS) if (band.code().equalsIgnoreCase(code)) return band;
-		return null;
+		return COURSE.band(code);
 	}
 
 	public static List<Band> before(Band band) {
-		return BANDS.subList(0, BANDS.indexOf(band));
+		return COURSE.before(band);
 	}
 
 	public static String describe(Progress progress) {
@@ -128,18 +133,10 @@ public final class LogicCourse {
 	}
 
 	public static List<String> gateItems() {
-		List<String> all = new ArrayList<>();
-		for (Band band : BANDS) all.addAll(band.gate());
-		return all;
+		return COURSE.gateItems();
 	}
 
-	/** For tests and /learn stage: every band before this one mastered, it and after not. */
 	public static void putAt(net.minecraft.server.level.ServerPlayer player, Band at) {
-		Progress progress = Progress.of(player);
-		boolean before = true;
-		for (Band band : BANDS) {
-			if (band == at) before = false;
-			for (String item : band.gate()) progress.setItemCleanForTests(player, item, before ? Progress.masteredAt() : 0);
-		}
+		COURSE.putAt(player, at);
 	}
 }

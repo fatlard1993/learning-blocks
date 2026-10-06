@@ -10,7 +10,6 @@ import justfatlard.learning_blocks.narration.CaptionLine;
 import justfatlard.learning_blocks.narration.Narration;
 import justfatlard.learning_blocks.plush.Plush;
 import justfatlard.learning_blocks.plush.Plushies;
-import justfatlard.learning_blocks.relate.Relations;
 import justfatlard.learning_blocks.toy.Toy;
 import justfatlard.learning_blocks.toy.ToyBlock;
 import justfatlard.learning_blocks.toy.Toys;
@@ -154,7 +153,7 @@ public final class SortRound extends LogicRound {
 		int group = choice == pens[0] ? 0 : choice == pens[1] ? 1 : -1;
 		if (group < 0) return;
 		if (target.equals("things")) {
-			set(spot, group == 0 ? box() : Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, Toy.CRIB).setValue(ToyBlock.FACING, Direction.NORTH));
+			set(spot, group == 0 ? BobProps.box() : Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, Toy.CRIB).setValue(ToyBlock.FACING, Direction.NORTH));
 			return;
 		}
 		BlockState rug = Blocks.CARPET.pick(target.equals("colour") ? colours[group] : DyeColor.BROWN).defaultBlockState();
@@ -163,12 +162,6 @@ public final class SortRound extends LogicRound {
 				if (Math.abs(dx) == 2 || dz == -2 || dz == 1) set(spot.offset(dx, 0, dz), rug);
 			}
 		}
-	}
-
-	private static BlockState box() {
-		var thing = Relations.thing("box");
-		BlockState state = thing == null ? null : BobStage.blockOf(thing);
-		return state == null ? Blocks.BARREL.defaultBlockState() : state;
 	}
 
 	/** One of a group: a creature (or a thing, for things), not yet added. */
