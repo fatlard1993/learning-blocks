@@ -2,27 +2,28 @@
 """
 Record every sound the room makes, in one voice, with the timing the captions follow.
 
-Three kinds of clip, matching the keys Sounds.java plays:
+The kinds of clip, matching the keys Sounds.java plays:
 
   phoneme/<x>   the sound a tile makes: /k/ for c, never "see" or "kuh"
-  word/<w>      a whole word, one per phonics_words entry
+  word/<w>      a whole word, one per learning_words entry
   phrase/<p>    what the room says: prompts, cheers, laughs; phrase/<p>_v2... are other ways of
                 saying the same thing, for the room to pick between
   number/<n>    a number's name, zero to twenty
   name/<x>      a consonant's name ("bee" for b); a vowel's name is its long sound, phoneme/<v>_long
   scene/<w>     the line that sets up word w's situation puzzle, from its "scene": {"line": ...}
-  blend/<w>/<i> the vowel of word w's tile i, cut from that word's own recording
+  blend/<w>/<i> the vowel of word w's tile i, cut from that word's sentence recording
 
 Each is asked of ElevenLabs with character timestamps, cut to the part that is wanted, peak
 normalised, and written as a mono .ogg under assets/.../sounds/. Beside it goes a caption file
-under data/.../phonics_captions/ listing each spoken word's start and end, shifted to match the
+under data/.../learning_captions/ listing each spoken word's start and end, shifted to match the
 cut, so the room can light the words up as they are heard.
 
 A speech engine will not say a bare sound, so each is cut out of something it will say: /k/
 from "kuh", up to where the "u" begins; /f/ from "fffffish"; short /a/ from the front of
-"apple", slowed to twice its length. Held vowels ("aaaapple") come out as the letter's name. A word
-said alone can come out ambiguous ("hat" drifting to "hot"), so words are cut out of "The word
-is hat." The timestamps say exactly where each cut falls.
+"apple", slowed to twice its length. Held vowels ("aaaapple") come out as the letter's name. Words are
+said on their own, which keeps their endings; the vowel cuts for sounding out come from "The word
+is hat.", where the letters are timed far enough apart to cut. The timestamps say exactly where
+each cut falls.
 
 In a blend the consonants are the standard ones, but each vowel is cut from the word being built,
 so "c... a... t... cat" leads into the word it becomes; a loose tile still says the standard
@@ -475,7 +476,6 @@ PHRASES = {
 		{"text": "[excited] All done! The portal is open!", "model": EXPRESSIVE},
 		{"text": "[excited] Woohoo! The portal is open!", "model": EXPRESSIVE},
 	]},
-	"door_open": {"text": "[excited] All done! The door is open!", "model": EXPRESSIVE},
 	**{f"more_to_go_{n}": {"text": f"{word} more to go!"} for n, word in enumerate(
 		[n.capitalize() for n in NUMBER_NAMES[1:21]], start=1)},
 	"press_the_button": {"variants": [{"text": "[cheerful] Press the button!", "model": EXPRESSIVE},
