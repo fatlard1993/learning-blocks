@@ -92,12 +92,12 @@ public final class SortRound extends LogicRound {
 	 * In an arc round where the child stands, each as far from them as the next: a click aimed at one
 	 * from there never passes through another's box on the way, as it would along a straight row.
 	 */
-	private static final double ARC = 1.7;
+	private static final double ARC = 2.4;
 	private static final float ANIMAL_BOX_WIDTH = 1.1F;
 	private static final float ANIMAL_BOX_HEIGHT = 1.5F;
 	/** With one picked, the animals' boxes shrink to the animals, so a click past them reaches the pens. */
 	private static final float PICKED_BOX = 0.55F;
-	private static final double ARC_STEP = Math.toRadians(42);
+	private static final double ARC_STEP = Math.toRadians(38);
 
 	private Vec3 thingSpot(int i) {
 		double angle = (i - (count - 1) / 2.0) * ARC_STEP;
@@ -124,6 +124,22 @@ public final class SortRound extends LogicRound {
 	@Override
 	protected boolean boxed(Choice choice) {
 		return choice != pens[0] && choice != pens[1];
+	}
+
+	/**
+	 * With one picked, a click on an animal (that one or another) only standing between the child and
+	 * a pen is aimed at the pen: if the line of sight runs on past it onto a pen within reach, that pen.
+	 */
+	@Override
+	protected Choice past(ServerPlayer player, Choice clicked) {
+		if (selected == null || clicked == pens[0] || clicked == pens[1]) return clicked;
+		Vec3 eye = player.getEyePosition();
+		Vec3 end = eye.add(player.getLookAngle().scale(player.blockInteractionRange()));
+		var hit = level.clip(new net.minecraft.world.level.ClipContext(eye, end, net.minecraft.world.level.ClipContext.Block.OUTLINE,
+			net.minecraft.world.level.ClipContext.Fluid.NONE, player));
+		if (hit.getType() != net.minecraft.world.phys.HitResult.Type.BLOCK) return clicked;
+		Choice pen = choiceAt(hit.getBlockPos());
+		return pen != null ? pen : clicked;
 	}
 
 	/** A pen's rug (or the box and the crib), clicked as a block: that pen. */

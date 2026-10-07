@@ -172,6 +172,8 @@ public final class Dispenser implements RoomEffects {
 		if (room.scene() != null && room.scene().occupies(pos)) return false;
 		if (BlockPos.containing(spawn()).equals(pos) || layout.creatureSpot().equals(pos)) return false;
 		if (!feet && (pos.equals(player.blockPosition()) || pos.equals(player.blockPosition().above()))) return false;
+		// Nor where any reader stands.
+		for (ServerPlayer reader : room.present()) if (pos.equals(reader.blockPosition()) && reader != player) return false;
 		return level.getEntities((Entity) null, new AABB(pos), entity -> !(entity instanceof Player)).isEmpty();
 	}
 
@@ -253,14 +255,11 @@ public final class Dispenser implements RoomEffects {
 	@Override
 	public void dispenseCreature(ServerPlayer player, Entity creature) {
 		puff();
-		Vec3 start = new Vec3(button().getX() + 0.5, origin.getY() + 1.3, button().getZ() + 1.3);
-		creature.snapTo(start.x, start.y, start.z, player.getYRot() + 180.0F, 0.0F);
-		Vec3 toward = player.position().subtract(start);
-		Vec3 flat = new Vec3(toward.x, 0, toward.z);
-		flat = flat.lengthSqr() > 1.0E-4 ? flat.normalize().scale(0.28) : new Vec3(0, 0, 0.28);
-		// Always away from the board, whatever the child is doing.
-		if (flat.z < 0.1) flat = new Vec3(flat.x, 0, 0.1);
-		creature.setDeltaMovement(flat.x, 0.32, flat.z);
+		Vec3 start = mouth();
+		creature.snapTo(start.x, start.y, start.z, 0.0F, 0.0F);
+		// Out over the floor in front of the readers, towards the board: never back onto whoever pressed.
+		double side = (level.getRandom().nextDouble() - 0.5) * 0.2;
+		creature.setDeltaMovement(side, 0.32, -0.24);
 		level.addFreshEntity(creature);
 		creature.needsSync = true;
 		sent("creature", start);
@@ -640,7 +639,7 @@ public final class Dispenser implements RoomEffects {
 	private boolean hutMay(BlockPos pos, boolean forScene) {
 		int x = pos.getX() - origin.getX();
 		int z = pos.getZ() - origin.getZ();
-		if (Math.abs(x) >= HALF - 1 || Math.abs(z) >= HALF - 1 || pos.getY() < origin.getY() || pos.getY() >= origin.getY() + HEIGHT - 1) return false;
+		if (Math.abs(x) >= HALF - 1 || z <= RoomLayout.FRONT + 1 || z >= RoomLayout.BACK - 1 || pos.getY() < origin.getY() || pos.getY() >= origin.getY() + HEIGHT - 1) return false;
 		if (!level.getBlockState(pos).isAir() || reserved.contains(pos) || room.holds(pos)) return false;
 		if (pos.equals(prizeMarker()) || pos.equals(portalLower()) || pos.equals(portalLower().above())) return false;
 		return forScene || room.scene() == null || !room.scene().occupies(pos);
@@ -714,8 +713,8 @@ public final class Dispenser implements RoomEffects {
 		if (rolling == null) return;
 		// Out of the button's mouth, a drop to the floor below it, and then the roll.
 		Vec3 mouth = mouth();
-		Vec3 from = new Vec3(button().getX() + 0.5, origin.getY() + 0.5, origin.getZ() - 0.5);
-		Vec3 to = new Vec3(origin.getX() - 4.5, origin.getY() + 0.5, origin.getZ() - 0.5);
+		Vec3 from = new Vec3(mouth.x, origin.getY() + 0.5, origin.getZ() - 0.5);
+		Vec3 to = new Vec3(origin.getX() - HALF + 1.5, origin.getY() + 0.5, origin.getZ() - 0.5);
 		rolling.snapTo(mouth.x, mouth.y, mouth.z, 0, 0);
 		rolling.setItemStack(stack.copy());
 		rolling.setItemTransform(ItemDisplayContext.FIXED);

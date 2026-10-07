@@ -39,6 +39,10 @@ public final class LearnCommand {
 			.executes(LearnCommand::enter)
 			.then(Commands.literal("leave").executes(LearnCommand::leave))
 			.then(Commands.literal("join").then(Commands.argument("player", EntityArgument.player()).executes(LearnCommand::join)))
+			.then(Commands.literal("teach")
+				.requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions())
+					|| source.getPlayer() != null && justfatlard.learning_blocks.reward.PrizeConfig.namedTeacher(source.getPlayer().getGameProfile().name()))
+				.then(Commands.argument("child", EntityArgument.player()).executes(LearnCommand::teach)))
 			.then(Commands.literal("accept").then(Commands.argument("player", EntityArgument.player()).executes(context -> answer(context, true))))
 			.then(Commands.literal("decline").then(Commands.argument("player", EntityArgument.player()).executes(context -> answer(context, false))))
 			.then(Commands.literal("try")
@@ -335,6 +339,22 @@ public final class LearnCommand {
 			return 0;
 		}
 		context.getSource().sendSuccess(() -> Component.literal("Asked " + host.getGameProfile().name() + "; waiting for an answer"), false);
+		return 1;
+	}
+
+	private static int teach(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+		ServerPlayer teacher = context.getSource().getPlayerOrException();
+		ServerPlayer child = EntityArgument.getPlayer(context, "child");
+		if (child == teacher) {
+			context.getSource().sendFailure(Component.literal("Teach someone else: /learn takes you in to read"));
+			return 0;
+		}
+		String refused = justfatlard.learning_blocks.classroom.Travel.teach(teacher, child);
+		if (refused != null) {
+			context.getSource().sendFailure(Component.literal(refused));
+			return 0;
+		}
+		context.getSource().sendSuccess(() -> Component.literal("Teaching in " + child.getGameProfile().name() + "'s classroom: clicks point; the portal takes you home"), false);
 		return 1;
 	}
 

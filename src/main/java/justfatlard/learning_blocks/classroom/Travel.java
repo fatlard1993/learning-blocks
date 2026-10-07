@@ -56,7 +56,7 @@ public final class Travel {
 	public static @Nullable String readWith(ServerPlayer player, Room room) {
 		if (room.leaving()) return "That classroom is closing";
 		if (Rooms.of(player) == room) return null;
-		if (room.members().size() >= 3) return "That classroom is full";
+		if (room.members().size() >= justfatlard.learning_blocks.reward.PrizeConfig.maxReaders()) return "That classroom is full";
 		if (Visit.of(player) != null && Places.isClassroom(player.level())) {
 			if (!Rooms.join(player, room)) return "That classroom is full";
 			Vec3 at = room.spawnFor(player.getUUID());
@@ -65,6 +65,29 @@ public final class Travel {
 			return null;
 		}
 		return enter(player, room);
+	}
+
+	/**
+	 * Into a child's room as its teacher: the ordinary way in, things put aside and given back on the
+	 * way out, but no lessons to keep them, no cubby and nothing to earn. What went wrong, or null.
+	 */
+	public static @Nullable String teach(ServerPlayer teacher, ServerPlayer child) {
+		Room room = Rooms.of(child);
+		if (room == null || !Places.isClassroom(child.level())) return child.getGameProfile().name() + " isn't in the classroom";
+		if (room.isTeacher(child.getUUID())) return child.getGameProfile().name() + " is teaching, not reading";
+		if (room.leaving()) return "That classroom is closing";
+		if (Rooms.of(teacher) == room) return null;
+		if (Visit.of(teacher) != null && Places.isClassroom(teacher.level())) {
+			Room own = Rooms.of(teacher);
+			if (own != null && !own.isTeacher(teacher.getUUID())) return "Leave your own room first";
+			Rooms.teach(teacher, room);
+			Visit.set(teacher, Visit.of(teacher).withLessons(0));
+			Vec3 at = room.spawnFor(teacher.getUUID());
+			teacher.teleportTo((ServerLevel) teacher.level(), at.x, at.y, at.z, Set.of(), Room.FACING_YAW, 0, true);
+			Rooms.begin(teacher);
+			return null;
+		}
+		return enter(teacher, room, true);
 	}
 
 	/**
@@ -84,6 +107,10 @@ public final class Travel {
 	}
 
 	private static @Nullable String enter(ServerPlayer player, @Nullable Room joining) {
+		return enter(player, joining, false);
+	}
+
+	private static @Nullable String enter(ServerPlayer player, @Nullable Room joining, boolean teaching) {
 		MinecraftServer server = player.level().getServer();
 		if (Visit.of(player) != null || Places.isClassroom(player.level())) return "You're already in the classroom";
 		if (player.isDeadOrDying()) return "Not just now";
@@ -99,7 +126,7 @@ public final class Travel {
 		// classroom's empty pack, to be cleared on the way out: closed first, it goes home in the stash.
 		player.closeContainer();
 
-		Visit.set(player, Visit.snapshot(player));
+		Visit.set(player, teaching ? Visit.snapshot(player).withLessons(0) : Visit.snapshot(player));
 
 		// From here, anything going wrong puts everything back: no child is left half in.
 		try {
@@ -115,9 +142,10 @@ public final class Travel {
 			player.containerMenu.broadcastChanges();
 
 			Room room;
-			if (joining != null && Rooms.join(player, joining)) room = joining;
+			if (teaching && joining != null) Rooms.teach(player, room = joining);
+			else if (joining != null && Rooms.join(player, joining)) room = joining;
 			else room = Rooms.open(player, classroom, Plots.origin(player));
-			Prizes.entered(player);
+			if (!teaching) Prizes.entered(player);
 			Vec3 spawn = room.spawnFor(player.getUUID());
 			var arrived = own(() -> player.teleport(new TeleportTransition(classroom, spawn, Vec3.ZERO, Room.FACING_YAW, 0, Set.of(),
 				entity -> {

@@ -71,7 +71,9 @@
       "justfatlard.learning_blocks.gametest.MissingTile",
       "justfatlard.learning_blocks.gametest.Pointing",
       "justfatlard.learning_blocks.gametest.ThreeAndTeams",
-      "justfatlard.learning_blocks.gametest.ShippedDefaults"
+      "justfatlard.learning_blocks.gametest.ShippedDefaults",
+      "justfatlard.learning_blocks.gametest.RoomShots",
+      "justfatlard.learning_blocks.gametest.ManyReaders"
     ]
   },
   "depends": {

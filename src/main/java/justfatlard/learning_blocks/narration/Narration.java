@@ -90,6 +90,7 @@ public final class Narration {
 
 	final List<Step> steps = new ArrayList<>();
 	@Nullable Consumer<ServerPlayer> onStop;
+	boolean alone;
 
 	public Narration sayExactly(String clip) {
 		return add(new Step(clip, null, null, null, true, GAP, EXACT + clip));
@@ -137,6 +138,12 @@ public final class Narration {
 	/** Do something with no clip, then wait a beat. The caption up already stays up. */
 	public Narration then(String label, Consumer<ServerPlayer> action, int beat) {
 		steps.add(new Step(null, null, action, null, false, beat, label));
+		return this;
+	}
+
+	/** Only for the player it is played to, not the others in the room: a word for one child. */
+	public Narration alone() {
+		this.alone = true;
 		return this;
 	}
 

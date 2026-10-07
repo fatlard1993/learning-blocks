@@ -178,9 +178,13 @@ public final class EveryWord implements FabricClientGameTest {
 					session.waitTicks(2);
 				}
 				long[] sentBefore = new long[1];
+				Set<java.util.UUID> creaturesBefore = new java.util.HashSet<>();
+				Set<BlockPos> placedBefore = new java.util.HashSet<>();
 				session.onServer(server -> {
 					Room room = Rooms.of(session.player());
 					sentBefore[0] = room.sends();
+					room.creatures().forEach(creature -> creaturesBefore.add(creature.getUUID()));
+					placedBefore.addAll(room.placed());
 					// Room in the pack for what it gives: every word that gives something has filled it by now.
 					var pack = session.player().getInventory();
 					int free = 0;
@@ -221,6 +225,17 @@ public final class EveryWord implements FabricClientGameTest {
 						}
 					}
 					check(player.getHealth() >= player.getMaxHealth(), word.id() + " hurt the child: " + player.getHealth());
+					// Nothing this word brought lands on the one at the button.
+					BlockPos feet = player.blockPosition();
+					for (BlockPos pos : room.placed()) {
+						if (placedBefore.contains(pos)) continue;
+						check(!pos.equals(feet) && !pos.equals(feet.above()), word.id() + " put a block on the child at the button: " + pos);
+					}
+					for (Entity creature : room.creatures()) {
+						if (creaturesBefore.contains(creature.getUUID())) continue;
+						check(!creature.getBoundingBox().intersects(player.getBoundingBox()), word.id() + "'s " + creature.getType().getDescriptionId()
+							+ " landed on the child at the button: " + creature.position());
+					}
 				});
 
 				// Its wrong version, as when built but not asked for: over quickly, and nothing of it left.

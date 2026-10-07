@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import java.util.UUID;
 import justfatlard.learning_blocks.narration.Narrator;
 import justfatlard.learning_blocks.Safely;
 import justfatlard.learning_blocks.classroom.Travel;
@@ -59,7 +60,10 @@ final class AnswerCommit {
 			return;
 		}
 		room.solved++;
+		room.credited.add(player.getUUID());
 		Safely.run("Crediting " + player.getGameProfile().name() + " for " + what, credit);
+		// Those who helped - pointed, or did something of it - have the lesson too, though not the mastery.
+		room.later(player, 1, p -> helpers());
 		Safely.run("Counting today's lessons", () -> Progress.of(player).solvedToday(player, room.currentSubject));
 		if (lessonsBefore > 0) {
 			Safely.run("Counting " + player.getGameProfile().name() + "'s lesson", () -> {
@@ -68,6 +72,25 @@ final class AnswerCommit {
 				// The portal waits for "All done!" to open; until then it shows the count.
 				if (lessonsBefore - 1 > 0) room.refreshPortal(player, false);
 				else Progress.of(player).lessonNote(player, "lessons all done");
+			});
+		}
+	}
+
+	/** A lesson for every reader who took part in this round and was not credited for answering it. */
+	private void helpers() {
+		for (ServerPlayer other : room.present()) {
+			UUID id = other.getUUID();
+			if (!room.tookPart.contains(id) || room.credited.contains(id)) continue;
+			room.credited.add(id);
+			int before = lessonsBefore(other);
+			Safely.run("Counting a helper's lesson", () -> {
+				Progress.of(other).solvedToday(other, room.currentSubject);
+				Progress.of(other).lessonNote(other, "helped with a round");
+				if (before > 0) {
+					Visit visit = Visit.of(other);
+					if (visit != null) Visit.set(other, visit.withLessons(before - 1));
+					room.refreshPortal(other, before == 1);
+				}
 			});
 		}
 	}

@@ -293,7 +293,7 @@ final class Interaction {
 		for (BlockPos gap : room.gapMarkers.keySet()) if (inGap(gap) == letter) return true;
 		BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
 		for (int x = -HALF + 1; x < HALF; x++) {
-			for (int z = -HALF + 1; z < HALF; z++) {
+			for (int z = RoomLayout.FRONT + 1; z < RoomLayout.BACK; z++) {
 				BlockState state = level.getBlockState(at.setWithOffset(layout.origin(), x, 0, z));
 				if (state.is(LearningBlocks.LETTER) && state.getValue(LetterBlock.LETTER) == letter) return true;
 			}

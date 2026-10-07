@@ -194,7 +194,8 @@ public final class Room {
 		this.layout = new RoomLayout(origin);
 		this.dispenser = new Dispenser(this, level, layout);
 		this.members.add(this.owner);
-		this.showcases.put(this.owner, new PrizeShowcase(this, level, layout, dispenser, layout.prizeMarker(0)));
+		takePlace(this.owner);
+		this.showcases.put(this.owner, new PrizeShowcase(this, level, layout, dispenser, this.owner, layout.prizeMarker(0)));
 		this.portal = new Portal(this, level, layout);
 		this.picture = new BoardPicture(level);
 		this.rounds = new RoundLifecycle(this, level, layout);
@@ -211,6 +212,20 @@ public final class Room {
 	/** Where a child is set down: far enough back to see the board and the tiles at once. */
 	public Vec3 spawn() {
 		return layout.spawn();
+	}
+
+	/** Where the reader in this place stands, 0 at the button. */
+	public Vec3 standingSpot(int place) {
+		return layout.standingSpot(place);
+	}
+
+	public Vec3 teacherSpot() {
+		return layout.teacherSpot();
+	}
+
+	/** Each place's cubby. */
+	public BlockPos cubby(int place) {
+		return layout.prizeMarker(place);
 	}
 
 	@ForTests
@@ -306,6 +321,10 @@ public final class Room {
 
 	/** A leave is under way: no new rounds, prompts, tile sounds or lines from here. */
 	public void beginLeaving(ServerPlayer player) {
+		if (isTeacher(player.getUUID())) {
+			leavingMembers.putIfAbsent(player.getUUID(), level.getGameTime());
+			return;
+		}
 		prizes(player.getUUID()).leaving(player);
 		// Reading together, the others carry on: only this reader is on the way out.
 		if (present().stream().anyMatch(other -> !other.getUUID().equals(player.getUUID()))) {
@@ -335,9 +354,8 @@ public final class Room {
 	}
 
 
-	/** Everyone reading in this room, the owner first; at most {@link #MOST_READERS}, and a plot's owner coming back on top of that. */
+	/** Everyone reading in this room, in the order they came: the rotation. At most {@code max_readers}, and a plot's owner coming back on top of that. */
 	final List<UUID> members = new ArrayList<>();
-	static final int MOST_READERS = 3;
 	@Nullable UUID turn;
 	final Map<UUID, Long> leavingMembers = new LinkedHashMap<>();
 	/** Where a reader was when their last round was picked: a change is their fresh start. */
@@ -371,6 +389,8 @@ public final class Room {
 	}
 	/** A team-up's two readers, the lower first; and a test's asked-for team-up. */
 	final List<UUID> teamReaders = new ArrayList<>();
+	/** How many team-ups this room has made: which pair of readers is next. */
+	int teamPairs;
 
 	/** The little marker over each reader whose round it is, in their colour, by player. */
 	private final Map<UUID, UUID> markerShown = new LinkedHashMap<>();
@@ -464,35 +484,123 @@ public final class Room {
 
 	/** The others in the room with this reader: who hears along with them. */
 	List<ServerPlayer> others(ServerPlayer player) {
-		if (!shared()) return List.of();
-		return present().stream().filter(other -> !other.getUUID().equals(player.getUUID())).toList();
+		List<ServerPlayer> others = new ArrayList<>();
+		if (shared() || isTeacher(player.getUUID())) others.addAll(present());
+		others.addAll(teachersHere());
+		others.removeIf(other -> other.getUUID().equals(player.getUUID()));
+		return others;
 	}
 
-	/** A reader's place in the room, for their colour and their chest: 0, 1 or 2. */
+	/** Readers who did something this round: answered, built, pointed. Only they are credited for it. */
+	final java.util.Set<UUID> tookPart = new java.util.HashSet<>();
+	/** Readers already credited for this round, so a helper's lesson is never given twice. */
+	final java.util.Set<UUID> credited = new java.util.HashSet<>();
+	/** Rounds in a row each reader has taken no part in. */
+	final Map<UUID, Integer> idleRounds = new java.util.HashMap<>();
+	/** Readers owed a nudge to join in, and whether it is their first: said when the room is next quiet. */
+	final Map<UUID, Boolean> nudgeOwed = new LinkedHashMap<>();
+
+	/** A reader did something in the room: this round counts as theirs to share. */
+	void tookPart(ServerPlayer player) {
+		if (members.contains(player.getUUID())) tookPart.add(player.getUUID());
+	}
+
+	@ForTests
+	public boolean tookPartForTests(UUID player) {
+		return tookPart.contains(player);
+	}
+
+	/**
+	 * Teachers in the room: never in the rotation, never kept in, never credited; everything they
+	 * click only points.
+	 */
+	final java.util.Set<UUID> teachers = new java.util.LinkedHashSet<>();
+
+	public boolean isTeacher(UUID player) {
+		return teachers.contains(player);
+	}
+
+	/** The teachers standing in this room just now. */
+	List<ServerPlayer> teachersHere() {
+		List<ServerPlayer> here = new ArrayList<>();
+		for (UUID id : teachers) {
+			ServerPlayer teacher = level.getServer().getPlayerList().getPlayer(id);
+			if (teacher != null && !teacher.isRemoved() && Rooms.of(teacher) == this) here.add(teacher);
+		}
+		return here;
+	}
+
+	void addTeacher(ServerPlayer teacher) {
+		teachers.add(teacher.getUUID());
+		Narrator.note(teacher, "joined:teacher");
+	}
+
+	void removeTeacher(ServerPlayer teacher) {
+		teachers.remove(teacher.getUUID());
+		leavingMembers.remove(teacher.getUUID());
+		Later.cancel(teacher);
+		Narrator.silence(teacher);
+	}
+
+	/**
+	 * A teacher's own tick: the way out is always theirs. Walking into the doorway, open or shut for
+	 * the children, takes them home; and their own view of the frame is lit.
+	 */
+	void tickTeacher(ServerPlayer teacher) {
+		if (leaving(teacher)) return;
+		if (level.getGameTime() % 20 == 0) portal.showFrameFor(teacher, true);
+		if (teacher.getBoundingBox().inflate(0.0, 0.0, 0.35).intersects(portal.opening())) {
+			Narrator.note(teacher, "portal:enter");
+			Travel.leave(teacher);
+		}
+	}
+
+	/** Each reader's place, kept while they are here: where they stand, their cubby and their colour. */
+	private final Map<UUID, Integer> places = new LinkedHashMap<>();
+
+	/** A reader's place in the room, 0 to {@link PrizeConfig#MOST_READERS} - 1. */
 	int place(UUID player) {
-		return Math.max(0, members.indexOf(player));
+		Integer at = places.get(player);
+		return at != null ? at : 0;
 	}
 
-	static final int[] COLOURS = {0x2B6CE0, 0xF08A1E, 0x2FA844};
+	private void takePlace(UUID player) {
+		if (places.containsKey(player)) return;
+		int free = 0;
+		while (places.containsValue(free)) free++;
+		places.put(player, free);
+	}
+
+	/**
+	 * Readers' colours, by place, from the dyes in a fixed order: the first three as the underscore
+	 * tiles have them, then the rest, so no two readers here are ever the same.
+	 */
+	static final List<net.minecraft.world.item.DyeColor> READER_DYES = List.of(net.minecraft.world.item.DyeColor.BLUE,
+		net.minecraft.world.item.DyeColor.ORANGE, net.minecraft.world.item.DyeColor.LIME, net.minecraft.world.item.DyeColor.MAGENTA,
+		net.minecraft.world.item.DyeColor.YELLOW, net.minecraft.world.item.DyeColor.CYAN, net.minecraft.world.item.DyeColor.PURPLE,
+		net.minecraft.world.item.DyeColor.RED, net.minecraft.world.item.DyeColor.LIGHT_BLUE, net.minecraft.world.item.DyeColor.PINK,
+		net.minecraft.world.item.DyeColor.GREEN, net.minecraft.world.item.DyeColor.BROWN, net.minecraft.world.item.DyeColor.LIGHT_GRAY,
+		net.minecraft.world.item.DyeColor.GRAY, net.minecraft.world.item.DyeColor.BLACK, net.minecraft.world.item.DyeColor.WHITE);
+	/** A teacher points in gold, which no reader is. */
+	static final int TEACHER_COLOUR = 0xFFC832;
+
+	public net.minecraft.world.item.DyeColor dye(UUID player) {
+		return READER_DYES.get(place(player) % READER_DYES.size());
+	}
 
 	public int colour(UUID player) {
-		return COLOURS[Math.min(place(player), COLOURS.length - 1)];
+		return dye(player).getTextureDiffuseColor() & 0xFFFFFF;
 	}
 
-	/** Where a reader is set down: side by side, the owner in the middle. */
+	/** Where a reader is set down: the first at the button, the rest in a row behind. */
 	public Vec3 spawnFor(UUID player) {
-		int at = place(player);
-		return layout.spawn().add(switch (at) {
-			case 0 -> 0;
-			case 1 -> -1.5;
-			case 2 -> 1.5;
-			default -> -3.0;
-		}, 0, 0);
+		if (isTeacher(player)) return layout.teacherSpot();
+		return layout.standingSpot(place(player));
 	}
 
 	/** This reader's prize chest; a new reader's is made as they come in. */
 	PrizeShowcase prizes(UUID player) {
-		return showcases.computeIfAbsent(player, id -> new PrizeShowcase(this, level, layout, dispenser, layout.prizeMarker(place(id))));
+		return showcases.computeIfAbsent(player, id -> new PrizeShowcase(this, level, layout, dispenser, id, layout.prizeMarker(place(id))));
 	}
 
 	@Nullable UUID chestOwner(BlockPos pos) {
@@ -502,6 +610,7 @@ public final class Room {
 
 	void addMember(ServerPlayer player) {
 		if (!members.contains(player.getUUID())) members.add(player.getUUID());
+		takePlace(player.getUUID());
 		prizes(player.getUUID());
 		Narrator.note(player, "joined");
 		for (ServerPlayer one : present()) refreshPortal(one, false);
@@ -516,6 +625,7 @@ public final class Room {
 		boolean theirs = id.equals(turn) || gapOwners.containsValue(id);
 		justfatlard.learning_blocks.reward.Progress.practice(player, false);
 		members.remove(id);
+		places.remove(id);
 		leavingMembers.remove(id);
 		lastStage.remove(id);
 		PrizeShowcase chest = showcases.remove(id);
@@ -591,7 +701,7 @@ public final class Room {
 		Long last = pointedAt.get(player.getUUID());
 		if (last != null && now - last < POINT_EVERY && now >= last) return;
 		pointedAt.put(player.getUUID(), now);
-		int colour = COLOURS[Math.min(place(player.getUUID()), COLOURS.length - 1)];
+		int colour = teachers.contains(player.getUUID()) ? TEACHER_COLOUR : colour(player.getUUID());
 		level.sendParticles(new net.minecraft.core.particles.DustParticleOptions(colour, 1.2F), at.x, at.y, at.z, 10, 0.12, 0.12, 0.12, 0.0);
 		level.playSound(null, at.x, at.y, at.z, net.minecraft.sounds.SoundEvents.NOTE_BLOCK_BELL.value(), net.minecraft.sounds.SoundSource.PLAYERS, 0.25F, 2.0F);
 		pointed.add(at);
@@ -818,6 +928,20 @@ public final class Room {
 		if (puzzle != null && !busy && level.getGameTime() % TILE_CHECK == 0) interaction.keepSolvable(player);
 		if (unstick(player)) return;
 		if (puzzle == null || busy || Narrator.isPlaying(player)) return;
+		if (!nudgeOwed.isEmpty()) {
+			List<ServerPlayer> here = present();
+			if (here.stream().noneMatch(Narrator::isPlaying)) {
+				nudgeOwed.keySet().removeIf(id -> id.equals(turn) || tookPart.contains(id) || here.stream().noneMatch(reader -> reader.getUUID().equals(id)));
+				for (ServerPlayer reader : here) {
+					Boolean first = nudgeOwed.remove(reader.getUUID());
+					if (first != null) {
+						// One at a time: the next waits for this one to finish.
+						rounds.nudge(reader, first);
+						return;
+					}
+				}
+			}
+		}
 		long now = level.getGameTime();
 		if (now - Math.max(lastActive, lastPrompted) < (repeats < MAX_REPEATS ? IDLE : NUDGE)) return;
 		repeats++;
@@ -973,6 +1097,7 @@ public final class Room {
 
 
 	public void refreshPrizeMarker(ServerPlayer player) {
+		if (isTeacher(player.getUUID())) return;
 		prizes(player.getUUID()).refreshPrizeMarker(player);
 	}
 
@@ -981,6 +1106,7 @@ public final class Room {
 	}
 
 	void refreshHaul(ServerPlayer player) {
+		if (isTeacher(player.getUUID())) return;
 		prizes(player.getUUID()).refreshHaul(player);
 	}
 
@@ -997,6 +1123,29 @@ public final class Room {
 	@ForTests
 	public BlockPos prizeMarker(UUID player) {
 		return prizes(player).prizeMarker();
+	}
+
+	/** The name over this reader's cubby, if they have one. */
+	@ForTests
+	public @Nullable Entity cubbyLabel(UUID player) {
+		PrizeShowcase chest = showcases.get(player);
+		return chest == null ? null : chest.label();
+	}
+
+	@ForTests
+	public void markCubbiesForTests() {
+		for (PrizeShowcase chest : showcases.values()) chest.mark();
+	}
+
+	@ForTests
+	public boolean hasCubby(UUID player) {
+		return showcases.containsKey(player);
+	}
+
+	/** Where this reader's banner hangs, when nothing paints their chest. */
+	@ForTests
+	public BlockPos bannerSpot(UUID player) {
+		return prizes(player).bannerSpot();
 	}
 
 	@ForTests

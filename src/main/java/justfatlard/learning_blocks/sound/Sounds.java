@@ -201,8 +201,8 @@ public final class Sounds {
 		return 24;
 	}
 
-	/** Something that was played, for a test to look back at. */
-	public record Played(String key, @Nullable BlockPos at, long gameTime) {}
+	/** Something that was played, for a test to look back at: where from, for a block's; and to whom, for the room's voice. */
+	public record Played(String key, @Nullable BlockPos at, long gameTime, java.util.@Nullable UUID to) {}
 
 	private static final int RECENT = 64;
 	private static final Deque<Played> recent = new ArrayDeque<>();
@@ -212,15 +212,19 @@ public final class Sounds {
 		return List.copyOf(recent);
 	}
 
-	private static synchronized void remember(String key, @Nullable BlockPos at, long gameTime) {
-		recent.addLast(new Played(key, at, gameTime));
+	private static void remember(String key, @Nullable BlockPos at, long gameTime) {
+		remember(key, at, gameTime, null);
+	}
+
+	private static synchronized void remember(String key, @Nullable BlockPos at, long gameTime, java.util.@Nullable UUID to) {
+		recent.addLast(new Played(key, at, gameTime, to));
 		while (recent.size() > RECENT) recent.removeFirst();
 	}
 
 	/** The room's voice, to this child only and as if beside them: a room is theirs. */
 	public static void play(ServerPlayer player, String key) {
 		Resolved sound = resolve(key);
-		remember(key, null, player.level().getGameTime());
+		remember(key, null, player.level().getGameTime(), player.getUUID());
 		player.connection.send(new ClientboundSoundPacket(sound.sound(), SoundSource.VOICE,
 			player.getX(), player.getEyeY(), player.getZ(), 1.0F, sound.pitch(), player.getRandom().nextLong()));
 	}

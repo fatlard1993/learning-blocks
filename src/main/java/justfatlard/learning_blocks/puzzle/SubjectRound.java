@@ -259,7 +259,12 @@ public abstract class SubjectRound {
 		Choice picked = hits.get(entity.getUUID());
 		if (picked == null) picked = owned.get(entity.getUUID());
 		if (picked == null) return false;
-		return clickChoice(player, picked, entity.position().add(0, entity.getBbHeight() / 2, 0));
+		return clickChoice(player, past(player, picked), entity.position().add(0, entity.getBbHeight() / 2, 0));
+	}
+
+	/** What a click on this choice's box was really aimed at: the choice itself, unless a kind knows better. */
+	protected Choice past(ServerPlayer player, Choice clicked) {
+		return clicked;
 	}
 
 	/** The block a choice is made of, where a click on the block itself counts too: a pen's rug, past a box's reach. */
@@ -339,9 +344,13 @@ public abstract class SubjectRound {
 		pressed(player);
 	}
 
+	/** Readers who picked a part of this round: in a team-up, each of them built some of it. */
+	private final java.util.Set<java.util.UUID> pickers = new java.util.HashSet<>();
+
 	private void pick(ServerPlayer player, Choice picked) {
 		if (room.busy || room.leaving) return;
 		room.touch();
+		pickers.add(player.getUUID());
 		Narrator.note(player, "picked:" + subject().id() + ":" + picked.id());
 		Verdict verdict = judge(player, picked);
 		if (verdict == Verdict.HOLD) {
@@ -374,10 +383,10 @@ public abstract class SubjectRound {
 				Prizes.itemSolved(player, item, firstTry);
 				Earned.checkItem(player, Progress.of(player), item);
 			}, lessonsBefore);
-			// A team-up is everyone's: it counts for each reader here, as a Reading team-up does.
+			// A team-up counts in full for each reader who built a part of it; others who helped have the lesson.
 			if (teamUp() && room.shared()) {
 				for (ServerPlayer other : room.present()) {
-					if (other == player) continue;
+					if (other == player || !pickers.contains(other.getUUID())) continue;
 					int otherBefore = AnswerCommit.lessonsBefore(other);
 					room.answers.commit().right(other, subject().id() + " " + picked.id() + " together", () -> {
 						Progress.of(other).itemRight(other, item, firstTry);

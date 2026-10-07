@@ -309,7 +309,10 @@ public final class PrizeFile {
 			this many is a word to fix. silly_counts: whether a silly sentence told to Bob (Silly
 			sentences, from the action menu) counts as a lesson; never towards mastery.
 			bob_prop_share: out of 100, at most how often Bob's goal is one with only props in it (a
-			mug on a desk) rather than a plushie or a toy; never two of those in a row."""),
+			mug on a desk) rather than a plushie or a toy; never two of those in a row.
+			max_readers: how many children may learn together in one room (1 to 6). teachers: names of
+			players who may join a room as a teacher (/learn teach) without being operators: a teacher
+			can only point, is never kept in or credited, and can always leave."""),
 		Map.entry("subjects", """
 			Subjects: reading, numbers and logic, each on (true) or off by default for a child nobody
 			has set them for (/learn subjects sets one child's). mix: how a child's subjects take
@@ -343,7 +346,8 @@ public final class PrizeFile {
 		  ] },
 		  "puzzles": { "scenes": true, "scene_every": 4, "letters_first": true, "mastery_clean": 3, "letter_word_every": 3, "read_it": true, "read_it_every": 5, "review_share": 30,
 		    "first_sound": true, "last_sound": true, "middle_vowel": true, "whole_word": true, "team_up": true, "team_up_every": 3,
-		    "tell_bob": true, "tell_bob_every": 5, "whats_wrong": true, "whats_wrong_every": 6, "silly_counts": false, "bob_prop_share": 20 },
+		    "tell_bob": true, "tell_bob_every": 5, "whats_wrong": true, "whats_wrong_every": 6, "silly_counts": false, "bob_prop_share": 20,
+		    "max_readers": 6, "teachers": [] },
 		  "subjects": { "reading": true, "numbers": true, "logic": true, "mix": "alternate", "block": 3,
 		    "weights": { "reading": 1, "numbers": 1, "logic": 1 } }
 		}

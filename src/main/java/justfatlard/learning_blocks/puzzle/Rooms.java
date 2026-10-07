@@ -102,15 +102,23 @@ public final class Rooms {
 
 	/**
 	 * Into another reader's room, out of their own if they had one: reading together. Up to
-	 * {@link Room#MOST_READERS}; false if it is full.
+	 * {@code max_readers}; false if it is full.
 	 */
 	public static boolean join(ServerPlayer player, Room room) {
 		if (rooms.get(player.getUUID()) == room) return true;
-		if (room.members.size() >= Room.MOST_READERS && !room.members.contains(player.getUUID())) return false;
+		if (room.members.size() >= justfatlard.learning_blocks.reward.PrizeConfig.maxReaders() && !room.members.contains(player.getUUID())) return false;
 		close(player);
 		rooms.put(player.getUUID(), room);
 		room.addMember(player);
 		return true;
+	}
+
+	/** Into a room as its teacher: never a reader in it, so it never fills up. */
+	public static void teach(ServerPlayer teacher, Room room) {
+		if (rooms.get(teacher.getUUID()) == room && room.isTeacher(teacher.getUUID())) return;
+		close(teacher);
+		rooms.put(teacher.getUUID(), room);
+		room.addTeacher(teacher);
 	}
 
 	static java.util.Collection<Room> all() {
@@ -123,6 +131,11 @@ public final class Rooms {
 	public static void begin(ServerPlayer player) {
 		Room room = of(player);
 		if (room == null) return;
+		if (room.isTeacher(player.getUUID())) {
+			PandoricalApi.hud().hideVanillaElements(player, LearningBlocks.MOD_ID,
+				List.of(VanillaHudElement.HELD_ITEM_TOOLTIP, VanillaHudElement.OVERLAY_MESSAGE));
+			return;
+		}
 		if (room.shared() && room.puzzle != null) {
 			// Joining a room already reading: no new round, just their own chest and portal.
 			PandoricalApi.hud().hideVanillaElements(player, LearningBlocks.MOD_ID,
@@ -389,6 +402,11 @@ public final class Rooms {
 		}
 		Room room = of(serverPlayer);
 		if (room == null) return InteractionResult.PASS;
+		if (room.isTeacher(serverPlayer.getUUID())) {
+			room.point(serverPlayer, entity.position().add(0, entity.getBbHeight() / 2, 0));
+			return InteractionResult.SUCCESS;
+		}
+		room.tookPart(serverPlayer);
 		// Bob's cards, and reading together the goals to pick from.
 		if (room.bob != null && room.bob.click(serverPlayer, entity)) return InteractionResult.SUCCESS;
 		// Another subject's choices: the one picked is the answer.
@@ -455,6 +473,10 @@ public final class Rooms {
 					() -> justfatlard.learning_blocks.classroom.Travel.goHomeNow(player));
 				continue;
 			}
+			if (room.isTeacher(player.getUUID())) {
+				Safely.run(player.getGameProfile().name() + " teaching", () -> room.tickTeacher(player));
+				continue;
+			}
 			boolean fine = Safely.run(player.getGameProfile().name() + "'s room", () -> {
 				room.tickMember(player);
 				// The room's own tick once, for whoever's turn it is.
@@ -480,7 +502,16 @@ public final class Rooms {
 
 	public static void close(ServerPlayer player) {
 		Room room = rooms.remove(player.getUUID());
+		if (room != null && room.isTeacher(player.getUUID())) {
+			room.removeTeacher(player);
+			PandoricalApi.hud().restoreVanillaElements(player, LearningBlocks.MOD_ID);
+			return;
+		}
 		if (room != null) {
+			// The last reader gone, the room with them: any teacher still in it goes home too.
+			if (!(room.members.size() > 1 && room.members.contains(player.getUUID()))) {
+				for (ServerPlayer teacher : room.teachersHere()) justfatlard.learning_blocks.Later.after(teacher, 1, justfatlard.learning_blocks.classroom.Travel::goHomeNow);
+			}
 			// Reading together: the others keep the room; only this reader goes from it.
 			if (room.members.size() > 1 && room.members.contains(player.getUUID())) room.removeMember(player);
 			else room.close();
@@ -538,11 +569,19 @@ public final class Rooms {
 		}
 		Room room = of(serverPlayer);
 		ItemStack held = serverPlayer.getItemInHand(hand);
+		if (room != null && room.isTeacher(serverPlayer.getUUID())) {
+			// A teacher only ever points, and may always go home by the portal.
+			if (hand == InteractionHand.MAIN_HAND && room.layout.isPortal(hit.getBlockPos())) justfatlard.learning_blocks.classroom.Travel.leave(serverPlayer);
+			else if (hand == InteractionHand.MAIN_HAND) room.point(serverPlayer, hit.getLocation());
+			serverPlayer.connection.send(new ClientboundBlockUpdatePacket(level, hit.getBlockPos().relative(hit.getDirection())));
+			return InteractionResult.FAIL;
+		}
 		if (serverPlayer.isCreative()) {
 			InteractionResult result = room == null ? null : room.use(serverPlayer, hit.getBlockPos(), hand);
 			return result != null ? result : InteractionResult.PASS;
 		}
 		if (room != null) {
+			room.tookPart(serverPlayer);
 			// Reading together, the reader whose turn it isn't can still point at what they mean.
 			if (hand == InteractionHand.MAIN_HAND && room.shared() && !room.mayPress(serverPlayer)) room.point(serverPlayer, hit.getLocation());
 			if (hand == InteractionHand.MAIN_HAND && room.subjectRound != null && room.subjectRound.clickBlock(serverPlayer, hit.getBlockPos(), hit.getLocation())) {
@@ -579,9 +618,11 @@ public final class Rooms {
 	}
 
 	public static boolean mayBreak(Level level, Player player, BlockPos pos, BlockState state) {
-		if (level.isClientSide() || !Places.isClassroom(level) || player.isCreative()) return true;
+		if (level.isClientSide() || !Places.isClassroom(level)) return true;
 		Room room = player instanceof ServerPlayer serverPlayer ? of(serverPlayer) : null;
-		if (room == null) return false;
+		if (room != null && room.isTeacher(player.getUUID())) return false;
+		if (player.isCreative()) return true;
+		if (room == null || room.isTeacher(player.getUUID())) return false;
 		// Someone else's gap is theirs to empty: helping fetch tiles is fine, answering for them is not.
 		if (room.gapOwners.containsKey(pos) && !room.mayPlace((ServerPlayer) player, pos)) return false;
 		return room.mayBreak(pos, state);

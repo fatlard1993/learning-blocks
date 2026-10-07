@@ -45,6 +45,11 @@ public final class Punches {
 		if (hit.getType() != HitResult.Type.BLOCK || !(hit instanceof BlockHitResult blockHit)) return;
 		BlockPos pos = blockHit.getBlockPos().immutable();
 		Room pointing = Rooms.of(player);
+		if (pointing != null && pointing.isTeacher(player.getUUID())) {
+			pointing.point(player, blockHit.getLocation());
+			return;
+		}
+		if (pointing != null) pointing.tookPart(player);
 		if (pointing != null && pointing.shared() && !pointing.mayPress(player)) pointing.point(player, blockHit.getLocation());
 		// A punch on a block a round's choice is made of picks it, as a right-click does.
 		if (pointing != null && pointing.subjectRound != null && pointing.subjectRound.clickBlock(player, pos, blockHit.getLocation())) return;

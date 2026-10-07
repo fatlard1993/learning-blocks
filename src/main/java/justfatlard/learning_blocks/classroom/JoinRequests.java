@@ -46,7 +46,7 @@ public final class JoinRequests {
 		if (host == guest) return "That's you!";
 		if (room == null) return host.getGameProfile().name() + " isn't learning just now";
 		if (Rooms.of(guest) == room) return "You're already learning together";
-		if (room.members().size() >= 3) return host.getGameProfile().name() + "'s classroom is full";
+		if (room.members().size() >= justfatlard.learning_blocks.reward.PrizeConfig.maxReaders()) return host.getGameProfile().name() + "'s classroom is full";
 		Map<UUID, Long> theirs = asked.computeIfAbsent(host.getUUID(), id -> new HashMap<>());
 		if (theirs.containsKey(guest.getUUID())) return "You've asked " + host.getGameProfile().name() + "; waiting for an answer";
 		Long last = lastAsked.get(guest.getUUID());

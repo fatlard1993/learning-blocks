@@ -158,6 +158,8 @@ public final class ProgressView {
 			line.accept("Today: " + progress.doneToday() + " of " + required + " lessons done (" + schedule.lessons() + " a day"
 				+ (justfatlard.learning_blocks.classroom.Schedules.weekendsOff(reader.getUUID()) ? ", weekends off" : "") + ")");
 		} else line.accept("Today: " + progress.doneToday() + " rounds solved; no daily schedule");
+		line.accept("Learning together, a round counts as a lesson for each child who took part in it (answered, built a part or"
+			+ " pointed); words, mastery and prizes only for whoever answered or built it.");
 		java.util.Map<String, Integer> each = justfatlard.learning_blocks.classroom.Schedules.perSubjectToday(reader);
 		if (!each.isEmpty()) {
 			line.accept("Of each: " + each.entrySet().stream().map(subject -> subject.getKey() + " " + progress.doneToday(subject.getKey()) + " of " + subject.getValue())

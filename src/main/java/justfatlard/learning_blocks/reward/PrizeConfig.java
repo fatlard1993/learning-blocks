@@ -230,6 +230,20 @@ public final class PrizeConfig {
 		subjectBlock = Math.max(1, block);
 	}
 	private static volatile int bobPropShare = 20;
+	/** The most readers any room is laid out for. */
+	public static final int MOST_READERS = 6;
+	private static volatile int maxReaders = MOST_READERS;
+	private static volatile List<String> teachers = List.of();
+
+	/** How many children may learn together in one room. */
+	public static int maxReaders() {
+		return maxReaders;
+	}
+
+	/** Whether this player may join a room as a teacher without being an operator. */
+	public static boolean namedTeacher(String name) {
+		return teachers.contains(name.toLowerCase(java.util.Locale.ROOT));
+	}
 
 	public static int tellBobEvery() {
 		return tellBobEvery;
@@ -365,6 +379,12 @@ public final class PrizeConfig {
 		for (String subject : justfatlard.learning_blocks.subject.Subjects.ids()) weights.put(subject, Math.max(0, integer(weightsJson, subject, 1, problems)));
 		subjectWeights = java.util.Map.copyOf(weights);
 		bobPropShare = Math.max(0, Math.min(100, integer(puzzlesJson, "bob_prop_share", 20, problems)));
+		maxReaders = Math.max(1, Math.min(MOST_READERS, integer(puzzlesJson, "max_readers", MOST_READERS, problems)));
+		List<String> named = new java.util.ArrayList<>();
+		if (puzzlesJson.get("teachers") instanceof com.google.gson.JsonArray list) {
+			for (var element : list) if (element.isJsonPrimitive()) named.add(element.getAsString().toLowerCase(java.util.Locale.ROOT));
+		}
+		teachers = List.copyOf(named);
 		return new PrizeConfig(
 			bool(json, "enabled", true, problems),
 			Math.max(0, integer(json, "daily_cap", 20, problems)),

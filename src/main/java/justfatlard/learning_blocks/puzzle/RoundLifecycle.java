@@ -2,6 +2,7 @@ package justfatlard.learning_blocks.puzzle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import justfatlard.learning_blocks.LearningBlocks;
 import justfatlard.learning_blocks.narration.CaptionLine;
 import justfatlard.learning_blocks.narration.Narration;
@@ -46,6 +47,9 @@ final class RoundLifecycle {
 	void newRound(ServerPlayer asked, RoundRequest request) {
 		if (room.leaving) return;
 		req = request;
+		nudgeIdle();
+		room.tookPart.clear();
+		room.credited.clear();
 		Word target = request.target();
 		boolean stageSet = request.stageSet();
 		boolean asScene = request.asScene();
@@ -193,6 +197,32 @@ final class RoundLifecycle {
 		layOut(player, next, sceneWord, freshStage);
 	}
 
+	/** Rounds without taking part before a reader is asked, gently and only them, to join in. */
+	static final int IDLE_ROUNDS = 2;
+
+	/** Reading together, a reader who has done nothing for a while hears, alone, that they can help. */
+	private void nudgeIdle() {
+		// A nudge is for the round about to start, never one carried over from rounds ago.
+		room.nudgeOwed.clear();
+		if (!room.shared() || room.puzzle == null && room.subjectRound == null && room.bob == null) return;
+		for (ServerPlayer reader : room.present()) {
+			UUID id = reader.getUUID();
+			int idle = room.tookPart.contains(id) ? 0 : room.idleRounds.getOrDefault(id, 0) + 1;
+			room.idleRounds.put(id, idle);
+			if (idle >= IDLE_ROUNDS && idle % IDLE_ROUNDS == 0) room.nudgeOwed.put(id, idle / IDLE_ROUNDS % 2 == 1);
+		}
+	}
+
+	/**
+	 * A nudge owed, said once the room is quiet (the round asked, nothing playing): to that reader
+	 * alone, with no name, "Can you help?" the first time and "Your turn to help!" the next.
+	 */
+	void nudge(ServerPlayer reader, boolean first) {
+		Narrator.note(reader, "nudge:idle");
+		Narrator.play(reader, SubjectRound.line(new Narration().alone(), first ? "phrase/can_you_help" : "phrase/your_turn_to_help",
+			first ? "Can you help?" : "Your turn to help!"));
+	}
+
 	/**
 	 * Whose subject this round is: one asked for, Reading for anything of Reading's asked for, or the
 	 * mix's pick from this reader's own subjects. True if it was another subject's, and it started.
@@ -237,7 +267,7 @@ final class RoundLifecycle {
 				java.util.UUID whose = !room.shared() ? null : room.team ? teamOwner(i == next.gaps().getFirst()) : room.turn;
 				if (whose != null) room.gapOwners.put(pos.immutable(), whose);
 				level.setBlock(pos.north(), LearningBlocks.BOARD_LETTER.showing(whose == null ? Letter.BLANK
-					: Letter.READER_BLANKS.get(Math.min(room.place(whose), Letter.READER_BLANKS.size() - 1))), FLAGS);
+					: room.place(whose) < Letter.READER_BLANKS.size() ? Letter.READER_BLANKS.get(room.place(whose)) : Letter.BLANK), FLAGS);
 			} else {
 				level.setBlock(pos, LearningBlocks.BOARD_LETTER.showing(letters.get(i)), FLAGS);
 			}
@@ -483,8 +513,15 @@ final class RoundLifecycle {
 	private @Nullable Puzzle teamPuzzle() {
 		List<ServerPlayer> here = room.present().stream().filter(p -> !room.leavingMembers.containsKey(p.getUUID())).toList();
 		if (here.size() < 2) return null;
-		List<ServerPlayer> readers = new ArrayList<>(here.subList(0, 2));
-		for (ServerPlayer reader : readers) if (Stages.current(Progress.of(reader)) == 0) return null;
+		// Pairs in turn, so every reader teams up with every other.
+		List<List<ServerPlayer>> pairs = new ArrayList<>();
+		for (int i = 0; i < here.size(); i++) {
+			for (int j = i + 1; j < here.size(); j++) {
+				if (Stages.current(Progress.of(here.get(i))) != 0 && Stages.current(Progress.of(here.get(j))) != 0) pairs.add(List.of(here.get(i), here.get(j)));
+			}
+		}
+		if (pairs.isEmpty()) return null;
+		List<ServerPlayer> readers = new ArrayList<>(pairs.get(room.teamPairs++ % pairs.size()));
 		readers.sort(java.util.Comparator.comparing(p -> {
 			Stages.Band band = Stages.currentBand(Progress.of(p));
 			return band == null ? new Stages.BandCode(Integer.MAX_VALUE / 100, 0) : band.code();
@@ -1083,7 +1120,7 @@ final class RoundLifecycle {
 		// Every tile wherever it ended up: on the floor, in the gap, in a hand, on the ground.
 		BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
 		for (int x = -HALF + 1; x < HALF; x++) {
-			for (int z = -HALF + 1; z < HALF; z++) {
+			for (int z = RoomLayout.FRONT + 1; z < RoomLayout.BACK; z++) {
 				at.setWithOffset(layout.origin(), x, 0, z);
 				if (level.getBlockState(at).is(LearningBlocks.LETTER)) level.setBlock(at, Blocks.AIR.defaultBlockState(), FLAGS);
 			}

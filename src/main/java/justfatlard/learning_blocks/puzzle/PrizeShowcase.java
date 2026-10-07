@@ -44,7 +44,15 @@ public final class PrizeShowcase {
 	/** Where this reader's chest stands: each reader in a shared room has their own. */
 	private final net.minecraft.core.BlockPos marker;
 
-	PrizeShowcase(Room room, ServerLevel level, RoomLayout layout, Dispenser dispenser, net.minecraft.core.BlockPos marker) {
+	/** Whose cubby this is. */
+	private final java.util.UUID owner;
+	/** The name over the cubby, in its reader's colour. */
+	private java.util.@org.jspecify.annotations.Nullable UUID label;
+	/** Without Chest Utils to paint the chest, a banner in the reader's colour behind it. */
+	private boolean banner;
+
+	PrizeShowcase(Room room, ServerLevel level, RoomLayout layout, Dispenser dispenser, java.util.UUID owner, net.minecraft.core.BlockPos marker) {
+		this.owner = owner;
 		this.marker = marker;
 		this.room = room;
 		this.level = level;
@@ -72,12 +80,15 @@ public final class PrizeShowcase {
 		Visit visit = Visit.of(player);
 		boolean waiting = visit != null && visit.hasPrizes();
 		BlockState now = level.getBlockState(prizeMarker());
+		mark();
 		if (waiting && !now.is(Blocks.CHEST)) {
-			level.setBlock(prizeMarker(), Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.NORTH), FLAGS);
+			level.setBlock(prizeMarker(), Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.EAST), FLAGS);
+			justfatlard.learning_blocks.integration.ChestPaint.paint(level, prizeMarker(), room.dye(owner));
 			Vec3 at = Vec3.atCenterOf(prizeMarker());
 			level.sendParticles(ParticleTypes.HAPPY_VILLAGER, at.x, at.y + 0.4, at.z, 16, 0.4, 0.4, 0.4, 0.0);
 			level.playSound(null, at.x, at.y, at.z, SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 0.6F, 1.4F);
 		} else if (!waiting && now.is(Blocks.CHEST)) {
+			justfatlard.learning_blocks.integration.ChestPaint.strip(level, prizeMarker());
 			level.setBlock(prizeMarker(), Blocks.AIR.defaultBlockState(), FLAGS);
 			clearHaul();
 		}
@@ -374,7 +385,52 @@ public final class PrizeShowcase {
 		return shown;
 	}
 
+	/**
+	 * The cubby is its reader's: their name over it in their colour, and the chest painted that colour
+	 * (by Chest Utils), or a banner of it behind the chest where nothing can paint it.
+	 */
+	void mark() {
+		ServerPlayer reader = level.getServer().getPlayerList().getPlayer(owner);
+		Entity shown = label == null ? null : level.getEntity(label);
+		if (shown == null && reader != null) {
+			Display.TextDisplay name = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
+			if (name != null) {
+				Vec3 at = labelSpot();
+				name.snapTo(at.x, at.y, at.z, -90.0F, 0.0F);
+				name.setBillboardConstraints(Display.BillboardConstraints.VERTICAL);
+				name.setText(Component.literal(reader.getGameProfile().name())
+					.withStyle(style -> style.withColor(room.colour(owner)).withBold(true)));
+				name.setTransformation(new Transformation(null, null, new Vector3f(0.7F, 0.7F, 0.7F), null));
+				level.addFreshEntity(name);
+				label = name.getUUID();
+			}
+		}
+		boolean wantBanner = !justfatlard.learning_blocks.integration.ChestPaint.available();
+		net.minecraft.core.BlockPos hung = bannerSpot();
+		if (wantBanner && !level.getBlockState(hung).is(Blocks.WALL_BANNER.pick(room.dye(owner)))) {
+			level.setBlock(hung, Blocks.WALL_BANNER.pick(room.dye(owner)).defaultBlockState()
+				.setValue(net.minecraft.world.level.block.WallBannerBlock.FACING, Direction.EAST), FLAGS);
+			banner = true;
+		}
+	}
+
+	/** Over the cubby, against the wall and above its banner; every other one higher, so long names side by side never run together. */
+	Vec3 labelSpot() {
+		boolean odd = Math.floorMod(marker.getZ() - layout.prizeMarker(0).getZ(), 2) == 1;
+		return Vec3.atBottomCenterOf(marker).add(-0.3, odd ? 2.65 : 2.3, 0);
+	}
+
+	net.minecraft.core.BlockPos bannerSpot() {
+		return marker.above();
+	}
+
+	@ForTests
+	public @org.jspecify.annotations.Nullable Entity label() {
+		return label == null ? null : level.getEntity(label);
+	}
+
 	void tick() {
+		if (level.getGameTime() % 20 == 0) mark();
 		if (level.getGameTime() % 40 == 0 && !haul.isEmpty()) turnHaul();
 		if (level.getGameTime() % 20 == 0 && level.getBlockState(prizeMarker()).is(Blocks.CHEST)) {
 			Vec3 at = Vec3.atCenterOf(prizeMarker());
@@ -390,6 +446,14 @@ public final class PrizeShowcase {
 		clearHaul();
 		flights.forEach(Entity::discard);
 		flights.clear();
-		if (level.getBlockState(prizeMarker()).is(Blocks.CHEST)) level.setBlock(prizeMarker(), Blocks.AIR.defaultBlockState(), FLAGS);
+		Entity name = label == null ? null : level.getEntity(label);
+		if (name != null) name.discard();
+		label = null;
+		if (banner) level.setBlock(bannerSpot(), Blocks.AIR.defaultBlockState(), FLAGS);
+		banner = false;
+		if (level.getBlockState(prizeMarker()).is(Blocks.CHEST)) {
+			justfatlard.learning_blocks.integration.ChestPaint.strip(level, prizeMarker());
+			level.setBlock(prizeMarker(), Blocks.AIR.defaultBlockState(), FLAGS);
+		}
 	}
 }

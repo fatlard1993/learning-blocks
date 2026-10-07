@@ -30,7 +30,8 @@ import net.minecraft.world.phys.Vec3;
 /**
  * Three reading together: rounds go round all three in turn, each standing in their own place with
  * their own chest. Then two, and the team-ups of the other subjects: a Numbers count either may
- * answer, and a Logic copy built half each; right, each counts for both. The third goes through
+ * answer, counting for whoever did and as a lesson for the other, who pointed; and a Logic copy
+ * built half each, counting for both. The third goes through
  * the server's own disconnect handler.
  */
 public final class ThreeAndTeams implements FabricClientGameTest {
@@ -75,7 +76,9 @@ public final class ThreeAndTeams implements FabricClientGameTest {
 		session.waitTicks(5);
 		session.onServer(server -> check(Rooms.of(session.player()).members().size() == 2, "the third reader's logout left them in the room"));
 
-		// A Numbers team-up: either may answer, and it counts for both.
+		// A Numbers team-up: either may answer; it counts for whoever did, and as a lesson for the other, who helped.
+		int[] done = new int[1];
+		ServerPlayer[] helperOf = new ServerPlayer[1];
 		session.onServer(server -> {
 			Subjects.onlyForTests(Set.of("reading", "numbers", "logic"));
 			ServerPlayer host = session.player();
@@ -87,11 +90,21 @@ public final class ThreeAndTeams implements FabricClientGameTest {
 			Room room = Rooms.of(host);
 			CountRound count = (CountRound) room.subjectRound();
 			ServerPlayer answerer = host.getUUID().equals(room.turn()) ? others[0] : host;
+			ServerPlayer helper = answerer == host ? others[0] : host;
 			int[] before = cleans(count.item(), host, others[0]);
+			done[0] = Progress.of(helper).doneToday();
+			// The other points at the floor: a helper, credited the lesson but not the answer.
+			BlockPos floor = BlockPos.containing(room.spawnFor(helper.getUUID())).below();
+			Rooms.useBlock(helper, helper.level(), InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(floor).add(0, 0.5, 0), Direction.UP, floor, false));
 			clickTile(answerer, count, count.rightForTests());
 			int[] after = cleans(count.item(), host, others[0]);
-			check(after[0] == before[0] + 1 && after[1] == before[1] + 1, "a team count did not count for both: " + before[0] + "," + before[1] + " to " + after[0] + "," + after[1]);
+			int a = answerer == host ? 0 : 1;
+			check(after[a] == before[a] + 1 && after[1 - a] == before[1 - a], "a team count did not count for the one who answered alone: "
+				+ before[0] + "," + before[1] + " to " + after[0] + "," + after[1]);
+			helperOf[0] = helper;
 		});
+		session.waitTicks(3);
+		session.onServer(server -> check(Progress.of(helperOf[0]).doneToday() == done[0] + 1, "the reader who helped with the count had no lesson for it"));
 		Waits.until(session, 1200, "the count never ended", () -> !(Rooms.of(session.player()).subjectRound() instanceof CountRound) && !Rooms.of(session.player()).busy());
 
 		// A Logic copy: the turn reader builds the first half, the other the rest; it counts for both.

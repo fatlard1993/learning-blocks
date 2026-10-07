@@ -361,6 +361,6 @@ public final class Sky {
 	public static void paint(ServerLevel level, BlockPos origin, ResourceKey<Biome> biome) {
 		var holder = level.registryAccess().lookupOrThrow(Registries.BIOME).get(biome);
 		if (holder.isEmpty()) return;
-		net.minecraft.server.commands.FillBiomeCommand.fill(level, origin.offset(-8, -1, -8), origin.offset(8, 8, 8), holder.get());
+		net.minecraft.server.commands.FillBiomeCommand.fill(level, origin.offset(-10, -1, -7), origin.offset(10, 8, 11), holder.get());
 	}
 }

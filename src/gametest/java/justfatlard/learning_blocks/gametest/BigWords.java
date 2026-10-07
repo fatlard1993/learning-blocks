@@ -130,17 +130,18 @@ public final class BigWords implements FabricClientGameTest {
 		session.waitTicks(30);
 		shoot(session, "learning-big-hedgehog");
 
-		// Cupcake: eight columns, clear of the button, the picture over the word.
+		// Cupcake: eight columns, clear of the button, the picture still on the board to its left.
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			check(Rooms.startChunk(player, word("cupcake"), 3), "no chunk round for cake in cupcake");
 			Room room = Rooms.of(player);
 			List<BlockPos> row = rowOf(room);
-			check(row.getLast().getX() < room.button().getX(), "cupcake runs into the button: " + row.getLast() + " vs " + room.button());
+			check(row.stream().noneMatch(pos -> pos.distManhattan(room.button()) < 3), "cupcake runs into the button: " + row + " vs " + room.button());
 			check(row.getFirst().getX() > room.origin().getX() - 6, "cupcake runs into the wall: " + row.getFirst());
 			check(room.pictureHit() != null, "cupcake has no picture");
 			net.minecraft.world.entity.Entity hit = ((ServerLevel) player.level()).getEntity(room.pictureHit());
-			check(hit != null && hit.getY() > row.getFirst().getY() + 0.5, "cupcake's picture is not over the word");
+			check(hit != null && hit.getX() < row.getFirst().getX() && hit.getX() > room.origin().getX() - 8,
+				"cupcake's picture is not on the board left of the word: " + (hit == null ? null : hit.position()) + " vs " + row.getFirst());
 		});
 		session.waitTicks(30);
 		shoot(session, "learning-big-cupcake");

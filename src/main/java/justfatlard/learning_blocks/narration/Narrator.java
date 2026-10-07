@@ -153,11 +153,16 @@ public final class Narrator {
 				if (run.tick >= run.length) {
 					advance(player, run);
 				} else {
-					for (ServerPlayer one : all(player)) if (CaptionHud.showing(one)) CaptionHud.advance(one, run.tick / 20.0F);
+					for (ServerPlayer one : audience(player, run)) if (CaptionHud.showing(one)) CaptionHud.advance(one, run.tick / 20.0F);
 				}
 			});
 			if (!fine) drop(player, run);
 		}
+	}
+
+	/** Who hears this narration: the player alone, for a line meant for them; else everyone in the room with them. */
+	private static List<ServerPlayer> audience(ServerPlayer player, Running run) {
+		return run.narration.alone ? List.of(player) : all(player);
 	}
 
 	/** A narration that failed: gone, its stop still run so nothing waits on it for ever. */
@@ -170,7 +175,7 @@ public final class Narrator {
 		UUID id = player.getUUID();
 		Narration.Step previous = run.index >= 0 ? run.narration.steps.get(run.index) : null;
 		if (previous != null && previous.caption() != null) {
-			for (ServerPlayer one : all(player)) if (CaptionHud.showing(one)) CaptionHud.advance(one, Float.MAX_VALUE);
+			for (ServerPlayer one : audience(player, run)) if (CaptionHud.showing(one)) CaptionHud.advance(one, Float.MAX_VALUE);
 		}
 
 		run.index++;
@@ -212,7 +217,7 @@ public final class Narrator {
 			// Nothing to say, something to read: a silent letter.
 			hideIn.remove(id);
 			note(player, "caption:" + step.line().text());
-			for (ServerPlayer one : all(player)) CaptionHud.show(one, step.line(), 0.0F);
+			for (ServerPlayer one : audience(player, run)) CaptionHud.show(one, step.line(), 0.0F);
 		}
 		if (step.clip() != null) {
 			note(player, "clip:" + written);
@@ -220,13 +225,13 @@ public final class Narrator {
 			Narration.Step saying = step;
 			Safely.run("Playing " + step.clip(), () -> {
 				if (saying.at() != null) Sounds.playAt(player.level(), saying.at(), saying.clip());
-				else for (ServerPlayer one : all(player)) Sounds.play(one, saying.clip());
+				else for (ServerPlayer one : audience(player, run)) Sounds.play(one, saying.clip());
 			});
 			CaptionLine line = step.caption();
 			if (line != null) {
 				hideIn.remove(id);
 				note(player, "caption:" + line.text());
-				for (ServerPlayer one : all(player)) CaptionHud.show(one, line, 0.0F);
+				for (ServerPlayer one : audience(player, run)) CaptionHud.show(one, line, 0.0F);
 			} else if (CaptionHud.showing(player)) {
 				// A clip with nothing to read: the last line should not sit there claiming it.
 				hideIn.put(id, 1);

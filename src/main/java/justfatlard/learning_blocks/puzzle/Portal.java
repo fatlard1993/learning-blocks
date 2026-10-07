@@ -130,6 +130,10 @@ final class Portal {
 		}
 	}
 
+	void showFrameFor(ServerPlayer player, boolean lit) {
+		showFrame(player, lit);
+	}
+
 	/** This reader's own frame: lit if they may go, dark if not, whatever the blocks say for the others. */
 	private void showFrame(ServerPlayer player, boolean lit) {
 		if (Rooms.of(player) != room) return;

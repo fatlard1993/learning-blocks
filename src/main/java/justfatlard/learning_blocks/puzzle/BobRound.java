@@ -251,7 +251,9 @@ public final class BobRound {
 				round.offered.add(others.get(random.nextInt(others.size())));
 				java.util.Collections.shuffle(round.offered, random);
 				round.builder = builder.getUUID();
-				for (ServerPlayer one : here) if (!one.getUUID().equals(builder.getUUID())) round.picker = one.getUUID();
+				// The reader before the builder in the rotation picks; the builder tells Bob.
+				int at = Math.max(0, here.indexOf(builder));
+				round.picker = here.get((at - 1 + here.size()) % here.size()).getUUID();
 				round.picking = true;
 				round.goal = null;
 			}
