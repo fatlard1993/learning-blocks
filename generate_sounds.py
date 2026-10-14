@@ -267,6 +267,13 @@ NAMES = {
 }
 
 # A phrase that runs into a word ends in "..." so the voice leaves it open.
+WELL_DONE = [
+	{"text": '[gasps] You did it!', "model": EXPRESSIVE},
+	{"text": '[excited] Great job!', "model": EXPRESSIVE},
+	{"text": "[happy] Yes! That's it!", "model": EXPRESSIVE},
+	{"text": '[excited] Wow, well done!', "model": EXPRESSIVE},
+]
+
 PHRASES = {
 	"make_the_word": {"variants": [
 		{"text": 'Can you make...'},
@@ -288,13 +295,9 @@ PHRASES = {
 		{"text": "Ooh, here's a new one!"},
 		{"text": 'Next one!'},
 	]},
-	"well_done": {"variants": [
-		{"text": '[gasps] You did it!', "model": EXPRESSIVE},
-		{"text": '[excited] Great job!', "model": EXPRESSIVE},
-		{"text": "[happy] Yes! That's it!", "model": EXPRESSIVE},
-		{"text": '[excited] Wow, well done!', "model": EXPRESSIVE},
-		{"text": '[cheerful] Nice reading!', "model": EXPRESSIVE},
-	]},
+	"well_done": {"variants": WELL_DONE},
+	# Reading's own: the same, and one that is only true of reading.
+	"well_done_reading": {"variants": WELL_DONE + [{"text": '[cheerful] Nice reading!', "model": EXPRESSIVE}]},
 	"oops_thats": {"variants": [
 		{"text": "[laughs] Oops! That's...", "model": EXPRESSIVE},
 		{"text": "[giggles] Uh oh, that's...", "model": EXPRESSIVE},

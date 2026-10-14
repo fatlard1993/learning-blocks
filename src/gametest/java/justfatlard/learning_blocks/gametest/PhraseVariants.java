@@ -25,7 +25,13 @@ public final class PhraseVariants implements FabricClientGameTest {
 			session.onServer(server -> {
 				ServerPlayer player = session.player();
 				List<String> options = Sounds.variantsOf("phrase/well_done");
-				check(options.size() == 5, "well_done has " + options.size() + " variants, not 5: " + options);
+				check(options.size() == 4, "well_done has " + options.size() + " variants, not 4: " + options);
+				List<String> reading = Sounds.variantsOf("phrase/well_done_reading");
+				check(reading.size() == 5, "well_done_reading has " + reading.size() + " variants, not 5: " + reading);
+				// "Nice reading!" is said only of reading: never among the cheers every subject shares.
+				for (String option : options) check(!Captions.get(option).toString().toLowerCase(java.util.Locale.ROOT).contains("reading"), option + " says reading");
+				check(reading.stream().anyMatch(option -> Captions.get(option).toString().toLowerCase(java.util.Locale.ROOT).contains("reading")),
+					"no reading cheer says reading");
 				for (String option : options) check(Captions.get(option) != null, option + " has no caption");
 				List<String> said = new ArrayList<>();
 				for (int i = 0; i < 20; i++) said.add(Sounds.variant(player, "phrase/well_done"));

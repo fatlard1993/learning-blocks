@@ -37,13 +37,9 @@ public final class MakeRound extends NumbersRound {
 		tiles(n, Math.max(1, lo), hi);
 	}
 
-	private BlockPos gap() {
-		return layout.rowSpot(0, 1);
-	}
-
 	@Override
 	protected void board() {
-		set(gap(), LearningBlocks.BOARD_LETTER.showing(Letter.BLANK));
+		set(tileGap(), LearningBlocks.BOARD_LETTER.showing(Letter.BLANK));
 	}
 
 	@Override
@@ -62,8 +58,13 @@ public final class MakeRound extends NumbersRound {
 	@Override
 	protected void hold(ServerPlayer player, Choice picked, Narration telling) {
 		chosen = picked;
-		telling.say(picked.clip(), "in_gap:" + picked.id(), p -> set(gap(), LearningBlocks.NUMBER.showing(number(picked))),
+		telling.say(picked.clip(), "in_gap:" + picked.id(), p -> set(tileGap(), LearningBlocks.NUMBER.showing(number(picked))),
 			CaptionLine.plain(picked.said()), 4);
+	}
+
+	@Override
+	protected void leftGap() {
+		chosen = null;
 	}
 
 	@Override
@@ -101,7 +102,8 @@ public final class MakeRound extends NumbersRound {
 					thing.discard();
 				}
 				out.clear();
-				set(gap(), LearningBlocks.BOARD_LETTER.showing(Letter.BLANK));
+				returnGap(p);
+				set(tileGap(), LearningBlocks.BOARD_LETTER.showing(Letter.BLANK));
 			}, 4);
 			chosen = null;
 		}

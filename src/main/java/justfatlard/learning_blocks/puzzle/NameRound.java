@@ -1,5 +1,6 @@
 package justfatlard.learning_blocks.puzzle;
 
+import net.minecraft.core.BlockPos;
 import justfatlard.learning_blocks.LearningBlocks;
 import justfatlard.learning_blocks.narration.CaptionLine;
 import justfatlard.learning_blocks.narration.Narration;
@@ -21,6 +22,12 @@ public final class NameRound extends NumbersRound {
 		super(room, NumberCourse.Kind.NAME, String.valueOf(n), stage, random);
 		this.n = n;
 		tiles(n, lo, hi);
+	}
+
+	/** Under the word, which fills the middle of the board. */
+	@Override
+	protected BlockPos tileGap() {
+		return layout.rowSpot(0, 1).below();
 	}
 
 	@Override

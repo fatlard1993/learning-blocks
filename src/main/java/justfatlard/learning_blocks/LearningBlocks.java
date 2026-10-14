@@ -172,18 +172,19 @@ public class LearningBlocks implements ModInitializer {
 		PandoricalApi.content().registerModAssets(MOD_ID);
 		Sounds.init();
 
-		// The way in, as a button on the server's own action menu, so nobody has to type.
-		PandoricalApi.actionMenus().suggestButton(
-			ActionMenuApi.Button.runs("minecraft:book", "Learning Blocks", "learn"));
+		// The way in, on the first page the menu key opens, so nobody has to type or look for it.
+		// Each button wears one of the classroom's own toys, which Pandorical gives the client.
+		PandoricalApi.actionMenus().suggestTopButton(
+			ActionMenuApi.Button.runs(MOD_ID + ":toy_block", "Learning Blocks", "learn"));
 		// Hearing the letters and your words again, from anywhere: safe for any child to press.
 		PandoricalApi.actionMenus().suggestButton(
-			ActionMenuApi.Button.runs("minecraft:note_block", "Letter sounds", "learn sounds"));
+			ActionMenuApi.Button.runs(MOD_ID + ":toy_drum", "Letter sounds", "learn sounds"));
 		PandoricalApi.actionMenus().suggestButton(
-			ActionMenuApi.Button.runs("minecraft:written_book", "My words", "learn words"));
+			ActionMenuApi.Button.runs(MOD_ID + ":toy_puzzle", "My words", "learn words"));
 		PandoricalApi.actionMenus().suggestButton(
-			ActionMenuApi.Button.runs("minecraft:villager_spawn_egg", "Silly sentences", "learn silly"));
+			ActionMenuApi.Button.runs(MOD_ID + ":toy_wig", "Silly sentences", "learn silly"));
 		PandoricalApi.actionMenus().suggestButton(
-			ActionMenuApi.Button.runs("minecraft:ender_pearl", "Go home", "learn leave"));
+			ActionMenuApi.Button.runs(MOD_ID + ":toy_bus", "Go home", "learn leave"));
 		LearnCommand.describe();
 
 		Visit.init();

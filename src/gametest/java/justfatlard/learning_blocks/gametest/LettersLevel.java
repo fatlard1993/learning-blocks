@@ -90,7 +90,7 @@ public final class LettersLevel implements FabricClientGameTest {
 			Hands.solve(player, room);
 			press(player, room);
 		});
-		Waits.until(session, 600, "the right letter was never chanted", () -> Narrator.log(session.player()).contains("clip:phrase/well_done"));
+		Waits.until(session, 600, "the right letter was never chanted", () -> Narrator.log(session.player()).contains("clip:phrase/well_done_reading"));
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			String g = target[0].grapheme();
@@ -101,7 +101,7 @@ public final class LettersLevel implements FabricClientGameTest {
 				.filter(step -> step.startsWith("clip:")).toList();
 			check(clips.equals(List.of("clip:phoneme/" + g, "clip:phoneme/" + g, "clip:word/" + keyword.text())),
 				"the chant was not " + g + ", " + g + ", " + keyword.text() + ": " + clips);
-			check(log.indexOf("outcome") < log.lastIndexOf("clip:phrase/well_done"), "the keyword did not happen before well done");
+			check(log.indexOf("outcome") < log.lastIndexOf("clip:phrase/well_done_reading"), "the keyword did not happen before well done");
 			check(Rooms.of(player).sends() > sends[0], "the keyword's outcome did not come out of the button");
 			check(Progress.of(player).letterHits(g) == 1, "a first-try match did not count: " + Progress.of(player).letterHits(g));
 		});
@@ -148,7 +148,7 @@ public final class LettersLevel implements FabricClientGameTest {
 		});
 		Waits.until(session, 600, missed[0] + " was never chanted after the miss", () -> {
 			List<String> log = Narrator.log(session.player());
-			return log.lastIndexOf("clip:phrase/well_done") > log.lastIndexOf("tile_home:" + wrong[0].grapheme());
+			return log.lastIndexOf("clip:phrase/well_done_reading") > log.lastIndexOf("tile_home:" + wrong[0].grapheme());
 		});
 		session.onServer(server -> check(Progress.of(session.player()).letterHits(missed[0].grapheme()) == 0, "a match after a miss counted as first try"));
 

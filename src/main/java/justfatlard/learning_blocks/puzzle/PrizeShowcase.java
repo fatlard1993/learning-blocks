@@ -22,7 +22,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
@@ -77,21 +76,17 @@ public final class PrizeShowcase {
 	}
 
 	void refreshPrizeMarker(ServerPlayer player) {
-		Visit visit = Visit.of(player);
-		boolean waiting = visit != null && visit.hasPrizes();
-		BlockState now = level.getBlockState(prizeMarker());
 		mark();
-		if (waiting && !now.is(Blocks.CHEST)) {
+		if (!level.getBlockState(prizeMarker()).is(Blocks.CHEST)) {
 			level.setBlock(prizeMarker(), Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.EAST), FLAGS);
 			justfatlard.learning_blocks.integration.ChestPaint.paint(level, prizeMarker(), room.dye(owner));
-			Vec3 at = Vec3.atCenterOf(prizeMarker());
-			level.sendParticles(ParticleTypes.HAPPY_VILLAGER, at.x, at.y + 0.4, at.z, 16, 0.4, 0.4, 0.4, 0.0);
-			level.playSound(null, at.x, at.y, at.z, SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 0.6F, 1.4F);
-		} else if (!waiting && now.is(Blocks.CHEST)) {
-			justfatlard.learning_blocks.integration.ChestPaint.strip(level, prizeMarker());
-			level.setBlock(prizeMarker(), Blocks.AIR.defaultBlockState(), FLAGS);
-			clearHaul();
 		}
+		if (!waiting(player)) clearHaul();
+	}
+
+	private static boolean waiting(@org.jspecify.annotations.Nullable ServerPlayer player) {
+		Visit visit = player == null ? null : Visit.of(player);
+		return visit != null && visit.hasPrizes();
 	}
 
 	/**
@@ -178,16 +173,13 @@ public final class PrizeShowcase {
 		toDeliver.clear();
 		xpToDeliver = 0;
 		flying.addAll(items);
-		// No chest yet: it pops into place first, and the prizes follow it in.
-		boolean popped = !level.getBlockState(prizeMarker()).is(Blocks.CHEST);
 		refreshPrizeMarker(player);
-		int start = popped ? 10 : 0;
 		for (int i = 0; i < items.size(); i++) {
 			ItemStack stack = items.get(i);
-			soon(player, start + i * PRIZE_GAP, p -> flyPrize(p, stack));
+			soon(player, i * PRIZE_GAP, p -> flyPrize(p, stack));
 		}
-		if (xp > 0) soon(player, start + items.size() * PRIZE_GAP, this::flyXp);
-		int done = start + Math.max(items.size(), 1) * PRIZE_GAP + PRIZE_FLIGHT + 12;
+		if (xp > 0) soon(player, items.size() * PRIZE_GAP, this::flyXp);
+		int done = Math.max(items.size(), 1) * PRIZE_GAP + PRIZE_FLIGHT + 12;
 		soon(player, done, p -> refreshHaul(p));
 	}
 
@@ -432,7 +424,7 @@ public final class PrizeShowcase {
 	void tick() {
 		if (level.getGameTime() % 20 == 0) mark();
 		if (level.getGameTime() % 40 == 0 && !haul.isEmpty()) turnHaul();
-		if (level.getGameTime() % 20 == 0 && level.getBlockState(prizeMarker()).is(Blocks.CHEST)) {
+		if (level.getGameTime() % 20 == 0 && waiting(level.getServer().getPlayerList().getPlayer(owner))) {
 			Vec3 at = Vec3.atCenterOf(prizeMarker());
 			level.sendParticles(ParticleTypes.HAPPY_VILLAGER, at.x, at.y + 0.6, at.z, 4, 0.3, 0.2, 0.3, 0.0);
 		}

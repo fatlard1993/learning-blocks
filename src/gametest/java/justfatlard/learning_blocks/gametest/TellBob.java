@@ -278,7 +278,7 @@ public final class TellBob implements FabricClientGameTest {
 			player.level().setBlock(room.gap(), LearningBlocks.LETTER.showing(Letter.A), 3);
 			press(player, room);
 		});
-		Waits.until(session, 600, "cat, fixed, was never cheered", () -> since(session.player()).contains("clip:phrase/well_done"));
+		Waits.until(session, 600, "cat, fixed, was never cheered", () -> since(session.player()).contains("clip:phrase/well_done_reading"));
 
 		// The progress screen: a Sentences section.
 		session.onServer(server -> {

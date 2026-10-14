@@ -39,6 +39,11 @@ public final class NextRound extends NumbersRound {
 		return after ? new int[] {from - 1, from, -1} : new int[] {-1, from, from + 1};
 	}
 
+	@Override
+	protected BlockPos tileGap() {
+		return gapSpot();
+	}
+
 	private BlockPos gapSpot() {
 		return layout.rowSpot(after ? 2 : 0, 3);
 	}

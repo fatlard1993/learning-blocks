@@ -95,6 +95,12 @@ public final class NumberBobRound extends NumbersRound {
 		return layout.origin().offset(-3, 0, -1);
 	}
 
+	/** Bob's cards are clicked: his sentence on the board has no gap to put one in. */
+	@Override
+	protected boolean carried(Choice choice) {
+		return false;
+	}
+
 	/** The cards stand to the right, clear of Bob and his box. */
 	@Override
 	protected BlockPos spotFor(int i, int n) {

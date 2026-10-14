@@ -113,10 +113,10 @@ public final class RoundTrip implements FabricClientGameTest {
 			shoot(session, "solved");
 
 			// A first read of a word is a new word: a diamond, waiting in the visit and nowhere else,
-			// with the chest by the portal to say so, which pops up as the prize flies in.
-			Waits.until(session, 300, "no prize chest by the portal", () -> {
-				Room room = Rooms.of(session.player());
-				return room != null && session.player().level().getBlockState(room.prizeMarker()).is(net.minecraft.world.level.block.Blocks.CHEST);
+			// with the chest by the portal to catch it.
+			Waits.until(session, 300, "no prize was paid", () -> {
+				Visit visit = Visit.of(session.player());
+				return visit != null && visit.hasPrizes();
 			});
 			session.onServer(server -> {
 				ServerPlayer player = session.player();

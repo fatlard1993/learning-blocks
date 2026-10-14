@@ -353,7 +353,7 @@ public final class ToyPlay implements FabricClientGameTest {
 			BobRound bob = Rooms.of(player).bob();
 			check(bob.clickGoal(player, bob.prepRight()), "the right picture could not be clicked");
 		});
-		Waits.until(session, 600, "the right picture was never cheered", () -> since(session.player()).contains("clip:phrase/well_done"));
+		Waits.until(session, 600, "the right picture was never cheered", () -> since(session.player()).contains("clip:phrase/well_done_reading"));
 		session.onServer(server -> check(Progress.of(session.player()).memory().item(Progress.sentenceKey("read: owl in box")) != null,
 			"the preposition round was not remembered"));
 		Waits.until(session, 600, "the preposition round never moved on", () -> !Rooms.of(session.player()).busy());

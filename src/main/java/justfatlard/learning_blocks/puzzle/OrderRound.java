@@ -50,6 +50,19 @@ public final class OrderRound extends NumbersRound {
 		return k < 5 ? layout.rowSpot(k, 5).above() : layout.rowSpot(k - 5, 5);
 	}
 
+	/** The next empty place in the row. */
+	@Override
+	protected @org.jspecify.annotations.Nullable BlockPos tileGap() {
+		return done < n ? slot(done) : null;
+	}
+
+	/** Any empty place in the row: the tile goes in the next one whichever was aimed at. */
+	@Override
+	protected boolean aimedAtGap(BlockPos hit, BlockPos target) {
+		for (int k = done; k < n; k++) if (hit.equals(slot(k)) || target.equals(slot(k))) return true;
+		return super.aimedAtGap(hit, target);
+	}
+
 	@Override
 	protected void board() {
 		for (int k = 0; k < n; k++) set(slot(k), LearningBlocks.BOARD_LETTER.showing(Letter.BLANK));

@@ -589,6 +589,25 @@ public final class Rooms {
 			}
 			InteractionResult result = room.use(serverPlayer, hit.getBlockPos(), hand);
 			if (result != null) return result;
+			int number = Tiles.numberOf(held);
+			if (hand == InteractionHand.MAIN_HAND && number >= 0 && room.subjectRound != null) {
+				// A number tile as a letter: into the gap it is the answer; set down anywhere else, back to its spot.
+				if (room.busy()) return InteractionResult.FAIL;
+				BlockPos target = new BlockPlaceContext(new UseOnContext(serverPlayer, hand, hit)).getClickedPos();
+				if (room.subjectRound.aimedAtGap(hit.getBlockPos(), target)) {
+					if (!room.subjectRound.place(serverPlayer, number, hit.getLocation())) {
+						serverPlayer.connection.send(new ClientboundBlockUpdatePacket(level, target));
+						serverPlayer.containerMenu.broadcastChanges();
+						return InteractionResult.FAIL;
+					}
+				} else {
+					room.subjectRound.sendHome(serverPlayer, number, net.minecraft.world.phys.Vec3.atCenterOf(target));
+				}
+				held.shrink(1);
+				serverPlayer.containerMenu.broadcastChanges();
+				serverPlayer.connection.send(new ClientboundBlockUpdatePacket(level, target));
+				return InteractionResult.SUCCESS;
+			}
 			Letter tile = Tiles.letterOf(held);
 			if (hand == InteractionHand.MAIN_HAND && tile != null) {
 				// The room places tiles itself: into the gap (swapping out what was there), or, set
@@ -617,6 +636,14 @@ public final class Rooms {
 		return held.isEmpty() ? InteractionResult.PASS : InteractionResult.FAIL;
 	}
 
+	/** A number tile knocked loose in a round that carries them: into the child's hand. False if it is not one. */
+	public static boolean numberBroken(ServerPlayer player, BlockPos pos, int number) {
+		Room room = of(player);
+		if (room == null || room.subjectRound == null || !Places.isClassroom(player.level())) return false;
+		room.subjectRound.intoHand(player, pos, number);
+		return true;
+	}
+
 	public static boolean mayBreak(Level level, Player player, BlockPos pos, BlockState state) {
 		if (level.isClientSide() || !Places.isClassroom(level)) return true;
 		Room room = player instanceof ServerPlayer serverPlayer ? of(serverPlayer) : null;
@@ -643,10 +670,11 @@ public final class Rooms {
 			return InteractionResult.FAIL;
 		}
 		Letter letter = Tiles.letterOf(held);
-		if (letter == null) return InteractionResult.PASS;
+		int number = Tiles.numberOf(held);
+		if (letter == null && number < 0) return InteractionResult.PASS;
 		Room room = of(serverPlayer);
 		if (room != null && room.busy()) return InteractionResult.SUCCESS;
-		Narrator.play(serverPlayer, new Narration().say(LetterBlock.soundOf(letter)));
+		Narrator.play(serverPlayer, new Narration().say(letter != null ? LetterBlock.soundOf(letter) : justfatlard.learning_blocks.numbers.NumberBlock.soundOf(number)));
 		return InteractionResult.SUCCESS;
 	}
 }

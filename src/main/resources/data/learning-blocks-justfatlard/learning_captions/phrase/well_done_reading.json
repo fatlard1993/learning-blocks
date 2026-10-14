@@ -1,0 +1,20 @@
+{
+	"duration": 1.44,
+	"words": [
+		{
+			"text": "You",
+			"start": 0.54,
+			"end": 0.72
+		},
+		{
+			"text": "did",
+			"start": 0.78,
+			"end": 0.96
+		},
+		{
+			"text": "it!",
+			"start": 1.067,
+			"end": 1.44
+		}
+	]
+}

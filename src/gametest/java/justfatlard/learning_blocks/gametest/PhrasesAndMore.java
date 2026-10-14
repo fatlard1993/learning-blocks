@@ -116,7 +116,7 @@ public final class PhrasesAndMore implements FabricClientGameTest {
 		session.onServer(server -> click(session.player(), "the"));
 		Waits.until(session, 300, "the right card was never praised", () -> {
 			List<String> log = Narrator.log(session.player());
-			return log.lastIndexOf("clip:phrase/well_done") > log.lastIndexOf("picked:the") && log.lastIndexOf("picked:the") >= 0;
+			return log.lastIndexOf("clip:phrase/well_done_reading") > log.lastIndexOf("picked:the") && log.lastIndexOf("picked:the") >= 0;
 		});
 		session.onServer(server -> {
 			List<String> log = Narrator.log(session.player());

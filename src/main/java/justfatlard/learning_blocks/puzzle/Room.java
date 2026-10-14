@@ -926,6 +926,7 @@ public final class Room {
 		}
 		for (PrizeShowcase chest : showcases.values()) chest.tick();
 		if (puzzle != null && !busy && level.getGameTime() % TILE_CHECK == 0) interaction.keepSolvable(player);
+		if (subjectRound != null && !busy && level.getGameTime() % TILE_CHECK == 0) subjectRound.keepTiles();
 		if (unstick(player)) return;
 		if (puzzle == null || busy || Narrator.isPlaying(player)) return;
 		if (!nudgeOwed.isEmpty()) {
@@ -1071,7 +1072,7 @@ public final class Room {
 	}
 
 	boolean mayBreak(BlockPos pos, BlockState state) {
-		return interaction.mayBreak(pos, state);
+		return interaction.mayBreak(pos, state) || subjectRound != null && subjectRound.mayBreak(pos, state);
 	}
 
 	@Nullable BlockPos aimedGap(BlockPos hit, BlockPos target) {

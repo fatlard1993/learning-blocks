@@ -19,10 +19,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The prize chest is there only while something is waiting. It turns up when a prize is paid, and
- * the room says "You earned a prize!" once, then. Opened, it shows what is waiting and holds
- * nothing that can be moved, and the first look says the prizes come home. After going home and
- * coming back with nothing waiting, it is gone.
+ * Every reader's cubby has its chest from the moment they come in, empty until a prize is paid; the
+ * room says "You earned a prize!" once, then. Opened, it shows what is waiting and holds nothing
+ * that can be moved, and the first look at something waiting says the prizes come home. After going
+ * home and coming back, it is there again, empty.
  */
 public final class PrizeChest implements FabricClientGameTest {
 
@@ -35,12 +35,12 @@ public final class PrizeChest implements FabricClientGameTest {
 			session.onServer(server -> {
 				ServerPlayer player = session.player();
 				Room room = Rooms.of(player);
-				check(!player.level().getBlockState(room.prizeMarker()).is(Blocks.CHEST), "a chest with nothing waiting");
+				check(player.level().getBlockState(room.prizeMarker()).is(Blocks.CHEST), "no chest in the cubby before anything was earned");
+				check(room.chestContents(player).isEmpty(), "the chest shows something before anything was earned");
 				Hands.solve(player, room);
 				click(player, room.button());
 			});
-			Waits.until(session, 600, "no chest turned up when the prize was paid",
-				() -> session.player().level().getBlockState(Rooms.of(session.player()).prizeMarker()).is(Blocks.CHEST));
+			Waits.until(session, 600, "no prize was paid", () -> Visit.of(session.player()).hasPrizes());
 			Waits.until(session, 600, "the round never finished", () -> Narrator.log(session.player()).contains("clip:phrase/another_one")
 				&& !Rooms.of(session.player()).busy());
 			session.onServer(server -> {
@@ -66,8 +66,9 @@ public final class PrizeChest implements FabricClientGameTest {
 			session.waitTicks(40);
 			session.onServer(server -> {
 				ServerPlayer player = session.player();
-				check(!player.level().getBlockState(Rooms.of(player).prizeMarker()).is(Blocks.CHEST),
-					"the chest is still there after the prizes went home");
+				Room room = Rooms.of(player);
+				check(player.level().getBlockState(room.prizeMarker()).is(Blocks.CHEST), "no chest in the cubby on the way back in");
+				check(room.chestContents(player).isEmpty(), "the chest still shows the prizes that went home");
 			});
 			session.command("/learn leave");
 			session.waitTicks(20);

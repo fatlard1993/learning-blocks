@@ -10,6 +10,7 @@ import justfatlard.learning_blocks.Safely;
 import justfatlard.learning_blocks.narration.CaptionLine;
 import justfatlard.learning_blocks.narration.Narration;
 import justfatlard.learning_blocks.narration.Narrator;
+import justfatlard.learning_blocks.numbers.NumberBlock;
 import justfatlard.learning_blocks.reward.Earned;
 import justfatlard.learning_blocks.reward.Prizes;
 import justfatlard.learning_blocks.reward.Progress;
@@ -35,7 +36,8 @@ import org.jspecify.annotations.Nullable;
  * as any round does (the item's memory and mastery, prizes, the lesson, the day's count, a toy
  * earned); another: it is told what it is, wiggles, and the question is asked again. A kind can
  * hold a pick without a verdict (a tile put in a gap, the next number put in a row) and give the
- * verdict later, from the button. Everything else a round is - the turn, the portal, the prompts,
+ * verdict later, from the button. A kind whose choices are number tiles has them broken loose, carried
+ * and placed in its gap, as letters are: the tile put there is the pick. Everything else a round is - the turn, the portal, the prompts,
  * the idle replays - is the room's, as for Reading's rounds; the room holds a stand-in puzzle
  * meanwhile, as for Bob's.
  */
@@ -164,6 +166,10 @@ public abstract class SubjectRound {
 
 	void start(ServerPlayer player) {
 		board();
+		BlockPos gap = tileGap();
+		if (gap != null && choices.stream().anyMatch(this::carried) && level.getBlockState(gap).isAir()) {
+			set(gap, justfatlard.learning_blocks.LearningBlocks.BOARD_LETTER.showing(Letter.BLANK));
+		}
 		for (int i = 0; i < choices.size(); i++) {
 			Choice choice = choices.get(i);
 			BlockPos spot = spotFor(i, choices.size());
@@ -271,7 +277,7 @@ public abstract class SubjectRound {
 	protected @Nullable Choice choiceAt(BlockPos pos) {
 		for (int i = 0; i < choices.size(); i++) {
 			Choice choice = choices.get(i);
-			if (choice.block() != null && !retired.contains(choice) && spotFor(i, choices.size()).equals(pos)
+			if (choice.block() != null && !carried(choice) && !retired.contains(choice) && spotFor(i, choices.size()).equals(pos)
 				&& level.getBlockState(pos).equals(choice.block())) return choice;
 		}
 		return null;
@@ -290,6 +296,184 @@ public abstract class SubjectRound {
 		}
 		pick(player, picked);
 		return true;
+	}
+
+	/** Whether this choice is a tile broken loose, carried and placed in the gap, rather than clicked. */
+	protected boolean carried(Choice choice) {
+		return false;
+	}
+
+	/** Where a carried tile is placed to answer with it: an underscore on the board, put there if nothing else is. */
+	protected @Nullable BlockPos tileGap() {
+		return null;
+	}
+
+	/** Whether a tile used on {@code hit}, aimed at {@code target}, is going into the gap: the gap itself or the board round it. */
+	protected boolean aimedAtGap(BlockPos hit, BlockPos target) {
+		BlockPos gap = tileGap();
+		if (gap == null) return false;
+		if (target.equals(gap) || hit.equals(gap)) return true;
+		for (net.minecraft.core.Direction side : net.minecraft.core.Direction.values()) {
+			if (side != net.minecraft.core.Direction.SOUTH && hit.equals(gap.relative(side)) && !level.getBlockState(hit).isAir()) return true;
+		}
+		return false;
+	}
+
+	/** The number in the gap, and where: placed there and not yet settled, so it can be taken back out or sent home. */
+	private @Nullable BlockPos tileAt;
+	private int tileIn = -1;
+
+	private @Nullable Choice carriedChoice(int number) {
+		for (Choice choice : choices) if (carried(choice) && !retired.contains(choice) && tileNumber(choice) == number) return choice;
+		return null;
+	}
+
+	private static int tileNumber(Choice choice) {
+		BlockState block = choice.block();
+		return block != null && block.hasProperty(NumberBlock.NUMBER) ? block.getValue(NumberBlock.NUMBER) : -1;
+	}
+
+	private boolean tileInGap(BlockPos pos) {
+		return tileIn >= 0 && pos.equals(tileAt) && pos.equals(tileGap());
+	}
+
+	/** Whether this block is a carried tile a child may knock loose: on its own spot, or in the gap and not yet settled. */
+	boolean mayBreak(BlockPos pos, BlockState state) {
+		if (room.busy || !state.is(justfatlard.learning_blocks.LearningBlocks.NUMBER)) return false;
+		if (tileInGap(pos)) return true;
+		Choice choice = carriedChoice(state.getValue(NumberBlock.NUMBER));
+		return choice != null && pos.equals(spotOf(choice)) && state.equals(choice.block());
+	}
+
+	/**
+	 * A tile knocked loose, into the child's hand, as a letter goes. One already in hand goes back to its
+	 * spot; anything else in hand moves into the pack. Out of the gap, the gap is empty again.
+	 */
+	void intoHand(ServerPlayer player, BlockPos from, int number) {
+		if (tileInGap(from)) {
+			tileAt = null;
+			tileIn = -1;
+			set(from, justfatlard.learning_blocks.LearningBlocks.BOARD_LETTER.showing(Letter.BLANK));
+			leftGap();
+		}
+		net.minecraft.world.entity.player.Inventory inventory = player.getInventory();
+		int hand = inventory.getSelectedSlot();
+		net.minecraft.world.item.ItemStack held = inventory.getItem(hand);
+		inventory.setItem(hand, Tiles.stack(number));
+		int had = Tiles.numberOf(held);
+		if (had >= 0) sendHome(player, had, player.getEyePosition());
+		else if (Tiles.letterOf(held) == null && !held.isEmpty() && !inventory.add(held)) player.drop(held, false, net.minecraft.util.Prediction.SERVER_ONLY);
+		player.containerMenu.broadcastChanges();
+	}
+
+	/** A held pick taken back out of the gap by hand (the tile in Make's gap): forget it. */
+	protected void leftGap() {}
+
+	/**
+	 * A carried tile placed in the gap: it sits there, and is the pick. One already there goes home. A
+	 * wrong one flies home again once it has been told, so it can be tried again. False if it is not
+	 * this child's turn, and the tile stays in their hand.
+	 */
+	boolean place(ServerPlayer player, int number, Vec3 at) {
+		Choice picked = carriedChoice(number);
+		BlockPos gap = tileGap();
+		if (picked == null || gap == null) return false;
+		java.util.UUID whose = whoseTurn();
+		if (whose != null ? !whose.equals(player.getUUID()) : !teamUp() && !room.mayPress(player)) {
+			room.notYourTurn(player, whose != null ? whose : room.turn, at);
+			return false;
+		}
+		int old = tileInGap(gap) ? tileIn : -1;
+		set(gap, justfatlard.learning_blocks.LearningBlocks.NUMBER.showing(number));
+		tileAt = gap.immutable();
+		tileIn = number;
+		if (old >= 0 && old != number) sendHome(player, old, Vec3.atCenterOf(gap));
+		Verdict verdict = judge(player, picked);
+		pick(player, picked);
+		if (verdict == Verdict.WRONG) {
+			room.later(player, WRONG_TILE_HOME, p -> {
+				if (tileAt == null || tileIn != number || !level.getBlockState(tileAt).equals(justfatlard.learning_blocks.LearningBlocks.NUMBER.showing(number))) return;
+				returnGap(p);
+			});
+		}
+		return true;
+	}
+
+	@ForTests
+	public @Nullable BlockPos gapForTests() {
+		return tileGap();
+	}
+
+	/** Long enough for "Oops, that's..." to start over the tile before it goes. */
+	private static final int WRONG_TILE_HOME = 30;
+
+	/** The tile in the gap, home to its spot, and the underscore back. */
+	protected void returnGap(ServerPlayer player) {
+		if (tileAt == null || tileIn < 0) return;
+		BlockPos at = tileAt;
+		int number = tileIn;
+		tileAt = null;
+		tileIn = -1;
+		set(at, justfatlard.learning_blocks.LearningBlocks.BOARD_LETTER.showing(Letter.BLANK));
+		sendHome(player, number, Vec3.atCenterOf(at));
+	}
+
+	/** A carried tile flies from where it is back to its spot on the floor and lands there; one already home is not doubled. */
+	void sendHome(ServerPlayer player, int number, Vec3 from) {
+		Choice choice = carriedChoice(number);
+		BlockPos home = choice == null ? null : spotOf(choice);
+		if (home == null || level.getBlockState(home).equals(choice.block()) || room.dispenser.reserved.contains(home)) return;
+		room.dispenser.reserved.add(home);
+		net.minecraft.world.entity.item.ItemEntity visual = room.dispenser.throwItem(from, Vec3.atBottomCenterOf(home).add(0, 0.2, 0), Tiles.stack(number), Dispenser.FLIGHT);
+		visual.setNeverPickUp();
+		level.addFreshEntity(visual);
+		made(visual);
+		room.later(player, Dispenser.FLIGHT, p -> {
+			visual.discard();
+			room.dispenser.reserved.remove(home);
+			if (room.subjectRound != this || !level.getBlockState(home).isAir()) return;
+			level.setBlock(home, choice.block(), RoomLayout.FLAGS);
+			justfatlard.learning_blocks.sound.Sounds.playAt(level, home, NumberBlock.soundOf(number));
+		});
+	}
+
+	/**
+	 * Every carried tile somewhere it can be used. One in a pack but not in the hand goes home, as a
+	 * letter does; one that is nowhere - not on its spot, in the gap, in a hand, on the ground or on
+	 * its way home - comes back to its spot.
+	 */
+	void keepTiles() {
+		if (choices.stream().noneMatch(this::carried)) return;
+		java.util.Set<Integer> found = new java.util.HashSet<>();
+		if (tileAt != null && tileIn >= 0) found.add(tileIn);
+		for (ServerPlayer one : room.present()) {
+			net.minecraft.world.entity.player.Inventory inventory = one.getInventory();
+			boolean moved = false;
+			for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
+				int number = Tiles.numberOf(inventory.getItem(slot));
+				if (number < 0) continue;
+				if (slot == inventory.getSelectedSlot()) {
+					found.add(number);
+					continue;
+				}
+				inventory.setItem(slot, net.minecraft.world.item.ItemStack.EMPTY);
+				sendHome(one, number, one.getEyePosition());
+				moved = true;
+			}
+			int cursor = Tiles.numberOf(one.containerMenu.getCarried());
+			if (cursor >= 0) found.add(cursor);
+			if (moved) one.containerMenu.broadcastChanges();
+		}
+		for (net.minecraft.world.entity.item.ItemEntity item : level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, layout.bounds())) {
+			int number = Tiles.numberOf(item.getItem());
+			if (number >= 0) found.add(number);
+		}
+		for (Choice choice : choices) {
+			if (!carried(choice) || retired.contains(choice) || found.contains(tileNumber(choice))) continue;
+			BlockPos home = spotOf(choice);
+			if (home == null || level.getBlockState(home).equals(choice.block()) || room.dispenser.reserved.contains(home)) continue;
+			if (level.getBlockState(home).isAir()) level.setBlock(home, choice.block(), RoomLayout.FLAGS);
+		}
 	}
 
 	/** Whether this round is a team-up: right, it counts for every reader in the room. */
@@ -312,6 +496,7 @@ public abstract class SubjectRound {
 		for (int i = 0; i < choices.size(); i++) {
 			Choice choice = choices.get(i);
 			if (boxed(choice) || retired.contains(choice)) continue;
+			if (carried(choice)) return true;
 			if (choice.block() == null || level.getBlockState(spotFor(i, choices.size())).equals(choice.block())) return true;
 		}
 		return false;
@@ -422,6 +607,15 @@ public abstract class SubjectRound {
 	}
 
 	void clear() {
+		for (ServerPlayer one : room.present()) {
+			net.minecraft.world.entity.player.Inventory inventory = one.getInventory();
+			for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
+				if (Tiles.numberOf(inventory.getItem(slot)) >= 0) inventory.setItem(slot, net.minecraft.world.item.ItemStack.EMPTY);
+			}
+			one.containerMenu.broadcastChanges();
+		}
+		tileAt = null;
+		tileIn = -1;
 		for (UUID id : made) {
 			Entity entity = level.getEntity(id);
 			if (entity != null) entity.discard();

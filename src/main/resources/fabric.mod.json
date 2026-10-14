@@ -23,7 +23,7 @@
 		"fabric-api": "${fabricApiVersion}",
 		"minecraft": "${minecraftDependency}",
 		"java": ">=25",
-		"pandorical": ">=15.0.0"
+		"pandorical": ">=15.17.0"
 	},
 	"contact": {
 		"homepage": "https://github.com/fatlard1993/learning-blocks",

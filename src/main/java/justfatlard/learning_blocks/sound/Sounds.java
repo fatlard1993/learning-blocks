@@ -273,7 +273,7 @@ public final class Sounds {
 			case "phoneme" -> phonemePlaceholder(name);
 			case "word" -> new Placeholder(SoundEvents.NOTE_BLOCK_CHIME, note(Math.floorMod(name.hashCode(), 25)));
 			case "phrase" -> switch (name) {
-				case "well_done" -> new Placeholder(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.PLAYER_LEVELUP), 1.0F);
+				case "well_done", "well_done_reading" -> new Placeholder(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.PLAYER_LEVELUP), 1.0F);
 				case "try_again" -> new Placeholder(SoundEvents.NOTE_BLOCK_BASS, note(6));
 				default -> new Placeholder(SoundEvents.NOTE_BLOCK_PLING, note(12));
 			};

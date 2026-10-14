@@ -11,7 +11,9 @@ import justfatlard.learning_blocks.numbers.NumberCourse;
 import justfatlard.learning_blocks.reward.Progress;
 import justfatlard.learning_blocks.subject.Numbers;
 import justfatlard.learning_blocks.subject.Subject;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -87,6 +89,19 @@ public abstract class NumbersRound extends SubjectRound {
 			case 1 -> "You can count to ten! Ready for more!";
 			default -> "You know more and fewer! Ready for more numbers!";
 		};
+	}
+
+	/** A number tile, 0 to 20, is broken loose and placed in the gap; anything else a kind stands there is clicked. */
+	@Override
+	protected boolean carried(Choice choice) {
+		BlockState block = choice.block();
+		return block != null && block.is(LearningBlocks.NUMBER) && block.getValue(NumberBlock.NUMBER) <= NumberBlock.HIGHEST;
+	}
+
+	/** The middle of the board, where nothing else of most kinds' stands. */
+	@Override
+	protected BlockPos tileGap() {
+		return layout.rowSpot(0, 1);
 	}
 
 	protected static Choice tile(int n) {

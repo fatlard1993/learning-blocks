@@ -95,7 +95,7 @@ public final class BlendNarration implements FabricClientGameTest {
 			Waits.until(session, 400, "the word never happened",
 				() -> Narrator.log(session.player()).contains("outcome"));
 			Waits.until(session, 200, "the room never said well done",
-				() -> Narrator.log(session.player()).contains("clip:phrase/well_done"));
+				() -> Narrator.log(session.player()).contains("clip:phrase/well_done_reading"));
 			session.waitTicks(22);
 			shoot(session, "learning-caption");
 
@@ -109,7 +109,7 @@ public final class BlendNarration implements FabricClientGameTest {
 				}
 				last = after(log, "clip:word/" + target, last);
 				last = after(log, "outcome", last);
-				after(log, "clip:phrase/well_done", last);
+				after(log, "clip:phrase/well_done_reading", last);
 				check(log.contains("caption:" + tiles[0] + " · " + tiles[1]), "the caption did not build up the letters: " + log);
 				check(log.contains("caption:" + target), "the caption never snapped to the whole word: " + log);
 			});

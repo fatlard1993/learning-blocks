@@ -54,6 +54,15 @@ public class NumberBlock extends Block {
 		};
 	}
 
+	/** Knocked loose in a round answered with number tiles: into the child's hand, as a letter goes. */
+	@Override
+	public void playerDestroy(ServerLevel level, net.minecraft.server.level.ServerPlayer player, BlockPos pos, BlockState state,
+			net.minecraft.world.level.block.entity.@org.jspecify.annotations.Nullable BlockEntity blockEntity, net.minecraft.world.item.ItemStack tool) {
+		if (!justfatlard.learning_blocks.puzzle.Rooms.numberBroken(player, pos, state.getValue(NUMBER))) {
+			super.playerDestroy(level, player, pos, state, blockEntity, tool);
+		}
+	}
+
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
 		if (level instanceof ServerLevel) Sounds.playAt(level, pos, soundOf(state.getValue(NUMBER)));

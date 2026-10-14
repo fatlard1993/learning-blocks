@@ -239,7 +239,7 @@ final class AnswerNarration {
 					light(-1);
 					sparkle(p);
 				}, room.rounds.starred(word), WORD_GAP)
-				.say("phrase/well_done", 2);
+				.say("phrase/well_done_reading", 2);
 			if (justMastered) blend.say("phrase/mastered");
 			if (newWord) blend.say("phrase/new_word");
 			blend.add(room.prizes(player.getUUID()).prizeLine());
@@ -348,7 +348,8 @@ final class AnswerNarration {
 	 * lessons left, the way home if that was the last, and the next round.
 	 */
 	void closing(ServerPlayer player, Narration blend, int lessonsBefore, boolean newWord, boolean lastOfStage, boolean justMastered) {
-		blend.say("phrase/well_done", 2);
+		// "Nice reading!" only where it was reading: a Numbers or Logic round is the room's subject round.
+		blend.say(room.subjectRound == null ? "phrase/well_done_reading" : "phrase/well_done", 2);
 		if (justMastered) blend.then("mastered", this::sparkle, 2).say("phrase/mastered");
 		if (newWord) blend.say("phrase/new_word");
 		blend.add(room.prizes(player.getUUID()).prizeLine());
@@ -404,7 +405,7 @@ final class AnswerNarration {
 					unlight();
 					if (keyword != null) keyword.outcome().run(p, room.dispenser);
 				}, OUTCOME_BEAT)
-				.say("phrase/well_done", 2);
+				.say("phrase/well_done_reading", 2);
 			if (letterMastered) chant.then("mastered", this::sparkle, 2).say("phrase/mastered");
 			chant.add(room.prizes(player.getUUID()).prizeLine());
 			int left = lessonsBefore - 1;
@@ -498,7 +499,7 @@ final class AnswerNarration {
 			String name = LetterBlock.nameOf(base);
 			chant.say(name, "light:0", p -> light(0), CaptionLine.building(pair, 0), PHONEME_GAP);
 			chant.say(name, "light:all", p -> caseLink(p), CaptionLine.building(pair, 1), WORD_GAP);
-			chant.say("phrase/well_done", 2);
+			chant.say("phrase/well_done_reading", 2);
 			if (mastered) chant.then("mastered", this::sparkle, 2).say("phrase/mastered");
 			chant.add(room.prizes(player.getUUID()).prizeLine());
 			int left = lessonsBefore - 1;

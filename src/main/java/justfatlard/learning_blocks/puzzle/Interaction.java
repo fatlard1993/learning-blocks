@@ -70,9 +70,11 @@ final class Interaction {
 			if (hand == InteractionHand.MAIN_HAND) {
 				// Each reader's own chest shows their own prizes, whoever looks.
 				ServerPlayer whose = level.getServer().getPlayerList().getPlayer(chestOwner);
-				PrizeChestScreen.open(player, room.chestContents(whose != null ? whose : player));
-				// Said once a visit, when nothing else is being read out; a look mid-word does not use it up.
-				if (!room.chestOpened && !room.busy && !room.leaving) {
+				var contents = room.chestContents(whose != null ? whose : player);
+				PrizeChestScreen.open(player, contents);
+				// Said once a visit, when nothing else is being read out and there is something to come
+				// home; a look mid-word or into an empty chest does not use it up.
+				if (!contents.isEmpty() && !room.chestOpened && !room.busy && !room.leaving) {
 					Narrator.play(player, new Narration().say("phrase/prizes_come_home"));
 					room.chestOpened = true;
 				}
