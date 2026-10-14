@@ -4,6 +4,13 @@
 		"Press the Learning Blocks button (or /learn) to go in, and walk through the portal to come home with everything you went in with."
 	],
 	"versions": {
+		"0.2.1": [
+			"Number tiles are answered as letters are: break one loose, carry it, and place it in the gap on the board. A wrong one flies back to its spot to be tried again. Bob's number cards are still clicked.",
+			"\"Nice reading!\" is said only after reading; Numbers and Logic rounds get the other cheers.",
+			"The prize chest by the portal is always there, and sparkles while a prize is waiting. Opened before anything is earned, it says Nothing yet.",
+			"Learning Blocks is on the first page of the action menu, and its buttons show the classroom's own toys.",
+			"The letter a has a new recording."
+		],
 		"0.2.0": [
 			"Phonics is now Learning Blocks, and Reading is one of three subjects. 0.2.0 starts fresh: progress, toys and schedules from Phonics do not carry over, and /phonics is gone; use /learn.",
 			"Subjects: Reading, Numbers and Logic take turns, with a hello and a coloured board edge for each. /learn subjects turns a child's subjects on and off, and a daily schedule can ask for some of each.",
