@@ -4,6 +4,9 @@
 		"Press the Learning Blocks button (or /learn) to go in, and walk through the portal to come home with everything you went in with."
 	],
 	"versions": {
+		"0.2.2": [
+			"The classroom can't be entered from a PvP Dimensions arena: going in from there mixed the arena's kit up with your own things. A daily schedule waits, and sends you in as soon as you leave the arena."
+		],
 		"0.2.1": [
 			"Number tiles are answered as letters are: break one loose, carry it, and place it in the gap on the board. A wrong one flies back to its spot to be tried again. Bob's number cards are still clicked.",
 			"\"Nice reading!\" is said only after reading; Numbers and Logic rounds get the other cheers.",
