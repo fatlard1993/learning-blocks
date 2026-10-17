@@ -114,6 +114,7 @@ public final class Travel {
 		MinecraftServer server = player.level().getServer();
 		if (Visit.of(player) != null || Places.isClassroom(player.level())) return "You're already in the classroom";
 		if (player.isDeadOrDying()) return "Not just now";
+		if (Places.heldElsewhere(player.level())) return "Not from here: leave this world first";
 		if (PrizeSessions.editing(player)) return "Finish editing prizes first: /learn prizes done";
 		ServerLevel classroom = server.getLevel(Places.CLASSROOM);
 		if (classroom == null) {
@@ -482,11 +483,18 @@ public final class Travel {
 	 * over. The player is looked up afresh, because they may have logged out or died in between.
 	 */
 	public static void changedLevel(ServerPlayer player, ServerLevel from, ServerLevel to) {
+		MinecraftServer server = to.getServer();
+		UUID id = player.getUUID();
+		if (Places.heldElsewhere(from) && !Places.heldElsewhere(to)) {
+			// Daily lessons refused while another mod held their things start now that it has given them back.
+			server.execute(() -> {
+				ServerPlayer now = server.getPlayerList().getPlayer(id);
+				if (now != null && !Places.heldElsewhere(now.level())) Schedules.enforce(now);
+			});
+		}
 		boolean out = Places.isClassroom(from) && !Places.isClassroom(to);
 		boolean in = !Places.isClassroom(from) && Places.isClassroom(to);
 		if (!out && !in) return;
-		MinecraftServer server = to.getServer();
-		UUID id = player.getUUID();
 		server.execute(() -> {
 			ServerPlayer now = server.getPlayerList().getPlayer(id);
 			if (now == null || now.isDeadOrDying()) return;
