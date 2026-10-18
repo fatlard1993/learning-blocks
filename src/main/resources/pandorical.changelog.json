@@ -5,7 +5,8 @@
 	],
 	"versions": {
 		"0.2.2": [
-			"The classroom can't be entered from a PvP Dimensions arena: going in from there mixed the arena's kit up with your own things. A daily schedule waits, and sends you in as soon as you leave the arena."
+			"The classroom can't be entered from a PvP Dimensions arena: going in from there mixed the arena's kit up with your own things. A daily schedule waits, and sends you in as soon as you leave the arena.",
+			"Toys and plushies no longer flicker where two of their parts meet."
 		],
 		"0.2.1": [
 			"Number tiles are answered as letters are: break one loose, carry it, and place it in the gap on the board. A wrong one flies back to its spot to be tried again. Bob's number cards are still clicked.",

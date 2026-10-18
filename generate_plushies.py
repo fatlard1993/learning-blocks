@@ -20,6 +20,7 @@ import json
 import pathlib
 import random
 
+from coplanar import settle
 from generate_textures import write_png
 
 HERE = pathlib.Path(__file__).parent
@@ -925,6 +926,7 @@ def build(name, make):
             axis, angle, origin = sides["rot"]
             element["rotation"] = {"origin": list(origin), "axis": axis, "angle": angle}
         elements.append(element)
+    settle(elements)
     write(ASSETS / f"models/block/plush_{name}.json", {
         "parent": "minecraft:block/block",
         "textures": {"plush": f"{NS}:block/plush_{name}", "particle": f"{NS}:block/plush_{name}"},

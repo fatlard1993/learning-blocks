@@ -20,6 +20,7 @@ import json
 import pathlib
 import random
 
+from coplanar import settle
 from generate_plushies import Face, felt, rgb, shade, write, CLEAR, INK, WHITE, CHEEK
 from generate_textures import tile, stamp, write_png, VOWEL, CONSONANT
 
@@ -759,6 +760,7 @@ def build(name, make):
             element["rotation"] = {"origin": list(origin), "axis": axis, "angle": angle}
         elements.append(element)
         parts.setdefault(sides.get("part", "body"), []).append(element)
+    settle(elements)
     write(ASSETS / f"models/block/toy_{name}.json", model(name, elements))
     # A toy whose play moves a part of it (the truck's bed, the car's wheels) is also drawn in pieces:
     # its body and each part on its own, for the displays that play it (play/Anims.java). Shown by an

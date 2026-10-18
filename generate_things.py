@@ -12,6 +12,7 @@ Usage: python3 generate_things.py
 import json
 import pathlib
 
+from coplanar import settle
 from generate_textures import write_png
 
 HERE = pathlib.Path(__file__).parent
@@ -454,6 +455,7 @@ GUI_SCALE = {"bin": 0.7, "fork": 0.8, "mug": 0.85, "jar": 0.8, "corn": 0.8}
 
 
 def model(elements, textures, display=None):
+    settle(elements)
     data = {"parent": "minecraft:block/block", "textures": textures, "elements": elements}
     if display:
         data["display"] = display
