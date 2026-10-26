@@ -29,5 +29,12 @@
 		"homepage": "https://github.com/fatlard1993/learning-blocks",
 		"sources": "https://github.com/fatlard1993/learning-blocks",
 		"issues": "https://github.com/fatlard1993/learning-blocks/issues"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.donate": "https://github.com/sponsors/fatlard1993"
+			}
+		}
 	}
 }
