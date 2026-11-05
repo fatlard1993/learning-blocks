@@ -18,7 +18,7 @@ The source is split three ways: `src/main` is the mod, `src/gametest` the tests,
 ALSOFT_DRIVERS=null xvfb-run -a ./gradlew --no-daemon runClientGameTest -Ptest.level=full
 ```
 
-Launches a client off-screen and silent (`ALSOFT_DRIVERS=null` gives OpenAL its null device, "OpenAL initialized on device No Output" in the log, and `--no-daemon` makes sure the variable reaches the game), joins a world and runs every test listed in `src/gametest/resources/fabric.mod.json`, in that order. `-Ptest.level=full` runs everything, screenshots included; without it, a smoke run skips the screenshots and the slowest parts.
+Launches a client off-screen and silent (`ALSOFT_DRIVERS=null` gives OpenAL its null device, "OpenAL initialized on device No Output" in the log, and `--no-daemon` makes sure the variable reaches the game), joins a world and runs every test listed in `src/gametest/resources/fabric.mod.json`, in that order. `-Ptest.level=full` runs every test; without it, a smoke run only joins a world once to show the mod loads. Screenshots are taken only with `-Ppictures`.
 
 The test mod's `TestDefaults` starts new readers on words, and `TestClientDefaults` sets the render distance to 4: every tick is drawn in software, and nothing tested is further away. Each test's class javadoc says what it checks; the table is a map. The log names each test as it starts and finishes (`[test] running ...`), so a run's coverage can be read from it.
 

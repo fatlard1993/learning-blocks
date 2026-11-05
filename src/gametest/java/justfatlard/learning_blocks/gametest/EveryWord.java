@@ -131,6 +131,8 @@ public final class EveryWord implements FabricClientGameTest {
 			List<BlockPos> before = new ArrayList<>();
 			for (Word word : words) {
 				String text = word.text();
+				// A failure can come from what an earlier word left behind, so the log keeps the order.
+				System.out.println("[learning-blocks test] EveryWord: " + word.id());
 				session.onServer(server -> {
 					ServerPlayer player = session.player();
 					check(Rooms.startRound(player, word), "no round could be built for " + word.id());
