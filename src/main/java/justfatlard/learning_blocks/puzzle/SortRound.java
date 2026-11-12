@@ -330,6 +330,12 @@ public final class SortRound extends LogicRound {
 		return thingOf.get(choice);
 	}
 
+	/** Whether this block is a pen's, where a click past an animal standing before it lands. */
+	@justfatlard.learning_blocks.ForTests
+	public boolean penAtForTests(BlockPos pos) {
+		return choiceAt(pos) != null;
+	}
+
 	public @Nullable Choice selected() {
 		return selected;
 	}

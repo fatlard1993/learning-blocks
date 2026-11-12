@@ -166,13 +166,12 @@ public final class SubjectsTest implements FabricClientGameTest {
 			check(room.subjectRound() instanceof NumberRound, "a wrong number ended the round");
 			check(Narrator.log(player).contains("clip:phrase/oops_thats"), "a wrong number was not told");
 			check(Travel.lessons(player) == 4, "a wrong number took a lesson off");
-			// The right one, by a click on its box, as a child would.
+			// The right one, as a child would: knocked loose and placed in the gap.
 			NumberRound round = (NumberRound) room.subjectRound();
 			BlockPos tile = BlockPos.containing(round.hitSpotOf(round.rightForTests()));
 			check(player.level().getBlockState(tile).equals(round.rightForTests().block()), "the right tile is not on its spot: " + round.choices());
-			Rooms.useBlock(player, player.level(), net.minecraft.world.InteractionHand.MAIN_HAND,
-				new net.minecraft.world.phys.BlockHitResult(Vec3.atCenterOf(tile).add(0, 0.5, 0), net.minecraft.core.Direction.UP, tile, false));
-			check(Narrator.log(player).contains("picked:numbers:" + round.number()), "the click on " + tile + " was not a pick");
+			Carry.intoGap(player, round, round.rightForTests());
+			check(Narrator.log(player).contains("picked:numbers:" + round.number()), "the tile from " + tile + " placed in the gap was not a pick");
 		});
 		Waits.until(session, 900, "a logic round never came after numbers", () -> {
 			Room room = Rooms.of(session.player());

@@ -140,7 +140,8 @@ public final class ManyReaders implements FabricClientGameTest {
 			Rooms.useBlock(cast[1], cast[1].level(), InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(tile).add(0, 0.5, 0), Direction.UP, tile, false));
 			check(room.tookPartForTests(cast[1].getUUID()), "pointing was not taking part");
 			check(!room.tookPartForTests(cast[2].getUUID()) && !room.tookPartForTests(cast[3].getUUID()), "watching was taking part");
-			Rooms.useBlock(turn, turn.level(), InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(tile).add(0, 0.5, 0), Direction.UP, tile, false));
+			if (Carry.carried(round[0], round[0].rightForTests())) Carry.intoGap(turn, round[0], round[0].rightForTests());
+			else Rooms.useBlock(turn, turn.level(), InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(tile).add(0, 0.5, 0), Direction.UP, tile, false));
 		});
 		session.waitTicks(5);
 		session.onServer(server -> {
@@ -243,7 +244,8 @@ public final class ManyReaders implements FabricClientGameTest {
 			check(!room.tookPartForTests(teacher[0].getUUID()), "the teacher counted as taking part");
 			check(!Rooms.mayBreak(host.level(), teacher[0], tile, host.level().getBlockState(tile)), "the teacher may break the room");
 			ServerPlayer turn = everyone(host, readers).stream().filter(p -> p.getUUID().equals(room.turn())).findFirst().orElseThrow();
-			Rooms.useBlock(turn, turn.level(), InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(tile).add(0, 0.5, 0), Direction.UP, tile, false));
+			if (Carry.carried(round[0], round[0].rightForTests())) Carry.intoGap(turn, round[0], round[0].rightForTests());
+			else Rooms.useBlock(turn, turn.level(), InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(tile).add(0, 0.5, 0), Direction.UP, tile, false));
 		});
 		session.waitTicks(5);
 		session.onServer(server -> check(Progress.of(teacher[0]).doneToday() == teacherBefore[0], "the teacher was credited"));

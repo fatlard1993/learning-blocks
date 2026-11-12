@@ -157,6 +157,10 @@ public final class ThreeAndTeams implements FabricClientGameTest {
 
 	/** A right-click on a choice, as a child's: on the block it is, or on its box. */
 	private static void clickTile(ServerPlayer player, SubjectRound round, SubjectRound.Choice choice) {
+		if (Carry.carried(round, choice)) {
+			Carry.intoGap(player, round, choice);
+			return;
+		}
 		Vec3 spot = round.hitSpotOf(choice);
 		if (choice.block() != null) {
 			BlockPos tile = BlockPos.containing(spot);

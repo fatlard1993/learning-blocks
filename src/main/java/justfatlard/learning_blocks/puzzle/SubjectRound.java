@@ -404,6 +404,11 @@ public abstract class SubjectRound {
 		return tileGap();
 	}
 
+	@ForTests
+	public boolean carriedForTests(Choice choice) {
+		return carried(choice);
+	}
+
 	/** Long enough for "Oops, that's..." to start over the tile before it goes. */
 	private static final int WRONG_TILE_HOME = 30;
 

@@ -174,6 +174,10 @@ public final class ShippedDefaults implements FabricClientGameTest {
 
 	/** A right-click on a choice: on the block it is, its box, or for a pen, its rug. */
 	private static void click(ServerPlayer player, SubjectRound round, SubjectRound.Choice choice) {
+		if (Carry.carried(round, choice)) {
+			Carry.intoGap(player, round, choice);
+			return;
+		}
 		Vec3 spot = round.hitSpotOf(choice);
 		var boxes = player.level().getEntitiesOfClass(net.minecraft.world.entity.Interaction.class, new net.minecraft.world.phys.AABB(spot, spot).inflate(0.2));
 		if (!boxes.isEmpty()) {

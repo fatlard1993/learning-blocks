@@ -41,9 +41,24 @@ public final class ClickReach implements FabricClientGameTest {
 		session.waitTicks(40);
 		SubjectRound.Choice[] picks = new SubjectRound.Choice[2];
 		session.onServer(server -> {
+			// Two the child can see, neither standing in front of the other, and the second not standing
+			// before a pen: with one picked, a click on an animal a pen lies behind is a click on that pen,
+			// as it is meant to be. Which animals come first, and where they have hopped, varies by run.
 			List<SubjectRound.Choice> left = sort.unsorted();
+			ServerPlayer player = session.player();
+			Vec3 eye = Rooms.of(player).spawnFor(player.getUUID()).add(0, player.getEyeHeight(), 0);
 			picks[0] = left.get(0);
 			picks[1] = left.get(1);
+			search:
+			for (SubjectRound.Choice a : left) {
+				for (SubjectRound.Choice b : left) {
+					if (a == b || hides(sort.thingFor(a), eye, middleOf(sort.thingFor(b))) || hides(sort.thingFor(b), eye, middleOf(sort.thingFor(a)))
+						|| penBehind(player, sort, eye, middleOf(sort.thingFor(b)))) continue;
+					picks[0] = a;
+					picks[1] = b;
+					break search;
+				}
+			}
 		});
 		clickAt(session, () -> middleOf(sort.thingFor(picks[0])));
 		session.onServer(server -> check(sort.selected() == picks[0] && sort.thingFor(picks[0]).hasGlowingTag(),
@@ -51,7 +66,9 @@ public final class ClickReach implements FabricClientGameTest {
 		settle(session);
 		clickAt(session, () -> middleOf(sort.thingFor(picks[1])));
 		session.onServer(server -> {
-			check(sort.selected() == picks[1], "clicking a second animal did not switch the pick; the crosshair was on " + aimed);
+			check(sort.selected() == picks[1], "clicking a second animal did not switch the pick; the crosshair was on " + aimed
+				+ "; first " + picks[0].id() + " at " + sort.thingFor(picks[0]).position() + ", second " + picks[1].id() + " at " + sort.thingFor(picks[1]).position()
+				+ ", selected " + (sort.selected() == null ? "none" : sort.selected().id()) + ", busy " + Rooms.of(session.player()).busy());
 			check(sort.thingFor(picks[1]).hasGlowingTag() && !sort.thingFor(picks[0]).hasGlowingTag(), "the glow did not move to the new pick");
 		});
 		settle(session);
@@ -69,7 +86,7 @@ public final class ClickReach implements FabricClientGameTest {
 		// Numbers: a number tile, clicked as the block it is; a pen, by its rug; and a picture.
 		// Tiles stand on the floor before the board, as letter tiles do: a child steps up to them.
 		forward = 2;
-		answer(session, start(session, Numbers.INSTANCE, "find", "3"), "the tile three");
+		carry(session, start(session, Numbers.INSTANCE, "find", "3"), "the tile three");
 		forward = 0;
 		// Numbers: a pen, clicked by its rug, and a picture.
 		answer(session, start(session, Numbers.INSTANCE, "pens", "more"), "the pen with more");
@@ -112,10 +129,57 @@ public final class ClickReach implements FabricClientGameTest {
 			&& !Rooms.of(session.player()).busy());
 	}
 
+	/**
+	 * A carried tile, from where the child stands: struck loose with the attack key, then placed in the
+	 * gap on the board with use. Both within reach, or a child standing there could not answer it.
+	 */
+	private static void carry(Smoke.Session session, SubjectRound round, String what) {
+		int[] before = new int[1];
+		SubjectRound.Choice[] right = new SubjectRound.Choice[1];
+		session.onServer(server -> {
+			before[0] = Progress.of(session.player()).itemClean(round.item());
+			right[0] = round.rightForTests();
+		});
+		aimAt(session, () -> Vec3.atCenterOf(BlockPos.containing(round.hitSpotOf(right[0]))).add(0, 0.45, 0));
+		session.context().getInput().holdKeyFor(options -> options.keyAttack, 15);
+		session.waitTicks(2);
+		String[] screen = new String[1];
+		session.context().runOnClient(client -> screen[0] = client.gui.screen() == null ? null : client.gui.screen().getClass().getName());
+		check(screen[0] == null, "striking " + what + " opened a screen: " + screen[0]);
+		session.onServer(server -> check(justfatlard.learning_blocks.puzzle.Tiles.numberOf(session.player().getMainHandItem()) == Integer.parseInt(right[0].id()),
+			"striking " + what + " from where the child stands did not take it into the hand; the crosshair was on " + aimed));
+		// Tile in hand, up to the tile row, where the board stands just behind: the gap is out of reach
+		// from where the tiles are struck, so this is where a child carrying one walks to.
+		int struck = forward;
+		forward = struck + 2;
+		aimAt(session, () -> Vec3.atCenterOf(round.gapForTests()).add(0, 0, 0.5));
+		forward = struck;
+		session.context().getInput().pressKey(options -> options.keyUse);
+		session.waitTicks(4);
+		Waits.until(session, 900, what + " never settled", () -> !Rooms.of(session.player()).busy());
+		session.onServer(server -> check(Progress.of(session.player()).itemClean(round.item()) > before[0]
+			|| Rooms.of(session.player()).subjectRound() != round, "placing " + what + " in the gap from the tile row did not answer it; the crosshair was on " + aimed));
+		Waits.until(session, 1200, what + "'s round never ended", () -> Rooms.of(session.player()).subjectRound() != round
+			&& !Rooms.of(session.player()).busy());
+	}
+
 	/** The pen's front rug: within a child's reach from where they stand. */
 	private static Vec3 farCorner(Smoke.Session session, Vec3 pen) {
 		double middle = Rooms.of(session.player()).origin().getX() + 0.5;
 		return pen.add(pen.x < middle ? 1.0 : -1.0, 0.05, 1.0);
+	}
+
+	/** Whether the line from the eye through that spot runs on, within reach, onto a pen. */
+	private static boolean penBehind(ServerPlayer player, SortRound sort, Vec3 eye, Vec3 spot) {
+		Vec3 end = eye.add(spot.subtract(eye).normalize().scale(player.blockInteractionRange()));
+		var hit = player.level().clip(new net.minecraft.world.level.ClipContext(eye, end, net.minecraft.world.level.ClipContext.Block.OUTLINE,
+			net.minecraft.world.level.ClipContext.Fluid.NONE, player));
+		return hit.getType() == net.minecraft.world.phys.HitResult.Type.BLOCK && sort.penAtForTests(hit.getBlockPos());
+	}
+
+	/** Whether this entity's box, with a little room, lies on the line from the eye to that spot. */
+	private static boolean hides(Entity entity, Vec3 eye, Vec3 spot) {
+		return entity.getBoundingBox().inflate(0.3).clip(eye, spot).isPresent();
 	}
 
 	private static Vec3 middleOf(Entity entity) {
@@ -124,6 +188,13 @@ public final class ClickReach implements FabricClientGameTest {
 
 	/** Back on the child's spot, looking at this, and use pressed on the client. */
 	private static void clickAt(Smoke.Session session, java.util.function.Supplier<Vec3> target) {
+		aimAt(session, target);
+		session.context().getInput().pressKey(options -> options.keyUse);
+		session.waitTicks(4);
+	}
+
+	/** Back on the child's spot, looking at this, with what the client's crosshair is on noted for a failure to say. */
+	private static void aimAt(Smoke.Session session, java.util.function.Supplier<Vec3> target) {
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
 			Room room = Rooms.of(player);
@@ -141,10 +212,9 @@ public final class ClickReach implements FabricClientGameTest {
 				? "entity " + entity.getEntity().getType() + " at " + entity.getEntity().position()
 				: hit.getType() + " at " + hit.getLocation();
 			aimed += ", looking " + client.player.getYRot() + "/" + client.player.getXRot() + " from " + client.player.position()
-				+ ", reach " + client.player.blockInteractionRange() + "/" + client.player.entityInteractionRange() + ", " + client.gameMode.getPlayerMode();
+				+ ", reach " + client.player.blockInteractionRange() + "/" + client.player.entityInteractionRange() + ", " + client.gameMode.getPlayerMode()
+				+ ", screen " + (client.gui.screen() == null ? "none" : client.gui.screen().getClass().getSimpleName());
 		});
-		session.context().getInput().pressKey(options -> options.keyUse);
-		session.waitTicks(4);
 	}
 
 	/** How far in front of where the room sets the child down they stand to click. */
