@@ -481,21 +481,23 @@ public final class Travel {
 	 * outer teleport sends them in again, and this fires again with no stack ever unwinding, into a
 	 * StackOverflowError. A tick later the outer teleport is
 	 * over. The player is looked up afresh, because they may have logged out or died in between.
+	 * Queued with {@code schedule}, never {@code execute}: called on the server thread, as this is,
+	 * {@code execute} runs the task on the spot, inside the very teleport it was meant to wait out.
 	 */
 	public static void changedLevel(ServerPlayer player, ServerLevel from, ServerLevel to) {
 		MinecraftServer server = to.getServer();
 		UUID id = player.getUUID();
 		if (Places.heldElsewhere(from) && !Places.heldElsewhere(to)) {
 			// Daily lessons refused while another mod held their things start now that it has given them back.
-			server.execute(() -> {
+			server.schedule(new net.minecraft.server.TickTask(server.getTickCount(), () -> {
 				ServerPlayer now = server.getPlayerList().getPlayer(id);
 				if (now != null && !Places.heldElsewhere(now.level())) Schedules.enforce(now);
-			});
+			}));
 		}
 		boolean out = Places.isClassroom(from) && !Places.isClassroom(to);
 		boolean in = !Places.isClassroom(from) && Places.isClassroom(to);
 		if (!out && !in) return;
-		server.execute(() -> {
+		server.schedule(new net.minecraft.server.TickTask(server.getTickCount(), () -> {
 			ServerPlayer now = server.getPlayerList().getPlayer(id);
 			if (now == null || now.isDeadOrDying()) return;
 			Visit visit = Visit.of(now);
@@ -508,7 +510,7 @@ public final class Travel {
 					LearningBlocks.MOD_ID, now.getGameProfile().name());
 				own(() -> now.teleport(spawnTrip(server)));
 			}
-		});
+		}));
 	}
 
 	/**
