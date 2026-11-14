@@ -4,6 +4,10 @@
 		"Press the Learning Blocks button (or /learn) to go in, and walk through the portal to come home with everything you went in with."
 	],
 	"versions": {
+		"0.2.6": [
+			"Classroom crossings are settled a tick later for real.",
+			"Tests answer number tiles as a child does, carried into the gap; nothing in play changes."
+		],
 		"0.2.5": [
 			"Drop changelog notes for changes nothing in the game shows."
 		],
