@@ -276,8 +276,10 @@ final class Interaction {
 	 */
 	void keepSolvable(ServerPlayer player) {
 		outOfHand();
+		if (room.homes.isEmpty()) return;
+		java.util.Set<Letter> missing = missing(player, room.homes.keySet());
 		for (Letter letter : room.homes.keySet()) {
-			if (present(player, letter)) continue;
+			if (!missing.contains(letter)) continue;
 			BlockPos home = room.homes.get(letter);
 			if (home != null && level.getBlockState(home).isAir() && !room.dispenser.reserved.contains(home)) {
 				level.setBlock(home, LearningBlocks.LETTER.showing(letter), FLAGS);
@@ -290,24 +292,32 @@ final class Interaction {
 		}
 	}
 
-	/** Whether this tile is anywhere: gap, floor, ground, pack, cursor, or on its way home. */
-	private boolean present(ServerPlayer player, Letter letter) {
-		for (BlockPos gap : room.gapMarkers.keySet()) if (inGap(gap) == letter) return true;
+	/** Which of these tiles are nowhere: not in the gap, on the floor, on the ground, in the pack, or on the cursor. */
+	private java.util.Set<Letter> missing(ServerPlayer player, java.util.Collection<Letter> wanted) {
+		java.util.Set<Letter> missing = java.util.EnumSet.noneOf(Letter.class);
+		missing.addAll(wanted);
+		for (BlockPos gap : room.gapMarkers.keySet()) {
+			missing.remove(inGap(gap));
+			if (missing.isEmpty()) return missing;
+		}
 		BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
 		for (int x = -HALF + 1; x < HALF; x++) {
 			for (int z = RoomLayout.FRONT + 1; z < RoomLayout.BACK; z++) {
 				BlockState state = level.getBlockState(at.setWithOffset(layout.origin(), x, 0, z));
-				if (state.is(LearningBlocks.LETTER) && state.getValue(LetterBlock.LETTER) == letter) return true;
+				if (state.is(LearningBlocks.LETTER) && missing.remove(state.getValue(LetterBlock.LETTER)) && missing.isEmpty()) return missing;
 			}
 		}
 		for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, layout.bounds())) {
-			if (Tiles.letterOf(item.getItem()) == letter) return true;
+			Letter letter = Tiles.letterOf(item.getItem());
+			if (letter != null && missing.remove(letter) && missing.isEmpty()) return missing;
 		}
-		if (Tiles.letterOf(player.containerMenu.getCarried()) == letter) return true;
+		Letter carried = Tiles.letterOf(player.containerMenu.getCarried());
+		if (carried != null) missing.remove(carried);
 		Inventory inventory = player.getInventory();
-		for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
-			if (Tiles.letterOf(inventory.getItem(slot)) == letter) return true;
+		for (int slot = 0; slot < inventory.getContainerSize() && !missing.isEmpty(); slot++) {
+			Letter letter = Tiles.letterOf(inventory.getItem(slot));
+			if (letter != null) missing.remove(letter);
 		}
-		return false;
+		return missing;
 	}
 }
