@@ -361,6 +361,23 @@ public final class Sky {
 	public static void paint(ServerLevel level, BlockPos origin, ResourceKey<Biome> biome) {
 		var holder = level.registryAccess().lookupOrThrow(Registries.BIOME).get(biome);
 		if (holder.isEmpty()) return;
-		net.minecraft.server.commands.FillBiomeCommand.fill(level, origin.offset(-10, -1, -7), origin.offset(10, 8, 11), holder.get());
+		BlockPos from = origin.offset(-10, -1, -7);
+		BlockPos to = origin.offset(10, 8, 11);
+		if (painted(level, from, to, biome)) return;
+		net.minecraft.server.commands.FillBiomeCommand.fill(level, from, to, holder.get());
+	}
+
+	/** Whether the air between these corners is this biome already, in chunks already loaded: a fill would rewrite every one of them to change nothing. */
+	private static boolean painted(ServerLevel level, BlockPos from, BlockPos to, ResourceKey<Biome> biome) {
+		for (int x = net.minecraft.core.QuartPos.fromBlock(from.getX()); x <= net.minecraft.core.QuartPos.fromBlock(to.getX()); x++) {
+			for (int z = net.minecraft.core.QuartPos.fromBlock(from.getZ()); z <= net.minecraft.core.QuartPos.fromBlock(to.getZ()); z++) {
+				var chunk = level.getChunkSource().getChunkNow(net.minecraft.core.QuartPos.toSection(x), net.minecraft.core.QuartPos.toSection(z));
+				if (chunk == null) return false;
+				for (int y = net.minecraft.core.QuartPos.fromBlock(from.getY()); y <= net.minecraft.core.QuartPos.fromBlock(to.getY()); y++) {
+					if (!chunk.getNoiseBiome(x, y, z).is(biome)) return false;
+				}
+			}
+		}
+		return true;
 	}
 }
