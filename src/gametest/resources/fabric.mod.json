@@ -41,6 +41,7 @@
       "justfatlard.learning_blocks.gametest.Mastery",
       "justfatlard.learning_blocks.gametest.DailySchedule",
       "justfatlard.learning_blocks.gametest.RoundTrip",
+      "justfatlard.learning_blocks.gametest.RoomFirst",
       "justfatlard.learning_blocks.gametest.Lessons",
       "justfatlard.learning_blocks.gametest.Protection",
       "justfatlard.learning_blocks.gametest.PrizeChest",

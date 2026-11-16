@@ -22,7 +22,7 @@ public final class PictureReplay implements FabricClientGameTest {
 	public void runTest(ClientGameTestContext context) {
 		Smoke.run(context, "learning-blocks-justfatlard", session -> {
 			session.command("/learn");
-			Waits.until(session, 300, "the first prompt never came", () -> !Rooms.of(session.player()).promptHeld()
+			Waits.until(session, 300, "the first prompt never came", () -> Rooms.of(session.player()) != null && !Rooms.of(session.player()).promptHeld()
 				&& Narrator.log(session.player()).contains("clip:phrase/make_the_word"));
 			session.waitTicks(40);
 			int[] before = new int[1];

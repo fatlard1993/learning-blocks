@@ -266,6 +266,12 @@ public final class Together implements FabricClientGameTest {
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "learn pair " + named[0] + " Ava");
 			check(Rooms.of(fake) != null && Rooms.of(fake) == Rooms.of(max), "/learn pair did not put them together");
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "learn unpair " + named[0]);
+		});
+		// Ava stays in the shared room until her own is up.
+		Waits.until(session, 300, "/learn unpair never moved Ava", () -> Rooms.of(ava[0]) != Rooms.of(session.player()));
+		session.onServer(server -> {
+			ServerPlayer max = session.player();
+			FakePlayer fake = ava[0];
 			check(Rooms.of(fake) != null && Rooms.of(fake) != Rooms.of(max) && !Rooms.of(max).shared(), "/learn unpair did not split them");
 			check(Rooms.of(fake).origin().equals(justfatlard.learning_blocks.classroom.Plots.origin(fake)), "Ava's own room is not on her plot");
 			net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.invoker().onPlayDisconnect(fake.connection, server);

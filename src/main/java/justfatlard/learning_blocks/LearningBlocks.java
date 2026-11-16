@@ -189,6 +189,7 @@ public class LearningBlocks implements ModInitializer {
 
 		Visit.init();
 		Plots.init();
+		justfatlard.learning_blocks.puzzle.RoomBuilds.init();
 		Progress.init();
 		PrizeSessions.init();
 		PrizeEditor.register(PandoricalApi.screens());
@@ -221,6 +222,7 @@ public class LearningBlocks implements ModInitializer {
 				// Already back (a quick re-login): everything belongs to the new session now.
 				if (Rooms.relogged(handler.player)) return;
 				Rooms.forget(handler.player, had);
+				justfatlard.learning_blocks.puzzle.RoomBuilds.drop(handler.player.getUUID());
 				justfatlard.learning_blocks.sound.Sounds.forget(handler.player.getUUID());
 				PrizeEditor.forget(handler.player.getUUID());
 				Review.forget(handler.player.getUUID());
@@ -237,6 +239,7 @@ public class LearningBlocks implements ModInitializer {
 			Later.tick(server);
 			Narrator.tick(server);
 			Rooms.tick(server);
+			justfatlard.learning_blocks.puzzle.RoomBuilds.tick(server);
 			Classroom.tick(server);
 			justfatlard.learning_blocks.Safely.run("Daily schedules", () -> justfatlard.learning_blocks.classroom.Schedules.tick(server));
 		});

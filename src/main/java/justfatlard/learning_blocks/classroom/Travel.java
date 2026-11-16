@@ -8,6 +8,7 @@ import justfatlard.learning_blocks.editor.PrizeSessions;
 import justfatlard.learning_blocks.narration.Narration;
 import justfatlard.learning_blocks.narration.Narrator;
 import justfatlard.learning_blocks.puzzle.Room;
+import justfatlard.learning_blocks.puzzle.RoomBuilds;
 import justfatlard.learning_blocks.puzzle.Rooms;
 import justfatlard.learning_blocks.reward.Prizes;
 import justfatlard.learning_blocks.reward.Progress;
@@ -45,7 +46,15 @@ public final class Travel {
 	 * hands back to them; the other order could leave a child with nothing and no record of it.
 	 */
 	public static @Nullable String enter(ServerPlayer player) {
-		return enter(player, null);
+		return enter(player, null, false, null);
+	}
+
+	/**
+	 * The same, and then {@code arrived} once they are standing in the room: a moment later, when
+	 * their room has to be put up first. Not run if they never get there.
+	 */
+	public static @Nullable String enter(ServerPlayer player, java.util.function.Consumer<ServerPlayer> arrived) {
+		return enter(player, null, false, arrived);
 	}
 
 	/**
@@ -64,7 +73,7 @@ public final class Travel {
 			Rooms.begin(player);
 			return null;
 		}
-		return enter(player, room);
+		return enter(player, room, false, null);
 	}
 
 	/**
@@ -87,7 +96,7 @@ public final class Travel {
 			Rooms.begin(teacher);
 			return null;
 		}
-		return enter(teacher, room, true);
+		return enter(teacher, room, true, null);
 	}
 
 	/**
@@ -98,30 +107,69 @@ public final class Travel {
 		Room room = Rooms.of(player);
 		if (room == null || !Places.isClassroom(player.level())) return "not in the classroom";
 		if (!room.shared()) return null;
-		Rooms.close(player);
-		Room own = Rooms.open(player, (ServerLevel) player.level(), Plots.origin(player));
-		Vec3 at = own.spawnFor(player.getUUID());
-		player.teleportTo((ServerLevel) player.level(), at.x, at.y, at.z, Set.of(), Room.FACING_YAW, 0, true);
-		Rooms.begin(player);
+		// In the shared room until their own is up.
+		RoomBuilds.request(player, (ServerLevel) player.level(), Plots.origin(player), p -> {
+			if (Rooms.of(p) != room || !room.shared() || !Places.isClassroom(p.level()) || p.isDeadOrDying()) return;
+			Rooms.close(p);
+			Room own = Rooms.open(p, (ServerLevel) p.level(), Plots.origin(p));
+			Vec3 at = own.spawnFor(p.getUUID());
+			p.teleportTo((ServerLevel) p.level(), at.x, at.y, at.z, Set.of(), Room.FACING_YAW, 0, true);
+			Rooms.begin(p);
+		});
 		return null;
 	}
 
-	private static @Nullable String enter(ServerPlayer player, @Nullable Room joining) {
-		return enter(player, joining, false);
-	}
-
-	private static @Nullable String enter(ServerPlayer player, @Nullable Room joining, boolean teaching) {
-		MinecraftServer server = player.level().getServer();
+	/** Why this player can't go into the classroom just now, said to them, or null. */
+	private static @Nullable String refusal(ServerPlayer player) {
 		if (Visit.of(player) != null || Places.isClassroom(player.level())) return "You're already in the classroom";
 		if (player.isDeadOrDying()) return "Not just now";
 		if (Places.heldElsewhere(player.level())) return "Not from here: leave this world first";
 		if (PrizeSessions.editing(player)) return "Finish editing prizes first: /learn prizes done";
-		ServerLevel classroom = server.getLevel(Places.CLASSROOM);
+		return null;
+	}
+
+	/**
+	 * Into a room of their own, the door opening while it is put up; into somebody else's, at once. Asked
+	 * again while their room goes up, it is the same trip, with {@code arrived} waiting on it too.
+	 */
+	private static @Nullable String enter(ServerPlayer player, @Nullable Room joining, boolean teaching,
+			java.util.function.@Nullable Consumer<ServerPlayer> arrived) {
+		java.util.function.Consumer<ServerPlayer> then = arrived == null ? p -> {} : p -> {
+			if (Visit.of(p) != null && Places.isClassroom(p.level())) arrived.accept(p);
+		};
+		if (joining == null && Visit.of(player) == null && RoomBuilds.alsoThen(player, then)) return null;
+		String refused = refusal(player);
+		if (refused != null) return refused;
+		ServerLevel classroom = player.level().getServer().getLevel(Places.CLASSROOM);
 		if (classroom == null) {
 			LearningBlocks.LOGGER.error("[{}] The classroom dimension is missing; is the mod's datapack disabled?", LearningBlocks.MOD_ID);
 			return "The classroom isn't there. Ask a grown-up to check the server.";
 		}
+		if (joining != null) {
+			refused = cross(player, classroom, joining, teaching);
+			if (refused == null) then.accept(player);
+			return refused;
+		}
+		String[] failed = new String[1];
+		boolean[] asked = new boolean[1];
+		boolean now = RoomBuilds.request(player, classroom, Plots.origin(player), p -> {
+			// Things may have changed while the room went up: asked again from the top.
+			String no = asked[0] ? refusal(p) : null;
+			if (no == null) no = cross(p, classroom, null, false);
+			if (no == null) then.accept(p);
+			else if (asked[0]) p.sendSystemMessage(net.minecraft.network.chat.Component.literal(no));
+			else failed[0] = no;
+		});
+		asked[0] = true;
+		if (now) return failed[0];
+		player.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
+			net.minecraft.core.Holder.direct(net.minecraft.sounds.SoundEvents.WOODEN_DOOR_OPEN), net.minecraft.sounds.SoundSource.BLOCKS,
+			player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, player.getRandom().nextLong()));
+		return null;
+	}
 
+	/** The way in itself: everything put aside, the room, the trip. What went wrong, or null. */
+	private static @Nullable String cross(ServerPlayer player, ServerLevel classroom, @Nullable Room joining, boolean teaching) {
 		if (player.isPassenger()) player.stopRiding();
 		// A crafting table, an anvil or a furnace left open would give its grid back into the
 		// classroom's empty pack, to be cleared on the way out: closed first, it goes home in the stash.
@@ -359,10 +407,14 @@ public final class Travel {
 		boolean inside = Places.isClassroom(player.level());
 		if (visit != null && inside) {
 			player.setGameMode(GameType.SURVIVAL);
-			Room room = Rooms.open(player, player.level(), Plots.origin(player));
-			Vec3 spawn = room.spawnFor(player.getUUID());
-			player.teleportTo(player.level(), spawn.x, spawn.y, spawn.z, Set.of(), Room.FACING_YAW, 0, true);
-			Rooms.begin(player);
+			// Where they stand until their room is up again: on the spot, if it still is.
+			RoomBuilds.request(player, player.level(), Plots.origin(player), p -> {
+				if (Visit.of(p) == null || !Places.isClassroom(p.level()) || p.isDeadOrDying()) return;
+				Room room = Rooms.open(p, p.level(), Plots.origin(p));
+				Vec3 spawn = room.spawnFor(p.getUUID());
+				p.teleportTo(p.level(), spawn.x, spawn.y, spawn.z, Set.of(), Room.FACING_YAW, 0, true);
+				Rooms.begin(p);
+			});
 		} else if (visit != null) {
 			int lessons = visit.lessons();
 			handBack(player, visit);
@@ -410,16 +462,22 @@ public final class Travel {
 	 * visit, for null). Already there, it only sets the lessons. What went wrong, or null.
 	 */
 	public static @Nullable String send(ServerPlayer player, @Nullable Integer lessons) {
+		return send(player, lessons, p -> {});
+	}
+
+	/** The same, and then {@code arrived} once they are in with their lessons set. */
+	public static @Nullable String send(ServerPlayer player, @Nullable Integer lessons, java.util.function.Consumer<ServerPlayer> arrived) {
 		// Lessons nobody could ever finish would keep the portal shut for good.
 		if (lessons != null && lessons > 0 && !Rooms.puzzleAvailable(player)) {
 			return "there are no words here for them to read, so lessons would never end";
 		}
-		if (Visit.of(player) == null) {
-			String refused = enter(player);
-			if (refused != null) return refused;
-		}
-		if (lessons != null) setLessons(player, lessons);
-		if (lessons != null && lessons > 0) Progress.of(player).lessonNote(player, "sent in for " + lessons + (lessons == 1 ? " lesson" : " lessons"));
+		java.util.function.Consumer<ServerPlayer> sent = p -> {
+			if (lessons != null) setLessons(p, lessons);
+			if (lessons != null && lessons > 0) Progress.of(p).lessonNote(p, "sent in for " + lessons + (lessons == 1 ? " lesson" : " lessons"));
+			arrived.accept(p);
+		};
+		if (Visit.of(player) == null) return enter(player, sent);
+		sent.accept(player);
 		return null;
 	}
 
@@ -433,10 +491,10 @@ public final class Travel {
 		Progress progress = Progress.of(player);
 		int owed = progress.lessonsOwed();
 		if (owed <= 0 || Visit.of(player) != null) return;
-		if (enter(player) == null) {
-			progress.setLessonsOwed(player, 0);
-			setLessons(player, owed);
-		}
+		enter(player, p -> {
+			Progress.of(p).setLessonsOwed(p, 0);
+			setLessons(p, owed);
+		});
 	}
 
 	public static void respawned(ServerPlayer player) {

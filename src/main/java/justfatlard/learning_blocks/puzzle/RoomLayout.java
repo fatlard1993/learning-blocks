@@ -169,29 +169,63 @@ record RoomLayout(BlockPos origin) {
 		return new Vec3(x, origin.getY(), creature.z);
 	}
 
+	/** The floor under the walls, the walls, and the open air up to their top: every block the shell sets. */
+	static final int SPAN_X = 2 * HALF + 1;
+	static final int SPAN_Z = BACK - FRONT + 1;
+	static final int SPAN_Y = HEIGHT + 2;
+	static final int CELLS = SPAN_X * SPAN_Z * SPAN_Y;
+
+	/** What the shell has at cell {@code i}, its place put in {@code at}. */
+	BlockState shell(int i, BlockPos.MutableBlockPos at) {
+		int y = i % SPAN_Y - 1;
+		int z = i / SPAN_Y % SPAN_Z + FRONT;
+		int x = i / (SPAN_Y * SPAN_Z) - HALF;
+		at.setWithOffset(origin, x, y, z);
+		// Walls, not a lid: the sky stays open, so a child's own rain and snow can fall in.
+		boolean edge = Math.abs(x) == HALF || z == FRONT || z == BACK;
+		if (edge) return Blocks.BARRIER.defaultBlockState();
+		if (y == -1) return Blocks.BIRCH_PLANKS.defaultBlockState();
+		if (z == -5 && y <= 4) return BOARD;
+		if (z == -5 && y == 5) return Blocks.SPRUCE_PLANKS.defaultBlockState();
+		return Blocks.AIR.defaultBlockState();
+	}
+
+	/**
+	 * The shell from cell {@code next[0]} on, until {@code most} blocks have been set: a block already
+	 * right is passed over. {@code next[0]} is left at the cell to carry on from, {@link #CELLS} once
+	 * the shell is up. How many blocks were set.
+	 */
+	int raise(ServerLevel level, int[] next, int most) {
+		BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
+		int set = 0;
+		for (; next[0] < CELLS && set < most; next[0]++) {
+			BlockState state = shell(next[0], at);
+			if (level.getBlockState(at) == state) continue;
+			level.setBlock(at, state, FLAGS);
+			set++;
+		}
+		return set;
+	}
+
+	/** The chunks the room and the air painted round it stand in. */
+	java.util.List<net.minecraft.world.level.ChunkPos> chunks() {
+		java.util.List<net.minecraft.world.level.ChunkPos> chunks = new java.util.ArrayList<>();
+		int reach = HALF + 1;
+		for (int x = SectionPos.blockToSectionCoord(origin.getX() - reach); x <= SectionPos.blockToSectionCoord(origin.getX() + reach); x++) {
+			for (int z = SectionPos.blockToSectionCoord(origin.getZ() + FRONT - 1); z <= SectionPos.blockToSectionCoord(origin.getZ() + BACK + 1); z++) {
+				chunks.add(new net.minecraft.world.level.ChunkPos(x, z));
+			}
+		}
+		return chunks;
+	}
+
 	void build(ServerLevel level) {
 		level.getChunk(SectionPos.blockToSectionCoord(origin.getX()), SectionPos.blockToSectionCoord(origin.getZ()));
 		for (Entity entity : level.getEntities((Entity) null, bounds(), entity -> !(entity instanceof Player))) {
 			entity.discard();
 		}
 
-		BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
-		for (int x = -HALF; x <= HALF; x++) {
-			for (int z = FRONT; z <= BACK; z++) {
-				for (int y = -1; y <= HEIGHT; y++) {
-					at.setWithOffset(origin, x, y, z);
-					// Walls, not a lid: the sky stays open, so a child's own rain and snow can fall in.
-					boolean edge = Math.abs(x) == HALF || z == FRONT || z == BACK;
-					BlockState state;
-					if (edge) state = Blocks.BARRIER.defaultBlockState();
-					else if (y == -1) state = Blocks.BIRCH_PLANKS.defaultBlockState();
-					else if (z == -5 && y <= 4) state = Blocks.DYED_TERRACOTTA.green().defaultBlockState();
-					else if (z == -5 && y == 5) state = Blocks.SPRUCE_PLANKS.defaultBlockState();
-					else state = Blocks.AIR.defaultBlockState();
-					level.setBlock(at, state, FLAGS);
-				}
-			}
-		}
+		raise(level, new int[1], CELLS);
 
 		// The room's air: the classroom's own biome, which can rain or (turned cold) snow.
 		justfatlard.learning_blocks.classroom.Sky.paint(level, origin, justfatlard.learning_blocks.classroom.Sky.BIOME);

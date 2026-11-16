@@ -295,10 +295,7 @@ public final class Rooms {
 			return null;
 		}
 		if (of(player) == null || !Places.isClassroom(player.level())) {
-			String refused = justfatlard.learning_blocks.classroom.Travel.enter(player);
-			if (refused != null) return refused;
-			justfatlard.learning_blocks.Later.after(player, 60, p -> startSilly(p));
-			return null;
+			return justfatlard.learning_blocks.classroom.Travel.enter(player, in -> justfatlard.learning_blocks.Later.after(in, 60, p -> startSilly(p)));
 		}
 		return startSilly(player) ? null : "Not just now: the room is busy";
 	}
@@ -555,6 +552,7 @@ public final class Rooms {
 
 	public static void clear() {
 		rooms.clear();
+		RoomBuilds.clear();
 	}
 
 	/**

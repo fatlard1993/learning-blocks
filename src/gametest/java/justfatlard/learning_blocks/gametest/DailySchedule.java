@@ -12,6 +12,7 @@ import justfatlard.learning_blocks.classroom.Travel;
 import justfatlard.learning_blocks.classroom.Visit;
 import justfatlard.learning_blocks.narration.Narrator;
 import justfatlard.learning_blocks.puzzle.Room;
+import justfatlard.learning_blocks.puzzle.RoomBuilds;
 import justfatlard.learning_blocks.puzzle.Rooms;
 import justfatlard.learning_blocks.reward.Progress;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -61,7 +62,11 @@ public final class DailySchedule implements FabricClientGameTest {
 			Schedules.load();
 			check(Schedules.of(id[0]) != null && Schedules.of(id[0]).lessons() == 2 && Schedules.of(id[0]).enabled(), "the schedule did not survive a reload");
 			Travel.loggedIn(player);
-			check(Visit.of(player) != null && Travel.lessons(player) == 2, "joining with none done did not send them in for two: " + Travel.lessons(player));
+		});
+		Waits.inside(session);
+		session.onServer(server -> {
+			ServerPlayer player = session.player();
+			check(Travel.lessons(player) == 2, "joining with none done did not send them in for two: " + Travel.lessons(player));
 			check(Travel.kept(player), "a scheduled child is not kept in");
 		});
 		Waits.until(session, 400, "\"Reading time first!\" was never said", () -> Narrator.log(session.player()).contains("clip:phrase/reading_time"));
@@ -93,6 +98,10 @@ public final class DailySchedule implements FabricClientGameTest {
 			check(Schedules.remaining(player) == 2, "the next day does not ask for two again");
 			Progress.of(player).setDoneTodayForTests(player, 1);
 			Travel.loggedIn(player);
+		});
+		Waits.inside(session);
+		session.onServer(server -> {
+			ServerPlayer player = session.player();
 			check(Travel.lessons(player) == 1, "a round done earlier today did not count: " + Travel.lessons(player));
 			release(server, name[0]);
 			asPlayer(player, "learn leave");
@@ -105,7 +114,7 @@ public final class DailySchedule implements FabricClientGameTest {
 			Schedules.setWeekday(id[0], name[0], DayOfWeek.THURSDAY, 0);
 			Progress.of(player).setDoneTodayForTests(player, 0);
 			Travel.loggedIn(player);
-			check(Visit.of(player) == null, "a weekday with no reading sent them in anyway");
+			check(Visit.of(player) == null && !RoomBuilds.waiting(player), "a weekday with no reading sent them in anyway");
 
 			// The day's boundary is the time zone's.
 			Progress.useInstant(() -> Instant.parse("2026-10-01T03:00:00Z"));
@@ -123,16 +132,20 @@ public final class DailySchedule implements FabricClientGameTest {
 		session.waitTicks(120);
 		session.onServer(server -> {
 			ServerPlayer player = session.player();
-			check(Visit.of(player) == null, "a new day while playing sent them in without enforce_on_rollover");
+			check(Visit.of(player) == null && !RoomBuilds.waiting(player), "a new day while playing sent them in without enforce_on_rollover");
 
 			// An operator: never kept in without a schedule; kept in with one.
 			Ops.op(server, player);
 			Schedules.set(id[0], name[0], 0);
 			Travel.loggedIn(player);
-			check(Visit.of(player) == null, "an operator with no schedule was sent in");
+			check(Visit.of(player) == null && !RoomBuilds.waiting(player), "an operator with no schedule was sent in");
 			Schedules.set(id[0], name[0], 1);
 			Travel.loggedIn(player);
-			check(Visit.of(player) != null && Travel.kept(player), "an operator who scheduled themselves was not kept in");
+		});
+		Waits.inside(session);
+		session.onServer(server -> {
+			ServerPlayer player = session.player();
+			check(Travel.kept(player), "an operator who scheduled themselves was not kept in");
 			Schedules.set(id[0], name[0], 0);
 			check(!Travel.kept(player), "an operator with the schedule off is still kept in");
 			server.getPlayerList().deop(new net.minecraft.server.players.NameAndId(player.getGameProfile()));

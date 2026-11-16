@@ -397,21 +397,30 @@ public final class LearnCommand {
 			context.getSource().sendFailure(Component.literal("Pick two different readers"));
 			return 0;
 		}
+		CommandSourceStack source = context.getSource();
 		var room = justfatlard.learning_blocks.puzzle.Rooms.of(first);
 		if (room == null) {
-			String refused = Travel.enter(first);
-			room = justfatlard.learning_blocks.puzzle.Rooms.of(first);
-			if (refused != null || room == null) {
-				context.getSource().sendFailure(Component.literal(first.getGameProfile().name() + ": " + (refused != null ? refused : "couldn't go in")));
+			// In with them once the first is standing in their room.
+			String refused = Travel.enter(first, in -> {
+				var theirs = justfatlard.learning_blocks.puzzle.Rooms.of(in);
+				if (theirs != null) pairWith(source, in, second, theirs);
+			});
+			if (refused != null) {
+				source.sendFailure(Component.literal(first.getGameProfile().name() + ": " + refused));
 				return 0;
 			}
+			return 1;
 		}
+		return pairWith(source, first, second, room);
+	}
+
+	private static int pairWith(CommandSourceStack source, ServerPlayer first, ServerPlayer second, justfatlard.learning_blocks.puzzle.Room room) {
 		String refused = Travel.readWith(second, room);
 		if (refused != null) {
-			context.getSource().sendFailure(Component.literal(second.getGameProfile().name() + ": " + refused));
+			source.sendFailure(Component.literal(second.getGameProfile().name() + ": " + refused));
 			return 0;
 		}
-		context.getSource().sendSuccess(() -> Component.literal(first.getGameProfile().name() + " and " + second.getGameProfile().name()
+		source.sendSuccess(() -> Component.literal(first.getGameProfile().name() + " and " + second.getGameProfile().name()
 			+ " are reading together"), true);
 		return 1;
 	}

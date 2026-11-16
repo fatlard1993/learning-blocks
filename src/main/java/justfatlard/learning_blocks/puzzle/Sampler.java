@@ -169,15 +169,12 @@ public final class Sampler {
 		last.put(player.getUUID(), kind);
 		Room room = Rooms.of(player);
 		if (room == null || !Places.isClassroom(player.level())) {
-			String refused = Travel.enter(player);
-			if (refused != null) return refused;
 			String chosen = target;
 			// Once they are standing in it, and its own first round is out of the way.
-			Later.after(player, 60, p -> {
+			return Travel.enter(player, in -> Later.after(in, 60, p -> {
 				String problem = run(p, kind, chosen);
 				if (problem != null) p.sendSystemMessage(net.minecraft.network.chat.Component.literal(problem));
-			});
-			return null;
+			}));
 		}
 		if (kind == Kind.TEAMUP && !room.shared()) return "A team-up needs two reading together: /learn pair, or /learn join";
 		if (room.busy() || room.leaving(player)) return "Not just now: the room is busy";
@@ -227,13 +224,10 @@ public final class Sampler {
 		}
 		Room room = Rooms.of(player);
 		if (room == null || !Places.isClassroom(player.level())) {
-			String refused = Travel.enter(player);
-			if (refused != null) return refused;
-			Later.after(player, 60, p -> {
+			return Travel.enter(player, in -> Later.after(in, 60, p -> {
 				String problem = runSubject(p, subject, kind, target);
 				if (problem != null) p.sendSystemMessage(net.minecraft.network.chat.Component.literal(problem));
-			});
-			return null;
+			}));
 		}
 		if (room.busy() || room.leaving(player)) return "Not just now: the room is busy";
 		room.practice = true;

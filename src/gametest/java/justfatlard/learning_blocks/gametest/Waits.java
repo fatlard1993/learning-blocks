@@ -16,6 +16,13 @@ final class Waits {
 			|| justfatlard.learning_blocks.classroom.Travel.lessons(session.player()) > 0);
 	}
 
+	/** In the classroom, in a room: after a way in, which waits for the room to be put up first. */
+	static void inside(Smoke.Session session) {
+		until(session, 300, "never got into a room", () -> justfatlard.learning_blocks.classroom.Visit.of(session.player()) != null
+			&& justfatlard.learning_blocks.classroom.Places.isClassroom(session.player().level())
+			&& justfatlard.learning_blocks.puzzle.Rooms.of(session.player()) != null);
+	}
+
 	static void until(Smoke.Session session, int maxTicks, String failure, BooleanSupplier condition) {
 		boolean[] done = new boolean[1];
 		for (int tick = 0; tick <= maxTicks; tick++) {

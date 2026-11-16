@@ -59,6 +59,7 @@ public final class BlendNarration implements FabricClientGameTest {
 
 			session.command("/learn");
 			// The first prompt waits for the client to finish loading into the room, then a moment.
+			Waits.until(session, 200, "never got into the room", () -> Rooms.of(session.player()) != null);
 			session.onServer(server -> check(Rooms.of(session.player()).promptHeld(), "the first prompt was not held for the client"));
 			Waits.until(session, 200, "the held prompt was never said", () -> !Rooms.of(session.player()).promptHeld()
 				&& Narrator.log(session.player()).contains("clip:phrase/make_the_word"));

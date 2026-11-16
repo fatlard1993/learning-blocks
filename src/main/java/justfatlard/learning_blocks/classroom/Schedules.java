@@ -335,24 +335,25 @@ public final class Schedules {
 		seenDay.put(player.getUUID(), Progress.today());
 		int left = remaining(player);
 		if (left <= 0 || Visit.of(player) != null || player.isDeadOrDying()) return false;
-		String refused = Travel.send(player, left);
+		String refused = Travel.send(player, left, in -> {
+			// Paired for daily lessons: in with their partner, if they are already learning.
+			UUID with = together(in.getUUID());
+			ServerPlayer partner = with == null ? null : in.level().getServer().getPlayerList().getPlayer(with);
+			Room theirs = partner == null ? null : Rooms.of(partner);
+			if (theirs != null && !theirs.leaving()) {
+				String moved = Travel.readWith(in, theirs);
+				if (moved != null) LearningBlocks.LOGGER.info("[{}] {} could not join {} for daily lessons: {}", LearningBlocks.MOD_ID,
+					in.getGameProfile().name(), partner.getGameProfile().name(), moved);
+			}
+			Rooms.learningTime(in);
+			Progress.of(in).lessonNote(in, "daily lessons: " + left + " to go today");
+			LearningBlocks.LOGGER.info("[{}] {} has {} of today's {} lessons to read first", LearningBlocks.MOD_ID, in.getGameProfile().name(), left,
+				requiredToday(in));
+		});
 		if (refused != null) {
 			LearningBlocks.LOGGER.warn("[{}] {}'s daily lessons could not start: {}", LearningBlocks.MOD_ID, player.getGameProfile().name(), refused);
 			return false;
 		}
-		// Paired for daily lessons: in with their partner, if they are already learning.
-		UUID with = together(player.getUUID());
-		ServerPlayer partner = with == null ? null : player.level().getServer().getPlayerList().getPlayer(with);
-		Room theirs = partner == null ? null : Rooms.of(partner);
-		if (theirs != null && !theirs.leaving()) {
-			String moved = Travel.readWith(player, theirs);
-			if (moved != null) LearningBlocks.LOGGER.info("[{}] {} could not join {} for daily lessons: {}", LearningBlocks.MOD_ID,
-				player.getGameProfile().name(), partner.getGameProfile().name(), moved);
-		}
-		Rooms.learningTime(player);
-		Progress.of(player).lessonNote(player, "daily lessons: " + left + " to go today");
-		LearningBlocks.LOGGER.info("[{}] {} has {} of today's {} lessons to read first", LearningBlocks.MOD_ID, player.getGameProfile().name(), left,
-			requiredToday(player));
 		return true;
 	}
 
