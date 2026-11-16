@@ -147,6 +147,10 @@ public final class Sampler {
 		return last.get(player.getUUID());
 	}
 
+	public static void clear() {
+		last.clear();
+	}
+
 	/**
 	 * A practice round of this kind, for this word or letter (or a random one), now. Not in the
 	 * classroom: in they go, and the round starts once they are there. What went wrong, said

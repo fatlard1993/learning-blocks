@@ -96,6 +96,11 @@ public final class Review {
 		states.clear();
 		capitals.clear();
 		starred.clear();
+		trickyShown.clear();
+		toyboxShown.clear();
+		toyboxHinted.clear();
+		toyboxCounted.clear();
+		masteredShown.clear();
 		talking.clear();
 	}
 
@@ -103,6 +108,11 @@ public final class Review {
 		states.remove(player);
 		capitals.remove(player);
 		starred.remove(player);
+		trickyShown.remove(player);
+		toyboxShown.remove(player);
+		toyboxHinted.remove(player);
+		toyboxCounted.remove(player);
+		masteredShown.remove(player);
 		talking.remove(player);
 	}
 

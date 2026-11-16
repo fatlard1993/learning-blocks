@@ -224,6 +224,7 @@ public class LearningBlocks implements ModInitializer {
 				justfatlard.learning_blocks.sound.Sounds.forget(handler.player.getUUID());
 				PrizeEditor.forget(handler.player.getUUID());
 				Review.forget(handler.player.getUUID());
+				justfatlard.learning_blocks.review.SamplerScreen.forget(handler.player.getUUID());
 				justfatlard.learning_blocks.review.ProgressView.forget(handler.player.getUUID());
 				justfatlard.learning_blocks.classroom.Schedules.forget(handler.player.getUUID());
 				justfatlard.learning_blocks.classroom.JoinRequests.forget(server, handler.player.getUUID());
@@ -249,6 +250,8 @@ public class LearningBlocks implements ModInitializer {
 			Narrator.clear();
 			Rooms.clear();
 			Review.clear();
+			justfatlard.learning_blocks.review.SamplerScreen.clear();
+			justfatlard.learning_blocks.puzzle.Sampler.clear();
 			justfatlard.learning_blocks.review.ProgressView.clear();
 			PrizeEditor.clear();
 			justfatlard.learning_blocks.puzzle.Punches.clear();

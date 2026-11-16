@@ -36,6 +36,16 @@ public final class SamplerScreen {
 		api.onClose(TYPE, player -> open.remove(player.getUUID()));
 	}
 
+	public static void forget(UUID player) {
+		open.remove(player);
+		ran.remove(player);
+	}
+
+	public static void clear() {
+		open.clear();
+		ran.clear();
+	}
+
 	public static boolean open(ServerPlayer viewer) {
 		if (!Admins.may(viewer) || !PandoricalApi.isAvailable(viewer)) return false;
 		Sampler.Kind[] kinds = Sampler.Kind.values();
