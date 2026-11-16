@@ -28,12 +28,20 @@ final class LootPicker {
 	static final String SEARCH = "loot_search";
 	static final int ROWS = 6;
 
+	/** The sorted ids, kept for as long as the loot tables they came from (a reload makes new ones). */
+	private static java.lang.ref.WeakReference<Object> sortedFrom = new java.lang.ref.WeakReference<>(null);
+	private static List<String> sorted = List.of();
+
 	static List<String> all(MinecraftServer server) {
+		Object from = server.reloadableRegistries();
+		if (sortedFrom.get() == from) return sorted;
 		List<String> ids = new ArrayList<>();
 		server.reloadableRegistries().lookup().lookup(Registries.LOOT_TABLE)
 			.ifPresent(tables -> tables.listElementIds().forEach(key -> ids.add(key.identifier().toString())));
 		ids.sort(String::compareTo);
-		return ids;
+		sorted = List.copyOf(ids);
+		sortedFrom = new java.lang.ref.WeakReference<>(from);
+		return sorted;
 	}
 
 	/** The ids holding every word typed, those whose path starts with the first word ahead. */
