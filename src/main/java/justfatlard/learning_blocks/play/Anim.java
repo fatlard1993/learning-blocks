@@ -45,8 +45,18 @@ public final class Anim {
 		}
 	}
 
-	/** A part of a toy drawn in pieces, its pivot in model units, and its poses. */
-	public record Part(String name, float px, float py, float pz, List<Turn> turns) {}
+	/**
+	 * A part of a toy drawn in pieces, its pivot in model units, and its poses: those it is always
+	 * keyed at, and the step-a-tick poses of its spins, keyed only for a client that cannot be told
+	 * to turn it.
+	 */
+	public record Part(String name, float px, float py, float pz, List<Turn> turns, List<Turn> spinSteps, List<Spin> spins) {}
+
+	/**
+	 * A part turning steadily round one of its own axes from a tick, for so many ticks, ending on a
+	 * whole number of turns: the same turn as its spin steps, told once to a client that can turn it.
+	 */
+	public record Spin(char axis, int from, int ticks, float degreesPerTick) {}
 
 	final List<Key> keys = new ArrayList<>();
 	final List<Event> events = new ArrayList<>();
@@ -54,6 +64,7 @@ public final class Anim {
 	@Nullable String pieces;
 	private @Nullable Part current;
 	private java.util.@Nullable SortedSet<Integer> poseTicks;
+	private java.util.@Nullable SortedSet<Integer> poseTicksSpun;
 
 	public static Anim of() {
 		return new Anim().key(0, 0, 0, 0);
@@ -63,7 +74,10 @@ public final class Anim {
 		int last = 0;
 		for (Key key : keys) last = Math.max(last, key.tick());
 		for (Event event : events) last = Math.max(last, event.tick());
-		for (Part part : parts.values()) for (Turn turn : part.turns()) last = Math.max(last, turn.tick());
+		for (Part part : parts.values()) {
+			for (Turn turn : part.turns()) last = Math.max(last, turn.tick());
+			for (Turn turn : part.spinSteps()) last = Math.max(last, turn.tick());
+		}
 		return last;
 	}
 
@@ -83,15 +97,16 @@ public final class Anim {
 
 	/** The part the poses after this are for, with its pivot (model units); it starts at rest. */
 	public Anim part(String name, float px, float py, float pz) {
-		poseTicks = null;
-		current = parts.computeIfAbsent(name, key -> new Part(key, px, py, pz, new ArrayList<>(List.of(new Turn(0, 0, 0, 0, 0, 0, 0)))));
+		forgetPoseTicks();
+		current = parts.computeIfAbsent(name, key -> new Part(key, px, py, pz, new ArrayList<>(List.of(new Turn(0, 0, 0, 0, 0, 0, 0))),
+			new ArrayList<>(), new ArrayList<>()));
 		return this;
 	}
 
 	/** The current part, at a tick: moved by x, y, z (model units) and turned about its pivot. */
 	public Anim turn(int tick, float x, float y, float z, float rx, float ry, float rz) {
 		if (current == null) throw new IllegalStateException("a part's pose with no part named");
-		poseTicks = null;
+		forgetPoseTicks();
 		current.turns().add(new Turn(tick, x, y, z, rx, ry, rz));
 		return this;
 	}
@@ -99,21 +114,41 @@ public final class Anim {
 	/** The same, stretched along its own axes too (a kite's string paying out). */
 	public Anim turn(int tick, float x, float y, float z, float rx, float ry, float rz, float sx, float sy, float sz) {
 		if (current == null) throw new IllegalStateException("a part's pose with no part named");
-		poseTicks = null;
+		forgetPoseTicks();
 		current.turns().add(new Turn(tick, x, y, z, rx, ry, rz, sx, sy, sz));
 		return this;
 	}
 
-	/** The current part spinning round one axis ({@code 'x'}, {@code 'y'} or {@code 'z'}) from one tick to another, a step every tick. */
+	/**
+	 * The current part spinning round one axis ({@code 'x'}, {@code 'y'} or {@code 'z'}) from one tick
+	 * to another, a step every tick, and on to the nearest whole turn two ticks later. A client that
+	 * can turn a display is told the spin once instead, at the steady pace that ends on that same
+	 * whole turn at that same tick.
+	 */
 	public Anim spin(char axis, int from, int to, float degreesPerTick) {
+		if (current == null) throw new IllegalStateException("a spin with no part named");
+		forgetPoseTicks();
+		List<Turn> steps = new ArrayList<>();
 		for (int tick = from; tick <= to; tick++) {
 			float turned = (tick - from) * degreesPerTick;
-			turn(tick, 0, 0, 0, axis == 'x' ? turned : 0, axis == 'y' ? turned : 0, axis == 'z' ? turned : 0);
+			steps.add(new Turn(tick, 0, 0, 0, axis == 'x' ? turned : 0, axis == 'y' ? turned : 0, axis == 'z' ? turned : 0));
 		}
 		// Back to rest from the nearest whole turn, so it ends exactly as drawn.
 		float last = (to - from) * degreesPerTick;
 		float home = Math.round(last / 360.0F) * 360.0F;
-		return turn(to + 2, 0, 0, 0, axis == 'x' ? home : 0, axis == 'y' ? home : 0, axis == 'z' ? home : 0);
+		steps.add(new Turn(to + 2, 0, 0, 0, axis == 'x' ? home : 0, axis == 'y' ? home : 0, axis == 'z' ? home : 0));
+		if (home == 0) {
+			current.turns().addAll(steps);
+		} else {
+			current.spinSteps().addAll(steps);
+			current.spins().add(new Spin(axis, from, to + 2 - from, home / (to + 2 - from)));
+		}
+		return this;
+	}
+
+	public boolean spins() {
+		for (Part part : parts.values()) if (!part.spins().isEmpty()) return true;
+		return false;
 	}
 
 	Key wholeAt(int tick) {
@@ -131,12 +166,15 @@ public final class Anim {
 			lerp(before.sx(), after.sx(), t), lerp(before.sy(), after.sy(), t), lerp(before.sz(), after.sz(), t));
 	}
 
-	static Turn partAt(Part part, int tick) {
+	/** A part's pose at a tick: {@code spun}, as drawn under its spins told to the client, or else with their steps. */
+	static Turn partAt(Part part, int tick, boolean spun) {
 		Turn before = null;
 		Turn after = null;
-		for (Turn turn : part.turns()) {
-			if (turn.tick() <= tick && (before == null || turn.tick() >= before.tick())) before = turn;
-			if (turn.tick() >= tick && (after == null || turn.tick() < after.tick())) after = turn;
+		for (List<Turn> turns : spun ? List.of(part.turns()) : List.of(part.turns(), part.spinSteps())) {
+			for (Turn turn : turns) {
+				if (turn.tick() <= tick && (before == null || turn.tick() >= before.tick())) before = turn;
+				if (turn.tick() >= tick && (after == null || turn.tick() < after.tick())) after = turn;
+			}
 		}
 		if (before == null) return after != null ? after : new Turn(tick, 0, 0, 0, 0, 0, 0);
 		if (after == null || after.tick() == before.tick()) return before;
@@ -156,13 +194,25 @@ public final class Anim {
 			.translate(-pivot.x, -pivot.y, -pivot.z);
 	}
 
-	java.util.SortedSet<Integer> poseTicks() {
-		if (poseTicks != null) return poseTicks;
+	/** The ticks something is posed at: {@code spun}, leaving out the steps of spins told to the client. */
+	java.util.SortedSet<Integer> poseTicks(boolean spun) {
+		java.util.SortedSet<Integer> cached = spun ? poseTicksSpun : poseTicks;
+		if (cached != null) return cached;
 		java.util.SortedSet<Integer> ticks = new java.util.TreeSet<>();
 		for (Key key : keys) ticks.add(key.tick());
-		for (Part part : parts.values()) for (Turn turn : part.turns()) ticks.add(turn.tick());
-		poseTicks = java.util.Collections.unmodifiableSortedSet(ticks);
-		return poseTicks;
+		for (Part part : parts.values()) {
+			for (Turn turn : part.turns()) ticks.add(turn.tick());
+			if (!spun) for (Turn turn : part.spinSteps()) ticks.add(turn.tick());
+		}
+		cached = java.util.Collections.unmodifiableSortedSet(ticks);
+		if (spun) poseTicksSpun = cached;
+		else poseTicks = cached;
+		return cached;
+	}
+
+	private void forgetPoseTicks() {
+		poseTicks = null;
+		poseTicksSpun = null;
 	}
 
 	private static float lerp(float a, float b, float t) {
@@ -186,7 +236,7 @@ public final class Anim {
 	}
 
 	public Anim key(int tick, float x, float y, float z, float yaw, float pitch, float roll, float sx, float sy, float sz) {
-		poseTicks = null;
+		forgetPoseTicks();
 		keys.add(new Key(tick, x, y, z, yaw, pitch, roll, sx, sy, sz));
 		return this;
 	}

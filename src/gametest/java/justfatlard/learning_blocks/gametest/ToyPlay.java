@@ -10,6 +10,7 @@ import justfatlard.learning_blocks.bob.Goal;
 import justfatlard.learning_blocks.bob.Goals;
 import justfatlard.learning_blocks.classroom.Visit;
 import justfatlard.learning_blocks.narration.Narrator;
+import justfatlard.learning_blocks.play.Anim;
 import justfatlard.learning_blocks.play.Anims;
 import justfatlard.learning_blocks.play.Play;
 import justfatlard.learning_blocks.plush.Plush;
@@ -215,6 +216,53 @@ public final class ToyPlay implements FabricClientGameTest {
 			BlockPos car = origin[0].offset(-4, 0, 7);
 			check(!level.getBlockState(car).getValue(Play.HIDDEN), "the car was left hidden after its play was dropped mid-way");
 			check(!Play.displayAt(level, car), "the dropped play's display was left");
+		});
+
+		// Spinning wheels and propellers are told to the client once, and drawn where their steps were.
+		int[] spinning = new int[4];
+		session.onServer(server -> {
+			for (Toy toy : Toy.values()) {
+				Anim anim = Anims.of(toy);
+				for (float facing : new float[] {0, (float) Math.PI / 2, (float) -Math.PI / 3}) {
+					float off = Play.spinMismatchForTests(anim, facing);
+					check(off < 1.0e-3F, toy + "'s told spin is drawn " + off + " from its steps");
+				}
+			}
+			check(Anims.of(Toy.CAR).spins() && Anims.of(Toy.JET).spins() && Anims.of(Toy.BUS).spins(), "the car, bus or jet has no spin to tell");
+			ServerLevel level = (ServerLevel) session.player().level();
+			BlockPos car = origin[0].offset(5, 0, -2);
+			BlockState carState = Toys.TOY.defaultBlockState().setValue(ToyBlock.KIND, Toy.CAR).setValue(ToyBlock.FACING, Direction.EAST);
+			level.setBlock(car, carState, 3);
+			spinning[0] = Play.posesForTests;
+			check(Play.play(level, car, carState, Anims.of(Toy.CAR)), "the car would not play for its wheels");
+		});
+		session.waitTicks(8);
+		session.onServer(server -> {
+			ServerLevel level = (ServerLevel) session.player().level();
+			int i = 0;
+			for (var display : Play.displaysAt(level, origin[0].offset(5, 0, -2))) if (i < 3) spinning[1 + i++] = display.getId();
+			check(i == 3, "the car plays in " + i + " displays, not its body and four wheels");
+		});
+		check(session.context().computeOnClient(client -> {
+			// Pandorical's client classes are not on this source set's compile path, only at run time.
+			int turning = 0;
+			try {
+				var angle = Class.forName("justfatlard.pandorical.client.animation.ClientDisplaySpins").getMethod("angle", int.class);
+				for (int i = 1; i < 4; i++) if (!Float.isNaN((float) angle.invoke(null, spinning[i]))) turning++;
+			} catch (ReflectiveOperationException e) {
+				throw new IllegalStateException(e);
+			}
+			return turning >= 2;
+		}), "the car's wheels are not turning on the client");
+		session.waitTicks(Anims.of(Toy.CAR).length() + 5);
+		session.onServer(server -> {
+			ServerLevel level = (ServerLevel) session.player().level();
+			BlockPos car = origin[0].offset(5, 0, -2);
+			check(!level.getBlockState(car).getValue(Play.HIDDEN) && !Play.displayAt(level, car), "the car did not come back after its wheels turned");
+			// Five displays posed at each of its ten key poses, not at every one of its twenty-eight ticks.
+			int posed = Play.posesForTests - spinning[0];
+			check(posed <= 5 * 12, "the car's displays were posed " + posed + " times: its wheels were stepped, not told");
+			level.setBlock(car, Blocks.AIR.defaultBlockState(), 3);
 		});
 
 		// A car loop, frame by frame, from close: the contact sheet.

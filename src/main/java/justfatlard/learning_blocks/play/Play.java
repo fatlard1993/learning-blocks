@@ -8,6 +8,8 @@ import java.util.Map;
 import justfatlard.learning_blocks.LearningBlocks;
 import justfatlard.learning_blocks.relate.Relations;
 import justfatlard.learning_blocks.relate.Thing;
+import justfatlard.pandorical.api.PandoricalApi;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -33,6 +35,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -64,7 +67,7 @@ public final class Play {
 	 * moving part; none for something bobbing in a tub), what is in it, and where it rests.
 	 */
 	private record Running(ServerLevel level, BlockPos pos, Anim anim, List<Piece> pieces, @Nullable Display contents, float facingYaw,
-			Matrix4f rest, long started) {
+			Matrix4f rest, long started, Told told) {
 		/** The first display, which stands for the rest: gone, and the play is over. */
 		@Nullable Display copy() {
 			return pieces.isEmpty() ? null : pieces.getFirst().display();
@@ -72,6 +75,18 @@ public final class Play {
 	}
 
 	private record Piece(Display display, @Nullable String body, Anim.@Nullable Part part) {}
+
+	/**
+	 * Whether a play's spins are told to the clients once, or stepped a tick at a time because
+	 * someone watching has a client that can't turn a display itself; stepped from then on.
+	 */
+	private static final class Told {
+		boolean spins;
+
+		Told(boolean spins) {
+			this.spins = spins;
+		}
+	}
 
 	private static final List<Running> running = new ArrayList<>();
 	private static final Map<String, Long> lastPlayed = new HashMap<>();
@@ -111,7 +126,8 @@ public final class Play {
 		level.setBlock(pos, state.setValue(HIDDEN, true), Block.UPDATE_CLIENTS);
 		// Whatever happens before the end, this shows it again.
 		level.scheduleTick(pos, state.getBlock(), anim.length() + 10);
-		running.add(new Running(level, pos.immutable(), anim, pieces, contents, yaw, rest, now));
+		boolean told = anim.spins() && canAllSpin(PlayerLookup.tracking(level, pos));
+		running.add(new Running(level, pos.immutable(), anim, pieces, contents, yaw, rest, now, new Told(told)));
 		lastStarted = BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath() + ":" + pos.toShortString();
 		step(running.getLast(), 0);
 		return true;
@@ -142,7 +158,7 @@ public final class Play {
 		for (Piece piece : pieces) {
 			piece.display().snapTo(foot.x, foot.y, foot.z, 0, 0);
 			if (piece.display() instanceof Display.ItemDisplay) {
-				piece.display().setTransformation(transformation(pieceMatrix(new Matrix4f(), facingYaw, piece.part(), 0)));
+				piece.display().setTransformation(transformation(pieceMatrix(new Matrix4f(), facingYaw, piece.part(), 0, false)));
 			}
 			piece.display().addTag(PLAYING);
 			level.addFreshEntity(piece.display());
@@ -163,13 +179,13 @@ public final class Play {
 	/**
 	 * Where a piece is drawn, from the whole toy's pose: the block's model as an item draws it
 	 * (about its middle), stood on the foot, turned the way the toy faces, and the part in its own
-	 * pose.
+	 * pose: {@code spun}, as drawn under its spins told to the client.
 	 */
-	private static Matrix4f pieceMatrix(Matrix4f whole, float facingYaw, Anim.@Nullable Part part, int tick) {
+	private static Matrix4f pieceMatrix(Matrix4f whole, float facingYaw, Anim.@Nullable Part part, int tick, boolean spun) {
 		Matrix4f matrix = new Matrix4f(whole).translate(0, 0.5F, 0).rotateY(facingYaw);
 		// The item display turns the model half round as it draws it, after this; a part's pose,
 		// in the model's own frame, goes in turned to match.
-		if (part != null) matrix.rotateY((float) Math.PI).mul(Anim.partMatrix(part, Anim.partAt(part, tick))).rotateY((float) Math.PI);
+		if (part != null) matrix.rotateY((float) Math.PI).mul(Anim.partMatrix(part, Anim.partAt(part, tick, spun))).rotateY((float) Math.PI);
 		return matrix;
 	}
 
@@ -198,22 +214,38 @@ public final class Play {
 	}
 
 	/**
-	 * Everything that happens at this tick: a pose to glide to, a sound, a puff. At each tick
-	 * something is posed at, every display is told where to be by the next one, and glides there.
+	 * Everything that happens at this tick: a pose to glide to, a spin to start, a sound, a puff. At
+	 * each tick something is posed at, every display is told where to be by the next one, and glides
+	 * there.
 	 */
 	private static void step(Running run, int at) {
-		java.util.SortedSet<Integer> ticks = run.anim().poseTicks();
-		if (ticks.contains(at)) {
+		boolean stepNow = false;
+		if (run.told().spins && !canAllSpin(run)) {
+			run.told().spins = false;
+			for (Piece piece : run.pieces()) if (piece.part() != null && !piece.part().spins().isEmpty()) PandoricalApi.displaySpins().stop(piece.display());
+			stepNow = true;
+		}
+		boolean spun = run.told().spins;
+		java.util.SortedSet<Integer> ticks = run.anim().poseTicks(spun);
+		if (stepNow || ticks.contains(at)) {
 			java.util.SortedSet<Integer> later = ticks.tailSet(at + 1);
 			int next = later.isEmpty() ? at : later.first();
 			int glide = Math.max(1, next - at);
 			Matrix4f pose = run.anim().wholeAt(next).matrix(run.facingYaw());
 			for (Piece piece : run.pieces()) {
 				Matrix4f matrix = piece.display() instanceof Display.BlockDisplay
-					? new Matrix4f(pose).translate(-0.5F, 0, -0.5F) : pieceMatrix(pose, run.facingYaw(), piece.part(), next);
+					? new Matrix4f(pose).translate(-0.5F, 0, -0.5F) : pieceMatrix(pose, run.facingYaw(), piece.part(), next, spun);
 				pose(piece.display(), matrix, glide);
 			}
 			if (run.contents() != null && !run.contents().isRemoved()) pose(run.contents(), new Matrix4f(pose).mul(run.rest()), glide);
+		}
+		if (spun) {
+			for (Piece piece : run.pieces()) {
+				if (piece.part() == null) continue;
+				for (Anim.Spin spin : piece.part().spins()) {
+					if (spin.from() == at) PandoricalApi.displaySpins().spin(piece.display(), spinPivot(piece.part()), spinAxis(spin), spin.degreesPerTick(), spin.ticks());
+				}
+			}
 		}
 		for (Anim.Event event : run.anim().events()) {
 			if (event.tick() != at) continue;
@@ -223,7 +255,68 @@ public final class Play {
 		}
 	}
 
+	/** Whether every one of these players' clients turns a display told to spin. */
+	private static boolean canAllSpin(java.util.Collection<ServerPlayer> watching) {
+		for (ServerPlayer player : watching) if (!PandoricalApi.displaySpins().canSpin(player)) return false;
+		return true;
+	}
+
+	/** Whether everyone watching a play with spins still to tell or turning can see them turn. */
+	private static boolean canAllSpin(Running run) {
+		Display first = run.copy();
+		return first == null || canAllSpin(PlayerLookup.tracking(first));
+	}
+
+	/**
+	 * A part's pivot in its display's frame: the model drawn about its middle, and turned half round
+	 * by the display as it draws it, after the transformation.
+	 */
+	private static Vector3f spinPivot(Anim.Part part) {
+		return new Vector3f(0.5F - part.px() / 16, part.py() / 16 - 0.5F, 0.5F - part.pz() / 16);
+	}
+
+	/** A spin's axis in its display's frame, turned half round as {@link #spinPivot}. */
+	private static Vector3f spinAxis(Anim.Spin spin) {
+		return switch (spin.axis()) {
+			case 'x' -> new Vector3f(-1, 0, 0);
+			case 'y' -> new Vector3f(0, 1, 0);
+			default -> new Vector3f(0, 0, -1);
+		};
+	}
+
+	/**
+	 * For tests: how far, at worst, a toy's spinning parts drawn under their told spins land from
+	 * where their spin steps put them, at every tick of each spin, turned as far as the steps have
+	 * got and, at the end, as far as the told pace has got; nought is the same.
+	 */
+	public static float spinMismatchForTests(Anim anim, float facingYaw) {
+		float worst = 0;
+		for (Anim.Part part : anim.parts()) {
+			for (Anim.Spin spin : part.spins()) {
+				for (int tick = spin.from(); tick <= spin.from() + spin.ticks(); tick++) {
+					Matrix4f whole = anim.wholeAt(tick).matrix(facingYaw);
+					Matrix4f stepped = pieceMatrix(whole, facingYaw, part, tick, false);
+					Anim.Turn turn = Anim.partAt(part, tick, false);
+					float steppedAngle = switch (spin.axis()) { case 'x' -> turn.rx(); case 'y' -> turn.ry(); default -> turn.rz(); };
+					List<Float> angles = tick == spin.from() + spin.ticks() ? List.of(steppedAngle, spin.degreesPerTick() * spin.ticks()) : List.of(steppedAngle);
+					for (float angle : angles) {
+						Vector3f pivot = spinPivot(part);
+						Vector3f axis = spinAxis(spin);
+						Matrix4f told = pieceMatrix(whole, facingYaw, part, tick, true)
+							.translate(pivot).rotate((float) Math.toRadians(angle), axis).translate(pivot.negate(new Vector3f()));
+						for (int i = 0; i < 4; i++) for (int j = 0; j < 4; j++) worst = Math.max(worst, Math.abs(told.get(i, j) - stepped.get(i, j)));
+					}
+				}
+			}
+		}
+		return worst;
+	}
+
+	/** For tests: how many times a display has been told a new pose. */
+	public static int posesForTests;
+
 	private static void pose(Display display, Matrix4f matrix, int glide) {
+		posesForTests++;
 		display.setTransformationInterpolationDelay(0);
 		display.setTransformationInterpolationDuration(glide);
 		display.setTransformation(transformation(matrix));
@@ -398,7 +491,7 @@ public final class Play {
 	public static void playContents(ServerLevel level, BlockPos pos, Display contents, Anim anim) {
 		if (playing(level, pos)) return;
 		Matrix4f rest = restPose(contents, level.getBlockState(pos), holdOf(level, pos, contents));
-		running.add(new Running(level, pos.immutable(), anim, List.of(), contents, 0, rest, level.getGameTime()));
+		running.add(new Running(level, pos.immutable(), anim, List.of(), contents, 0, rest, level.getGameTime(), new Told(false)));
 		step(running.getLast(), 0);
 	}
 
@@ -441,6 +534,11 @@ public final class Play {
 	}
 
 	public static boolean displayAt(ServerLevel level, BlockPos pos) {
-		return !level.getEntities((Entity) null, new AABB(pos).inflate(0.5), entity -> entity.entityTags().contains(PLAYING)).isEmpty();
+		return !displaysAt(level, pos).isEmpty();
+	}
+
+	/** The displays playing a block. */
+	public static List<Entity> displaysAt(ServerLevel level, BlockPos pos) {
+		return level.getEntities((Entity) null, new AABB(pos).inflate(0.5), entity -> entity.entityTags().contains(PLAYING));
 	}
 }
