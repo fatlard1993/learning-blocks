@@ -283,7 +283,7 @@ public final class Sky {
 	}
 
 	private static void tick(MinecraftServer server) {
-		for (Map.Entry<UUID, Long> entry : new HashMap<>(darkUntil).entrySet()) {
+		if (!darkUntil.isEmpty()) for (Map.Entry<UUID, Long> entry : new HashMap<>(darkUntil).entrySet()) {
 			ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
 			if (player == null) darkUntil.remove(entry.getKey());
 			else if (player.level().getGameTime() >= entry.getValue()) light(player);
@@ -301,7 +301,7 @@ public final class Sky {
 			}
 		}
 		if (server.getTickCount() % 4 != 0) return;
-		for (Map.Entry<UUID, Weather> entry : new HashMap<>(weathers).entrySet()) {
+		if (!weathers.isEmpty()) for (Map.Entry<UUID, Weather> entry : new HashMap<>(weathers).entrySet()) {
 			ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
 			if (player == null || !Places.isClassroom(player.level())) continue;
 			Weather weather = entry.getValue();

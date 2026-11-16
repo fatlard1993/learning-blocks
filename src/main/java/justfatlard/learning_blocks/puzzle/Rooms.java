@@ -459,6 +459,7 @@ public final class Rooms {
 	static final int LEAVE_AT_MOST = 100;
 
 	public static void tick(MinecraftServer server) {
+		if (rooms.isEmpty()) return;
 		java.util.Set<Room> ticked = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
 		for (Map.Entry<UUID, Room> entry : new ArrayList<>(rooms.entrySet())) {
 			ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
@@ -474,10 +475,10 @@ public final class Rooms {
 				continue;
 			}
 			if (room.isTeacher(player.getUUID())) {
-				Safely.run(player.getGameProfile().name() + " teaching", () -> room.tickTeacher(player));
+				Safely.run(() -> player.getGameProfile().name() + " teaching", () -> room.tickTeacher(player));
 				continue;
 			}
-			boolean fine = Safely.run(player.getGameProfile().name() + "'s room", () -> {
+			boolean fine = Safely.run(() -> player.getGameProfile().name() + "'s room", () -> {
 				room.tickMember(player);
 				// The room's own tick once, for whoever's turn it is.
 				if (ticked.add(room)) {

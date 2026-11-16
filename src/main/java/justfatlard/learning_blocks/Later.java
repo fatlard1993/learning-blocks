@@ -54,7 +54,7 @@ public final class Later {
 			Job job = due.removeFirst();
 			ServerPlayer player = server.getPlayerList().getPlayer(job.player());
 			// One job failing is that job gone, never the rest of the tick's or the server.
-			if (player != null && !player.isRemoved()) Safely.run("A job for " + player.getGameProfile().name(), () -> job.what().accept(player));
+			if (player != null && !player.isRemoved()) Safely.run(() -> "A job for " + player.getGameProfile().name(), () -> job.what().accept(player));
 		}
 	}
 

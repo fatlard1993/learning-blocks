@@ -400,6 +400,7 @@ public final class Room {
 	 * team-up), kept over their head as they move; none alone.
 	 */
 	private void markers() {
+		if (markerShown.isEmpty() && !(shared() && puzzle != null)) return;
 		java.util.Set<UUID> want = new java.util.HashSet<>();
 		if (shared() && puzzle != null) {
 			if (team) want.addAll(teamReaders);

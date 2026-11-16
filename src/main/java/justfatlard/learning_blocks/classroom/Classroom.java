@@ -52,7 +52,7 @@ public final class Classroom {
 		wasRaining = raining;
 
 		for (ServerPlayer player : List.copyOf(classroom.players())) {
-			Safely.run("The classroom's care of " + player.getGameProfile().name(), () -> care(player, turned));
+			Safely.run(() -> "The classroom's care of " + player.getGameProfile().name(), () -> care(player, turned));
 		}
 	}
 

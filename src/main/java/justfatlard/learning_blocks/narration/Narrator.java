@@ -129,7 +129,7 @@ public final class Narrator {
 	}
 
 	public static void tick(MinecraftServer server) {
-		for (Map.Entry<UUID, Integer> entry : new ArrayList<>(hideIn.entrySet())) {
+		if (!hideIn.isEmpty()) for (Map.Entry<UUID, Integer> entry : new ArrayList<>(hideIn.entrySet())) {
 			int left = entry.getValue() - 1;
 			if (left > 0) {
 				entry.setValue(left);
@@ -140,7 +140,7 @@ public final class Narrator {
 			if (player != null) for (ServerPlayer one : all(player)) if (one == player || !running.containsKey(one.getUUID())) CaptionHud.hide(one);
 		}
 
-		for (UUID id : new ArrayList<>(running.keySet())) {
+		if (!running.isEmpty()) for (UUID id : new ArrayList<>(running.keySet())) {
 			Running run = running.get(id);
 			if (run == null) continue;
 			ServerPlayer player = server.getPlayerList().getPlayer(id);
@@ -149,7 +149,7 @@ public final class Narrator {
 				continue;
 			}
 			run.tick++;
-			boolean fine = Safely.run("Narration for " + player.getGameProfile().name(), () -> {
+			boolean fine = Safely.run(() -> "Narration for " + player.getGameProfile().name(), () -> {
 				if (run.tick >= run.length) {
 					advance(player, run);
 				} else {

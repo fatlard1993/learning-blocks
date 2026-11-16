@@ -11,12 +11,17 @@ public final class Safely {
 
 	/** Run it; false, logged, if it failed. */
 	public static boolean run(String what, Runnable action) {
+		return run(() -> what, action);
+	}
+
+	/** The same, saying what it was only if it failed: for a job run every tick. */
+	public static boolean run(java.util.function.Supplier<String> what, Runnable action) {
 		try {
 			action.run();
 			return true;
 		} catch (Throwable failure) {
 			if (failure instanceof VirtualMachineError && !(failure instanceof StackOverflowError)) throw (VirtualMachineError) failure;
-			LearningBlocks.LOGGER.error("[{}] {} failed", LearningBlocks.MOD_ID, what, failure);
+			LearningBlocks.LOGGER.error("[{}] {} failed", LearningBlocks.MOD_ID, what.get(), failure);
 			return false;
 		}
 	}
