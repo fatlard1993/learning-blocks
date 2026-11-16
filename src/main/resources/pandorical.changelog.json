@@ -4,6 +4,14 @@
 		"Press the Learning Blocks button (or /learn) to go in, and walk through the portal to come home with everything you went in with."
 	],
 	"versions": {
+		"0.2.7": [
+			"The progress review and try-a-lesson screens forget a player who leaves, and everyone when the server stops.",
+			"A toy at play works out its pose ticks once, not again every tick it moves.",
+			"The check that keeps a round finishable looks over the room once for every tile, not once per tile.",
+			"An idle classroom costs less each tick: nothing is copied or named for a log line unless there is something to do or report.",
+			"Picture cards are read in the background as the server starts, so the first round to show one doesn't hitch.",
+			"The prize editor's loot table search sorts the tables once per reload, not on every key typed."
+		],
 		"0.2.6": [
 			"Classroom crossings are settled a tick later for real.",
 			"Tests answer number tiles as a child does, carried into the gap; nothing in play changes."
