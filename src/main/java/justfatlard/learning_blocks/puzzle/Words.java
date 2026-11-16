@@ -105,6 +105,11 @@ public final class Words implements SimpleSynchronousResourceReloadListener {
 		return pictureCards.get(word.id());
 	}
 
+	/** Every picture card some word asks for. */
+	public static java.util.Set<String> pictureCards() {
+		return java.util.Set.copyOf(pictureCards.values());
+	}
+
 	public static List<Word> tricky() {
 		return tricky;
 	}

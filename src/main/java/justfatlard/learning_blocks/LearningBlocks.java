@@ -243,6 +243,7 @@ public class LearningBlocks implements ModInitializer {
 		// Prizes name items and loot tables, which only exist once the server's registries do.
 		ServerLifecycleEvents.SERVER_STARTED.register(PrizeConfig::load);
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> justfatlard.learning_blocks.classroom.Schedules.load());
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> justfatlard.learning_blocks.puzzle.PictureCards.preload(justfatlard.learning_blocks.puzzle.Words.pictureCards()));
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
 			Later.clear();
 			justfatlard.learning_blocks.classroom.JoinRequests.clear();

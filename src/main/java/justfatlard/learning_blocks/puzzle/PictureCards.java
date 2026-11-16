@@ -33,6 +33,14 @@ public final class PictureCards {
 		return picture;
 	}
 
+	/** Read these cards in the background, so the first round to show one doesn't wait on the read. */
+	public static void preload(java.util.Collection<String> names) {
+		if (names.isEmpty()) return;
+		net.minecraft.util.Util.backgroundExecutor().execute(() -> {
+			for (String name : names) of(name);
+		});
+	}
+
 	private static @Nullable Picture load(String name) {
 		String path = "/assets/" + LearningBlocks.MOD_ID + "/textures/card/" + name + ".png";
 		try (InputStream in = PictureCards.class.getResourceAsStream(path)) {
