@@ -53,6 +53,7 @@ public final class Anim {
 	final java.util.Map<String, Part> parts = new java.util.LinkedHashMap<>();
 	@Nullable String pieces;
 	private @Nullable Part current;
+	private java.util.@Nullable SortedSet<Integer> poseTicks;
 
 	public static Anim of() {
 		return new Anim().key(0, 0, 0, 0);
@@ -82,6 +83,7 @@ public final class Anim {
 
 	/** The part the poses after this are for, with its pivot (model units); it starts at rest. */
 	public Anim part(String name, float px, float py, float pz) {
+		poseTicks = null;
 		current = parts.computeIfAbsent(name, key -> new Part(key, px, py, pz, new ArrayList<>(List.of(new Turn(0, 0, 0, 0, 0, 0, 0)))));
 		return this;
 	}
@@ -89,6 +91,7 @@ public final class Anim {
 	/** The current part, at a tick: moved by x, y, z (model units) and turned about its pivot. */
 	public Anim turn(int tick, float x, float y, float z, float rx, float ry, float rz) {
 		if (current == null) throw new IllegalStateException("a part's pose with no part named");
+		poseTicks = null;
 		current.turns().add(new Turn(tick, x, y, z, rx, ry, rz));
 		return this;
 	}
@@ -96,6 +99,7 @@ public final class Anim {
 	/** The same, stretched along its own axes too (a kite's string paying out). */
 	public Anim turn(int tick, float x, float y, float z, float rx, float ry, float rz, float sx, float sy, float sz) {
 		if (current == null) throw new IllegalStateException("a part's pose with no part named");
+		poseTicks = null;
 		current.turns().add(new Turn(tick, x, y, z, rx, ry, rz, sx, sy, sz));
 		return this;
 	}
@@ -153,10 +157,12 @@ public final class Anim {
 	}
 
 	java.util.SortedSet<Integer> poseTicks() {
+		if (poseTicks != null) return poseTicks;
 		java.util.SortedSet<Integer> ticks = new java.util.TreeSet<>();
 		for (Key key : keys) ticks.add(key.tick());
 		for (Part part : parts.values()) for (Turn turn : part.turns()) ticks.add(turn.tick());
-		return ticks;
+		poseTicks = java.util.Collections.unmodifiableSortedSet(ticks);
+		return poseTicks;
 	}
 
 	private static float lerp(float a, float b, float t) {
@@ -180,6 +186,7 @@ public final class Anim {
 	}
 
 	public Anim key(int tick, float x, float y, float z, float yaw, float pitch, float roll, float sx, float sy, float sz) {
+		poseTicks = null;
 		keys.add(new Key(tick, x, y, z, yaw, pitch, roll, sx, sy, sz));
 		return this;
 	}
