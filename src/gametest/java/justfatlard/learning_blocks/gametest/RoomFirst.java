@@ -32,7 +32,7 @@ public final class RoomFirst implements FabricClientGameTest {
 				RoomBuilds.knockDown(server.getLevel(Places.CLASSROOM), Plots.origin(player));
 				RoomBuilds.mostSetInATick = 0;
 			});
-			arrive(session);
+			arrive(session, true);
 			session.onServer(server -> check(RoomBuilds.mostSetInATick == RoomBuilds.SLICE,
 				"the room did not go up a slice at a time: at most " + RoomBuilds.mostSetInATick + " blocks in a tick"));
 
@@ -49,6 +49,7 @@ public final class RoomFirst implements FabricClientGameTest {
 				player.getInventory().setItem(0, new ItemStack(Items.APPLE, 3));
 				check(Travel.enter(player) == null, "the way in was refused");
 				check(RoomBuilds.waiting(player), "a plot nobody has used was ready on the spot");
+				check(Travel.enter(player) == null, "asked again while the room goes up, the way in was refused");
 				check(!Places.isClassroom(player.level()) && Visit.of(player) == null, "let in before the room was up");
 				check(player.getInventory().countItem(Items.APPLE) == 3, "things were put aside before the room was up");
 				RoomBuilds.drop(player.getUUID());
@@ -60,9 +61,15 @@ public final class RoomFirst implements FabricClientGameTest {
 				check(!Places.isClassroom(player.level()) && Visit.of(player) == null && Rooms.of(player) == null,
 					"a dropped way in still took them in");
 				check(player.getInventory().countItem(Items.APPLE) == 3, "a dropped way in lost their things");
+				// A wait on the room left by something other than a way in (a split from a shared room
+				// they then walked out of): a way in asked for alongside it still takes them in.
+				RoomBuilds.knockDown(server.getLevel(Places.CLASSROOM), Plots.origin(player));
+				RoomBuilds.request(player, server.getLevel(Places.CLASSROOM), Plots.origin(player), p -> {});
+				check(RoomBuilds.waiting(player), "the leftover wait was ready on the spot");
+				check(Travel.enter(player) == null, "the way in beside a leftover wait was refused");
 			});
 
-			arrive(session);
+			arrive(session, false);
 			session.onServer(server -> check(session.player().getInventory().isEmpty(), "carried things into the classroom"));
 			session.command("/learn leave");
 			Waits.until(session, 300, "never went home the second time", () -> !Places.isClassroom(session.player().level()));
@@ -71,9 +78,9 @@ public final class RoomFirst implements FabricClientGameTest {
 		});
 	}
 
-	/** /learn, then watched tick by tick: the walls are up the first tick they stand inside. */
-	private static void arrive(Smoke.Session session) {
-		session.command("/learn");
+	/** /learn (or a way in already asked for), then watched tick by tick: the walls are up the first tick they stand inside. */
+	private static void arrive(Smoke.Session session, boolean learn) {
+		if (learn) session.command("/learn");
 		boolean[] in = new boolean[1];
 		String[] gap = new String[1];
 		for (int tick = 0; tick <= 200 && !in[0]; tick++) {

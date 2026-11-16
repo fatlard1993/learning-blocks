@@ -55,7 +55,7 @@ public final class RoomBuilds {
 			this.level = level;
 			this.layout = new RoomLayout(origin);
 			this.chunks = layout.chunks();
-			this.asked = level.getGameTime();
+			this.asked = level.getServer().getTickCount();
 		}
 	}
 
@@ -93,13 +93,6 @@ public final class RoomBuilds {
 	public static boolean waiting(ServerPlayer player) {
 		Build build = builds.get(player.getUUID());
 		return build != null && build.player == player;
-	}
-
-	/** Something more to do once the room this player is waiting for is ready; false if they wait for none. */
-	public static boolean alsoThen(ServerPlayer player, Consumer<ServerPlayer> then) {
-		if (!waiting(player)) return false;
-		builds.get(player.getUUID()).then.add(then);
-		return true;
 	}
 
 	/** Their room no longer wanted: nothing waiting on it runs. */
@@ -151,8 +144,8 @@ public final class RoomBuilds {
 	}
 
 	private static void step(Build build) {
-		// Once a tick, though asked for twice in it.
-		long now = build.level.getGameTime();
+		// Once a tick, though asked for twice in it; server ticks, which go on under /tick freeze.
+		long now = build.level.getServer().getTickCount();
 		if (build.stepped == now) return;
 		build.stepped = now;
 		// A room already open here with readers in it is left as it is: they are in the middle of a round.

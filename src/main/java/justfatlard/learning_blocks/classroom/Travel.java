@@ -137,7 +137,6 @@ public final class Travel {
 		java.util.function.Consumer<ServerPlayer> then = arrived == null ? p -> {} : p -> {
 			if (Visit.of(p) != null && Places.isClassroom(p.level())) arrived.accept(p);
 		};
-		if (joining == null && Visit.of(player) == null && RoomBuilds.alsoThen(player, then)) return null;
 		String refused = refusal(player);
 		if (refused != null) return refused;
 		ServerLevel classroom = player.level().getServer().getLevel(Places.CLASSROOM);
@@ -147,12 +146,22 @@ public final class Travel {
 		}
 		if (joining != null) {
 			refused = cross(player, classroom, joining, teaching);
-			if (refused == null) then.accept(player);
+			if (refused == null) {
+				// In by another way: a room of their own still going up has nobody left to let in.
+				RoomBuilds.drop(player.getUUID());
+				then.accept(player);
+			}
 			return refused;
 		}
+		boolean already = RoomBuilds.waiting(player);
 		String[] failed = new String[1];
 		boolean[] asked = new boolean[1];
 		boolean now = RoomBuilds.request(player, classroom, Plots.origin(player), p -> {
+			// Let in by an earlier wait on the same room.
+			if (Visit.of(p) != null && Places.isClassroom(p.level())) {
+				then.accept(p);
+				return;
+			}
 			// Things may have changed while the room went up: asked again from the top.
 			String no = asked[0] ? refusal(p) : null;
 			if (no == null) no = cross(p, classroom, null, false);
@@ -162,6 +171,7 @@ public final class Travel {
 		});
 		asked[0] = true;
 		if (now) return failed[0];
+		if (already) return null;
 		player.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
 			net.minecraft.core.Holder.direct(net.minecraft.sounds.SoundEvents.WOODEN_DOOR_OPEN), net.minecraft.sounds.SoundSource.BLOCKS,
 			player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, player.getRandom().nextLong()));
