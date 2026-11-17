@@ -4,6 +4,9 @@
 		"Press the Learning Blocks button (or /learn) to go in, and walk through the portal to come home with everything you went in with."
 	],
 	"versions": {
+		"0.2.8": [
+			"A child in the classroom can't trade away what the room lends them, and the classroom can't be entered while another mod lends something, such as a Miniature Bench's workshop."
+		],
 		"0.2.7": [
 			"The progress review and try-a-lesson screens forget a player who leaves, and everyone when the server stops.",
 			"A toy at play works out its pose ticks once, not again every tick it moves.",

@@ -124,6 +124,9 @@ public final class Travel {
 		if (Visit.of(player) != null || Places.isClassroom(player.level())) return "You're already in the classroom";
 		if (player.isDeadOrDying()) return "Not just now";
 		if (Places.heldElsewhere(player.level())) return "Not from here: leave this world first";
+		// Whatever another mod has lent them would be put aside here as theirs, and given back as theirs.
+		net.minecraft.network.chat.Component lent = justfatlard.pandorical.api.PandoricalApi.loans().onLoan(player);
+		if (lent != null) return "Not while " + lent.getString();
 		if (PrizeSessions.editing(player)) return "Finish editing prizes first: /learn prizes done";
 		return null;
 	}

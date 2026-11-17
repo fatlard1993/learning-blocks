@@ -116,6 +116,9 @@ public class LearningBlocks implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		// In the classroom a child's own things are put aside and the room's are lent to them.
+		justfatlard.pandorical.api.PandoricalApi.loans().register(player -> justfatlard.learning_blocks.classroom.Visit.of(player) == null ? null
+			: net.minecraft.network.chat.Component.literal("in the classroom"));
 		Registry.register(BuiltInRegistries.BLOCK, LETTER_ID, LETTER);
 		Registry.register(BuiltInRegistries.BLOCK, PLUSH_ID, PLUSH);
 		justfatlard.learning_blocks.plush.Plushies.register();
