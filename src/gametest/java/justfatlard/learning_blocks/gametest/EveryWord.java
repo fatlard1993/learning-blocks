@@ -206,7 +206,21 @@ public final class EveryWord implements FabricClientGameTest {
 					session.waitTicks(5);
 					shoot(session, "learning-flight-" + text);
 				}
-				session.waitTicks(text.equals("fun") ? 30 : 40);
+				// Watched a tick at a time, so each creature this word brought is judged where it first
+				// comes down, not wherever it has wandered by the end: a sheep walking up to the child
+				// afterwards is a sheep, not a word landing on them.
+				java.util.Map<java.util.UUID, Vec3> landedOn = new java.util.HashMap<>();
+				java.util.Set<java.util.UUID> landed = new java.util.HashSet<>();
+				for (int tick = text.equals("fun") ? 30 : 40; tick > 0; tick--) {
+					session.waitTicks(1);
+					session.onServer(server -> {
+						ServerPlayer player = session.player();
+						for (Entity creature : Rooms.of(player).creatures()) {
+							if (creaturesBefore.contains(creature.getUUID()) || !creature.onGround() || !landed.add(creature.getUUID())) continue;
+							if (creature.getBoundingBox().intersects(player.getBoundingBox())) landedOn.put(creature.getUUID(), creature.position());
+						}
+					});
+				}
 				if (pictured) shoot(session, "learning-outcome-" + text);
 				// And ends where it always did.
 				session.onServer(server -> landed(session.player(), word));
@@ -235,8 +249,13 @@ public final class EveryWord implements FabricClientGameTest {
 					}
 					for (Entity creature : room.creatures()) {
 						if (creaturesBefore.contains(creature.getUUID())) continue;
-						check(!creature.getBoundingBox().intersects(player.getBoundingBox()), word.id() + "'s " + creature.getType().getDescriptionId()
-							+ " landed on the child at the button: " + creature.position());
+						Vec3 on = landedOn.get(creature.getUUID());
+						check(on == null, word.id() + "'s " + creature.getType().getDescriptionId() + " landed on the child at the button: " + on);
+						// One that never came down (a bird, a fish) is judged where it is.
+						if (!landed.contains(creature.getUUID())) {
+							check(!creature.getBoundingBox().intersects(player.getBoundingBox()), word.id() + "'s " + creature.getType().getDescriptionId()
+								+ " is on the child at the button: " + creature.position());
+						}
 					}
 				});
 
