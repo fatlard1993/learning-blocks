@@ -4,6 +4,9 @@
 		"Press the Learning Blocks button (or /learn) to go in, and walk through the portal to come home with everything you went in with."
 	],
 	"versions": {
+		"0.2.9": [
+			"Describes itself in one short line of what it adds."
+		],
 		"0.2.8": [
 			"A child in the classroom can't trade away what the room lends them, and the classroom can't be entered while another mod lends something, such as a Miniature Bench's workshop."
 		],
